@@ -1,0 +1,11 @@
+---
+mainfont: DejaVuSerif
+title: Computer graphics
+subtitle: A practical approach
+author: Jonas Heinle
+date: \today
+toc: true
+highlight-style: pygments.theme
+toc-title: Table of contents
+linkcolor: blue
+---
