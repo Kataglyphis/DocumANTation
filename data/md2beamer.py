@@ -1,8 +1,8 @@
 import os
 import subprocess
 
-input_dir = "chapters"
-output_dir = "my_book"
+input_dir = "presentationMd"
+output_dir = "presentationPdf"
 
 # Ensure the output directory exists
 os.makedirs(output_dir, exist_ok=True)
@@ -22,12 +22,22 @@ pandoc_cmd = [
     "pandoc",
     *input_files,
     "--resource-path=.",
-    "--metadata-file", "metadata_beamer.yml",
-    "-t", "beamer",
-    "-V", "linkcolor:blue",
-    "-V", "mainfont=DejaVu Serif",
+    # "--metadata-file",
+    # "metadata_beamer.yml",
+    "-t",
+    "beamer",
+    "--verbose",
+    # "--pdf-engine",
+    # "lualatex",
+    # "--include-in-header",
+    # "latex_template/main.tex",
+    # "-V",
+    # "linkcolor:blue",
+    # "-V",
+    # "mainfont=DejaVu Serif",
     # "-V", "monofont=SauceCodePro Nerd Font",
-    "-o", os.path.join(output_dir, "beamer_output.pdf"),
+    "-o",
+    os.path.join(output_dir, "beamer_output.pdf"),
 ]
 
 # Run the pandoc command

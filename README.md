@@ -93,12 +93,24 @@ This project is a template.
 This enumeration also includes submodules.
 <!-- * [Vulkan 1.3](https://www.vulkan.org/) -->
 
+For my beamer latex project I use this ![beamerthemeawesome](https://github.com/LukasPietzschmann/awesome-beamer/blob/master/beamerthemeawesome.sty) theme from LukasPietzschmann as a starting point and customized it for my needs.
+
 ### Useful tools
 
 <!-- * [cppcheck](https://cppcheck.sourceforge.io/) -->
 
 <!-- GETTING STARTED -->
 ## Getting Started
+
+```bash
+# first build docker image
+docker build . -t pandoc_all
+# for WINDOWS OS run the following command: 
+docker run -it -v ${PWD}:/data --name mypandoc -h mypandoc pandoc_all
+# for LINUX based OS run the following: 
+docker run -it -v $(pwd):/data --name mypandoc -h mypandoc pandoc_all
+# docker start -ai mypandoc
+```
 
 ### Prerequisites
 

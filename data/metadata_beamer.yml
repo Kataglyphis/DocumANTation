@@ -1,0 +1,13 @@
+---
+# title:  'This is the title'
+pdf-engine-opts:
+  - '-shell-escape'
+aspectratio: 169
+handout: true
+# header-includes:
+#   - \usepackage{latex_template/smile}
+#   - \usepackage[english, secslide, subsecslide, coloraccent=darkmaroon]{latex_template/beamerthemeawesome}
+
+# include-in-header:
+#   - latex_template/main.tex
+---
