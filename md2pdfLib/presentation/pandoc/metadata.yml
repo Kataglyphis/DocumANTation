@@ -1,0 +1,11 @@
+---
+theme:
+  - awesome
+author: "Jonas Heinle"
+pdf-engine-opts:
+  - '-shell-escape'
+aspectratio: 169
+handout: true
+# include-in-header:
+#   - latex_template/main.tex
+---

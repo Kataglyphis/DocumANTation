@@ -1,8 +1,9 @@
 import os
 import subprocess
 
-input_dir = "chapters"
-output_dir = "my_book"
+input_dir = "./data/book/chapters"
+output_dir = "./data/out"
+output_name = "book_output.pdf"
 
 # Ensure the output directory exists
 os.makedirs(output_dir, exist_ok=True)
@@ -21,15 +22,16 @@ input_files = sorted(
 pandoc_cmd = [
     "pandoc",
     *input_files,
-    "--pdf-engine=lualatex",
+    "--verbose",
+    "--pdf-engine=latexmk",
     "--number-sections",
     "--resource-path=.",
     "--metadata-file",
-    "metadata.yml",
-    "--include-in-header",
-    "main.tex",
+    "md2pdfLib/book/pandoc/metadata.yml",
+    # "--include-in-header",
+    # "main.tex",
     "-o",
-    os.path.join(output_dir, "book_output.pdf"),
+    os.path.join(output_dir, output_name),
 ]
 
 # Run the pandoc command

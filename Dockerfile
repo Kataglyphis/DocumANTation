@@ -1,8 +1,8 @@
 # Dockerfile
 # docker build . -t pandoc_all
-# WINDOWS: docker run -it --rm -v ${PWD}:/data --name mypandoc -h mypandoc pandoc_all
-# LINUX: docker run -it --rm -v $(pwd):/data --name mypandoc -h mypandoc pandoc_all
-# docker start -ai mypandoc
+# WINDOWS: docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc pandoc_all
+# LINUX: docker run -it --rm -v ${pwd}/md2pdfLib:/md2pdfLib -v ${pwd}/data:/data --name mypandoc -h mypandoc pandoc_all
+
 FROM ubuntu:22.04
 ENV TZ="Europe/Berlin" 
 
@@ -39,6 +39,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 
 
 # install a specific Pandoc version for amd64 or arm64 platform
+# i want to use it on my schlaptop and my himbeerkuchen (raspberrypi)
 ARG TARGETARCH
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
       curl -L https://github.com/jgm/pandoc/releases/download/3.2/pandoc-3.2-1-amd64.deb \
@@ -54,15 +55,13 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
    
 
 # install fonts
-# (unfortunately, we cannot provide the fonts file)
 ADD Roboto.zip /usr/local/share/texmf
-RUN texhash 
+RUN texhash
+RUN mktexlsr
 
-# /data volume
+# neccessary file for generating pdf (scripts, templates, ... etc.)
+VOLUME  ["/md2pdfLib"]
 # connect to your local directory with *.md files
-# when executing docker run:
-# - docker run -v $(pwd):/data 
-# - docker run -v $(pwd):/data:z   (:z option necessary for RHEL, Fedora)
 VOLUME  ["/data"]
 
 # start command

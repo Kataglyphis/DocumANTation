@@ -2,7 +2,7 @@
   <br>
   <a href="https://jotrockenmitlocken.de"><img src="images/logo.png" alt="logo" width="200"></a>
   <br>
-  Cataglyphis template
+  mdToPdf
   <br>
 </h1>
 
@@ -13,7 +13,7 @@
   <a href="https://jotrockenmitlocken.de"><img src="images/glm_logo.png" alt="VulkanEngine" width="200"></a>
 </h1> -->
 
-<h4 align="center">A template <a href="https://jotrockenmitlocken.de" target="_blank"></a>.</h4>
+<h4 align="center">Convert markdown to modern slide show or a4paper book  <a href="https://jotrockenmitlocken.de" target="_blank"></a>.</h4>
 
 <!-- [![Linux build](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Linux.yml/badge.svg)](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Linux.yml)
 [![Windows build](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml/badge.svg)](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml)
@@ -75,7 +75,8 @@
 [![Kataglyphis Engine][product-screenshot2]](https://jotrockenmitlocken.de)
 [![Kataglyphis Engine][product-screenshot3]](https://jotrockenmitlocken.de) -->
 
-This project is a template. 
+What is nicer than writing in pure, simple markdown? <br>
+No worries about latex but with all the power of it!
 
 ### Key Features
 
@@ -102,14 +103,29 @@ For my beamer latex project I use this ![beamerthemeawesome](https://github.com/
 <!-- GETTING STARTED -->
 ## Getting Started
 
+### WINDOWS
+```powershell
+  cd mdToPdf
+  docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc pandoc_all
+```
+### LINUX 
+Tested on ubuntu. Fedora etc. might have little differences. Idk
 ```bash
-# first build docker image
-docker build . -t pandoc_all
-# for WINDOWS OS run the following command: 
-docker run -it -v ${PWD}:/data --name mypandoc -h mypandoc pandoc_all
-# for LINUX based OS run the following: 
-docker run -it -v $(pwd):/data --name mypandoc -h mypandoc pandoc_all
-# docker start -ai mypandoc
+  cd mdToPdf
+  docker run -it --rm -v ${pwd}/md2pdfLib:/md2pdfLib -v ${pwd}/data:/data --name mypandoc -h mypandoc pandoc_all
+```
+
+### Build presentation
+
+Place all .md files in the data/presentation/chapters/ folder
+
+```bash
+  python3 md2PdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
+```
+
+### Build book
+```bash
+  python3 md2pdfLib/book/scripts/md2pdf.py  
 ```
 
 ### Prerequisites
@@ -118,7 +134,7 @@ docker run -it -v $(pwd):/data --name mypandoc -h mypandoc pandoc_all
 
 1. Clone the repo
    ```sh
-   git clone --recurse-submodules git@github.com:Kataglyphis/....git
+   git clone --recurse-submodules git@github.com:Kataglyphis/mdToPdf.git
    ```
 
 ## Tests
@@ -156,36 +172,19 @@ Project Link: [https://github.com/Kataglyphis/...](https://github.com/Kataglyphi
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-<!-- Thanks for free 3D Models: 
-* [Morgan McGuire, Computer Graphics Archive, July 2017 (https://casual-effects.com/data)](http://casual-effects.com/data/)
-* [Viking room](https://sketchfab.com/3d-models/viking-room-a49f1b8e4f5c4ecf9e1fe7d81915ad38) -->
 
 ## Literature 
 
 Some very helpful literature, tutorials, etc. 
 
-<!-- CMake/C++
-* [Cpp best practices](https://github.com/cpp-best-practices/cppbestpractices)
+LaTeX
+* [Custom modern LaTeX .sty template](https://github.com/LukasPietzschmann/awesome-beamer)
+* [LaTeX template overview](https://github.com/martinbjeldbak/ultimate-beamer-theme-list)
 
-Vulkan
-* [Udemy course by Ben Cook](https://www.udemy.com/share/102M903@JMHgpMsdMW336k2s5Ftz9FMx769wYAEQ7p6GMAPBsFuVUbWRgq7k2uY6qBCG6UWNPQ==/)
-* [Vulkan Tutorial](https://vulkan-tutorial.com/)
-* [Vulkan Raytracing Tutorial](https://developer.nvidia.com/rtx/raytracing/vkray)
-* [Vulkan Tutorial; especially chapter about integrating imgui](https://frguthmann.github.io/posts/vulkan_imgui/)
-* [NVidia Raytracing tutorial with Vulkan](https://nvpro-samples.github.io/vk_raytracing_tutorial_KHR/)
-* [Blog from Sascha Willems](https://www.saschawillems.de/)
-
-Physically Based Shading
-* [Advanced Global Illumination by Dutre, Bala, Bekaert](https://www.oreilly.com/library/view/advanced-global-illumination/9781439864951/)
-* [The Bible: PBR book](https://pbr-book.org/3ed-2018/Reflection_Models/Microfacet_Models)
-* [Real shading in Unreal engine 4](https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf)
-* [Physically Based Shading at Disney](https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf)
-* [RealTimeRendering](https://www.realtimerendering.com/)
-* [Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs](https://hal.inria.fr/hal-01024289/)
-* [Sampling the GGX Distribution of Visible Normals](https://pdfs.semanticscholar.org/63bc/928467d760605cdbf77a25bb7c3ad957e40e.pdf)
-
-Path tracing
-* [NVIDIA Path tracing Tutorial](https://github.com/nvpro-samples/vk_mini_path_tracer/blob/main/vk_mini_path_tracer/main.cpp) -->
+Pandoc
+* [The Art of Book Creation with Pandoc](https://medium.com/@sydasif78/book-creation-with-pandoc-and-markdown-893c7d72cb35)
+* [my-pandoc-book GitHub Repo](https://github.com/sydasif/my-pandoc-book)
+* [Kofler Pandoc bible](https://kofler.info/free-ebooks/pandoc2.pdf)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

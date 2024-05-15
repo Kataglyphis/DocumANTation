@@ -413,7 +413,7 @@ segmentation style={lcr, solid, shorten >=1mm,shorten <=1mm, line width=\smile@l
 		\begin{tikzpicture}[remember picture, overlay]
 			\clip (current page.south east)
 				-- (current page.north east)
-				-- ++(-5.1, 0)
+				-- ++(-3.1, 0)
 				-- ++(-3, -\paperheight)
 				-- cycle;
 
@@ -425,13 +425,13 @@ segmentation style={lcr, solid, shorten >=1mm,shorten <=1mm, line width=\smile@l
 				\includegraphics[height=\paperheight]{\@background}
 			};
 
-			\fill[
-				black, path fading=title page picture fading,
-				fading angle=-15
-			]
-			(current page.south east)
-			rectangle
-			++(-10, \dimexpr\paperheight+1cm);
+			% \fill[
+			% 	black, path fading=title page picture fading,
+			% 	fading angle=-15
+			% ]
+			% (current page.south east)
+			% rectangle
+			% ++(-3.0, \dimexpr\paperheight+1cm);
 		\end{tikzpicture}
 	\fi
 \end{wide}}
