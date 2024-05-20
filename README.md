@@ -107,6 +107,12 @@ For my beamer latex project I use this ![beamerthemeawesome](https://github.com/
 <!-- GETTING STARTED -->
 ## Getting Started
 
+### Building docker image
+For building my docker image I use sth. like this:
+```bash
+docker build . -t pandoc_all
+```
+
 ### WINDOWS
 ```powershell
   cd mdToPdf

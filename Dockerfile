@@ -58,9 +58,10 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 ADD Roboto.zip /usr/local/share/texmf
 # make outr custom themes globally available
 RUN mkdir -p /root/texmf/tex/latex/commonstuff/
-RUN cp -r md2pdfLib/presentation/template/latex /root/texmf/tex/latex/commonstuff/
+ADD md2pdfLib/presentation/template/latex/awesome-beamer /root/texmf/tex/latex/commonstuff/
+ADD md2pdfLib/presentation/template/latex/smile /root/texmf/tex/latex/commonstuff/
 RUN texhash
-RUN mktexlsr
+# RUN mktexlsr
 
 # neccessary file for generating pdf (scripts, templates, ... etc.)
 VOLUME  ["/md2pdfLib"]
