@@ -2,10 +2,26 @@
 theme:
   - awesome
 author: "Jonas Heinle"
+background: data/presentation/images/The World's First AI.jpg
+title: Create personal blog in flutter/dart}
+subtitle: Cross platform UI toolkit for web
+email: support@jonasheinle.de
+institute: Institute of Software Engineering and Programming Languages
+uni: Ulm University
+location: Schwäbisch Hall
+date: \today
 pdf-engine-opts:
-  - '-shell-escape'
+  - "-shell-escape"
 aspectratio: 169
+themeoptions:
+  - english
+  - color
+  - coloraccent=white,
+  - secslide
+  - listings
+  - footnote
 handout: true
-# include-in-header:
-#   - latex_template/main.tex
+# background-image: data/presentation/images/22e2a944.jpg
+# include-in-header: data/presentation/latex/main.tex
 ---
+

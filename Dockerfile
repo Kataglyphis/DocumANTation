@@ -56,6 +56,9 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 
 # install fonts
 ADD Roboto.zip /usr/local/share/texmf
+# make outr custom themes globally available
+RUN mkdir -p /root/texmf/tex/latex/commonstuff/
+RUN cp -r md2pdfLib/presentation/template/latex /root/texmf/tex/latex/commonstuff/
 RUN texhash
 RUN mktexlsr
 

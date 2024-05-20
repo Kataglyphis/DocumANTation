@@ -9,19 +9,87 @@ $if(CJKmainfont)$
 $endif$
 
 \documentclass[
-	$if(beamer)$
+	$if(fontsize)$
+	$fontsize$,
+	$endif$
+	$if(papersize)$
+	$papersize$paper,
+	$endif$
 	$if(handout)$
 	handout,
 	$endif$
 	$if(aspectratio)$
 	aspectratio=$aspectratio$,
 	$endif$
-	$endif$
 ]{beamer}
 
 \makeatletter
 \appto\input@path{{./md2pdfLib/presentation/template/latex}}
 \makeatother
+
+$if(background-image)$
+\usebackgroundtemplate{%
+  \includegraphics[width=\paperwidth]{$background-image$}%
+}
+% In beamer background-image does not work well when other images are used, so this is the workaround
+\pgfdeclareimage[width=\paperwidth,height=\paperheight]{background}{$background-image$}
+\usebackgroundtemplate{\pgfuseimage{background}}
+$endif$
+
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+$for(beameroption)$
+\setbeameroption{$beameroption$}
+$endfor$
+
+\widowpenalties 1 10000
+\raggedbottom
+$if(section-titles)$
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+
+$if(beamerarticle)$
+\usepackage{beamerarticle} % needs to be loaded first
+$endif$
+\usepackage{amsmath,amssymb}
+$if(linestretch)$
+\usepackage{setspace}
+$endif$
+\usepackage{iftex}
+
+
+$endif$
 
 \definecolor{dred}{RGB}{105, 240, 174}
 \usetheme[english, color, coloraccent=dred, secslide, listings, footnote]{awesome}
@@ -142,6 +210,24 @@ $endif$
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
   
 \usepackage{multicol}
+
+% this is for translating code blocks
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+$if(tables)$
+\usepackage{longtable,booktabs,array}
+$if(multirow)$
+\usepackage{multirow}
+$endif$
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+$endif$
 
 \begin{document}
 

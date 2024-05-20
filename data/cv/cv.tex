@@ -1,0 +1,50 @@
+% !TEX TS-program = luatex
+% USA STEM CV LaTeX Template
+%
+% Author:
+% Jonas Heinle
+% based on templated created by Sabrina Benge
+%
+% Template license:
+% CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+
+\documentclass[localFont,alternative]{myCV_METADATA}
+
+\name{Jonas}{Heinle}
+\tagline{\IfLanguageName{english}{Information Scientist | Master of Science}{Informatiker Master of Science}}%| 
+\photo{5.5cm}{images/a95a64ca}
+
+\socialinfo{
+    \github{Kataglyphis}\newline
+    \linkedin{jonas-heinle-0b2a301a0}\newline
+	\personalLink{jonasheinle.de}\newline
+	\email{jonasheinle@googlemail.com}\newline
+    \youtube{jotrockenmitlocken}\newline
+	\address{\IfLanguageName{english}{\hspace{0.3em}Schwäbisch Hall}{\hspace{0.3em}Schwäbisch Hall}}
+	\infos{\IfLanguageName{english}{German Citizen}{Deutscher Staatsbürger}}\newline
+	\infos{\IfLanguageName{english}{\hspace{0.5em}Birthday: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall, Germany}{\hspace{0.5em}Geburtstag: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall, Deutschland}}\newline
+    \smartphone{\hspace{0.4em}+49 15678111689}
+}
+
+\begin{document}
+
+	\makecvheader
+
+	\makecvfooter
+		{\textsc{}} %\selectlanguage{english}\today
+		{\textsc{Jonas Heinle - CV}}
+		{\thepage}
+
+	\input{section_headline}                % Research Statement
+    \vspace{0.5cm}
+	\input{section_experience}
+	\input{section_education}   % Section Professional Outreach and volunteering
+	%\input{section_references} 				% Section references
+	\input{section_teaching_mentoring}      % Section Teaching and Mentoring
+    
+	\input{section_projects}    % Section Projects
+	\input{section_private}				% Section private
+	\input{section_international_experiences_volunteering.tex}
+    \input{section_extracurricular_courses_certificates.tex}
+
+\end{document}

@@ -63,7 +63,11 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
+Formulating everything you need in markdown is very light weight and efficient. This can be an enormous productivity bust for oneself. Nevertheless one would miss the power of LaTeX with its unique ecosystem which is perfect for writing scientific content (paper, books, presentation). This project is using the amazing pandoc library which is the exact right tool to combine both worlds. </br>
+You can immediately get started an use my customized templates for generating nice 
+looking books, papers or presentations. I provide detailed steps how to use it and 
+how to reproduce everything. The main environment is containerized thanks to Docker.
+Therefore everything can much simpler be reproduced.
 <!-- <h1 align="center">
   <br>
   <a href="https://jotrockenmitlocken.de"><img src="images/Screenshot1.png" alt="VulkanEngine" width="400"></a>
@@ -120,7 +124,7 @@ Tested on ubuntu. Fedora etc. might have little differences. Idk
 Place all .md files in the data/presentation/chapters/ folder
 
 ```bash
-  python3 md2PdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
+  python3 md2pdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
 ```
 
 ### Build book
@@ -136,6 +140,23 @@ Place all .md files in the data/presentation/chapters/ folder
    ```sh
    git clone --recurse-submodules git@github.com:Kataglyphis/mdToPdf.git
    ```
+
+### How i created my customized pandoc latex template
+This project aims to provide an unique style for the pdf layouts.
+Therefore I had to produce my own pandoc template.latex file.
+The following steps are guiding you through the customization steps
+so you can reproduce everything:
+
+I assume you already cloned the repo and the terminal points to the directory.
+
+* export standart .latex file used by pandoc:
+```bash
+  pandoc -D latex > md2pdfLib/presentation/pandoc/custom.tex
+```
+
++ Delete *ignorenonframetext* out of the \documentclass options.
+*  
+
 
 ## Tests
 
