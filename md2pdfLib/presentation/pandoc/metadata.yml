@@ -3,7 +3,7 @@ theme:
   - awesome
 author: "Jonas Heinle"
 background: data/presentation/images/The World's First AI.jpg
-title: Create personal blog in flutter/dart}
+title: Create personal blog in flutter/dart
 subtitle: Cross platform UI toolkit for web
 email: support@jonasheinle.de
 institute: Institute of Software Engineering and Programming Languages
