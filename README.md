@@ -98,7 +98,9 @@ No worries about latex but with all the power of it!
 This enumeration also includes submodules.
 <!-- * [Vulkan 1.3](https://www.vulkan.org/) -->
 
-For my beamer latex project I use this ![beamerthemeawesome](https://github.com/LukasPietzschmann/awesome-beamer/blob/master/beamerthemeawesome.sty) theme from LukasPietzschmann as a starting point and customized it for my needs.
+For my beamer latex project I use the following latex templates: 
+* [beamerthemeawesome](https://github.com/LukasPietzschmann/awesome-beamer) theme from LukasPietzschmann as a starting point and customized it for my needs.
+* [smile](https://github.com/LukasPietzschmann/smile) theme from LukasPietzschmann as a starting point and customized it for my needs.
 
 ### Useful tools
 
@@ -160,8 +162,8 @@ I assume you already cloned the repo and the terminal points to the directory.
   pandoc -D latex > md2pdfLib/presentation/pandoc/custom.tex
 ```
 
-+ Delete *ignorenonframetext* out of the \documentclass options.
-*  
+* Delete *ignorenonframetext* out of the \documentclass options.
+* Add custom colors right before \usetheme (in my case my favorite \definecolor{myGreenAccent}{RGB}{105, 240, 174}) 
 
 
 ## Tests
@@ -198,6 +200,7 @@ Project Link: [https://github.com/Kataglyphis/...](https://github.com/Kataglyphi
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+Huge shoutout to Lukas Pietzschmann for his latex template.
 
 
 ## Literature 
