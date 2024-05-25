@@ -13,11 +13,11 @@
   <a href="https://jotrockenmitlocken.de"><img src="images/glm_logo.png" alt="VulkanEngine" width="200"></a>
 </h1> -->
 
-<h4 align="center">Convert markdown to modern slide show or a4paper book  <a href="https://jotrockenmitlocken.de" target="_blank"></a>.</h4>
+<h4 align="center">Convert markdown to modern slide show or a4paper book. Combining the very light weight markdown language with all the power of LaTeX.<a href="https://jotrockenmitlocken.de" target="_blank"></a></h4>
 
 <!-- [![Linux build](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Linux.yml/badge.svg)](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Linux.yml)
-[![Windows build](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml/badge.svg)](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml)
-[![TopLang](https://img.shields.io/github/languages/top/Kataglyphis/GraphicsEngineVulkan)]() -->
+[![Windows build](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml/badge.svg)](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml) -->
+[![TopLang](https://img.shields.io/github/languages/top/Kataglyphis/mdToPdf)]() 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=BX9AVVES2P9LN)
 [![Twitter](https://img.shields.io/twitter/follow/Cataglyphis_?style=social)](https://twitter.com/Cataglyphis_)
 
@@ -85,26 +85,24 @@ No worries about latex but with all the power of it!
 ### Key Features
 
 <!-- ❌  -->
-<!-- |          Feature                    |   Implement Status |
-| ------------------------------------| :----------------: |
-| Rasterizer                          |         ✔️         |
-| Raytracing                          |         ✔️         |
-| Path tracing                        |         ✔️         |
-| PBR support (UE4,disney,... etc.)   |         ✔️         |
-| .obj Model loading                  |         ✔️         |
-| Mip Mapping                         |         ✔️         | -->
+|          Feature                           |   Implement Status |
+| ------------------------------------------ | :----------------: |
+| Docker image, make everything reproducible |         ✔️         |
+| LaTeX templates                            |         ✔️         |
+| Comprehensive python scripts               |         ✔️         |
 
 ### Dependencies
 This enumeration also includes submodules.
-<!-- * [Vulkan 1.3](https://www.vulkan.org/) -->
 
 For my beamer latex project I use the following latex templates: 
 * [beamerthemeawesome](https://github.com/LukasPietzschmann/awesome-beamer) theme from LukasPietzschmann as a starting point and customized it for my needs.
 * [smile](https://github.com/LukasPietzschmann/smile) theme from LukasPietzschmann as a starting point and customized it for my needs.
 
+* [Roboto font](https://fonts.google.com/specimen/Roboto) just a very nice font
+
 ### Useful tools
 
-<!-- * [cppcheck](https://cppcheck.sourceforge.io/) -->
+* [pandoc](https://github.com/jgm/pandoc)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -137,7 +135,7 @@ Place all .md files in the data/presentation/chapters/ folder
 
 ### Build book
 ```bash
-  python3 md2pdfLib/book/scripts/md2pdf.py  
+  python3 md2pdfLib/book/scripts/md2pdf.py 2>&1 | tee data/out/book.log
 ```
 
 ### Prerequisites

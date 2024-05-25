@@ -6,14 +6,15 @@ background: data/presentation/images/The World's First AI.jpg
 title: Create personal blog in flutter/dart
 subtitle: Cross platform UI toolkit for web
 institute: Institute of Muscle Building
-# uni: Life University
 location: Schwäbisch Hall
 date: \today
 pdf-engine-opts:
   - "-shell-escape"
-bibliography: data/presentation/latex/refs.bib,
+link-citations: true
+# bibliography: data/presentation/latex/refs.bib,
 aspectratio: 169
 handout: true
+# highlight-style: tango # md2pdfLib/pygments.theme
 # background-image: data/presentation/images/22e2a944.jpg
 # include-in-header: data/presentation/latex/main.tex
 ---

@@ -28,6 +28,8 @@ pandoc_cmd = [
     "--resource-path=.",
     "--metadata-file",
     "md2pdfLib/book/pandoc/metadata.yml",
+    "--include-in-header",
+    "data/book/latex/main.tex",
     # "--include-in-header",
     # "main.tex",
     "-o",

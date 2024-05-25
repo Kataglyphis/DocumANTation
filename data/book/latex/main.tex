@@ -1,0 +1,175 @@
+% \documentclass{bookclass}
+
+%% -------------------------------
+%% |    ISSD Thesis Template       |
+%% -------------------------------
+%% Further additions by:
+%%   Philipp Stroehle, IM, 2013 
+%%   Jasper Feine, ISSD, 2018
+%%   Merlin Knaeble, ISSD, 2020-2022 
+%% firstname.lastname "at" kit.edu
+
+%% Notes:
+%% Language switch after \begin{document}
+
+% Based on thesisclass.cls of Timo Rohrberg, 2009
+% ----------------------------------------------------------------
+% Thesis - Main document
+% ----------------------------------------------------------------
+
+\usepackage[english, german]{babel}
+\usepackage{csquotes} % for citing more advanced
+
+%% ---------------------------------
+%% |      Additional packages      |
+%% ---------------------------------
+%% 
+
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\graphicspath{{./figures/},{./text/content/images/}} %Use curly braces for each path to add and don't forget trailing slash '/'
+% \usepackage{epstopdf} %Nice to automatically convert eps figures to pdf format  (from inkscape, etc)
+\usepackage[style=apa, backend=biber, natbib=true, hyperref=true, uniquelist=true, language=american]{biblatex}
+\addbibresource{peer_reviewed_literature.bib}
+\addbibresource{non_peer_reviewed_literature.bib}
+\usepackage{booktabs}
+
+%% ---------------------------------
+%% | Needed for the List of Abbreviations |
+%% ---------------------------------
+% create nomenclature
+\usepackage{nomencl}
+\renewcommand{\nomname}{List of Abbreviations}
+\setlength{\nomlabelwidth}{.40\hsize}
+\renewcommand{\nomlabel}[1]{#1 \dotfill}
+\setlength{\nomitemsep}{-\parsep}
+\makenomenclature
+\usepackage[normalem]{ulem}
+\newcommand{\markup}[1]{\uline{#1}}
+
+\input{md2pdfLib/book/template/latex/nomenclature}
+
+% create glossary
+\usepackage{glossaries}
+\makeglossaries
+
+\input{md2pdfLib/book/template/latex/glossary_entries}
+
+%% ---------------------------------
+%% | Information about the book    |
+%% ---------------------------------
+
+\newcommand{\mytitle}{Computer Graphics}
+\newcommand{\mytitleger}{Introduction into the world of rendering}
+
+\newcommand{\reviewerone}{Max Mustermann}
+\newcommand{\reviewertwo}{Johannes Heinle}
+\newcommand{\submissiontime}{22.05.2023}
+
+\newcommand{\myname}{Jonas Heinle}
+%% -------------------------------
+%% |  Information for PDF file   |
+%% -------------------------------
+\hypersetup{
+ pdfauthor={\myname},
+ pdftitle={\mytitle},
+ pdfsubject={\mytitle},
+ pdfkeywords={\mytitle}
+}
+
+%% --------------------------------
+%% | Settings for word separation |
+%% --------------------------------
+% Describe separation hints here:
+\hyphenation{
+opos-sum
+he-lio-trope
+}
+
+%% --------------------------------
+%% | Include C-style pseudo code |
+%% --------------------------------
+\input{md2pdfLib/book/template/latex/c_code_style.tex}
+
+%% ------------------------
+%% |    Including files   |
+%% ------------------------
+% Only files listed here will be included!
+% Userful command for partially translating the document (for bug-fixing e.g.)
+\includeonly{
+titlepage,
+text/dedication,
+text/acknowledgment,
+text/abstract,
+text/content,  %feel free to introduce additional files for structuring your thesis
+text/appendix
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Here, main documents begins %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{document}
+
+% \frontmatter
+% \include{titlepage}
+% \pagenumbering{roman}
+% \include{text/dedication}
+% \include{text/acknowledgment.tex}
+% \include{text/abstract}
+
+% % ISSD Style: No additional blank page
+% % \blankpage
+
+
+% %% -------------------
+% %% |   Directories   |
+% %% -------------------
+% \tableofcontents
+
+% % ISSD Style: No additional blank page
+% % \blankpaage
+
+% % You may elect not to include a list of figures, list of tables and list of abbreviations, if the work is a seminar thesis (comment out the following)
+% \listoffigures \addcontentsline{toc}{chapter}{List of Figures} 
+% \listoftables  \addcontentsline{toc}{chapter}{List of Tables} 
+% % \printnomenclature   \addcontentsline{toc}{chapter}{List of Abbreviations} 
+% %\printglossaries  \addcontentsline{toc}{chapter}{List of Abbreviations}
+% \printglossary[title=List of Abbreviations]
+
+% %% -----------------
+% %% |   Main part   |
+% %% -----------------
+% \mainmatter
+% \pagenumbering{arabic}
+% \include{text/content}
+
+
+% \backmatter
+% \pagenumbering{Roman}
+
+
+% %% --------------------
+% %% |   Bibliography   |
+% %% --------------------
+
+% % src: https://tex.stackexchange.com/questions/112874/sectioning-bibliography-by-type-with-multiple-types-per-section
+% \defbibfilter{papers}{
+%   type=article or
+%   type=inproceedings or 
+%   type=incollection or
+%   type=book
+% }
+
+% \phantomsection
+% \addcontentsline{toc}{chapter}{\bibname}
+% \printbibliography[filter=papers]
+
+% %% ----------------
+% %% |   Appendix   |
+% %% ----------------
+
+% \input{text/appendix}
+
+% \include{text/affidavit}
+% \include{text/prototype_agreement}
+% \end{document}

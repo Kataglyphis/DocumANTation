@@ -1,0 +1,68 @@
+%% titlepage.tex
+%%
+
+% coordinates for the bg shape on the titlepage
+\newcommand{\diameter}{20}
+\newcommand{\xone}{-15}
+\newcommand{\xtwo}{160}
+\newcommand{\yone}{15}
+\newcommand{\ytwo}{-253}
+
+\begin{titlepage}
+% bg shape
+\begin{tikzpicture}[overlay]
+\draw[color=gray]  
+ 		 (\xone mm, \yone mm)
+  -- (\xtwo mm, \yone mm)
+ arc (90:0:\diameter pt) 
+  -- (\xtwo mm + \diameter pt , \ytwo mm) 
+	-- (\xone mm + \diameter pt , \ytwo mm)
+ arc (270:180:\diameter pt)
+	-- (\xone mm, \yone mm);
+\end{tikzpicture}
+	\begin{center}
+		\includegraphics[width=.3\textwidth]{logos/Engine_logo.png} % KITLogo_EN_RGB.pdf
+	\end{center}
+	\changefont{ppl}{m}{n}	% helvetica	(phv), % IM Style: palatino (ppl) 
+	\vspace*{0.5cm}
+	\begin{center}
+		\Huge{\mytitle}\\
+		\rule{0.05\textwidth}{0.5pt}\\
+		\Large{\mytitleger}\\
+		\vspace*{1cm}
+		\huge{\myname}\\
+            \github{Kataglyphis}%\newline
+		\vspace*{1cm}
+	\end{center}
+	%\vspace*{1cm}
+\Large{
+\begin{center}
+\begin{tabular}[ht]{l c l}
+  Reviewer: & \hfill  & \reviewerone\\
+  Second Reviewer: & \hfill  & \reviewertwo\\
+\end{tabular}
+\end{center}
+}
+
+\vspace{1.cm}
+\begin{center}
+\large{\submissiontime}
+% \iflanguage{english}{Duration:}{Bearbeitungszeit:} \timestart \hspace*{0.25cm}
+% -- \hspace*{0.25cm} 
+% \timeend}
+\end{center}
+
+
+\begin{textblock}{10}[0,0](5,16.8)
+\large{ 
+	Jonas Heinle
+}
+\end{textblock}
+
+\begin{textblock}{10}[0,0](12,16.8)
+\large{
+	\textbf{\url{www.jotrockenmitlocken.de}} 
+}
+\end{textblock}
+
+\end{titlepage}

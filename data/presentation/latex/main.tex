@@ -1,78 +1,12 @@
-% \usepackage[strict,autostyle]{csquotes}
-% \nocite{*}
-% \addbibresource{refs.bib}
+\usepackage{minted}
+\setminted{frame=single, framesep=2mm, bgcolor=lightgray, fontsize=\small, linenos, breaklines, breakanywhere=true}
+\usemintedstyle{friendly}
 
-\usepackage{fontawesome5}
-\def\ergo{\raisebox{.5pt}{\scalebox{.8}{\faCaretRight}}}
-
-\usepackage{contour}
-\usepackage{tikzducks}
-
-\usepackage{fontspec}
-\setsansfont[
-	Ligatures=TeX,
-	BoldFont={* Medium},
-]{Fira Sans}
-\setmonofont[
-	Path = md2pdfLib/fonts/,
-	Scale = .9,
-	Extension = .ttf,
-	Contextuals=Alternate,
-	BoldFont={*-Bold},
-	UprightFont={*-Regular},
-]{Fira Code}
-
-\usepackage[duration=90,defaulttransition=fade,enduserslide=43]{pdfpc}
-\newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
-
-\def\link #1 to #2;{\def\ULdepth{.5pt}\def\ULthickness{.1pt}\uline{\href{#2}{#1}}}
-
-\usetikzlibrary{tikzmark,shapes.symbols,decorations.pathmorphing}
-\def\m#1{\tikzmark{#1}}
-\newcommand<>\ul[5][0pt]{\begin{tikzpicture}[o,blend mode=multiply]
-	\coordinate(#5_west) at ([yshift=#1-0.25ex]pic cs:#3);
-	\coordinate(#5_east) at ([yshift=#1+0.35ex]pic cs:#4);
-	\fill[ul=#2,visible on=#6] (#5_west) rectangle node(#5){} (#5_east);
-\end{tikzpicture}}
-\tikzset{ul/.style={#1!70!black,opacity=0.40,rounded corners=.17ex}}
-\newcounter{ulcntr}\setcounter{ulcntr}{0}
-\newcommand<>\doul[2]{%
-	\m{uls\theulcntr}#2\m{ule\theulcntr}%
-	\ul<#3>{#1}{uls\theulcntr}{ule\theulcntr}{}%
-	\stepcounter{ulcntr}%
-}
-
-\tikzset{bb/.style={draw=tcbcolframe,dash pattern=on 1mm off 1mm,dash phase=0.5mm,tcb@spec,segmentation@style}}
-\def\setlinetext#1{\small\color{tcbcolframe}\contourlength{1.5pt}\contour{tcbcolback}{#1}}
-\renewenvironment{block}[1][]{%
-	\begin{beamerbox}[segmentation code={
-		\path[bb] (segmentation.west) to node{\setlinetext{#1}} (segmentation.east);
-	}]{gray}{}%
-}{\end{beamerbox}}
-\newenvironment{sblock}[1][]{
-	\begin{beamerbox}[sidebyside,segmentation code={
-		\path[bb] (segmentation.north) to node[rotate=90]{\setlinetext{#1}} (segmentation.south);
-	}]{gray}{}%
-}{\end{beamerbox}}
-
-\usepackage{emoji}
-
-\usepackage[verbatim]{lstfiracode}
-\lstdefinestyle{firastyleb}{style=FiraCodeStyle,style=smile@lst@base}
-\lstdefinestyle{firastylep}{style=FiraCodeStyle,style=smile@lst@plain}
-\lstset{
-	tabsize=4,
-	style=firastylep,
-	%apptoliterate={{=> }{{{=> }}}3} % for whatever reason, the space would otherwise be eaten
-}
-
-\background{data/presentation/images/The World's First AI.jpg}
+\background{data/presentation/images/shrek.jpg} % The World's First AI.jpg
 \email{contact@jonasheinle.de}
 \uni{Life university}
 
 \addtobeamertemplate{title page}{}{
 \tikz[o]\node[anchor=south east,outer sep=0pt] at (current page.south east)
-{\fontsize{4}{4}\selectfont\color{white}This image shows the worlds first AI: Klaus Dieter};
+{\fontsize{4}{4}\selectfont\color{white}Shrek is love};
 }
-
-\usepackage{multicol}

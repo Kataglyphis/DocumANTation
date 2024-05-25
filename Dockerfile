@@ -34,9 +34,12 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
       wget \
       ca-certificates \
       less && \
+	  pip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# for styling our code snippets
+RUN pip3 install Pygments
 
 # install a specific Pandoc version for amd64 or arm64 platform
 # i want to use it on my schlaptop and my himbeerkuchen (raspberrypi)
