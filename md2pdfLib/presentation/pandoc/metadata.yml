@@ -8,6 +8,13 @@ subtitle: Cross platform UI toolkit for web
 institute: Institute of Muscle Building
 location: Schwäbisch Hall
 date: \today
+biblio-title: References
+section-titles: true
+toc: true
+toc-color: black
+sec-num-depth: 3
+number-sections: true
+toc-title: Table of contents
 pdf-engine-opts:
   - "-shell-escape"
 link-citations: true

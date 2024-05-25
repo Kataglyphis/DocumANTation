@@ -1,19 +1,20 @@
 # Motivation
-
+## Why Flutter/Dart?
 - Eat eggs
 - Drink coffee
 
-# Why Flutter/Dart?
-
+## sdfdsgf markdown?
 - Eat spaghetti
-- Drink wine
+- Drink wine -->
 
 # Building a personal web blog
+## Goals
  - spread knowledge; Open Source <3
  - bring order in my own thoughts
- - documentation for you and me 
-  
-# Why markdown?
+ - documentation for you and me
+
+<!--
+# lololololo?
  - this slides are written in markdown too
  - super light weight
 
@@ -32,4 +33,4 @@ jotrockenmitlocken.git
 - $f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(a)}{n!}(x-a)^n$ [@school]
 
 
-# References
+# Referencesssss -->

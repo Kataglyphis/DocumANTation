@@ -22,6 +22,7 @@ input_files = sorted(
 pandoc_cmd = [
     "pandoc",
     *input_files,
+    "--log=data/out/book.json",
     "--verbose",
     "--pdf-engine=latexmk",
     "--number-sections",
