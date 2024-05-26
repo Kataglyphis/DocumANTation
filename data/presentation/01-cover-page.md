@@ -3,15 +3,38 @@
 - Eat eggs
 - Drink coffee
 
-## sdfdsgf markdown?
+## Markdown best life?
 - Eat spaghetti
 - Drink wine -->
+### teest
+
+# Getting started
+
+# Big adventure
 
 # Building a personal web blog
 ## Goals
  - spread knowledge; Open Source <3
  - bring order in my own thoughts
  - documentation for you and me
+### Jodeln
+ - sadfasf
+ - wdfafaf
+
+# Motivation
+## sdgfasg
+
+# Motivation
+## sdgfasg
+
+# Arbeitslos in Greece
+## Groten
+ - spread knowledge; Open Source <3
+ - bring order in my own thoughts
+ - documentation for you and me
+### Aussiedler
+ - sadfasf
+ - wdfafaf
 
 <!--
 # lololololo?
