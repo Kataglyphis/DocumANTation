@@ -138,6 +138,12 @@ Place all .md files in the data/presentation/chapters/ folder
   python3 md2pdfLib/book/scripts/md2pdf.py 2>&1 | tee data/out/book.log
 ```
 
+### Build CV
+```bash
+  cd data/cv
+  lualatex cv.tex
+```
+
 ### Prerequisites
 
 ### Installation

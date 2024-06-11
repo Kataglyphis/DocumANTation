@@ -53,7 +53,7 @@
 
 % Dependences
 %A Few Useful Packages
-\RequirePackage[french,main=german,english]{babel} % 
+\RequirePackage[french,german,main=english]{babel} % 
 \RequirePackage[utf8]{luainputenc}
 \RequirePackage{fontspec} 					                 % for loading fonts
 \RequirePackage{url,parskip} 	    % other packages for formatting
