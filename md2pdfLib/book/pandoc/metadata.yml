@@ -1,5 +1,5 @@
 ---
-mainfont: DejaVuSerif
+mainfont: Roboto #DejaVuSerif
 title: Computer graphics
 subtitle: A practical approach
 titlepage: true
