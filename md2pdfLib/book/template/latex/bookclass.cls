@@ -36,7 +36,7 @@
 \usepackage{tabularx}
 
 \usepackage{ae}               % Almost european, virtual T1-Font
-\usepackage[pdftex]{graphicx}
+\usepackage{graphicx}
 \usepackage{vmargin}          % Adjust margins in a simple way
 \usepackage{rotating}
 \usepackage{fancyhdr}         % Define simple headings
@@ -77,22 +77,22 @@
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{amber}{rgb}{1.0, 0.49, 0.0}
 \colorlet{symbolcolor}{greenAccent}
-\colorlet{linkcolor}{mygray}
+\colorlet{linkcolor}{blue}
 
 \usepackage[raiselinks=true,
-            bookmarks=true,
-            bookmarksopenlevel=1,
-            bookmarksopen=true,
-            bookmarksnumbered=true,
-            hyperindex=true,
-            plainpages=false,
-            pdfpagelabels=true,
-            pdfborder={0.5 0.5 0.5},
-            colorlinks=false,
-            allbordercolors=greenAccent,
-            linkbordercolor=greenAccent,
-            citebordercolor=greenAccent]{hyperref}
-						
+	bookmarks=true,
+	bookmarksopenlevel=1,
+	bookmarksopen=true,
+	bookmarksnumbered=true,
+	hyperindex=true,
+	plainpages=false,
+	pdfpagelabels=true,
+	pdfborder={0.5 0.5 0.5},
+	colorlinks=true,
+	allbordercolors=greenAccent,
+	linkbordercolor=greenAccent,
+	citebordercolor=greenAccent]{hyperref}
+
 %% IM Packages
 \usepackage{setspace} % 1.5 line spacing
 \onehalfspacing
@@ -126,10 +126,10 @@
 %\newcommand{\captionfont}{}
 \newcommand{\chapterheadfont}{}
 \newcommand{\blankpage}{
- \clearpage{\pagestyle{empty}\cleardoublepage}
+	\clearpage{\pagestyle{empty}\cleardoublepage}
 }
 
-\newcommand\link[2]{\color{linkcolor}\href{#1}{#2}\color{black} }
+\newcommand\link[2]{\color{linkcolor}\href{#1}{#2}\color{blue} }
 
 % Render a link with its symbol
 % Usage; \sociallink{<icon>}{<label>}
@@ -138,7 +138,7 @@
 % Render author's github (optional)
 % Usage: \github{<github-nick>}
 \newcommand{\githubSymbol}{\faGithub}
-\newcommand*{\github}[1]{\sociallink{\githubSymbol}{https://www.github.com/#1}{github.com/#1}}           % Github icon + URL
+\newcommand*{\github}[1]{\sociallink{\githubSymbol}{https://github.com/Kataglyphis/#1}{https://github.com/Kataglyphis/#1}}           % Github icon + URL
 
 %% --- End of New Commands ---
 
@@ -163,7 +163,7 @@
 %% -------------------------------
 
 % coordinates for the bg shape on the titlepage
-\newcommand{\diameter}{20}
+\newcommand{\mydiameter}{20}
 \newcommand{\xone}{-15}
 \newcommand{\xtwo}{160}
 \newcommand{\yone}{15}
@@ -171,62 +171,62 @@
 
 % Define the custom \maketitle command
 \renewcommand{\maketitle}{
-\begin{titlepage}
-    % bg shape
-    \begin{tikzpicture}[overlay]
-    \draw[color=gray]  
-             (\xone mm, \yone mm)
-      -- (\xtwo mm, \yone mm)
-     arc (90:0:\diameter pt) 
-      -- (\xtwo mm + \diameter pt , \ytwo mm) 
-        -- (\xone mm + \diameter pt , \ytwo mm)
-     arc (270:180:\diameter pt)
-        -- (\xone mm, \yone mm);
-    \end{tikzpicture}
-    \begin{center}
-        \includegraphics[width=.3\textwidth]{md2pdfLib/book/template/latex/logos/Engine_logo.png} % KITLogo_EN_RGB.pdf
-    \end{center}
-    \changefont{ppl}{m}{n}    % helvetica    (phv), % IM Style: palatino (ppl) 
-    \vspace*{0.5cm}
-    \begin{center}
-        \Huge{\mytitle}\\
-        \rule{0.05\textwidth}{0.5pt}\\
-        \Large{\mytitleger}\\
-        \vspace*{1cm}
-        \huge{\myname}\\
-        \github{Kataglyphis}%\newline
-        \vspace*{1cm}
-    \end{center}
-    %\vspace*{1cm}
-    \Large{
-    \begin{center}
-    \begin{tabular}[ht]{l c l}
-      Reviewer: & \hfill  & \reviewerone\\
-      Second Reviewer: & \hfill  & \reviewertwo\\
-    \end{tabular}
-    \end{center}
-    }
+	\begin{titlepage}
+		% bg shape
+		\begin{tikzpicture}[overlay]
+			\draw[color=gray]
+			(\xone mm, \yone mm)
+			-- (\xtwo mm, \yone mm)
+			arc (90:0:\mydiameter pt)
+			-- (\xtwo mm + \mydiameter pt , \ytwo mm)
+			-- (\xone mm + \mydiameter pt , \ytwo mm)
+			arc (270:180:\mydiameter pt)
+			-- (\xone mm, \yone mm);
+		\end{tikzpicture}
+		\begin{center}
+			\includegraphics[width=.3\textwidth]{md2pdfLib/book/template/latex/logos/Engine_logo.png}  % 
+		\end{center}
+		\changefont{ppl}{m}{n}    % helvetica    (phv), % IM Style: palatino (ppl) 
+		\vspace*{0.5cm}
+		\begin{center}
+			\Huge{\mytitle}\\
+			\rule{0.05\textwidth}{0.5pt}\\
+			\Large{\mytitleger}\\
+			\vspace*{1cm}
+			\huge{\myname}\\
+			\small\github{GraphicsEngineVulkan}%\newline
+			\vspace*{1cm}
+		\end{center}
+		%\vspace*{1cm}
+		\Large{
+			% \begin{center}
+			% 	\begin{tabular}[ht]{l c l}
+			% 		Reviewer:        & \hfill & \reviewerone \\
+			% 		Second Reviewer: & \hfill & \reviewertwo \\
+			% 	\end{tabular}
+			% \end{center}
+		}
 
-    \vspace{1.cm}
-    \begin{center}
-    \large{\submissiontime}
-    % \iflanguage{english}{Duration:}{Bearbeitungszeit:} \timestart \hspace*{0.25cm}
-    % -- \hspace*{0.25cm} 
-    % \timeend}
-    \end{center}
+		\vspace{1.cm}
+		\begin{center}
+			\large{\submissiontime}
+			% \iflanguage{english}{Duration:}{Bearbeitungszeit:} \timestart \hspace*{0.25cm}
+			% -- \hspace*{0.25cm} 
+			% \timeend}
+		\end{center}
 
-    \begin{textblock}{10}[0,0](5,16.8)
-    \large{ 
-        Jonas Heinle
-    }
-    \end{textblock}
+		\begin{textblock}{10}[0,0](5,16.8)
+			\large{
+				Jonas Heinle
+			}
+		\end{textblock}
 
-    \begin{textblock}{10}[0,0](12,16.8)
-    \large{
-        \textbf{\url{www.jotrockenmitlocken.de}} 
-    }
-    \end{textblock}
-\end{titlepage}
+		\begin{textblock}{10}[0,0](12,16.8)
+			\large{
+				\textbf{\url{www.jonasheinle.de}}
+			}
+		\end{textblock}
+	\end{titlepage}
 }
 
 
@@ -245,10 +245,10 @@
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0pt}
 \fancypagestyle{plain}{%
-\fancyhf{}													% No Header and Footer fields
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
-\fancyfoot[C]{\thepage}
+	\fancyhf{}													% No Header and Footer fields
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+	\fancyfoot[C]{\thepage}
 }
 %% --- End of Headings ---
 
@@ -260,44 +260,44 @@
 \renewcommand{\chaptername}{}
 
 \renewcommand{\section}{%
-\@startsection{section}%
-{1}		% Structure level
-{0mm}	% Indention
-{2ex plus 1ex minus 1ex}			% Pre-Margin
-{0.5ex plus 0.5ex minus 0.5ex}		% Post-Margin
-{\chapterheadfont\Large\bfseries}	% Style
+	\@startsection{section}%
+	{1}		% Structure level
+	{0mm}	% Indention
+	{2ex plus 1ex minus 1ex}			% Pre-Margin
+	{0.5ex plus 0.5ex minus 0.5ex}		% Post-Margin
+	{\chapterheadfont\Large\bfseries}	% Style
 }
 \renewcommand{\subsection}{%
-\@startsection{subsection}%
-{2}		% Structure level
-{0mm}	% Indention
-{1.5ex plus 1ex minus 0.5ex}		% Pre-Margin
-{0.3ex plus 0.3ex minus 0.3ex}		% Post-Margin
-{\chapterheadfont\large\bfseries}	% Style
+	\@startsection{subsection}%
+	{2}		% Structure level
+	{0mm}	% Indention
+	{1.5ex plus 1ex minus 0.5ex}		% Pre-Margin
+	{0.3ex plus 0.3ex minus 0.3ex}		% Post-Margin
+	{\chapterheadfont\large\bfseries}	% Style
 }
 \renewcommand{\subsubsection}{%
-\@startsection{subsubsection}%
-{3}		% Structure level
-{0mm}	% Indention
-{1.5ex plus 1ex minus 0.5ex}			% Pre-Margin
-{0.2ex plus 0.2ex minus 0.2ex}			% Post-Margin
-{\chapterheadfont\normalsize\bfseries}	% Style
+	\@startsection{subsubsection}%
+	{3}		% Structure level
+	{0mm}	% Indention
+	{1.5ex plus 1ex minus 0.5ex}			% Pre-Margin
+	{0.2ex plus 0.2ex minus 0.2ex}			% Post-Margin
+	{\chapterheadfont\normalsize\bfseries}	% Style
 }
 \renewcommand{\paragraph}{%
-\@startsection{paragraph}%
-{4}		% Structure level
-{0mm}	% Indention
-{1.3ex plus 1ex minus 0.3ex}			% Pre-Margin
-{0.2ex plus 0.2ex minus 0.2ex}			% Post-Margin
-{\chapterheadfont\normalsize\bfseries}	% Style
+	\@startsection{paragraph}%
+	{4}		% Structure level
+	{0mm}	% Indention
+	{1.3ex plus 1ex minus 0.3ex}			% Pre-Margin
+	{0.2ex plus 0.2ex minus 0.2ex}			% Post-Margin
+	{\chapterheadfont\normalsize\bfseries}	% Style
 }
 \renewcommand{\subparagraph}{%
-\@startsection{subparagraph}%
-{5}		% Structure level
-{0mm}	% Indention
-{1ex plus 1ex minus 0.2ex}				% Pre-Margin
-{0.1ex plus 0.1ex minus 0.1ex}			% Post-Margin
-{\chapterheadfont\normalsize\bfseries}	% Style
+	\@startsection{subparagraph}%
+	{5}		% Structure level
+	{0mm}	% Indention
+	{1ex plus 1ex minus 0.2ex}				% Pre-Margin
+	{0.1ex plus 0.1ex minus 0.1ex}			% Post-Margin
+	{\chapterheadfont\normalsize\bfseries}	% Style
 }
 %% --- End of captions style ---
 
@@ -310,33 +310,33 @@
 \newlength{\chapparlen}
 \newsavebox{\chapno}
 \renewcommand{\@makechapterhead}[1]{
-  %\vspace*{0.2\textheight}
-  %\vskip 15\p@
-  {\parindent \z@ \raggedright \normalfont
-    \ifnum \c@secnumdepth >\m@ne
-      \if@mainmatter
-        \savebox{\chapno}{\chapterheadfont\huge\bfseries \thechapter.}
-        \settowidth{\chapnolen}{\usebox{\chapno}}
-        \parbox[t]{\chapnolen}{\usebox{\chapno}}\nobreak\leavevmode
-      \fi
-    \fi
-    \interlinepenalty\@MM
-    \setlength{\chapparlen}{\textwidth}
-    \addtolength{\chapparlen}{-1.0\chapnolen}
-    \addtolength{\chapparlen}{-2ex}
-    \leavevmode\nobreak
-    \parbox[t]{\chapparlen}{\raggedright\chapterheadfont\huge \bfseries #1\par\nobreak}
-    %\vskip 40\p@
-  }}
+	%\vspace*{0.2\textheight}
+	%\vskip 15\p@
+	{\parindent \z@ \raggedright \normalfont
+			\ifnum \c@secnumdepth >\m@ne
+				\if@mainmatter
+					\savebox{\chapno}{\chapterheadfont\huge\bfseries \thechapter.}
+					\settowidth{\chapnolen}{\usebox{\chapno}}
+					\parbox[t]{\chapnolen}{\usebox{\chapno}}\nobreak\leavevmode
+				\fi
+			\fi
+			\interlinepenalty\@MM
+			\setlength{\chapparlen}{\textwidth}
+			\addtolength{\chapparlen}{-1.0\chapnolen}
+			\addtolength{\chapparlen}{-2ex}
+			\leavevmode\nobreak
+			\parbox[t]{\chapparlen}{\raggedright\chapterheadfont\huge \bfseries #1\par\nobreak}
+			%\vskip 40\p@
+		}}
 
 \renewcommand{\@makeschapterhead}[1]{
-  \vspace*{50\p@}
-  {\parindent \z@ \raggedright
-    \normalfont
-    \interlinepenalty\@M
-    \chapterheadfont \huge \bfseries  #1\par\nobreak
-    \vskip 40\p@
-  }
+	\vspace*{50\p@}
+	{\parindent \z@ \raggedright
+		\normalfont
+		\interlinepenalty\@M
+		\chapterheadfont \huge \bfseries  #1\par\nobreak
+		\vskip 40\p@
+	}
 }
 %% --- End of chapter captions style ---
 
@@ -355,13 +355,13 @@
 %% ----------------------------------
 %% |  Style of appendix numbering   |
 %% ----------------------------------
- \renewcommand\appendix{\par 
-   \setcounter{section}{0}% 
-   \setcounter{subsection}{0}% 
-   \setcounter{figure}{0}%
-   \renewcommand\thesection{\Alph{section}}% 
-   \renewcommand\thefigure{\Alph{section}.\arabic{figure}} 
-   \renewcommand\thetable{\Alph{section}.\arabic{table}}}
+\renewcommand\appendix{\par
+	\setcounter{section}{0}% 
+	\setcounter{subsection}{0}% 
+	\setcounter{figure}{0}%
+	\renewcommand\thesection{\Alph{section}}% 
+	\renewcommand\thefigure{\Alph{section}.\arabic{figure}}
+	\renewcommand\thetable{\Alph{section}.\arabic{table}}}
 %% --- End of appenix numbering style ---
 
 

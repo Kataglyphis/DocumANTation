@@ -55,6 +55,9 @@
 
 \input{md2pdfLib/book/template/latex/glossary_entries}
 
+% \usepackage{lipsum} % if you use some additional packages
+% \titleformat{\chapter}[hang]{\huge\bfseries}{\thechapter.}{2pc}{}
+
 %% ---------------------------------
 %% | Information about the book    |
 %% ---------------------------------
@@ -71,10 +74,10 @@
 %% |  Information for PDF file   |
 %% -------------------------------
 \hypersetup{
- pdfauthor={\myname},
- pdftitle={\mytitle},
- pdfsubject={\mytitle},
- pdfkeywords={\mytitle}
+	pdfauthor={\myname},
+	pdftitle={\mytitle},
+	pdfsubject={\mytitle},
+	pdfkeywords={\mytitle}
 }
 
 %% --------------------------------
@@ -82,8 +85,8 @@
 %% --------------------------------
 % Describe separation hints here:
 \hyphenation{
-opos-sum
-he-lio-trope
+	opos-sum
+	he-lio-trope
 }
 
 %% --------------------------------
@@ -96,14 +99,14 @@ he-lio-trope
 %% ------------------------
 % Only files listed here will be included!
 % Userful command for partially translating the document (for bug-fixing e.g.)
-\includeonly{
-titlepage,
-text/dedication,
-text/acknowledgment,
-text/abstract,
-text/content,  %feel free to introduce additional files for structuring your thesis
-text/appendix
-}
+% \includeonly{
+% titlepage,
+% text/dedication,
+% text/acknowledgment,
+% text/abstract,
+% text/content,  %feel free to introduce additional files for structuring your thesis
+% text/appendix
+% }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Here, main documents begins %%
