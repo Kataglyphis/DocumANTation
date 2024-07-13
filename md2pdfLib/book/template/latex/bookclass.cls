@@ -7,7 +7,6 @@
 %% Additions by: Thorsten Haberecht, IPD - Chair Prof. Böhm, 2010
 %% thorsten.haberecht@kit.edu
 %% Additions by: Jonas Heinle, 2023 for own book project
-%% thorsten.haberecht@kit.edu
 
 \NeedsTeXFormat{LaTeX2e}										% We do need LaTeX2e
 \ProvidesClass{bookclass}
