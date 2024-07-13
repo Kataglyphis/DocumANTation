@@ -21,30 +21,30 @@
 \newif\if@showLinks   \@showLinksfalse
 
 \DeclareOption{green}{
-  \def\@green{green}
+	\def\@green{green}
 }
 
 \DeclareOption{red}{
-  \def\@red{red}
+	\def\@red{red}
 }
 
 \DeclareOption{indigo}{
-  \def\@indigo{indigo}
+	\def\@indigo{indigo}
 }
 \DeclareOption{orange}{
-  \def\@orange{orange}
+	\def\@orange{orange}
 }
 
 \DeclareOption{monochrome}{
-  \def\@monochrome{monochrome}
+	\def\@monochrome{monochrome}
 }
 
 \DeclareOption{localFont}{
-  \def\@local{local}
+	\def\@local{local}
 }
 
 \DeclareOption{alternative}{
-  \def\@alternative{alternate}
+	\def\@alternative{alternate}
 }
 
 \DeclareOption{showLinks}{ \@showLinkstrue}
@@ -65,17 +65,17 @@
 \RequirePackage{titlesec}
 \RequirePackage{array}
 \RequirePackage{enumitem}
-\RequirePackage{longtable} 	
+\RequirePackage{longtable}
 \RequirePackage{etoolbox}
 \RequirePackage{tikz}
 \RequirePackage[skins]{tcolorbox}
 \RequirePackage{fancyhdr}
 
 \RequirePackage[
-  german = guillemets,%quotes,<- I'd like to have both quot. marks in the same document
-  autostyle = true,
-  autopunct,
-  csdisplay = true,
+	german = guillemets,%quotes,<- I'd like to have both quot. marks in the same document
+	autostyle = true,
+	autopunct,
+	csdisplay = true,
 ]{csquotes}
 
 \RequirePackage{iflang}
@@ -91,17 +91,17 @@
 \colorlet{headingcolor}{black}
 
 \ifundef{\@green} {
-  \ifundef{\@red} {
-    \ifundef{\@indigo}{
-      \ifundef{\@orange} {
-        \ifundef{\@monochrome} {}
-        { \definecolor{basecolor}{HTML}{000000}}
-      }
-      { \definecolor{basecolor}{HTML}{e68a00} }
-    }
-    { \definecolor{basecolor}{rgb}{0.2, 0.07, 0.48} }
-  }
-  { \definecolor{basecolor}{HTML}{b30000} }     %RED
+	\ifundef{\@red} {
+		\ifundef{\@indigo}{
+			\ifundef{\@orange} {
+				\ifundef{\@monochrome} {}
+				{ \definecolor{basecolor}{HTML}{000000}}
+			}
+			{ \definecolor{basecolor}{HTML}{e68a00} }
+		}
+		{ \definecolor{basecolor}{rgb}{0.2, 0.07, 0.48} }
+	}
+	{ \definecolor{basecolor}{HTML}{b30000} }     %RED
 }
 { \definecolor{basecolor}{rgb}{0.0, 0.62, 0.38} }
 
@@ -115,14 +115,14 @@
 %\definecolor{linkcolour}{rgb}{0,0.2,0.6}
 
 \if@showLinks
-  \hypersetup{%
-    breaklinks
-  }%
+	\hypersetup{%
+		breaklinks
+	}%
 \else
-  \hypersetup{%
-    pdfborder = {0 0 0},
-    breaklinks
-  }%
+	\hypersetup{%
+		pdfborder = {0 0 0},
+		breaklinks
+	}%
 \fi
 
 % Setup fancyhdr package
@@ -141,8 +141,8 @@
 \titlespacing{\section}{0pt}{2pt}{2pt}
 
 % Configure list
-\setlist[itemize,1]{label=\faAngleRight, nosep, leftmargin=2em} 
-\setlist[itemize,2]{label=\faAngleRight, nosep, leftmargin=1.5em} 
+\setlist[itemize,1]{label=\faAngleRight, nosep, leftmargin=2em}
+\setlist[itemize,2]{label=\faAngleRight, nosep, leftmargin=1.5em}
 
 % Setup Array : new column type
 \newcolumntype{R}[1]{>{\hfill}m{#1}}
@@ -157,16 +157,18 @@
 % Define font to use according to localFont option
 \ifundef{\@local}
 {
-  %\setmainfont[BoldFont = Helvetica Neue, ItalicFont=Helvetica Neue Thin Italic ,SmallCapsFont = Helvetica Neue Light]{Helvetica Neue Thin}
-  \setmainfont{Source Sans Pro Light}[
-    BoldFont = SourceSansPro-Regular, 
-    ItalicFont= Source Sans Pro Light Italic]
+	%\setmainfont[BoldFont = Helvetica Neue, ItalicFont=Helvetica Neue Thin Italic ,SmallCapsFont = Helvetica Neue Light]{Helvetica Neue Thin}
+	%   \setmainfont{Source Sans Pro Light}[
+	%     BoldFont = SourceSansPro-Regular, 
+	%     ItalicFont= Source Sans Pro Light Italic]
+	\setmainfont{Roboto}
 }
 {
-  \setmainfont{SourceSansPro-Light}[
-    Path = fonts/, 
-    BoldFont = SourceSansPro-Regular, 
-    ItalicFont = SourceSansPro-LightIt]
+	% \setmainfont{SourceSansPro-Light}[
+	% 	Path = fonts/,
+	% 	BoldFont = SourceSansPro-Regular,
+	% 	ItalicFont = SourceSansPro-LightIt]
+	\setmainfont{Roboto}
 }
 
 %New length definition
@@ -193,7 +195,7 @@
 % Create a tag
 % Usage: \cvtag{<tag label>}
 \newcommand{\cvtag}[1]{%
-  \tikz[baseline]\node[anchor=base,draw=darkGrey!70,rounded corners=0.5ex,inner xsep=1ex,inner ysep =0.55ex,text height=1.3ex,text depth=.25ex]{#1};
+	\tikz[baseline]\node[anchor=base,draw=darkGrey!70,rounded corners=0.5ex,inner xsep=1ex,inner ysep =0.55ex,text height=1.3ex,text depth=.25ex]{#1};
 }
 
 % Render author's name
@@ -246,7 +248,7 @@
 
 % Render author's viadeo(optional)
 % Usage: \viadeo{<viadeo-nick>}
-\newcommand*{\viadeo}[1]{\sociallink{\viadeoSymbol}{http://www.viadeo.com/fr/profile/#1}{viadeo.com/fr/profile/#1}} 
+\newcommand*{\viadeo}[1]{\sociallink{\viadeoSymbol}{http://www.viadeo.com/fr/profile/#1}{viadeo.com/fr/profile/#1}}
 
 % Render author's github (optional)
 % Usage: \github{<github-nick>}
@@ -266,25 +268,25 @@
 
 % Render author's mobile phone (optional)
 % Usage: \smartphone{<mobile phone number>}
-\newcommand*\smartphone[1]{\socialtext{\mobileSymbol}{#1}}    
+\newcommand*\smartphone[1]{\socialtext{\mobileSymbol}{#1}}
 
 % Render author's tagline
 \newcommand\resumetitle[1]{
-  \ifundef{\@alternative}{
-	 \par{
-	 	 \bigskip\center{\Large \color{headingcolor}\textbf{#1}\color{Black}}\par
-	 }
-	 \bigskip
-  }{
-    \color{headingcolor}\textbf{\large{#1}}\color{black}
-  }
+	\ifundef{\@alternative}{
+		\par{
+			\bigskip\center{\Large \color{headingcolor}\textbf{#1}\color{Black}}\par
+		}
+		\bigskip
+	}{
+		\color{headingcolor}\textbf{\large{#1}}\color{black}
+	}
 }
 
 \newcommand\idphoto{
-    \setlength{\fboxrule}{2pt}
-    \setlength{\fboxsep}{0pt}
-    \textcolor{basecolor}{\fbox{\tikz{\path[fill overzoom image={\@photo}]rectangle (0.9\linewidth,0.64\linewidth)}}}%
-  %  \tikz\path[fill overzoom image={\@photo}]circle(radius = 0.5\linewidth);
+	\setlength{\fboxrule}{2pt}
+	\setlength{\fboxsep}{0pt}
+	\textcolor{basecolor}{\fbox{\tikz{\path[fill overzoom image={\@photo}]rectangle (0.9\linewidth,0.64\linewidth)}}}%
+	%  \tikz\path[fill overzoom image={\@photo}]circle(radius = 0.5\linewidth);
 }
 
 % Define social entries to print in header
@@ -293,49 +295,49 @@
 % Render CV header
 % Needs \@firstname, \@lastname and \@tagline to be defined
 \newcommand*{\makecvheader}{
-  \ifundef{\@alternative}{
-    \ifundef{\@photodiameter}{
-      \begin{minipage}{\linewidth}
-    }{
-      \begin{minipage}{\dimexpr\linewidth-\@photodiameter+2em}
-    }
-    \color{headingcolor}\user{\@firstname}{\@lastname}\color{black}\\
-    \small{\@socialinfo}
-    \end{minipage}
-    \ifdef{\@photodiameter}{
-      \begin{minipage}{\@photodiameter}
-        \idphoto
-      \end{minipage}
-    }{}
-    \resumetitle{\@tagline}
-  }{
-    \ifundef{\@photodiameter}{
-      \begin{minipage}{\linewidth}
-    }{
-      \begin{minipage}{\dimexpr\linewidth-\@photodiameter - 4.5em}
-    }
-    \color{headingcolor}\user{\@firstname}{\@lastname}\\
-    \resumetitle{\@tagline}
-    \smallskip\\
-    \small{\@socialinfo}
-    \end{minipage}
-    \ifdef{\@photodiameter}{
-      \begin{minipage}{\@photodiameter}
-        \vspace{0.5cm}
-        \idphoto
-      \end{minipage}
-    }{}
-    \bigskip
-  }
+\ifundef{\@alternative}{
+\ifundef{\@photodiameter}{
+	\begin{minipage}{\linewidth}
+}{
+	\begin{minipage}{\dimexpr\linewidth-\@photodiameter+2em}
+		}
+		\color{headingcolor}\user{\@firstname}{\@lastname}\color{black}\\
+		\small{\@socialinfo}
+	\end{minipage}
+	\ifdef{\@photodiameter}{
+		\begin{minipage}{\@photodiameter}
+			\idphoto
+		\end{minipage}
+	}{}
+	\resumetitle{\@tagline}
+}{
+	\ifundef{\@photodiameter}{
+		\begin{minipage}{\linewidth}
+	}{
+		\begin{minipage}{\dimexpr\linewidth-\@photodiameter - 4.5em}
+			}
+			\color{headingcolor}\user{\@firstname}{\@lastname}\\
+			\resumetitle{\@tagline}
+			\smallskip\\
+			\small{\@socialinfo}
+		\end{minipage}
+		\ifdef{\@photodiameter}{
+			\begin{minipage}{\@photodiameter}
+				\vspace{0.5cm}
+				\idphoto
+			\end{minipage}
+		}{}
+		\bigskip
+	}
 }
 
 % Define a footer for CV
 % Usage: \makecvfooter{<left>}{<center>}{<right>}
 \newcommand*{\makecvfooter}[3]{%
-  \fancyfoot{}
-  \fancyfoot[L]{#1}
-  \fancyfoot[C]{#2}
-  \fancyfoot[R]{#3}
+	\fancyfoot{}
+	\fancyfoot[L]{#1}
+	\fancyfoot[C]{#2}
+	\fancyfoot[R]{#3}
 }
 
 % Resume part title definition
@@ -343,17 +345,17 @@
 
 % Define the 'keywords' environment
 \newenvironment{keywords}{%
-  \renewcommand{\arraystretch}{1.1}
+	\renewcommand{\arraystretch}{1.1}
 
-  \begin{tabular}{>{}r>{}p{13cm}} 
-}{%
-  \end{tabular}
+	\begin{tabular}{>{}r>{}p{13cm}}
+		}{%
+	\end{tabular}
 }
 
 % Render a scholarshipentry in the scolarship environment
 % Usage: \scholarshipentry{<date>}{<description>}
 \newcommand\keywordsentry[2]{
-  \textbf{#1} &   #2\\ 
+	\textbf{#1} &   #2\\
 }
 
 % Define a new column type for the scholarship environment
@@ -361,37 +363,37 @@
 
 % Define the 'scholarship' environment
 \newenvironment{scholarship}{%
-  \begin{tabular}{Y p{\rightcolumnlength}}
-}{%
-  \end{tabular}
+	\begin{tabular}{Y p{\rightcolumnlength}}
+		}{%
+	\end{tabular}
 }
 
 % Render a scholarshipentry in the scolarship environment
 % Usage: \scholarshipentry{<date>}{<description>}
 \newcommand\scholarshipentry[2]{
-  #1    &  #2 \\
+	#1    &  #2 \\
 }
 
 % Define the 'skills' environment
 \newenvironment{skills}{%
-  \begin{longtable}{R{\leftcolumn}p{\rightcolumnlength}}
-}{%
-  \end{longtable}
+	\begin{longtable}{R{\leftcolumn}p{\rightcolumnlength}}
+		}{%
+	\end{longtable}
 }
 
 % Render a skill in the skills environment
 % Usage: \skill{<skill>}{<level>}
 \newcommand\skill[2]{
-  \textbf{#1}    & \foreach \x in {1,...,5}{{\color{accentcolor!80} \ifnumgreater{\x}{#2}{\faCircleThin}{\faCircle}}\enspace } \\
+	\textbf{#1}    & \foreach \x in {1,...,5}{{\color{accentcolor!80} \ifnumgreater{\x}{#2}{\faCircleThin}{\faCircle}}\enspace } \\
 }
 
 \newcolumntype{E}{>{\raggedright\arraybackslash}p{\rightcolumnlength}}
 
 % Define the 'experiences' environment
 \newenvironment{experiences}{%
-  \begin{longtable}{R{\leftcolumn}|E}
-}{%
-  \end{longtable}
+	\begin{longtable}{R{\leftcolumn}|E}
+		}{%
+	\end{longtable}
 }
 
 % Render an experience in the experiences environment
@@ -403,12 +405,12 @@
 %                    }
 %                    {<Technology list>}
 \newcommand\experience[7]{
-  \textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   			   \\*
-  \textbf{#5}    & \begin{minipage}[t]{\rightcolumnlength}
-  					         #6
-                   \end{minipage}								   \\*
-                 & \footnotesize{\foreach \n in {#7}{\cvtag{\n}}} \\
-  }
+	\textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   			   \\*
+	\textbf{#5}    & \begin{minipage}[t]{\rightcolumnlength}
+		#6
+	\end{minipage}								   \\*
+	& \footnotesize{\foreach \n in {#7}{\cvtag{\n}}} \\
+}
 
 % Render an education in the education environment
 % Usage: 
@@ -420,13 +422,13 @@
 %                    }
 %                    {<Technology list>}
 \newcommand\education[8]{
-  \textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   			   \\*
-  \textbf{#5}    & #6                                            \\*
-                 & \begin{minipage}[t]{\rightcolumnlength}
-  					         #7
-                   \end{minipage}								   \\*
-                 & \footnotesize{\foreach \n in {#8}{\cvtag{\n}}} \\
-  }
+	\textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   			   \\*
+	\textbf{#5}    & #6                                            \\*
+	& \begin{minipage}[t]{\rightcolumnlength}
+		#7
+	\end{minipage}								   \\*
+	& \footnotesize{\foreach \n in {#8}{\cvtag{\n}}} \\
+}
 
 % Render a consultant experience in the experiences environment
 % Usage: 
@@ -438,23 +440,23 @@
 %                    }
 %                    {<Technology list>}
 \newcommand\consultantexperience[9]{
-  \textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   								\\*
-  \textbf{#5}    & \emph{#6} pour \textsc{#7}                       				\\*
-  				       & 	\begin{minipage}[t]{\rightcolumnlength}
-  						        #8
-                   	\end{minipage}										\\*
-                 & \footnotesize{\foreach \n in {#9}{\cvtag{\n}}} 	\\
-  }
+	\textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   								\\*
+	\textbf{#5}    & \emph{#6} pour \textsc{#7}                       				\\*
+	& 	\begin{minipage}[t]{\rightcolumnlength}
+		#8
+	\end{minipage}										\\*
+	& \footnotesize{\foreach \n in {#9}{\cvtag{\n}}} 	\\
+}
 
 \newcommand\emptySeparator{\multicolumn{2}{c}{}\\}
 
 % Define the 'projects' environment
 \newenvironment{projects}{%
-    \begin{center}
-    \begin{longtable}{l}
-}{%
-  \end{longtable}
-  \end{center}
+	\begin{center}
+		\begin{longtable}{l}
+			}{%
+		\end{longtable}
+	\end{center}
 }
 
 % Define the 'project' entry in the 'projects' environment
@@ -465,59 +467,59 @@
 %   {<Project description>}
 %   {<techno1>,<techno2>}
 \newcommand\project[5]{
-    \vspace{0.25cm}
-    \begin{minipage}[t]{\dimexpr(\linewidth - 3em)}%{\dimexpr(\linewidth - 3em)}%
-    \textbf{\textsc{#1}} \hfill \textsc{#2}\smallskip\\ %\newline
-    #3\newline %\newline
-    #4\smallskip\\%\newline
-    \footnotesize{\foreach \n in {#5}{\cvtag{\n}}}
-    \end{minipage}
-  \\
+	\vspace{0.25cm}
+	\begin{minipage}[t]{\dimexpr(\linewidth - 3em)}%{\dimexpr(\linewidth - 3em)}%
+		\textbf{\textsc{#1}} \hfill \textsc{#2}\smallskip\\ %\newline
+		#3\newline %\newline
+		#4\smallskip\\%\newline
+		\footnotesize{\foreach \n in {#5}{\cvtag{\n}}}
+	\end{minipage}
+	\\
 }
 
 
 \newcommand*\twocolumnsection[2]{
-  \begin{minipage}[t]{\dimexpr(\linewidth/2) - 3em}
-    #1
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{\dimexpr(\linewidth/2) - 3em}
-    #2
-  \end{minipage}
-  }
+	\begin{minipage}[t]{\dimexpr(\linewidth/2) - 3em}
+		#1
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{\dimexpr(\linewidth/2) - 3em}
+		#2
+	\end{minipage}
+}
 
-  \newcommand*\threecolumnsection[3]{
-  \begin{minipage}[t]{\dimexpr(\linewidth/4) - 2em}
-    #1
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{\dimexpr(\linewidth/4) - 2em}
-    #2
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{\dimexpr(\linewidth/2) + 3em}
-    #3
-  \end{minipage}
-  }
+\newcommand*\threecolumnsection[3]{
+	\begin{minipage}[t]{\dimexpr(\linewidth/4) - 2em}
+		#1
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{\dimexpr(\linewidth/4) - 2em}
+		#2
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{\dimexpr(\linewidth/2) + 3em}
+		#3
+	\end{minipage}
+}
 
 % Define the 'referencees' environment
 \newenvironment{referees}{%
 }{%
-  \hfill
-  \bigskip
+	\hfill
+	\bigskip
 }
 
 \newcommand*\referee[5]{
-  \hspace{1em}
-  \begin{minipage}[t]{\dimexpr(\linewidth/3) - 3em}
-    \begin{tabular}{>{}l >{}l}
-      \multicolumn{2}{l}{\textbf{#1}}\\
-      \multicolumn{2}{l}{\emph{#2}}\\%, \textsc{#3}
-      \multicolumn{2}{l}{\textsc{#3}}\\
-      \quad \mailSymbol & \href{mailto:#4}{#4} \\  
-      \quad \faPhone & #5 \\
-    \end{tabular}
-  \end{minipage}%
+	\hspace{1em}
+	\begin{minipage}[t]{\dimexpr(\linewidth/3) - 3em}
+		\begin{tabular}{>{}l >{}l}
+			\multicolumn{2}{l}{\textbf{#1}}          \\
+			\multicolumn{2}{l}{\emph{#2}}            \\%, \textsc{#3}
+			\multicolumn{2}{l}{\textsc{#3}}          \\
+			\quad \mailSymbol & \href{mailto:#4}{#4} \\
+			\quad \faPhone    & #5                   \\
+		\end{tabular}
+	\end{minipage}%
 }
 
 \RequirePackage{xcolor}
@@ -543,56 +545,56 @@
 %   4th parameter = array of entries
 %% ========
 \newcommand{\wheelchart}[4][0]{%
-    \begingroup\centering
-    \def\innerradius{#3}%
-    \def\outerradius{#2}%
-    % Calculate total
-    \pgfmathsetmacro{\totalnum}{0}%
-    \foreach \value/\colour/\name in {#4} {%
-        \pgfmathparse{\value+\totalnum}%
-        \global\let\totalnum=\pgfmathresult%
-    }%
-    \begin{tikzpicture}
+	\begingroup\centering
+	\def\innerradius{#3}%
+	\def\outerradius{#2}%
+	% Calculate total
+	\pgfmathsetmacro{\totalnum}{0}%
+	\foreach \value/\colour/\name in {#4} {%
+			\pgfmathparse{\value+\totalnum}%
+			\global\let\totalnum=\pgfmathresult%
+		}%
+	\begin{tikzpicture}
 
-      % Calculate the thickness and the middle line of the wheel
-      \pgfmathsetmacro{\wheelwidth}{\outerradius-\innerradius}
-      \pgfmathsetmacro{\midradius}{(\outerradius+\innerradius)/2}
-      \pgfmathsetmacro{\totalrot}{-90 + #1}
+		% Calculate the thickness and the middle line of the wheel
+		\pgfmathsetmacro{\wheelwidth}{\outerradius-\innerradius}
+		\pgfmathsetmacro{\midradius}{(\outerradius+\innerradius)/2}
+		\pgfmathsetmacro{\totalrot}{-90 + #1}
 
-      % Rotate so we start from the top
-      \begin{scope}[rotate=\totalrot]
+		% Rotate so we start from the top
+		\begin{scope}[rotate=\totalrot]
 
-      % Loop through each value set. \cumnum keeps track of where we are in the wheel
-      \pgfmathsetmacro{\cumnum}{0}
-      \foreach \value/\width/\colour/\name in {#4} {
-            \pgfmathsetmacro{\newcumnum}{\cumnum + \value/\totalnum*360}
+			% Loop through each value set. \cumnum keeps track of where we are in the wheel
+			\pgfmathsetmacro{\cumnum}{0}
+			\foreach \value/\width/\colour/\name in {#4} {
+					\pgfmathsetmacro{\newcumnum}{\cumnum + \value/\totalnum*360}
 
-            % Calculate the percent value
-            \pgfmathsetmacro{\percentage}{\value/\totalnum*100}
-            % Calculate the mid angle of the colour segments to place the labels
-            \pgfmathsetmacro{\midangle}{-(\cumnum+\newcumnum)/2}
+					% Calculate the percent value
+					\pgfmathsetmacro{\percentage}{\value/\totalnum*100}
+					% Calculate the mid angle of the colour segments to place the labels
+					\pgfmathsetmacro{\midangle}{-(\cumnum+\newcumnum)/2}
 
-            % This is necessary for the labels to align nicely
-            \pgfmathparse{
-               (-\midangle>180?"west":"east")
-            } \edef\textanchor{\pgfmathresult}
-            \pgfmathparse{
-               (-\midangle>180?"flush left":"flush right")
-            } \edef\textalign{\pgfmathresult}
-            \pgfmathsetmacro\labelshiftdir{1-2*(-\midangle<180)}
+					% This is necessary for the labels to align nicely
+					\pgfmathparse{
+						(-\midangle>180?"west":"east")
+					} \edef\textanchor{\pgfmathresult}
+					\pgfmathparse{
+						(-\midangle>180?"flush left":"flush right")
+					} \edef\textalign{\pgfmathresult}
+					\pgfmathsetmacro\labelshiftdir{1-2*(-\midangle<180)}
 
-            % Draw the color segments. Somehow, the \midrow units got lost, so we add 'pt' at the end. Not nice...
-            \filldraw[draw=white,fill=\colour] (-\cumnum:\outerradius) arc (-\cumnum:-(\newcumnum):\outerradius) --
-            (-\newcumnum:\innerradius) arc (-\newcumnum:-(\cumnum):\innerradius) -- cycle;
+					% Draw the color segments. Somehow, the \midrow units got lost, so we add 'pt' at the end. Not nice...
+					\filldraw[draw=white,fill=\colour] (-\cumnum:\outerradius) arc (-\cumnum:-(\newcumnum):\outerradius) --
+					(-\newcumnum:\innerradius) arc (-\newcumnum:-(\cumnum):\innerradius) -- cycle;
 
-            % Draw the data labels
-            % v1.6: Use accsupp so that the numeric number is copied/pasted too
-            \draw  [*-,thin,emphasis] node [append after command={(\midangle:\midradius pt) -- (\midangle:\outerradius + 1ex) -- (\tikzlastnode)}] at (\midangle:\outerradius + 1ex) [xshift=\labelshiftdir*0.5cm,inner sep=1ex, outer sep=0pt, text width=\width,anchor=\textanchor,align=\textalign,font=\small,text=body]{\BeginAccSupp{method=pdfstringdef,ActualText={\name: \value}}\name\EndAccSupp{}};
-            % Set the old cumulated angle to the new value
-            \global\let\cumnum=\newcumnum
-        }
-      \end{scope}
-%      \draw[gray] (0,0) circle (\outerradius) circle (\innerradius);
-    \end{tikzpicture}\par
-    \endgroup
+					% Draw the data labels
+					% v1.6: Use accsupp so that the numeric number is copied/pasted too
+					\draw  [*-,thin,emphasis] node [append after command={(\midangle:\midradius pt) -- (\midangle:\outerradius + 1ex) -- (\tikzlastnode)}] at (\midangle:\outerradius + 1ex) [xshift=\labelshiftdir*0.5cm,inner sep=1ex, outer sep=0pt, text width=\width,anchor=\textanchor,align=\textalign,font=\small,text=body]{\BeginAccSupp{method=pdfstringdef,ActualText={\name: \value}}\name\EndAccSupp{}};
+					% Set the old cumulated angle to the new value
+					\global\let\cumnum=\newcumnum
+				}
+		\end{scope}
+		%      \draw[gray] (0,0) circle (\outerradius) circle (\innerradius);
+	\end{tikzpicture}\par
+	\endgroup
 }

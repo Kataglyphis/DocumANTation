@@ -22,6 +22,11 @@
 %% |          Packages           |
 %% -------------------------------
 
+\usepackage{fontspec}
+
+% Set the main font
+\setmainfont{Roboto}
+
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc} % Input in ISO 8859-1 (Latin1)
 
@@ -186,7 +191,7 @@
 		\begin{center}
 			\includegraphics[width=.3\textwidth]{md2pdfLib/book/template/latex/logos/Engine_logo.png}  % 
 		\end{center}
-		\changefont{ppl}{m}{n}    % helvetica    (phv), % IM Style: palatino (ppl) 
+		%\changefont{ppl}{m}{n}    % helvetica    (phv), % IM Style: palatino (ppl) 
 		\vspace*{0.5cm}
 		\begin{center}
 			\Huge{\mytitle}\\
