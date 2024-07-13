@@ -1,0 +1,158 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.7.12)  13 JUL 2024 12:17
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**c:/Users/JSH/Documents/GitHub/mdToPdf/data/cv/cv.tex
+(c:/Users/JSH/Documents/GitHub/mdToPdf/data/cv/cv.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-04-11>
+(myCV_METADATA.cls
+Document Class: myCV_METADATA 2023/05/26 v0.0.1 'Jonas Heinle CV' Class
+(C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count189
+\c@section=\count190
+\c@subsection=\count191
+\c@subsubsection=\count192
+\c@paragraph=\count193
+\c@subparagraph=\count194
+\c@figure=\count195
+\c@table=\count196
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
+Package: babel 2024/04/20 v24.4 The Babel package
+\babel@savecnt=\count197
+\U@D=\dimen141
+\l@unhyphenated=\language79
+ (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
+\bbl@readstream=\read2
+\bbl@dirlevel=\count198
+
+*************************************
+* Local config file bblopts.cfg used
+*
+(C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of babel
+)
+Package babel Info: Main language set with 'main='. Except if you have
+(babel)             problems, prefer the default mechanism for setting
+(babel)             the main language, ie, as the last declared.
+(babel)             Reported on input line 4180.
+ (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\french.ldf
+Language: french 2024-06-26 v3.6b French support from the babel system
+Package babel Info: Hyphen rules for 'acadian' set to \l@french
+(babel)             (\language22). Reported on input line 91.
+Package babel Info: Hyphen rules for 'canadien' set to \l@french
+(babel)             (\language22). Reported on input line 92.
+\FB@stdchar=\count199
+Package babel Info: Making : an active character on input line 421.
+Package babel Info: Making ; an active character on input line 422.
+Package babel Info: Making ! an active character on input line 423.
+Package babel Info: Making ? an active character on input line 424.
+\FBguill@level=\count266
+\FBold@everypar=\toks17
+\FB@Mht=\dimen142
+\mc@charclass=\count267
+\mc@charfam=\count268
+\mc@charslot=\count269
+\std@mcc=\count270
+\dec@mcc=\count271
+\FB@parskip=\dimen143
+\listindentFB=\dimen144
+\descindentFB=\dimen145
+\labelindentFB=\dimen146
+\labelwidthFB=\dimen147
+\leftmarginFB=\dimen148
+\parindentFFN=\dimen149
+\FBfnindent=\dimen150
+) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/babel-german\german.ldf
+Language: german 2024/01/19 v2.14 German support for babel (pre-1996 orthography)
+ (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/babel-german\germanb.ldf
+Language: germanb 2024/01/19 v2.14 German support for babel (pre-1996 orthography)
+Package babel Info: Making " an active character on input line 139.
+)) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/babel-english\english.ldf
+Language: english 2017/06/06 v3.3r English support from the babel system
+Package babel Info: Hyphen rules for 'canadian' set to \l@english
+(babel)             (\language0). Reported on input line 102.
+Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
+(babel)             (\language73). Reported on input line 105.
+Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
+(babel)             (\language73). Reported on input line 108.
+)) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/en\babel-english.tex
+Package babel Info: Importing font and identification data for english
+(babel)             from babel-en.ini. Reported on input line 11.
+) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/de\babel-german.tex
+Package babel Info: Importing font and identification data for german
+(babel)             from babel-de.ini. Reported on input line 25.
+) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/fr\babel-french.tex
+Package babel Info: Importing font and identification data for french
+(babel)             from babel-fr.ini. Reported on input line 11.
+) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/carlisle\scalefnt.sty) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/lualatex/luainputenc\luainputenc.sty
+Package: luainputenc 2010/11/19 v0.973 inputenc package for LuaTeX
+ (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifluatex.sty
+Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
+ (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+)) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifxetex.sty
+Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
+) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks18
+\inpenc@posthook=\toks19
+)) (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.sty (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xparse.sty (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2024-04-11 L3 programming layer (loader) 
+ (C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-04-11 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count272
+\l__pdf_internal_box=\box51
+))
+Package: xparse 2024-03-14 L3 Experimental document command parser
+)
+Package: fontspec 2024/05/07 v2.9d Font selection for XeLaTeX and LuaLaTeX
+
+
+C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.sty:101: Fatal Package fontspec Error: The fontspec package requires either XeTeX or
+(fontspec)                      LuaTeX.
+(fontspec)                      
+(fontspec)                      You must change your typesetting engine to,
+(fontspec)                      e.g., "xelatex" or "lualatex" instead of
+(fontspec)                      "latex" or "pdflatex".
+
+Type <return> to continue.
+ ...                                              
+                                                  
+l.101 \msg_fatal:nn {fontspec} {cannot-use-pdftex}
+                                                  
+
+LaTeX does not know anything more about this error, sorry.
+
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+
+This is a fatal error: LaTeX will abort.
+
+
+
+C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.sty:101: Emergency stop.
+<read *> 
+         
+l.101 \msg_fatal:nn {fontspec} {cannot-use-pdftex}
+                                                  
+*** (cannot \read from terminal in nonstop modes)
+
+ 
+Here is how much of TeX's memory you used:
+ 2827 strings out of 474369
+ 55882 string characters out of 5741458
+ 1925754 words of memory out of 5000000
+ 25241 multiletter control sequences out of 15000+600000
+ 558069 words of font info for 36 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 94i,0n,107p,316b,428s stack positions out of 10000i,1000n,20000p,200000b,200000s
+C:\Users\JSH\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.sty:101:  ==> Fatal error occurred, no output PDF file produced!

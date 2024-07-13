@@ -139,6 +139,21 @@ Place all .md files in the data/presentation/chapters/ folder
   python3 md2pdfLib/book/scripts/md2pdf.py 2>&1 | tee data/out/book.log
 ```
 
+#### Build book with glossary entries
+For now we must invoke lualatex by ourselves if we want to print latex gloassary
+entries. Therefore the workflow changes to the following:
+```bash
+  # CHANGE TO OUTPUT TO .tex in this script first
+  # then call this script to export a .tex file
+  python3 md2pdfLib/book/scripts/md2pdf.py 2>&1 | tee data/out/book.log
+  # assuming the output is named book_output.tex
+  lualatex data/out/book_output.tex
+  makeglossaries book_output
+  makeindex book_output.nlo -s nomencl.ist -o book_output.nls
+  lualatex data/out/book_output.tex
+  lualatex data/out/book_output.tex
+```
+
 ### Build CV
 ```bash
   cd data/cv

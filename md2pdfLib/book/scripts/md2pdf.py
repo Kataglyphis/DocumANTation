@@ -3,7 +3,7 @@ import subprocess
 
 input_dir = "./data/book/chapters"
 output_dir = "./data/out"
-output_name = "book_output.pdf"
+output_name = "book_output.tex"
 
 # Ensure the output directory exists
 os.makedirs(output_dir, exist_ok=True)

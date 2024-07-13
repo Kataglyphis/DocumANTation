@@ -1,3 +1,5 @@
+\printnomenclature
+
 # Introduction
 
 Learn network programmability with Python, GNS3, and Cisco devices.
@@ -20,6 +22,9 @@ I am an Associate Engineer (DAE in Electronics) exploring network automation as 
 - Docker/Vagrant - Hands On
 - Ansible for Network Automation
 - Python for Network Automation
+
+\gls{sigmoidFunction}
+\gls{WebRTC}
 
 ## Conventions
 
