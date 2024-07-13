@@ -126,7 +126,7 @@
 %% -------------------------------
 %% |         New commands        |
 %% -------------------------------
-\newcommand{\changefont}[3]{\fontfamily{#1} \fontseries{#2} \fontshape{#3} \selectfont}
+%\newcommand{\changefont}[3]{\fontfamily{#1} \fontseries{#2} \fontshape{#3} \selectfont}
 %\renewcommand*{\headfont}{\slshape}
 %\newcommand{\captionfont}{}
 \newcommand{\chapterheadfont}{}
