@@ -131,6 +131,7 @@ Tested on ubuntu. Fedora etc. might have little differences. Idk
 Place all .md files in the data/presentation/chapters/ folder
 
 ```bash
+  . md2pdf/bin/activate
   python3 md2pdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
 ```
 

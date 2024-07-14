@@ -1,6 +1,7 @@
 ---
 theme:
   - awesome
+mainfont: Roboto #DejaVuSerif
 author: Jonas Heinle
 background: data/presentation/images/The World's First AI.jpg
 title: Create personal blog in flutter/dart
