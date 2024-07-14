@@ -1,1 +1,7 @@
 
+[submodule "md2pdfLib/presentation/template/latex/awesome-beamer"]
+	path = md2pdfLib/presentation/template/latex/awesome-beamer
+	url = https://github.com/Kataglyphis/awesome-beamer
+[submodule "md2pdfLib/presentation/template/latex/smile"]
+	path = md2pdfLib/presentation/template/latex/smile
+	url = https://github.com/Kataglyphis/smile
