@@ -142,6 +142,15 @@ Place all .md files in the data/presentation/chapters/ folder
 #### Build book with glossary entries
 For now we must invoke lualatex by ourselves if we want to print latex gloassary
 entries. Therefore the workflow changes to the following:
+Execute the bash script for making life easy:
+
+```bash
+  chmod +x md2pdfLib/book/scripts/compile_with_glossaries_and_nomenclature.sh
+  ./md2pdfLib/book/scripts/compile_with_glossaries_and_nomenclature.sh
+```
+
+or run steps manually:
+
 ```bash
   # CHANGE TO OUTPUT TO .tex in this script first
   # then call this script to export a .tex file

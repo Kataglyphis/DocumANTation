@@ -1,7 +1,5 @@
-\printnomenclature
-
 # Introduction
-
+testing things
 Learn network programmability with Python, GNS3, and Cisco devices.
 
 ## What you’ll learn

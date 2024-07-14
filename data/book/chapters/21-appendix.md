@@ -1,6 +1,3 @@
-\printglossaries
-
-
 # Appendix A: Additional Resources {#additional-resources}
 
 This section contains additional resources related to the content of the book.
