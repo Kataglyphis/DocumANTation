@@ -73,5 +73,5 @@ VOLUME  ["/md2pdfLib"]
 # connect to your local directory with *.md files
 VOLUME  ["/data"]
 
-# start command
-ENTRYPOINT ["/bin/bash"]
+# Activate the virtual environment and start the application
+ENTRYPOINT ["sh", "-c", ". md2pdf/bin/activate && exec /bin/bash"]

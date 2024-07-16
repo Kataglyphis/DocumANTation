@@ -32,6 +32,7 @@ pandoc_cmd = [
     "--resource-path=.",
     "--metadata-file",
     "md2pdfLib/book/pandoc/metadata.yml",
+    "--highlight-style=md2pdfLib/pygments.theme",
     "--include-in-header",
     "data/book/latex/main.tex",
     # "--include-in-header",

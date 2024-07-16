@@ -131,8 +131,13 @@ Tested on ubuntu. Fedora etc. might have little differences. Idk
 Place all .md files in the data/presentation/chapters/ folder
 
 ```bash
-  . md2pdf/bin/activate
   python3 md2pdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
+```
+
+When you changed your .sty files you need to update the latex repo:
+```bash
+  chmod +x md2pdfLib/presentation/scripts/update_own_sty.sh
+  ./md2pdfLib/presentation/scripts/update_own_sty.sh
 ```
 
 ### Build book

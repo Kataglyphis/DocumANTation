@@ -2,7 +2,7 @@
  - this slides are written in markdown too
  - super light weight
 
-## How to get started
+# How to get started
 
 ```bash
 git clone --recurse-submodules git@github.com:Kataglyphis/\

@@ -32,9 +32,6 @@
  - spread knowledge; Open Source <3
  - bring order in my own thoughts
  - documentation for you and me
-### Aussiedler
- - sadfasf
- - wdfafaf
 
 <!--
 # lololololo?
