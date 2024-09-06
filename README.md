@@ -123,22 +123,23 @@ Command works in powershell but not on cmd.
 Tested on ubuntu. Fedora etc. might have little differences. Idk
 ```bash
   cd mdToPdf
-  docker run -it --rm -v ${pwd}/md2pdfLib:/md2pdfLib -v ${pwd}/data:/data --name mypandoc -h mypandoc pandoc_all
+  docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc pandoc_all
 ```
 
 ### Build presentation
 
 Place all .md files in the data/presentation/chapters/ folder
 
-```bash
-  python3 md2pdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
-```
-
-When you changed your .sty files you need to update the latex repo:
+Run following command at the very first time and whenever you change your .sty files (this updates the latex repo):
 ```bash
   chmod +x md2pdfLib/presentation/scripts/update_own_sty.sh
   ./md2pdfLib/presentation/scripts/update_own_sty.sh
 ```
+
+```bash
+  python3 md2pdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
+```
+
 
 ### Build book
 ```bash
