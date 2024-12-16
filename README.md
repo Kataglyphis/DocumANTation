@@ -20,6 +20,7 @@
 [![TopLang](https://img.shields.io/github/languages/top/Kataglyphis/mdToPdf)]() 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=BX9AVVES2P9LN)
 [![Twitter](https://img.shields.io/twitter/follow/Cataglyphis_?style=social)](https://twitter.com/Cataglyphis_)
+[![YouTube](https://img.shields.io/youtube/channel/subscribers/UC3LZiH4sZzzaVBCUV8knYeg?style=social)](https://www.youtube.com/channel/UC3LZiH4sZzzaVBCUV8knYeg)
 
 <p align="center">
   <a href="#about-the-project">About The Project</a> •
@@ -63,7 +64,10 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Formulating everything you need in markdown is very light weight and efficient. This can be an enormous productivity bust for oneself. Nevertheless one would miss the power of LaTeX with its unique ecosystem which is perfect for writing scientific content (paper, books, presentation). This project is using the amazing pandoc library which is the exact right tool to combine both worlds. </br>
+Formulating everything you need in markdown is very light weight and efficient. 
+This can be an enormous productivity bust for oneself. Nevertheless one would miss the power of LaTeX 
+with its unique ecosystem which is perfect for writing scientific content (paper, books, presentation). 
+This project is using the amazing pandoc library which is the exact right tool to combine both worlds. </br>
 You can immediately get started an use my customized templates for generating nice 
 looking books, papers or presentations. I provide detailed steps how to use it and 
 how to reproduce everything. The main environment is containerized thanks to Docker.
