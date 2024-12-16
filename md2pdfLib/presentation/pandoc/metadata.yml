@@ -11,11 +11,12 @@ location: Schwäbisch Hall
 date: \today
 biblio-title: References
 section-titles: true
-toc: true
 toc-color: black
 sec-num-depth: 3
 number-sections: true
+toc: true
 toc-title: Table of contents
+toc-depth: 2
 pdf-engine-opts:
   - "-shell-escape"
 link-citations: true
