@@ -1,9 +1,13 @@
 import os
 import subprocess
+import sys
 
 input_dir = "./data/book/chapters"
 output_dir = "./data/out"
-output_name = "book_output.tex"
+
+# Standardwert für den Ausgabedateinamen
+default_output_name = "output.tex"
+output_name = sys.argv[1] if len(sys.argv) > 1 else default_output_name
 
 # Ensure the output directory exists
 os.makedirs(output_dir, exist_ok=True)

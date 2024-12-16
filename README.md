@@ -142,11 +142,15 @@ Run following command at the very first time and whenever you change your .sty f
 
 
 ### Build book
+If no glossary is needed one can just run the following command:
+
 ```bash
-  python3 md2pdfLib/book/scripts/md2pdf.py 2>&1 | tee data/out/book.log
+  OUTPUT_NAME=output.pdf
+  python3 md2pdfLib/book/scripts/md2pdf.py $OUTPUT_NAME 2>&1 | tee data/out/book.log
 ```
 
 #### Build book with glossary entries
+
 For now we must invoke lualatex by ourselves if we want to print latex gloassary
 entries. Therefore the workflow changes to the following:
 Execute the bash script for making life easy:
