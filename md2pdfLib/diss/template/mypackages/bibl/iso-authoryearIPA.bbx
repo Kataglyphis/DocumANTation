@@ -1,0 +1,643 @@
+% Diese Datei stellt den Stil des Literaturverzeichnisses bereit.------------------
+% Der Aufbau der Datei gliedert sich in:
+%	1. Preambel: Neue Toggles, Lade Sprachpaket
+%	2. Definition der Commands
+%	3. Neue/Änderungen DeclareFieldFormat
+%	4. Definition der Macros
+%	5. Definition der Bibliography Driver
+%	6. Verlinkung zu anderen Bibliography Driver
+%	7. Sonstige Definitionen und Settings
+%---------------------------------------------------------------------------------------------------
+
+\ProvidesFile{iso-authoryearIPA.bbx}[2021/07/01 v1.0.0 Literaturstil IPA by Nico Güttler]
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------PREAMBEL---------------------------------------------------
+%---------------------------------------------------------------------------------------------------
+\DeclareLanguageMapping{german}{md2pdfLib/diss/template/mypackages/bibl/german-IPA} %Pfad muss ggf. angepasst werden
+\DeclareLanguageMapping{ngerman}{md2pdfLib/diss/template/mypackages/bibl/german-IPA} %Pfad muss ggf. angepasst werden
+\DeclareLanguageMapping{english}{md2pdfLib/diss/template/mypackages/bibl/english-IPA} %Pfad muss ggf. angepasst werden
+\DeclareLanguageMapping{american}{md2pdfLib/diss/template/mypackages/bibl/english-IPA} %Pfad muss ggf. angepasst werden
+
+\NewBibliographyString{fassung, from, patent}
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------Commands---------------------------------------------------
+%---------------------------------------------------------------------------------------------------
+\newcommand\mainsstring[1]{\bibsstring[\textmainlang]{#1}}
+\newcommand\mainlstring[1]{\biblstring[\textmainlang]{#1}}
+
+\newcommand\addspacecolon{%
+	\addnbspace\blx@addsppunct{colon}%
+}
+
+\renewcommand*\subtitlepunct{\addcolon\addspace}
+\renewcommand\multinamedelim{\addsemicolon\addspace}
+\newcommand{\biband}{\ifcurrentname{labelname}{\addspace\printtext{\&}}{\addsemicolon}}
+
+\renewcommand*{\finalnamedelim}{%
+   \ifnumgreater{\value{liststop}}{3}{\finalandcomma}{}%
+   \biband\addspace}
+
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------DeclareFieldFormat-----------------------------------------
+%---------------------------------------------------------------------------------------------------
+\DeclareFieldFormat*{title}{#1}%
+\DeclareFieldFormat*{subtitle}{#1}%
+%\DeclareFieldFormat*{eventtitle}{\mkbibemph{#1}}%
+\DeclareFieldFormat[thesis]{type}{{{#1}}\isdot}%
+\DeclareFieldFormat{volume}{\bibsstring{volume}\addnbspace#1}% volume of a book
+\DeclareFieldFormat[article]{volume}{\mkbibbold{#1}}
+\DeclareFieldFormat*{number}{\printtext{#1}}%
+\DeclareFieldFormat[article]{number}{{\mkbibparens{#1}}}
+\DeclareFieldFormat{chapter}{\bibstring{chapter}\addnbspace#1\isdot}%
+\DeclareFieldFormat{journaltitle}{#1}%
+\DeclareFieldFormat{booktitle}{#1}%
+\DeclareFieldFormat{maintitle}{#1}%
+\DeclareFieldFormat{issuetitle}{#1}%
+\DeclareFieldFormat{journalsubtitle}{#1}%
+\DeclareFieldFormat{booksubtitle}{#1}%
+\DeclareFieldFormat{mainsubtitle}{#1}%
+\DeclareFieldFormat{issuesubtitle}{#1}%
+\DeclareFieldFormat{titleaddon}{#1}%
+\DeclareFieldFormat{booktitleaddon}{\mkbibbrackets{#1}}%
+\DeclareFieldFormat{maintitleaddon}{\mkbibbrackets{#1}}%
+\DeclareFieldFormat{nameaddon}{\mkbibbrackets{#1}}%
+\DeclareFieldFormat{urldate}{\mainsstring{urlseen}\addcolon\space#1}%o
+\DeclareFieldFormat[patent]{number}{#1}%
+\DeclareFieldFormat[verdict]{vertype}{#1}%
+\DeclareFieldFormat*{pages}{\mkmlpageprefix[bookpagination]{#1}}%
+\DeclareFieldFormat[incollection]{pages}{\addcomma\space\mkmlpageprefix[bookpagination]{#1}}%
+
+
+\DeclareFieldFormat*{edition}{%
+  \ifnumeral{#1}%
+    {\mkbibordedition{#1}\addnbspace\bibsstring{edition}}%
+    {\MakeCapital{#1}}%
+}
+
+\DeclareFieldFormat[article]{pages}{%
+	\mainsstring{pages}\addnbspace\printtext{#1}%
+}
+
+\DeclareFieldFormat{eprint}{%
+  \printtext{URN}\addcolon\space%
+    \ifhyperref%
+		{\href{https://nbn-resolving.org/#1}{\nolinkurl{#1}}}%
+		{\nolinkurl{#1}}%
+}
+
+\DeclareFieldFormat*{url}{%
+	\mainlstring{urlfrom}\addcolon\space\url{#1}%
+}
+
+\DeclareFieldFormat{doi}{%
+  \printtext{DOI}\addcolon\space%
+    \ifhyperref%
+		{\href{http://dx.doi.org/#1}{\nolinkurl{#1}}}
+		{\nolinkurl{#1}}%
+}
+
+\DeclareFieldFormat{type}{%
+	\ifbibstring{#1}%
+		{\mainlstring{#1}}%
+		{#1}%
+}
+
+% Wenn man mit mehreren ISBN/ISSN handwerken muss
+\DeclareFieldFormat{isbn}{%
+\printtext{ISBN}\addcolon\addspace#1}%
+
+\DeclareFieldFormat{version}{%
+  \ifnumeral{#1}%
+    {\biblstring{version}\addnbspace#1}%
+    {\MakeCapital{#1}}%
+}
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------Bibliography  Macros---------------------------------------
+%---------------------------------------------------------------------------------------------------
+\newbibmacro*{begentry}{} %funktionsweise?
+
+\newbibmacro*{names:primary}{%
+  \ifboolexpr{
+    test \ifuseauthor
+    and
+    not test {\ifnameundef{author}}
+  }
+    {\usebibmacro{author}}%
+    {\usebibmacro{editor}}%
+  \setunit{\addspace}\printfield{nameaddon}%
+  \setunit{\addcomma\space}\printfield{year}%
+}
+
+\newbibmacro*{names:subsidiary}{%
+  \ifboolexpr{%
+    test \ifuseeditor
+    and
+    not test {\ifnameundef{editor}}%
+  }
+    {\printnames{editor}%
+     \addspace%
+     \mkbibparens{\usebibmacro{editorstrg}}\addcolon%
+     \clearname{editor}}%
+    {}
+}
+
+\renewbibmacro*{editor}{%
+  \ifboolexpr{%
+    test \ifuseeditor
+    and
+    not test {\ifnameundef{editor}}%
+  }
+    {\printnames{editor}%
+     \addspace%
+     \mkbibparens{\usebibmacro{editorstrg}}\addcomma%
+     \clearname{editor}}%
+    {}
+}
+
+\newbibmacro{titles}[2]{%
+  \ifboolexpr{%
+    test {\iffieldundef{#1title}}%
+    and
+    test {\iffieldundef{#1subtitle}}}%
+    {}
+    {\printtext[#2]{%
+       \printfield{#1title}%
+       \setunit{\subtitlepunct}%
+       \printfield{#1subtitle}}%
+       \setunit{\addspace}}%
+  \newunit%
+}
+
+\newbibmacro{titles_article}[2]{%
+  \ifboolexpr{%
+    test {\iffieldundef{#1title}}%
+    and
+    test {\iffieldundef{#1subtitle}}}%
+    {}
+    {\printtext[#2]{%
+       \printfield{#1title}%
+       \setunit{\subtitlepunct}%
+       \printfield{#1subtitle}}%
+       \setunit{\addspace}}%
+}%
+
+\newbibmacro{volume}{%
+  \iffieldundef{volume}%
+    {}%
+    {\printfield{volume}%
+     \printfield{part}%
+     \setunit{\addcomma\addspace}}%
+}
+
+\newbibmacro{multi:titles}{%
+  \iffieldundef{maintitle}%
+    {\iffieldundef{booktitle}%
+      {\usebibmacro{titles}{}{emph}}%
+      {\usebibmacro{titles}{book}{emph}%
+       \usebibmacro{volume}%
+       \usebibmacro{titles}{}{}}}%
+    {\usebibmacro{titles}{main}{emph}%
+     \usebibmacro{volume}%
+     \usebibmacro{titles}{}{}}%
+}
+
+\newbibmacro{host:titles}{%
+ \iffieldundef{maintitle}%
+   {\iffieldundef{booktitle}%
+      {}%
+      {\usebibmacro{titles}{book}{emph}}}%
+   {\usebibmacro{titles}{main}{emph}}%
+}
+
+\newbibmacro*{location+publisher}{%
+	\printlist{location}%
+	\setunit*{\addcolon\space}%
+	\printlist{publisher}%
+}
+
+\newbibmacro*{serial:numeration}{%
+	\printfield{volume}%
+	\setunit*{\addspace}%
+	\printfield{number}%
+}
+
+\newbibmacro*{book:numeration}{%
+	\printfield{volume}%
+	\setunit*{\addcomma\addspace}%
+	\printfield{chapter}%
+}
+
+\newbibmacro*{series+number}{%
+	\printfield{series}%
+	%\setunit*{\addcomma\space}%
+	\setunit*{\addspace}%
+	\printfield{number}%
+}%
+
+\newbibmacro*{availability+access}{%
+	\iffieldundef{isbn}%
+		{\iffieldundef{doi}%
+			{\iffieldundef{eprint}%
+				{\printfield{url}%
+				\newblock%kein Punkt hinter URL
+				\usebibmacro{urldate}}%
+				{\printfield{eprint}}}%
+			{\printfield{doi}}}%
+	{\printfield{isbn}}%
+}
+
+
+\newbibmacro*{location+uni+typ+year}{%
+	\printlist{location}%
+	\setunit*{\addcomma\space}
+	\printlist{institution}%
+	\setunit*{\addcomma\space}%
+	\printfield{type}%
+	\setunit*{\addcomma\space}%
+	\printfield{examyear}%
+}
+
+\renewbibmacro*{in:}{%
+	\printtext{\mainsstring{in}\intitlepunct}%
+}
+	
+\newbibmacro*{venue+date}{%
+	\printfield{venue}%
+	\setunit*{\addcomma\space}%
+	\printeventdate%
+}
+
+\newbibmacro*{labeltitle}{%
+	\iffieldundef{label}
+	{\iffieldundef{shorttitle}
+	   {\usebibmacro{titles}{}{emph}%
+		\clearfield{title}%
+		\clearfield{subtitle}%
+		\clearfield{titleaddon}}
+	   {\printfield{shorttitle}}%
+	}
+	{\printfield{label}}%
+}
+
+\InitializeBibliographyStyle{\global\undef\bbx@lasthash}
+
+\newbibmacro*{bbx:savehash}{%
+	\savefield{fullhash}{\bbx@lasthash}%
+}
+
+\newbool{bbx@inset}
+\DeclareBibliographyDriver{set}{%
+	\booltrue{bbx@inset}%
+	\entryset{}{}%
+	\newunit\newblock
+	\usebibmacro{setpageref}%
+}
+
+\newrobustcmd*{\blx@imc@mkmlpageprefix}[1][pagination]{%
+	\begingroup
+	\def\blx@tempa{\blx@mkmlpageprefix{page}}%
+	\iffieldundef{#1}
+	{}
+	{\iffieldequalstr{#1}{none}
+	   {\def\blx@tempa{\blx@mkmlpageprefix@i}}
+	   {\iffieldbibstring{#1}
+		  {\edef\blx@tempa{\blx@mkmlpageprefix{\thefield{#1}}}}
+		  {\blx@warning@entry{%
+			 Unknown pagination type '\strfield{#1}'}}}}%
+	\@ifnextchar[%]
+	{\blx@tempa}
+	{\blx@tempa[\@firstofone]}%
+}
+
+\protected\long\def\blx@mkmlpageprefix#1[#2]#3{%
+  \ifnumeral{#3}
+    {\mainsstring{#1}\ppspace}
+    {\ifnumerals{#3}
+       {\mainsstring{#1s}\ppspace}
+       {\def\pno{\mainsstring{#1}}%
+        \def\ppno{\mainsstring{#1s}}}}%
+  \blx@mkmlpageprefix@i[#2]{#3}%
+ }
+
+\long\def\blx@mkmlpageprefix@i[#1]#2{#1{#2}\endgroup}
+
+\blx@regimcs{\mkmlpageprefix}
+
+% see biblatex2.sty for these macros
+\blx@regimcs{% let biblatex know the new macros
+	\addspcolon
+}%
+
+\def\blx@addsppunct#1{% <---- new name for spaced punctuation
+	%\unspace <----- commented out
+	\ifnum\blx@spacefactor<\blx@sf@threshold@low
+	\csuse{blx@qp@#1}\csuse{abx@#1}%
+	\else%
+	\ifnum\blx@spacefactor>\blx@sf@threshold@high
+	  \csuse{blx@qp@#1}\csuse{abx@#1}%
+	\else%
+	  \ifcsdef{blx@pp@\the\csname blx@sf@#1\endcsname @\blx@spacefactor}%
+		{\csuse{blx@qp@#1}\csuse{abx@#1}}%
+		{\csuse{blx@qp@#1}}%%
+	\fi%
+	\fi%
+  \csuse{blx@pq@#1}%
+}
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------Bibliography  Driver---------------------------------------
+%---------------------------------------------------------------------------------------------------
+
+% Buch----------------------------------------------------------------------------------------
+\DeclareBibliographyDriver{book}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{multi:titles}%
+	\newunit%
+	\printfield{edition}%
+	\newunit%
+	\usebibmacro{names:subsidiary}%
+	\newunit%
+	\usebibmacro{location+publisher}%
+	\newunit%
+	\printfield{version}%
+	\newunit%
+	\usebibmacro{series+number}%
+	\newunit\newblock%
+	\printfield{note}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Buch (Sammlung) -------------------------------------------------------------------
+\DeclareBibliographyDriver{collection}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{titles}{}{emph}%
+	\newunit%
+	\setunit{\addcomma\space}%
+	\usebibmacro{series+number}%
+	\newunit%
+	\printfield{edition}%
+	\newunit%
+	\usebibmacro{names:subsidiary}%
+	\newunit%
+	\usebibmacro{location+publisher}%
+	\newunit\newblock%
+	\printfield{note}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Artikel (article)---------------------------------------------------------------------------------
+\DeclareBibliographyDriver{article}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{titles}{}{}%
+	\newunit\newblock%
+	\usebibmacro{titles_article}{journal}{emph}%
+	\usebibmacro{serial:numeration}%
+	\setunit{\addcomma\space}%
+	%\printdate%
+	\setunit{\bibpagespunct}%
+	\printfield{pages}%
+	\newunit\newblock%
+	\printfield{note}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Beitrag einer Sammelwerk---------------------------------------------------------------
+\DeclareBibliographyDriver{incollection}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{titles}{}{}%
+	\newunit\newblock%
+	\usebibmacro{in:}%
+	\usebibmacro{names:subsidiary}%
+	\usebibmacro{host:titles}%
+	\newunit\newblock%
+	\usebibmacro{location+publisher}%
+	\printfield{pages}%
+	\newunit\newblock%
+	\printfield{note}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+
+% Beitrag in Tagungsband ---------------------------------------------------------------
+\DeclareBibliographyDriver{inproceedings}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{titles}{}{}%
+	\newunit\newblock%
+	\usebibmacro{in:}%
+	\usebibmacro{names:subsidiary}%
+	\usebibmacro{host:titles}%
+	\newunit\newblock%
+	\printfield{eventtitle}%
+	\newunit\newblock%
+	\usebibmacro{venue+date}
+	\setunit{\addcomma\space}%
+	\printfield{pages}%
+	\newunit\newblock%
+	\printfield{note}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Tagung/Konferenz (proceedings)-----------------------------------------------------------------------
+\DeclareBibliographyDriver{proceedings}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{titles}{}{emph}%
+	\setunit{\addcomma\space}%
+	\printfield{titleaddon}%
+	\newunit\newblock%
+	\usebibmacro{venue+date}
+	\newblock
+	\usebibmacro{location+publisher}%
+	\newblock%
+	\printfield{note}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Online-------------------------------------------------------------------------------------
+\DeclareBibliographyDriver{online}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{multi:titles}%
+	\newunit\newblock%
+	\usebibmacro{location+publisher}%
+	\setunit{\addcomma\space}%
+	\usebibmacro{availability+access}%
+}%
+
+% Thesis------------------------------------------------------------------------------------
+\DeclareBibliographyDriver{thesis}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%%
+	\usebibmacro{titles}{}{emph}%
+	\newunit\newblock%
+	\usebibmacro{location+uni+typ+year}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Patent-------------------------------------------------------------------------------------
+\DeclareBibliographyDriver{patent}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%%
+	\usebibmacro{titles}{}{emph}%
+	\newunit\newblock%
+	\biblstring{patent}%
+	\addspace%
+	\printfield{number}%
+}%
+
+% Norm---------------------------------------------------------------------------------------
+\DeclareBibliographyDriver{standard}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\printfield{titleaddon}\setunit*{\addspace}\printfield{number}\addcolon\printfield{note}%
+	\newunit\newblock%
+	\usebibmacro{titles}{}{emph}%
+	\newunit\newblock%
+	\usebibmacro{availability+access}
+}%
+
+% Gesetz---------------------------------------------------------------------------------------
+\DeclareBibliographyDriver{law}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{titles}{}{emph}%
+	\newunit\newblock%
+	\biblstring{fassung}%
+	\addspace%
+	\printdate%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Urteil-----------------------------------------------------------------------------------
+\DeclareBibliographyDriver{verdict}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{titles}{}{emph}%
+	\newblock%
+	\printfield{vertype}%
+	\addspace%
+	\biblstring{from}
+	\addspace%
+	\printdate%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+% Persönliche Mitteilung------------------------------------------------------------------------
+\DeclareBibliographyDriver{conversation}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%%
+	\usebibmacro{titles}{}{emph}%
+	\newunit\newblock%
+	\printlist{location}%
+	\setunit{\addcomma\space}%
+	\printdate%
+}%
+
+% Vortrag------------------------------------------------------------------------
+\DeclareBibliographyDriver{presentation}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%%
+	\usebibmacro{titles}{}{emph}%
+	\setunit{\addcomma\space}%
+	\printfield{titleaddon}%
+	\newunit\newblock%
+	\printlist{location}%
+	\setunit{\addcomma\space}%
+	\printdate%
+}%
+
+% Software----------------------------------------------------------------------------------------
+\DeclareBibliographyDriver{software}{%
+	\usebibmacro{bibindex}%
+	\usebibmacro{begentry}%
+	\usebibmacro{names:primary}%
+	\setunit{\labelnamepunct}\newblock%
+	\usebibmacro{multi:titles}%
+	\setunit{\addcomma\space}%
+	\printfield{version}%
+	\setunit{\addcomma\space}%
+	\printfield{note}%
+	\setunit{\addcomma\space}%
+	\printlist{location}%%
+	\newunit\newblock%
+	\usebibmacro{availability+access}%
+}%
+
+%---------------------------------------------------------------------------------------------------
+%-------------------------------Verlinkungen zu anderen Biliographietypen---------------------------
+%---------------------------------------------------------------------------------------------------
+\DeclareBibliographyAlias{*}{misc}
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------Sonstige Einstellungen-------------------------------------
+%---------------------------------------------------------------------------------------------------
+
+% Fix um zwischen Tag/Monat und Monat/Jahr kein Leerzeichen zu setzen
+\DefineBibliographyExtras{ngerman}{%
+    \protected\def\mkbibdateshort#1#2#3{%
+        \iffieldundef{#3}
+        {}
+        {\mkdayzeros{\thefield{#3}}\adddot
+            %%% Kein Abstand zwischen Tag und Monate
+            \iffieldundef{#2}{}{}}%
+        \iffieldundef{#2}
+        {}
+        {\mkmonthzeros{\thefield{#2}}%
+            \iffieldundef{#1}
+            {}
+            %%% Kein Abstand zwischen Monat und Jahr
+            {\iffieldundef{#3}{/}{\adddot}}}%
+        \iffieldbibstring{#1}{\bibstring{\thefield{#1}}}
+{\mkyearzeros{\thefield{#1}}}}}%
+
+
+% Reihenfolge, wie nach Jahr/Datum gesucht werden soll; nodate wurde entfgertn, da es sonst bei DIN, Gesetze etc. auftaucht
+\DeclareLabeldate{%
+  \field{year}
+  \field{date}
+  \field{urldate}
+  %\literal{nodate}
+}
+

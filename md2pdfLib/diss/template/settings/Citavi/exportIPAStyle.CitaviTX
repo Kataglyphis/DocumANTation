@@ -1,0 +1,725 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Transformer>
+  <DisplayName>exportIPAStylev2</DisplayName>
+  <Id>f5479b08-6470-4ade-8533-aed4a7049a42</Id>
+  <BuiltIn>False</BuiltIn>
+  <Version>1</Version>
+  <CitaviVersion>6.12</CitaviVersion>
+  <Author>Copyright © 2009 Swiss Academic Software. All rights reserved.</Author>
+  <Culture>de-DE</Culture>
+  <ConcentrationAreas>General</ConcentrationAreas>
+  <Status>Enabled</Status>
+  <Access>Free</Access>
+  <BibTeXExportSettings>
+    <ExportTaggedFields>true</ExportTaggedFields>
+    <FieldDelimiter>braces</FieldDelimiter>
+    <MaxFieldLength>-1</MaxFieldLength>
+    <MergeTitleFieldsShortTitle>false</MergeTitleFieldsShortTitle>
+    <MergeTitleFieldsShortTitleSeperator />
+    <MergeTitleFieldsTitleSupplement>false</MergeTitleFieldsTitleSupplement>
+    <MergeTitleFieldsTitleSupplementSeperator />
+    <MergeTitleFieldsParentReference>false</MergeTitleFieldsParentReference>
+    <UseBraces>true</UseBraces>
+    <UseBibLaTeXPackage>false</UseBibLaTeXPackage>
+    <UseCrossRef>false</UseCrossRef>
+    <UseLaTeX>false</UseLaTeX>
+    <UseLaTeXURL>false</UseLaTeXURL>
+    <UseUnixFormat>false</UseUnixFormat>
+    <YearTwoDigits>false</YearTwoDigits>
+    <HelpContext type="formatted">
+      <de><![CDATA[{\rtf1\ansi\ansicpg1252\deff0\deflang1031\deflangfe1031{\fonttbl{\f0\fswiss\fprq2\fcharset0 Arial;}}
+{\colortbl ;\red225\green0\blue0;\red0\green0\blue0;}
+\viewkind4\uc1\pard\sa80\sl264\slmult1\cf1\lang2055\f0\fs18 BibTeX\par
+\cf2 W\'e4hlen Sie diese Option, wenn Sie die BibTeX-Datei mit einem LaTeX-Editor oder f\'fcr den Import in ein anderes Programm verwenden m\'f6chten.\par
+\cf1\par
+}]]></de>
+      <en><![CDATA[{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1031\deflangfe1031{\fonttbl{\f0\fnil\fcharset1 Segoe UI Symbol;}{\f1\fswiss\fprq2\fcharset0 Arial;}}
+{\colortbl ;\red255\green136\blue17;\red128\green128\blue128;}
+{\*\generator Riched20 6.3.9600}\viewkind4\uc1 
+\pard\sa80\sl264\slmult1\cf1\f0\fs18\lang2055\u9658?\f1  BibTeX\par
+\cf2 Select this option if you want to use the BibTeX file with a LaTeX Editor or if you want to import it into another program.\par
+\cf1\par
+}]]></en>
+    </HelpContext>
+  </BibTeXExportSettings>
+  <RecordLayout>
+    <Format>TeX</Format>
+    <Encoding>65001</Encoding>
+    <RecordTagLayout />
+    <RecordDelimiter />
+    <TagDelimiter />
+    <SubfieldDelimiter />
+  </RecordLayout>
+  <Mapping>
+    <ReferenceTypeMapping defaultReferenceType="Unknown">
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="ArchiveMaterial" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="AudioBook" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="AudioOrVideoDocument" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="RadioPlay" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="software" referenceType="ComputerProgram" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="verdict" referenceType="CourtDecision" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="online" referenceType="InternetDocument" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="comment" referenceType="InterviewMaterial" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="presentation" referenceType="Lecture" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="law" referenceType="LegalCommentary" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="Map" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="Movie" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="MusicTrack" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="NewsAgencyReport" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="patent" referenceType="Patent" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="conversation" referenceType="PersonalCommunication" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="PressRelease" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="Broadcast" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="File" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="MusicAlbum" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="book" referenceType="SpecialIssue" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="law" referenceType="StatuteOrRegulation" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="Unknown" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="collection" referenceType="BookEdited" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="book" referenceType="Book" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="book" referenceType="CollectedWorks" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="standard" referenceType="Standard" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="UnpublishedWork" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="unpublished" referenceType="Manuscript" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="proceedings" referenceType="ConferenceProceedings" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="article" referenceType="NewspaperArticle" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="article" referenceType="JournalArticle" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="thesis" referenceType="Thesis" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="misc" referenceType="ContributionInLegalCommentary" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="incollection" referenceType="ContributionInCollectedWorks" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="incollection" referenceType="ContributionInBookEdited" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="inproceedings" referenceType="ContributionInConferenceProceedings" />
+      <Field tag="" fieldType="ReferenceType" requiredPattern="incollection" referenceType="ContributionInSpecialIssue" />
+    </ReferenceTypeMapping>
+    <FieldMappingTable>
+      <FieldMapping referenceType="ArchiveMaterial">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="AudioBook">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="AudioOrVideoDocument">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="RadioPlay">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="ComputerProgram">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="version" fieldType="SpecificField4" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="type" fieldType="SpecificField1" />
+        <Field tag="note" fieldType="StorageMedium" />
+      </FieldMapping>
+      <FieldMapping referenceType="CourtDecision">
+        <Field tag="author" fieldType="Organizations" />
+        <Field tag="date" fieldType="Date" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="" fieldType="FileLink" />
+        <Field tag="title" fieldType="SpecificField2" />
+        <Field tag="vertype" fieldType="SpecificField3" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="url" fieldType="OnlineAddress" />
+      </FieldMapping>
+      <FieldMapping referenceType="InternetDocument">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+      </FieldMapping>
+      <FieldMapping referenceType="InterviewMaterial">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="howpublished" fieldType="StorageMedium" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="Lecture">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="date" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+        <Field tag="organization" fieldType="Edition" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="titleaddon" fieldType="TitleSupplement" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="url" fieldType="OnlineAddress" />
+      </FieldMapping>
+      <FieldMapping referenceType="LegalCommentary">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="number" fieldType="NumberOfVolumes" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="Map">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="Movie">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="howpublished" fieldType="StorageMedium" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="MusicTrack">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="ParentReferenceYear" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="publisher" fieldType="ParentReferencePublishers" />
+        <Field tag="isbn" fieldType="ParentReferenceIsbn" />
+        <Field tag="series" fieldType="ParentReferenceSeriesTitle" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="booktitle" fieldType="ParentReferenceTitle" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="NewsAgencyReport">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="Patent">
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="author" fieldType="EditorsFullName" />
+      </FieldMapping>
+      <FieldMapping referenceType="PersonalCommunication">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="date" fieldType="Date" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+      </FieldMapping>
+      <FieldMapping referenceType="PressRelease">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="howpublished" fieldType="StorageMedium" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="Broadcast">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="institution" fieldType="Organizations" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="File">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="CollaboratorsFullName" />
+        <Field tag="year" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="institution" fieldType="Organizations" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="MusicAlbum">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="institution" fieldType="Organizations" />
+        <Field tag="howpublished" fieldType="StorageMedium" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="SpecialIssue">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="journal" fieldType="PeriodicalName" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="StatuteOrRegulation">
+        <Field tag="title" fieldType="Title" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="publisher" fieldType="ParentReferencePublishers" />
+        <Field tag="isbn" fieldType="ParentReferenceIsbn" />
+        <Field tag="series" fieldType="ParentReferenceSeriesTitle" />
+        <Field tag="editor" fieldType="ParentReferenceEditorsFullName" />
+        <Field tag="booktitle" fieldType="ParentReferenceTitle" />
+        <Field tag="year" fieldType="ParentReferenceYear" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="date" fieldType="Date2" />
+        <Field tag="author" fieldType="Subtitle" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="urldate" fieldType="AccessDate" />
+      </FieldMapping>
+      <FieldMapping referenceType="Unknown">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="journal" fieldType="PeriodicalName" />
+        <Field tag="institution" fieldType="Organizations" />
+        <Field tag="howpublished" fieldType="StorageMedium" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="BookEdited">
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="titleaddon" fieldType="TitleSupplement" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="volumes" fieldType="Volume" />
+      </FieldMapping>
+      <FieldMapping referenceType="Book">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="number" fieldType="Volume" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="eprint" fieldType="ArxivId" />
+        <Field tag="note" fieldType="Additions" />
+        <Field tag="titleaddon" fieldType="TitleSupplement" />
+      </FieldMapping>
+      <FieldMapping referenceType="CollectedWorks">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="institution" fieldType="Organizations" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="Standard">
+        <Field tag="note" fieldType="Date" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="titleaddon" fieldType="SpecificField2" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="doi" fieldType="Doi" />
+      </FieldMapping>
+      <FieldMapping referenceType="UnpublishedWork">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="date" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="edition" fieldType="Edition" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="series" fieldType="SeriesTitle" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="institution" fieldType="Organizations" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="Manuscript">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="address" fieldType="PlaceOfPublication" />
+        <Field tag="note" fieldType="TitleSupplement" />
+        <Field tag="originalyear" fieldType="OriginalPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+      <FieldMapping referenceType="ConferenceProceedings">
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+        <Field tag="series" fieldType="NumberOfVolumes" />
+        <Field tag="publisher" fieldType="Publishers" />
+        <Field tag="isbn" fieldType="Isbn" />
+        <Field tag="editor" fieldType="EditorsFullName" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="venue" fieldType="SpecificField1" />
+        <Field tag="eventtitle" fieldType="SpecificField7" />
+        <Field tag="eventdate" fieldType="SpecificField4" />
+        <Field tag="volumes" fieldType="Volume" />
+        <Field tag="volume" fieldType="Edition" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="titleaddon" fieldType="TitleSupplement" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="urldate" fieldType="AccessDate" />
+      </FieldMapping>
+      <FieldMapping referenceType="NewspaperArticle">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="date" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="journal" fieldType="PeriodicalName" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="titleaddon" fieldType="TitleSupplement" />
+      </FieldMapping>
+      <FieldMapping referenceType="JournalArticle">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Year" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="number" fieldType="Number" />
+        <Field tag="journal" fieldType="PeriodicalName" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="eprint" fieldType="ArxivId" />
+        <Field tag="titleaddon" fieldType="TitleSupplement" />
+        <Field tag="note" fieldType="Additions" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+      </FieldMapping>
+      <FieldMapping referenceType="Thesis">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="year" fieldType="Date" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="eprint" fieldType="OnlineAddress" />
+        <Field tag="location" fieldType="PlaceOfPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="type" fieldType="TitleSupplement" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="note" fieldType="Additions" />
+        <Field tag="institution" fieldType="Organizations" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="examyear" fieldType="CustomField1" />
+      </FieldMapping>
+      <FieldMapping referenceType="ContributionInLegalCommentary">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="publisher" fieldType="ParentReferencePublishers" />
+        <Field tag="isbn" fieldType="ParentReferenceIsbn" />
+        <Field tag="series" fieldType="ParentReferenceSeriesTitle" />
+        <Field tag="editor" fieldType="ParentReferenceEditorsFullName" />
+        <Field tag="booktitle" fieldType="ParentReferenceTitle" />
+        <Field tag="year" fieldType="ParentReferenceYear" />
+        <Field tag="address" fieldType="ParentReferencePlaceOfPublication" />
+        <Field tag="doi" fieldType="Doi" />
+      </FieldMapping>
+      <FieldMapping referenceType="ContributionInBookEdited">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="publisher" fieldType="ParentReferencePublishers" />
+        <Field tag="isbn" fieldType="ParentReferenceIsbn" />
+        <Field tag="series" fieldType="ParentReferenceSeriesTitle" />
+        <Field tag="booktitle" fieldType="ParentReferenceTitle" />
+        <Field tag="year" fieldType="ParentReferenceYear" />
+        <Field tag="location" fieldType="ParentReferencePlaceOfPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="eprint" fieldType="ArxivId" />
+        <Field tag="editor" fieldType="ParentReferenceEditorsFullName" />
+        <Field tag="note" fieldType="Additions" />
+      </FieldMapping>
+      <FieldMapping referenceType="ContributionInCollectedWorks">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="eprint" fieldType="OnlineAddress" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="publisher" fieldType="ParentReferencePublishers" />
+        <Field tag="isbn" fieldType="ParentReferenceIsbn" />
+        <Field tag="series" fieldType="ParentReferenceSeriesTitle" />
+        <Field tag="editor" fieldType="ParentReferenceEditorsFullName" />
+        <Field tag="booktitle" fieldType="ParentReferenceTitle" />
+        <Field tag="year" fieldType="ParentReferenceYear" />
+        <Field tag="address" fieldType="ParentReferencePlaceOfPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="eprint" fieldType="ArxivId" />
+      </FieldMapping>
+      <FieldMapping referenceType="ContributionInConferenceProceedings">
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="isbn" fieldType="ParentReferenceIsbn" />
+        <Field tag="year" fieldType="ParentReferenceYear" />
+        <Field tag="volume" fieldType="ParentReferenceVolume" />
+        <Field tag="volumes" fieldType="ParentReferenceNumberOfVolumes" />
+        <Field tag="venue" fieldType="ParentReferenceSpecificField1" />
+        <Field tag="eventtitle" fieldType="ParentReferenceSpecificField7" />
+        <Field tag="eventdate" fieldType="ParentReferenceSpecificField4" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="shorthand" fieldType="CitationKey" />
+        <Field tag="eprint" fieldType="ArxivId" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="organization" fieldType="ParentReferenceOrganizations" />
+        <Field tag="booktitle" fieldType="ParentReferenceTitle" />
+        <Field tag="booktitleaddon" fieldType="ParentReferenceTitleSupplement" />
+        <Field tag="booksubtitle" fieldType="ParentReferenceSubtitle" />
+        <Field tag="titleaddon" fieldType="TitleSupplement" />
+        <Field tag="subtitle" fieldType="Subtitle" />
+        <Field tag="editor" fieldType="ParentReferenceEditorsFullName" />
+        <Field tag="note" fieldType="Additions" />
+      </FieldMapping>
+      <FieldMapping referenceType="ContributionInSpecialIssue">
+        <Field tag="abstract" fieldType="Abstract" />
+        <Field tag="author" fieldType="AuthorsFullName" />
+        <Field tag="title" fieldType="Title" />
+        <Field tag="url" fieldType="OnlineAddress" />
+        <Field tag="price" fieldType="Price" />
+        <Field tag="keywords" fieldType="Keywords" />
+        <Field tag="urldate" fieldType="AccessDate" />
+        <Field tag="pages" fieldType="PageRange" />
+        <Field tag="volume" fieldType="Volume" />
+        <Field tag="publisher" fieldType="ParentReferencePublishers" />
+        <Field tag="isbn" fieldType="ParentReferenceIsbn" />
+        <Field tag="series" fieldType="ParentReferenceSeriesTitle" />
+        <Field tag="editor" fieldType="ParentReferenceEditorsFullName" />
+        <Field tag="booktitle" fieldType="ParentReferenceTitle" />
+        <Field tag="year" fieldType="ParentReferenceYear" />
+        <Field tag="address" fieldType="ParentReferencePlaceOfPublication" />
+        <Field tag="doi" fieldType="Doi" />
+        <Field tag="file" fieldType="FileLink" />
+      </FieldMapping>
+    </FieldMappingTable>
+  </Mapping>
+  <FieldEditing>
+    <Substitutions />
+    <KeywordSplitter>;</KeywordSplitter>
+    <PersonTextParserSettings>
+      <Author splitter=" and " sequence="LastnameFirstnameWithComma" />
+    </PersonTextParserSettings>
+  </FieldEditing>
+</Transformer>

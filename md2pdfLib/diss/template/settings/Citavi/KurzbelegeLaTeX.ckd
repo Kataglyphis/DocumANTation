@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyTemplateSettings>
+  <Version>6.18.0.1</Version>
+  <AutoUpdate>true</AutoUpdate>
+  <CharsToRemove />
+  <NormalizeKeys>false</NormalizeKeys>
+  <KeyTemplates>
+    <KeyTemplate>
+      <ReferenceTypeId>CourtDecision</ReferenceTypeId>
+      <KeyItems>
+        <KeyItem>
+          <ReferencePropertyId>SpecificField3</ReferencePropertyId>
+          <Lowercase>false</Lowercase>
+          <TextAfter />
+          <TextBefore />
+          <Uppercase>false</Uppercase>
+          <NumberOfChars>0</NumberOfChars>
+          <NumberOfWords>0</NumberOfWords>
+          <TextKeyFormatType>None</TextKeyFormatType>
+        </KeyItem>
+        <KeyItem>
+          <ReferencePropertyId>SpecificField2</ReferencePropertyId>
+          <Lowercase>false</Lowercase>
+          <TextAfter />
+          <TextBefore> </TextBefore>
+          <Uppercase>false</Uppercase>
+          <NumberOfChars>0</NumberOfChars>
+          <NumberOfWords>0</NumberOfWords>
+          <TextKeyFormatType>None</TextKeyFormatType>
+        </KeyItem>
+      </KeyItems>
+    </KeyTemplate>
+    <KeyTemplate>
+      <ReferenceTypeId>StatuteOrRegulation</ReferenceTypeId>
+      <KeyItems>
+        <KeyItem>
+          <ReferencePropertyId>Subtitle</ReferencePropertyId>
+          <Lowercase>false</Lowercase>
+          <TextAfter />
+          <TextBefore />
+          <Uppercase>false</Uppercase>
+          <NumberOfChars>0</NumberOfChars>
+          <NumberOfWords>0</NumberOfWords>
+          <TextKeyFormatType>None</TextKeyFormatType>
+        </KeyItem>
+      </KeyItems>
+    </KeyTemplate>
+    <KeyTemplate>
+      <ReferenceTypeId>Standard</ReferenceTypeId>
+      <KeyItems>
+        <KeyItem>
+          <ReferencePropertyId>SpecificField2</ReferencePropertyId>
+          <Lowercase>false</Lowercase>
+          <TextAfter />
+          <TextBefore />
+          <Uppercase>false</Uppercase>
+          <NumberOfChars>0</NumberOfChars>
+          <NumberOfWords>0</NumberOfWords>
+          <TextKeyFormatType>None</TextKeyFormatType>
+        </KeyItem>
+        <KeyItem>
+          <ReferencePropertyId>Number</ReferencePropertyId>
+          <Lowercase>false</Lowercase>
+          <TextAfter />
+          <TextBefore> </TextBefore>
+          <Uppercase>false</Uppercase>
+          <NumberOfChars>0</NumberOfChars>
+          <NumberOfWords>0</NumberOfWords>
+          <TextKeyFormatType>None</TextKeyFormatType>
+        </KeyItem>
+      </KeyItems>
+    </KeyTemplate>
+    <KeyTemplate>
+      <ReferenceTypeId>None</ReferenceTypeId>
+      <KeyItems>
+        <KeyItem>
+          <ReferencePropertyId>AuthorsOrEditorsOrOrganizations</ReferencePropertyId>
+          <Lowercase>false</Lowercase>
+          <TextAfter />
+          <TextBefore />
+          <Uppercase>false</Uppercase>
+          <PersonElement1>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>1</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>LastNameFirstName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName />
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement1>
+          <PersonElement2>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>2</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>LastNameFirstName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName />
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement2>
+          <PersonListElement>
+            <AbbreviateAfterPersonIndex>1</AbbreviateAfterPersonIndex>
+            <AbbreviateText> et al.</AbbreviateText>
+            <MaxPersonCount>2</MaxPersonCount>
+          </PersonListElement>
+          <UseDifferentSetsForDifferentNumberOfPersons>true</UseDifferentSetsForDifferentNumberOfPersons>
+          <PersonElementForOnePerson>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElementForOnePerson>
+          <PersonElement1ForTwoPersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>-1</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName> </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement1ForTwoPersons>
+          <PersonElement2ForTwoPersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>-1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement2ForTwoPersons>
+          <PersonElement1ForThreePersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>1</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>LastNameFirstName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName />
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement1ForThreePersons>
+          <PersonElement2ForThreePersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>2</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>LastNameFirstName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName />
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement2ForThreePersons>
+        </KeyItem>
+      </KeyItems>
+    </KeyTemplate>
+    <KeyTemplate>
+      <ReferenceTypeId>Patent</ReferenceTypeId>
+      <KeyItems>
+        <KeyItem>
+          <ReferencePropertyId>Editors</ReferencePropertyId>
+          <Lowercase>false</Lowercase>
+          <TextAfter />
+          <TextBefore />
+          <Uppercase>false</Uppercase>
+          <PersonElement1>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement1>
+          <PersonElement2>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement2>
+          <PersonListElement>
+            <AbbreviateAfterPersonIndex>2</AbbreviateAfterPersonIndex>
+            <AbbreviateText />
+            <MaxPersonCount>3</MaxPersonCount>
+          </PersonListElement>
+          <UseDifferentSetsForDifferentNumberOfPersons>false</UseDifferentSetsForDifferentNumberOfPersons>
+          <PersonElementForOnePerson>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElementForOnePerson>
+          <PersonElement1ForTwoPersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement1ForTwoPersons>
+          <PersonElement2ForTwoPersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement2ForTwoPersons>
+          <PersonElement1ForThreePersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement1ForThreePersons>
+          <PersonElement2ForThreePersons>
+            <FirstNameCharCount>0</FirstNameCharCount>
+            <FormatEndIndex>3</FormatEndIndex>
+            <FormatStartIndex>1</FormatStartIndex>
+            <LastNameCharCount>100</LastNameCharCount>
+            <PersonNameFormatType>FirstNameLastName</PersonNameFormatType>
+            <TextBetweenFirstNameLastName>. </TextBetweenFirstNameLastName>
+            <TextBetweenPersons> &amp; </TextBetweenPersons>
+          </PersonElement2ForThreePersons>
+        </KeyItem>
+      </KeyItems>
+    </KeyTemplate>
+  </KeyTemplates>
+</KeyTemplateSettings>
