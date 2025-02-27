@@ -1,6 +1,7 @@
-\microtypesetup{protrusion=false} % deaktiviere protusion vom microtyping Paket
+\microtypesetup{protrusion=false} 
+<!-- deaktiviere protusion vom microtyping Paket -->
 
-% Inhaltsverzeichnis-------------------------------------------------------------------------
+<!-- Inhaltsverzeichnis------------------------------------------------------------------------- -->
 \cleardoublepage
 \phantomsection
 \pdfbookmark{Inhaltsverzeichnis}{} % wird für die Navigationsleiste in PDF-Readern benötigt

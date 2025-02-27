@@ -57,6 +57,7 @@
 \LoadClass{scrbook}
 
 %Mathe Paket
+% Nötiger pandoc fix
 \disable@package@load{amssymb}{}%
 \RequirePackage{unicode-math} % Paket muss sehr früh geladen werden, sonst gibt es Fehlermeldungen
 
@@ -161,7 +162,7 @@
 % Literaturstil IPA-------------------------------------------------------------------------------------
 \RequirePackage{md2pdfLib/diss/template/mypackages/bibl/biblatexIPA}
 
-\addbibresource{data/diss/latex/Literatur.bib}			% hier deine .bib Datei verlinken
+\addbibresource{md2pdfLib/diss/template/Literatur.bib}			% hier deine .bib Datei verlinken
 %\addbibresource{Literaturverzeichnis/Literatur2.bib}  		% du kannst auch mehrere einbinden
 
 
@@ -245,6 +246,11 @@
 % Nachträgliche Verbesserungen von verschiedenen Paketen----------------------------------------------
 \RequirePackage{scrhack} %muss ganz am Ende geladen werden, da es diverse macros umdefiniert
 
+\renewcommand{\maketitle}{%
+  \begin{titlepage}
+    \input{md2pdfLib/diss/template/titlepage.tex}
+  \end{titlepage}
+}
 
 \endinput
 %% End of file `thesis.cls'. 

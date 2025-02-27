@@ -1,5 +1,7 @@
 # About Me
 
+\cite{Jonas.2021}
+
 \begin{center}
 \begin{tikzpicture}
   \clip (0,0) circle(2.5cm);

@@ -3,10 +3,12 @@ mainfont: "FrutigerFhG"
 mainfontoptions:
 - Path=md2pdfLib/diss/template/fonts/Frutiger/
 - UprightFont=*-Roman.ttf
-- BoldFont=*-Bold
-- ItalicFont=*-Italic
-- BoldItalicFont=*-BoldItalic
-fontsize: 12pt
+- BoldFont=*-Bold.ttf
+- ItalicFont=*-Italic.ttf
+- BoldItalicFont=*-BoldItalic.ttf
+# bibliography: data/diss/latex/Literatur.bib
+# biblio-title: References
+link-citations: true
 pdf-engine: lualatex
 classoption:
   - publishing

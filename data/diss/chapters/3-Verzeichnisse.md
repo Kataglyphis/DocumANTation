@@ -8,8 +8,8 @@ Um das Literaturverzeichnis im IPA-Stil zu erstellen, wurden eigene Bib-Macros e
 \begin{small}
 \begin{lstlisting}
 % Literaturstil IPA----------------
-\RequirePackage{Vorlagen/mypackages/bibl/biblatexIPA}
-\addbibresource{Literaturverzeichnis/Literatur.bib}		% hier deine .bib Datei verlinken
+\RequirePackage{md2pdfLib/diss/template/mypackages/bibl/biblatexIPA}
+\addbibresource{data/diss/latex/Literatur.bib}		% hier deine .bib Datei verlinken
 \end{lstlisting}
 \end{small}
 %
@@ -18,9 +18,9 @@ Solltet ihr den Pfad der biblatexIPA.sty ändern, müsst ihr in selbiger Datei d
 \begin{small}
 \begin{lstlisting}
 \RequirePackage[backend=biber,
-bibstyle=Vorlagen/mypackages/bibl/iso-authoryearIPA, 	% <-- Hier Pfad ändern
-citestyle=Vorlagen/mypackages/bibl/iso-authoryearIPA, 	% <-- Hier Pfad ändern
-datamodel = Vorlagen/mypackages/bibl/iso-authoryearIPA,	% <-- Hier Pfad ändern
+bibstyle=md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA, 	% <-- Hier Pfad ändern
+citestyle=md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA, 	% <-- Hier Pfad ändern
+datamodel = md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA,	% <-- Hier Pfad ändern
 ]{biblatex} 	% eigene .bib Enträge
 \end{lstlisting}
 \end{small}
@@ -48,7 +48,7 @@ In den einzelnen iso-authoryear.* Dateien könnt ihr noch die provide Pfade anpa
 
 \section{Cite-Befehle}
 \label{sec:Cite-Befehle}
-\lstinline[language={[LaTeX]TeX},basicstyle=\ttfamily]{\cite} -> \cite{Bauer.2021}
+\lstinline[language={[LaTeX]TeX},basicstyle=\ttfamily]{\cite} -> \cite{Bauer.2021} 
 \noindent
 \lstinline[language={[LaTeX]TeX},basicstyle=\ttfamily]{\parencite} -> \parencite{Bauernhansl.2017}
 \noindent
