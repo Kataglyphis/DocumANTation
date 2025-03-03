@@ -29,6 +29,7 @@ pandoc_cmd = [
     "--log=data/out/book.json",
     "--verbose",
     "--pdf-engine=lualatex",
+    "--biblatex",
     "--toc",
     "--number-offset=2",
     "--number-sections",

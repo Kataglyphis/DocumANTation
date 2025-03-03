@@ -9,7 +9,7 @@ python3 md2pdfLib/book/scripts/md2pdf.py ${OUTPUT_NAME}.tex 2>&1 | tee data/out/
 # Assuming the output is named $OUTPUT_NAME.tex
 lualatex data/out/${OUTPUT_NAME}.tex
 # Run bibtex to process bibliography entries
-bibtex ${OUTPUT_NAME}
+biber ${OUTPUT_NAME}
 makeglossaries ${OUTPUT_NAME}
 makeindex ${OUTPUT_NAME}.nlo -s nomencl.ist -o ${OUTPUT_NAME}.nls
 lualatex data/out/${OUTPUT_NAME}.tex
