@@ -1,0 +1,98 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{md2pdfLib/diss/template/mypackages/glossary/glossaryNCG}%
+  [2021/07/01 v01.0.0 LaTeX package for Nicos glossary style]
+
+\@ifpackageloaded{longtable}{}{\RequirePackage{longtable}}% Lange Tabellen, meistens für seitenübergreifende genutzt
+
+%TODO checke ob columntype L bereits definiert ist, else neuen erstellen
+\newcolumntype{G}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+\RequirePackage[nonumberlist, 	% keine Seitenzahlen anzeigen 
+				acronym,      	% ein Abkürzungsverzeichnis erstellen 
+				nopostdot,	
+				%nogroupskip 	%hebt Gruppierung auf
+				]{glossaries}[=v4.49] 
+
+
+% Verringere Platz zwischen Glossary Titel und Tabelle -----------------------------------------------------
+\renewcommand*{\glossarypreamble}{\vspace*{-10pt}}
+
+%Neuer Eintrag für Abkürzungen------------------------------------------------------------------------------
+\newglossary[alg]{acronyms}{acr}{acn}{}
+
+% Stil Abkürzungsververzeichnis-----------------------------------------------------------------------------
+% Regular ohne Gruppierung (nogroupskip in glossary aktivieren!)
+\newglossarystyle{mylistBoldSymb}{%
+	% put the glossary in a longtable environment:
+	\renewenvironment{theglossary}%
+	{\begin{longtable}[l]{@{}G{0.1\textwidth}p{0.9\textwidth-6\tabcolsep}@{}}}%
+		{\end{longtable}}%
+	
+	\renewcommand*{\glossaryheader}{} % Set the table's header:
+	\renewcommand*{\glsgroupheading}[1]{} %% No heading between groups:
+	
+	% Main (level 0) entries displayed in a row:
+	\renewcommand*{\glossaryentryfield}[5]{%
+		\glstarget{##1}{\textbf{##2}}% Name
+		& ##3% Description \renewcommand*{\glsgroupskip}{ & \\}%
+		\\% end of row
+	}%
+}
+% Fettgedruck mit Gruppierung ---------------------
+\expandafter\let\csname @glsstyle@long\endcsname\relax
+\newglossarystyle{mylistBoldSymbGrouped}{%
+	% put the glossary in a longtable environment:
+	\renewenvironment{theglossary}%
+	{\begin{longtable}[l]{@{}G{0.1\textwidth}p{0.9\textwidth-6\tabcolsep}@{}}}%
+		{\end{longtable}}%
+	
+	\renewcommand*{\glossaryheader}{} % Set the table's header:
+	\renewcommand*{\glsgroupheading}[1]{} % No heading between groups:
+	
+	% Main (level 0) entries displayed in a row:
+	\renewcommand*{\glossaryentryfield}[5]{%
+		\glsentryitem{##1}\glstarget{##1}{\textbf{##2}} & ##3\glspostdescription\space ##5\\}%
+	\renewcommand*{\glossarysubentryfield}[6]{%
+		&
+		\glssubentryitem{##2}%
+		\glstarget{##2}{\strut}##4\glspostdescription\space ##6\\}%
+	\renewcommand*{\glsgroupskip}{\noalign{\penalty-50\vskip\normalbaselineskip}}%
+}
+
+\setlength{\glslistdottedwidth}{5cm} %Setze die Länge der Punkte
+
+%Neuer Eintragstyp für Symbole getrennt nach griechische und lateinische Symbole
+\newglossary[fog]{greek}{foi}{foo}{} %griechische Symboleinträge
+\newglossary[flg]{latin}{fli}{flo}{} %lateinische Symboleinträge
+
+%--------------
+% Stil für das Symbolverzeichnis--------------------------------------------------------------------------
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+\newglossarystyle{mytab_SymbEinDescr}{% 
+	\renewenvironment{theglossary}%   
+	{\begin{longtable}{@{\extracolsep{\fill}}@{}G{\dimexpr0.15\textwidth-\tabcolsep\relax}G{\dimexpr0.2\textwidth-\tabcolsep\relax}G{\dimexpr0.6\textwidth-\tabcolsep\relax}@{}}}
+	{\end{longtable}}%   
+	
+	% Kopf der Tabelle 
+	\renewcommand*{\glossaryheader}{%
+		\bfseries Symbol & \bfseries Einheit & \bfseries Beschreibung \tabularnewline \midrule
+		\endhead 
+	} 
+	% Kein Abstand zwischen Gruppen 
+	\renewcommand*{\glsgroupheading}[1]{}% 
+	\renewcommand*{\glossaryentryfield}[5]{%
+		\glstarget{##1}{##2} & ##4 & \raggedright{##3} \tabularnewline}%
+	\renewcommand*{\glossarysubentryfield}[6]{%
+		&
+		\glssubentryitem{##2}%
+		\glstarget{##2}{\strut}##4 & ##5 & ##6\\}%
+	\renewcommand*{\glsgroupskip}{\ifglsnogroupskip\else & &\\\fi} 
+}
+
+\makeglossaries
+%--------------
+\endinput
+%%
+%% End of file `biblatexIPA.sty'.

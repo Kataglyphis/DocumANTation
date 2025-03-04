@@ -1,0 +1,20 @@
+\appendix
+\chapter{Abbildungen}
+\label{chap:A-Abbildungen}
+%
+\bigskip\noindent
+\begin{minipage}{\textwidth}
+	\centering
+	\includegraphics{awesome.jpg}
+	\captionsetup{type=figure}
+	\captionof{figure}{Awesome-Meme}
+\end{minipage}
+%
+\bigskip\noindent
+\begin{minipage}{\textwidth}
+	\centering
+	\includegraphics{example-image-b}
+	\captionsetup{type=figure}
+	\captionof{figure}{Ein weiteres Bild.}
+\end{minipage}
+%

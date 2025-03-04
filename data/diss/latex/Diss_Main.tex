@@ -1,0 +1,73 @@
+% Diese Vorlage wurde hauptsächlich zur Anfertigung einer Dissertation nach IPA-Vorgaben erstellt, 
+% kann aber auch für Bachelor-, Studien- und Masterarbeiten genutzt werden.
+
+% Eigene Klasse definiert: Hier sind auch die usepackages und weitere Settings enthalten
+% \documentclass[publishing]{Vorlagen/thesis} % Optionen: [publishing] oder [manuskript]
+\addbibresource{md2pdfLib/diss/template/Literatur.bib}			% hier deine .bib Datei verlinken
+% Präambel: Style-------------------------------------------------------------------------------------------------
+\input{md2pdfLib/diss/template/Meta} 				% Meta-Informationen 
+\input{md2pdfLib/diss/template/Befehle}			% eigene LaTeX-Befehle
+
+
+% Präambel: Indexing (benutzt makeindex)--------------------------------------------------------------------------
+\input{md2pdfLib/diss/template/Abkuerzungen}
+\input{md2pdfLib/diss/template/Formelzeichen-und-Symbole}
+
+
+% % Das eigentliche Dokument ---------------------------------------------------------------------------------------
+% \begin{document}
+\setstretch{1.5} %FIXME: \onehalfspacing funktioniert nicht mit eigenem Font? (aber \doublespacing); liegt bestimmt am Frutiger
+
+% % In der Druckversion steht der Vorspann mit Kurzfassung und Abstract vor den Verzeichnissen
+% \ifpublishing
+% 	\include{Kapitel/000-Titelseite}	% Titelseite einbinden
+% 	\include{Kapitel/00-Vorspann} 		% Vorspann
+% 	\include{Kapitel/0-Verzeichnisse} 	% Verzeichnisse
+	
+% \else % Im Manuskript steht der Vorspann mit Kurzfassung und Abstract hinter den Verzeichnissen
+% 	\include{Kapitel/000-Titelseite}	% Titelseite einbinden
+% 	\include{Kapitel/X-Eigenstaendigkeitserklaerung} % Eigenständigkeitserklärung (nur im Manuskript)
+% 	\include{Kapitel/0-Verzeichnisse} 	% Verzeichnisse
+% 	\include{Kapitel/00-Vorspann} 		% Vorspann
+% \fi %end @manuskript 
+
+
+% % Inhaltskapitel einfügen----------------------------------------------------------------------------------------
+% \cleardoublepage\include{Kapitel/1-Einleitung} %\cleardoublepage um Kapitel immer auf der rechten Buchseite zu öffnen
+% \cleardoublepage%\include{Kapitel/2-DeinKapitel}
+% \cleardoublepage\include{Kapitel/3-Verzeichnisse}
+% %\cleardoublepage\include{Kapitel/4-DeinKapitel}
+% %\cleardoublepage\include{Kapitel/5-DeinKapitel}
+% \cleardoublepage\include{Kapitel/5-Anwendung}
+% \cleardoublepage\include{Kapitel/6-Zusammenfassung}
+
+% % Literaturverzeichnis erstellen---------------------------------------------------------------------------------
+% \singlespacing %für Literaturverzeichnis einfacher Zeilenabstand, um Patz zu sparen
+% \phantomsection
+% % %!!!ACHTUNG: Das ist nicht der klassische \printbibliography Befehl!! Dieser hier wurde eigens für den IPA-Stil erstellt!!!
+% % Dies ist der finale Befehl, damit alles in einem geprinted wird
+% \printbibtabular[heading=bibintoc] 
+% %Die folgenden Befehle klassieren die Bib-Einträge entsprechend ihrer Typen, um diese einfacher zu korrigieren. Doro wird euch danken :), dauert nur leider etwas länger zu kompilieren
+% %\printbibtabular[heading=bibintoc, type=incollection, title={Beitrag in Sammelwerk}]
+% %\printbibtabular[heading=bibintoc, type=inproceedings, title={Beitrag in Konferenzen}]
+% %\printbibtabular[heading=bibintoc, type=book, title={Buch (Monographie)}]
+% %\printbibtabular[heading=bibintoc, type=collection, title={Buch (Sammelwerk)}]
+% %\printbibtabular[heading=bibintoc, type=law, title={Gesetz}]
+% %\printbibtabular[heading=bibintoc, type=verdict, title={Urteil/Gerichtsentscheidung}]
+% %\printbibtabular[heading=bibintoc, type=thesis, title={Dissertation (nicht im Verlag veröffentlicht) / Vorlesungsskript}]
+% %\printbibtabular[heading=bibintoc, type=online, title={Internetquelle}]
+% %\printbibtabular[heading=bibintoc, type=standard, title={Norm}]
+% %\printbibtabular[heading=bibintoc, type=patent, title={Patent}]
+% %\printbibtabular[heading=bibintoc, type=conversation, title={Persönliche Mitteilung}]
+% %\printbibtabular[heading=bibintoc, type=software, title={Software}]
+% %\printbibtabular[heading=bibintoc, type=proceedings, title={Tagungsband}]
+% %\printbibtabular[heading=bibintoc, type=presentation, title={Vortrag}]
+% %\printbibtabular[heading=bibintoc, type=article, title={Zeitschriftenartikel / Zeitungsartikel}]
+
+
+% %Anhänge einfügen----------------------------------------------------------------------------------------------
+% \setstretch{1.5} %FIXME: \onehalfspacing funktioniert nicht mit eigenem Font? (aber \doublespacing und \singlespacing gehen)
+% \addtocontents{toc}{\protect\vspace{-1ex}} % Verringert Zeilenabstand im ToC
+% \include{Kapitel/7-Anhang}
+
+% \end{document}

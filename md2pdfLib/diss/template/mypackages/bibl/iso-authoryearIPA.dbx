@@ -1,0 +1,106 @@
+% Diese Datei stellt neue Bibliographie Typen bereit und erweitert bestehende Eintragstypen.--------
+% Der Aufbau der Datei gliedert sich in:
+%	1. Preambel: Neue Toggles, Lade Sprachpaket, biblatex settings
+%	2. Definition der Commands
+%	3. Definition der Macros
+
+%---------------------------------------------------------------------------------------------------
+\ProvidesFile{iso-authoryearIPA.dbx}[2022/06/16 v1.1.0 DataModel IPA by NCG]
+\RequireBiber[3]
+
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------Neue Entrytypes--------------------------------------------
+%---------------------------------------------------------------------------------------------------
+\DeclareDatamodelEntrytypes{thesis,standard,law,verdict,patent,conversation,software,presentation} %es dürfen keine Leerzeichen in dieser Auflistung stehen
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------Neue Entryfields-------------------------------------------
+%---------------------------------------------------------------------------------------------------
+\DeclareDatamodelEntryfields[thesis]{
+	location,
+	examyear,
+}%Prüfungsdatum der Promotion
+
+\DeclareDatamodelEntryfields[standard]{
+	author,
+	title,
+	subtitle,
+	year,
+	shorthand,
+	doi,
+}
+
+\DeclareDatamodelEntryfields[law]{
+	author,
+	title,
+	date,
+	shorthand,
+	url,
+	urldate,
+}
+
+\DeclareDatamodelEntryfields[verdict]{
+	author,
+	title,
+	date,
+	vertype,
+	shorthand,
+	url,
+	urldate,
+}
+
+\DeclareDatamodelEntryfields[patent]{
+	author,
+	title,
+	year,
+	number,
+	date,
+	shorthand,
+}
+
+\DeclareDatamodelEntryfields[conversation]{
+	author,
+	title,
+	year,
+	date,
+	shorthand,
+	location,
+}
+
+\DeclareDatamodelEntryfields[software]{
+	author,
+	title,
+	year,
+	location,
+	shorthand,
+	version,
+	publisher,
+	url,
+	urldate,
+}
+
+\DeclareDatamodelEntryfields[presentation]{
+	author,
+	title,
+	subtitle,
+	titleaddon,
+	series,
+	date,
+	location,
+	shorthand,
+	url,
+	urldate,
+}
+
+%---------------------------------------------------------------------------------------------------
+%----------------------------------------Declare Fields---------------------------------------------
+%---------------------------------------------------------------------------------------------------
+\DeclareDatamodelFields[type=field, datatype=verbatim]{
+	vertype,
+	examyear,
+}
+
+\DeclareDatamodelFields[type=list, datatype=verbatim]{
+	location,
+}

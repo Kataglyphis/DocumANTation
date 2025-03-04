@@ -1,0 +1,110 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{md2pdfLib/diss/template/mypackages/bibl/biblatexIPA}%
+  [2021/07/01 v1.0.0 LaTeX package for IPA bibliography by Nico Guettler]
+
+\@ifpackageloaded{longtable}{}{\RequirePackage{longtable}}% Lange Tabellen, meistens für seitenübergreifende genutzt
+\@ifpackageloaded{array}{}{\RequirePackage{array}}
+
+\newcolumntype{B}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+\RequirePackage[backend=biber,
+                defernumbers=true,
+				bibstyle=md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA, 	% IPA Stil Literaturverzeichnis
+				citestyle=md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA, 	% IPA Zitierstil
+				datamodel = md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA,	% eigene Datenmodelle
+				block=nbpar,
+				uniquelist=false,
+				uniquename=false,
+				sorting=nyt,
+				citetracker=true,
+				urldate=iso,
+				maxbibnames=100,
+				alldates=short,
+				language=auto,
+				hyperref=auto,
+				autolang=other,
+				bibencoding=UTF8,
+				useprefix=true,
+				labeldateparts=true,
+				maxcitenames=2,
+				autocite=inline,
+				]{biblatex} 	% eigene .bib Enträge
+
+% Sortierer------------------------------------------------------------------------------------
+\newcounter{mymaxcitenames}
+\AtBeginDocument{%
+	\setcounter{mymaxcitenames}{2}%
+}
+
+\newbibmacro*{sortname}{%
+	\begingroup
+		\defcounter{maxnames}{\value{mymaxcitenames}}%
+		\printtext[bold]{%
+			\iffieldundef{shorthand}{%
+				\printnames{labelname}}{%
+				\printfield{shorthand}}}%
+		\ifentrytype{law}{}{% wenn Gesetzes Eintrag, dann keine Jahreszahl ausgeben
+			\ifentrytype{verdict}{}{% wenn Urteil Eintrag, dann keine Jahreszahl ausgeben
+				\setunit{\nameyeardelim}%
+				\printtext[bold]{\printlabeldateextra}%
+			}
+		}
+	\endgroup
+}%
+
+
+%Tabellarischer Aufbau------------------------------------------------------------------------------------
+\renewcommand\bibfont{\small}			% Schriftgröße im Literaturverzeichnis verkleinern
+\RequirePackage{biblatex-ext-tabular} 	% eigene Tabelle im Literaturverzeichnis, Befehl muss hier stehen
+
+\defbibtabular{bibtabular}{%
+	\setlength{\LTpre}{0pt}%
+	\setlength{\LTpost}{0pt}%
+	\def\arraystretch{1.5}%
+		\begin{longtable}{%
+			@{}
+			B{\dimexpr0.35\textwidth-\tabcolsep\relax}
+			B{\dimexpr0.65\textwidth-\tabcolsep\relax}
+			@{}}}
+		{\end{longtable}}
+	{\anchorlang{\usebibmacro{sortname}} &
+		\driver{} \\}
+
+\DeclareSortingTemplate{nyt}{%
+	\sort{\field{presort}}
+	\sort[final]{\field{sortkey}}
+	\sort{\field{sortname}\field{shorthand}\field{author}\field{editor}\field{translator}\field{sorttitle}\field{title}}
+	\sort{\field{sortyear}\field{year}}
+	\sort{\field{sorttitle}\field{title}}
+	\sort{\field[padside=left,padwidth=4,padchar=0]{volume}
+		\literal{0000}}}
+
+% Nachname, Vorname in bib Eintrag
+\DeclareNameAlias{default}{family-given}
+
+
+% Ändere .bib Eintragsfelder bevor diese verarbeitet werden
+\DeclareSourcemap{
+	\maps[datatype=bibtex]{
+		\map[overwrite=false]{
+			\step[fieldsource=author, match=\regexp{(.+?)\s+and\s+(.+)}, final]
+			\step[fieldset=sortname, fieldvalue={$1}]
+		}
+		\map[overwrite=true]{%convert german date format dd.mm.yyyy from CITAVI to ISO yyyy-mm-dd
+            \step[fieldsource=urldate, match=\regexp{([0-9]{2})\.([0-9]{2})\.([0-9]{4})}, replace={$3-$2-$1}, final]
+		}
+		\map[overwrite=true]{%convert german date format dd.mm.yyyy from CITAVI to ISO yyyy-mm-dd
+			\step[fieldsource=date, match=\regexp{([0-9]{2})\.([0-9]{2})\.([0-9]{4})}, replace={$3-$2-$1}, final]
+        }
+		\map[overwrite=true]{%convert german date range format dd.mm.yyyy-dd.mm.yyyy- from CITAVI to ISO yyyy-mm-dd/yyyy-mm-dd
+			\step[fieldsource=eventdate, match=\regexp{([0-9]{2})\.([0-9]{2})\.([0-9]{4})\-([0-9]{2})\.([0-9]{2})\.([0-9]{4})}, replace={$3-$2-$1/$6-$5-$4}, final]
+		}
+		\map[overwrite=true]{%convert german date format dd.mm.yyyy from CITAVI to ISO yyyy-mm-dd
+			\step[fieldsource=eventdate, match=\regexp{([0-9]{2})\.([0-9]{2})\.([0-9]{4})}, replace={$3-$2-$1}, final]
+		}
+	}
+}
+
+
+\endinput
+%% End of file `biblatexIPA.sty'.
