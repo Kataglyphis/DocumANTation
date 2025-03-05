@@ -1,33 +1,35 @@
+\cleardoublepage
 \chapter{Literatur-, Abkürzungs- und Symbolverzeichnis}
 \label{cha:Literaturverzeichnis-erstellen}
 
 \section{Literaturverzeichnis}
 \label{sec:Literaturverzeichnis}
 Um das Literaturverzeichnis im IPA-Stil zu erstellen, wurden eigene Bib-Macros erstellt, welche ihr in (./Vorlagen/mypackages/bibl) findet. Die biblatexIPA.sty wird in der thesis.cls an dieser Stelle geladen
-%
+<!-- % -->
 \begin{small}
 \begin{lstlisting}
-% Literaturstil IPA----------------
+<!-- % Literaturstil IPA---------------- -->
 \RequirePackage{md2pdfLib/diss/template/mypackages/bibl/biblatexIPA}
 \addbibresource{data/diss/latex/Literatur.bib}		% hier deine .bib Datei verlinken
 \end{lstlisting}
 \end{small}
-%
+<!-- % -->
 Solltet ihr den Pfad der biblatexIPA.sty ändern, müsst ihr in selbiger Datei die Pfade anpassen.
-%
+<!-- %  -->
 \begin{small}
 \begin{lstlisting}
 \RequirePackage[backend=biber,
 bibstyle=md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA, 	% <-- Hier Pfad ändern
 citestyle=md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA, 	% <-- Hier Pfad ändern
 datamodel = md2pdfLib/diss/template/mypackages/bibl/iso-authoryearIPA,	% <-- Hier Pfad ändern
-]{biblatex} 	% eigene .bib Enträge
+]{biblatex} 	
+<!-- % eigene .bib Enträge -->
 \end{lstlisting}
 \end{small}
-%
+
 In den einzelnen iso-authoryear.* Dateien könnt ihr noch die provide Pfade anpassen, um Warnungen zu verhindern.
 
-%noch der nocite Befehl um alle .bib Einträge aufzurufen
+<!-- noch der nocite Befehl um alle .bib Einträge aufzurufen -->
 \nocite{*}
 
 \section{Hinweise für die Citavi-Datenbank + Export zu \LaTeX}
@@ -93,7 +95,7 @@ Das Schubmodul \gls{symb:Schubmodul} ist ein lateinisches Symbol und wird über 
 
 \begin{small}
 \begin{lstlisting}
-% G - Schubmodul
+<!-- % G - Schubmodul -->
 \newglossaryentry{symb:Schubmodul}{
 	name={\ensuremath{G}},
 	description={Schubmodul},
@@ -106,7 +108,7 @@ Die Kreisfrequenz \gls{symb:omega} ist ein griechisches Symbol und wird über ty
 
 \begin{small}
 \begin{lstlisting}
-% W-Omega
+<!-- % W-Omega -->
 \newglossaryentry{symb:omega}{
 	name={\ensuremath{\omega}},
 	description={Kreisfrequenz},

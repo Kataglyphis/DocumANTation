@@ -1,3 +1,4 @@
+\cleardoublepage
 \chapter{Praktische Tipps beim Arbeiten mit \LaTeX}
 \label{cha:Anwendung}
 
@@ -11,16 +12,16 @@ Tipps und Tricks:
 \section{Grafiken und Tabellen einbinden}
 \label{sec:How-to-2Figure-Einbinden}
 In diesem Abschnitt habe ich euch ein paar Beispiele zum Einfügen von Grafiken eingefügt. Anstelle der subcaptionbox könnt ihr natürlich auch subfigure verwenden.
-%
+<!-- % -->
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{example-image-a}
 	\caption[Dies ist eine Kurzüberschrift der Figure 1]{Dies ist ein Beispiel um eine Grafiken nebeneinander in eine Figure-Umgebung zu packen.}
 	\label{fig:How-to-1Figure-Einbinden}
 \end{figure}
-%
+<!-- % -->
 
-%
+<!-- % -->
 \begin{figure}[ht]
 	\centering
 	\subcaptionbox{Subcaption A}{\includegraphics[width=0.49\textwidth]{example-image-a}\label{fig:example-image-a1}}\hfill%
@@ -28,7 +29,7 @@ In diesem Abschnitt habe ich euch ein paar Beispiele zum Einfügen von Grafiken 
 	\caption[Dies ist eine Kurzüberschrift der Figure 2]{Dies ist ein Beispiel um zwei Grafiken nebeneinander in eine Figure-Umgebung zu packen.}
 	\label{fig:How-to-2Figure-Einbinden}
 \end{figure}
-%
+<!-- % -->
 
 \begin{figure}[ht]
 	\centering
@@ -44,9 +45,9 @@ In diesem Abschnitt habe ich euch ein paar Beispiele zum Einfügen von Grafiken 
 	\end{minipage}%
 	\label{fig:How-to-4Figure-Einbinden}
 \end{figure}
-%
+<!-- % -->
 
-%
+<!-- % -->
 \begin{table}[htb]
 	\centering
 	\small %nutze \small um die Schriftgröße etwas zu reduzieren
@@ -78,7 +79,7 @@ In diesem Abschnitt habe ich euch ein paar Beispiele zum Einfügen von Grafiken 
 	\end{tabularx}
 	\label{tab:Beispieltabelle}
 \end{table}
-%
+<!-- % -->
 
 \section{Mathefont}
 \label{sec:mathFont}

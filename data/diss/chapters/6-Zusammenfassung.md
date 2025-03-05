@@ -1,4 +1,5 @@
-\chapter{Zusammenfassung}
+
+\cleardoublepage\chapter{Zusammenfassung}
 \label{cha:Zusammenfassung}
 
 Bekannte Fehler:

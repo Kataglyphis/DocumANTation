@@ -1,7 +1,7 @@
-% Eigenständigkeitserklärung-----------------
+<!-- % Eigenständigkeitserklärung----------------- -->
 \thispagestyle{empty}
 
-% Erzeugt Lesezeichen in der PDF
+<!-- % Erzeugt Lesezeichen in der PDF -->
 \phantomsection
 \addchap{Eigenständigkeitserklärung}
 \label{cha:Eigenständigkeitserklärung}

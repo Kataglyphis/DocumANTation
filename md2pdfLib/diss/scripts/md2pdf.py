@@ -30,7 +30,7 @@ pandoc_cmd = [
     "--verbose",
     "--pdf-engine",
     "lualatex",
-    "--biblatex",
+    # "--biblatex",
     "--verbose",
     "--bibliography",
     "md2pdfLib/diss/template/Literatur.bib",
