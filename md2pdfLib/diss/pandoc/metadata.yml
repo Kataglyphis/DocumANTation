@@ -1,24 +1,13 @@
 ---
-mainfont: "FrutigerFhG"
-mainfontoptions:
-  - Path=md2pdfLib/diss/template/fonts/Frutiger/
-  - UprightFont=*-Roman.ttf
-  - BoldFont=*-Bold.ttf
-  - ItalicFont=*-Italic.ttf
-  - BoldItalicFont=*-BoldItalic.ttf
-# bibliography: data/diss/latex/Literatur.bib
-# biblio-title: References
-# link-citations: true
-pdf-engine: lualatex
-classoption:
-  - publishing
+mainfont: Roboto #DejaVuSerif
 title: Computer graphics
 subtitle: A practical approach
 titlepage: true
 author: Jonas Heinle
 date: \today
-documentclass: md2pdfLib/diss/template/thesis
+documentclass: md2pdfLib/book/template/latex/bookclass
 highlight-style: md2pdfLib/pygments.theme
 toc-title: Table of contents
+linkcolor: blue
 ---
 
