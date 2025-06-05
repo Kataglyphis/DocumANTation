@@ -47,12 +47,12 @@ RUN python3 -m venv md2pdf && \
 # i want to use it on my schlaptop and my himbeerkuchen (raspberrypi)
 ARG TARGETARCH
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
-    curl -L https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-1-amd64.deb \
+    curl -L https://github.com/jgm/pandoc/releases/download/3.7.0.2/pandoc-3.7.0.2-1-amd64.deb \
     -o /tmp/pandoc.deb && \
     dpkg -i /tmp/pandoc.deb && \
     rm /tmp/pandoc.deb; \
     elif [ "$TARGETARCH" = "arm64" ]; then \
-    curl -L https://github.com/jgm/pandoc/releases/download/3.6.3/pandoc-3.6.3-1-arm64.deb \
+    curl -L https://github.com/jgm/pandoc/releases/download/3.7.0.2/pandoc-3.7.0.2-1-arm64.deb \
     -o /tmp/pandoc.deb && \
     dpkg -i /tmp/pandoc.deb && \
     rm /tmp/pandoc.deb; \
