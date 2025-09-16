@@ -126,7 +126,7 @@ Command works in powershell but not on cmd.
 ### LINUX 
 Tested on ubuntu. Fedora etc. might have little differences. Idk
 ```bash
-  cd mdToPdf
+  cd Kataglyphis-mdToPdf
   docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc pandoc_all
 ```
 
