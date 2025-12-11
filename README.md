@@ -1,19 +1,14 @@
-<h1 align="center">
-  <br>
-  <a href="https://jonasheinle.de"><img src="images/logo.png" alt="logo" width="200"></a>
-  <br>
-  mdToPdf
-  <br>
-</h1>
+<div align="center">
+  <a href="https://jonasheinle.de">
+    <img src="images/logo.png" alt="logo" width="200" />
+  </a>
 
-<!-- <h1 align="center">
-  <br>
-  <a href="https://jonasheinle.de"><img src="images/vulkan-logo.png" alt="VulkanEngine" width="200"></a>
-  <a href="https://jonasheinle.de"><img src="images/Engine_logo.png" alt="VulkanEngine" width="200"></a>
-  <a href="https://jonasheinle.de"><img src="images/glm_logo.png" alt="VulkanEngine" width="200"></a>
-</h1> -->
+  <h1>Kataglyphis-mdToPdf</h1>
 
-<h4 align="center">Convert markdown to modern slide show or a4paper book. Combining the very light weight markdown language with all the power of LaTeX.<a href="https://jonasheinle.de" target="_blank"></a></h4>
+  <h4>Convert markdown to modern slide show or a4paper book. Combining the very light weight markdown language with all the power of LaTeX.</h4>
+</div>
+
+<h4 align="center"><a href="https://jonasheinle.de" target="_blank"></a></h4>
 
 <!-- [![Linux build](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Linux.yml/badge.svg)](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Linux.yml)
 [![Windows build](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml/badge.svg)](https://github.com/Kataglyphis/GraphicsEngineVulkan/actions/workflows/Windows.yml) -->
@@ -22,45 +17,29 @@
 [![Twitter](https://img.shields.io/twitter/follow/Cataglyphis_?style=social)](https://twitter.com/Cataglyphis_)
 [![YouTube](https://img.shields.io/youtube/channel/subscribers/UC3LZiH4sZzzaVBCUV8knYeg?style=social)](https://www.youtube.com/channel/UC3LZiH4sZzzaVBCUV8knYeg)
 
-<p align="center">
-  <a href="#about-the-project">About The Project</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#license">License</a> •
-  <a href="#literature">Literature</a>
-</p>
-
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#key-features">Key Features</a></li>
-      </ul>
-      <ul>
-        <li><a href="#dependencies">Dependencies</a></li>
-      </ul>
-      <ul>
-        <li><a href="#useful-tools">Useful tools</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#tests">Tests</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-    <li><a href="#literature">Literature</a></li>
-  </ol>
-</details>
+## Table of Contents
+- [About The Project](#about-the-project)
+  - [Key Features](#key-features)
+  - [Dependencies](#dependencies)
+  - [Useful tools](#useful-tools)
+- [Getting Started](#getting-started)
+  - [Building docker image](#building-docker-image)
+  - [Windows](#windows)
+  - [Linux](#linux)
+  - [Build presentation](#build-presentation)
+  - [Build book](#build-book)
+  - [Build book with glossary entries](#build-book-with-glossary-entries)
+  - [Build CV](#build-cv)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [How i created my customized pandoc latex template](#how-i-created-my-customized-pandoc-latex-template)
+- [Tests](#tests)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
+- [Literature](#literature)
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -72,16 +51,6 @@ You can immediately get started an use my customized templates for generating ni
 looking books, papers or presentations. I provide detailed steps how to use it and 
 how to reproduce everything. The main environment is containerized thanks to Docker.
 Therefore everything can much simpler be reproduced.
-<!-- <h1 align="center">
-  <br>
-  <a href="https://jonasheinle.de"><img src="images/Screenshot1.png" alt="VulkanEngine" width="400"></a>
-  <a href="https://jonasheinle.de"><img src="images/Screenshot2.png" alt="VulkanEngine" width="400"></a>
-  <a href="https://jonasheinle.de"><img src="images/Screenshot3.png" alt="VulkanEngine" width="700"></a>
-</h1> -->
-
-<!-- [![Kataglyphis Engine][product-screenshot1]](https://jonasheinle.de)
-[![Kataglyphis Engine][product-screenshot2]](https://jonasheinle.de)
-[![Kataglyphis Engine][product-screenshot3]](https://jonasheinle.de) -->
 
 What is nicer than writing in pure, simple markdown? <br>
 No worries about latex but with all the power of it!
