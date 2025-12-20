@@ -158,7 +158,7 @@ or run steps manually:
 ### Installation
 
 1. Clone the repo
-   ```sh
+   ```bash
    git clone --recurse-submodules git@github.com:Kataglyphis/mdToPdf.git
    ```
 
