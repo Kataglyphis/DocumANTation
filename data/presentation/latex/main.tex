@@ -1,11 +1,18 @@
 \tcbuselibrary{all}
 
 \usepackage{minted}
-\setminted{frame=single, framesep=2mm, bgcolor=lightgray, fontsize=\small, linenos, breaklines, breakanywhere=true}
+% Move slide content closer to the left edge
+\setminted{frame=single, framesep=2mm, bgcolor=lightgray, fontsize=\small, linenos, breaklines, breakanywhere=true, resetmargins, xleftmargin=0pt}
 \usemintedstyle{friendly}
 
 \background{data/presentation/images/shrek.jpg} % The World's First AI.jpg
 \email{contact@jonasheinle.de}
+% Social row (optional): uncomment + adjust
+\social{%
+	\socialitem{GH}{Kataglyphis}{https://github.com/Kataglyphis}\hspace{1em}%
+	\socialitem{in}{Jonas Heinle}{https://www.linkedin.com/in/your-handle}\hspace{1em}%
+	\socialitem{www}{jonasheinle.de}{https://jonasheinle.de}%
+}
 \uni{Life university}
 
 \addtobeamertemplate{title page}{}{

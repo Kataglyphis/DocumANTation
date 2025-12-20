@@ -110,7 +110,7 @@ Run following command at the very first time and whenever you change your .sty f
 ```
 
 ```bash
-  python3 md2pdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
+  uv run python md2pdfLib/presentation/scripts/md2beamerpdf.py 2>&1 | tee data/out/beamer.log
 ```
 
 
@@ -119,7 +119,7 @@ If no glossary is needed one can just run the following command:
 
 ```bash
   OUTPUT_NAME=output.pdf
-  python3 md2pdfLib/book/scripts/md2pdf.py $OUTPUT_NAME 2>&1 | tee data/out/book.log
+  uv run python md2pdfLib/book/scripts/md2pdf.py $OUTPUT_NAME 2>&1 | tee data/out/book.log
 ```
 
 #### Build book with glossary entries
@@ -138,7 +138,7 @@ or run steps manually:
 ```bash
   # CHANGE TO OUTPUT TO .tex in this script first
   # then call this script to export a .tex file
-  python3 md2pdfLib/book/scripts/md2pdf.py 2>&1 | tee data/out/book.log
+  uv run python md2pdfLib/book/scripts/md2pdf.py 2>&1 | tee data/out/book.log
   # assuming the output is named book_output.tex
   lualatex data/out/book_output.tex
   makeglossaries book_output

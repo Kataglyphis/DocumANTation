@@ -31,6 +31,63 @@
 - Citations: keep sources in `refs.bib`
 - Resource paths: images can live next to the repo
 
+# Code example: build the PDF (Docker)
+
+```bash
+docker run --rm \
+	-v "${PWD}/md2pdfLib:/md2pdfLib" \
+	-v "${PWD}/data:/data" \
+	ghcr.io/kataglyphis/kataglyphis_md2pdf \
+	bash -lc "cd /md2pdfLib/presentation; ./scripts/update_own_sty.sh; python ./scripts/md2beamerpdf.py"
+```
+
+# Code example: Rust (tiny CLI-like utility)
+
+```rust
+fn main() {
+		let args: Vec<String> = std::env::args().collect();
+		let name = args.get(1).map(|s| s.as_str()).unwrap_or("world");
+		println!("Hello, {name}!");
+}
+```
+
+# Code example: Dart (Flutter-friendly model)
+
+```dart
+class Project {
+	final String title;
+	final List<String> tags;
+
+	const Project({required this.title, required this.tags});
+
+	String get headline => '$title (${tags.join(", ")})';
+}
+
+void main() {
+	const p = Project(title: 'md→pdf', tags: ['pandoc', 'latex', 'docker']);
+	print(p.headline);
+}
+```
+
+# Code example: C++ (small data transform)
+
+```cpp
+#include <iostream>
+#include <string>
+
+std::string slugify(std::string s) {
+	for (char& c : s) {
+		if (c == ' ') c = '-';
+		else c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+	}
+	return s;
+}
+
+int main() {
+	std::cout << slugify("Hello Meetup") << "\n";
+}
+```
+
 # Trade-offs
 
 - `-shell-escape` is powerful (use only in trusted builds)

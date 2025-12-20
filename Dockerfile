@@ -5,6 +5,7 @@
 
 FROM ubuntu:24.04
 ENV TZ="Europe/Berlin" 
+ENV PATH="/root/.local/bin:${PATH}"
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
@@ -17,7 +18,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     imagemagick \
     unzip \
     python3-full \
-    pip \
+    python3-pip \
     ghostscript \
     locales \
     joe \
@@ -38,10 +39,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# install Astral uv (python package manager/runner)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # for styling our code snippets
-RUN python3 -m venv md2pdf && \
+RUN uv venv md2pdf && \
     . md2pdf/bin/activate && \
-    pip3 install Pygments
+    uv pip install Pygments
 
 # install a specific Pandoc version for amd64 or arm64 platform
 # i want to use it on my schlaptop and my himbeerkuchen (raspberrypi)
