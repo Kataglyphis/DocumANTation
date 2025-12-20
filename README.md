@@ -83,20 +83,20 @@ For my beamer latex project I use the following latex templates:
 ### Building docker image
 For building my docker image I use sth. like this:
 ```bash
-docker build . -t pandoc_all
+docker build . -t ghcr.io/kataglyphis/kataglyphis_md2pdf
 ```
 
 ### WINDOWS
 Command works in powershell but not on cmd.
 ```powershell
-  cd mdToPdf
-  docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc pandoc_all
+  cd Kataglyphis-mdToPdf
+  docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc ghcr.io/kataglyphis/kataglyphis_md2pdf
 ```
 ### LINUX 
 Tested on ubuntu. Fedora etc. might have little differences. Idk
 ```bash
   cd Kataglyphis-mdToPdf
-  docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc pandoc_all
+  docker run -it --rm -v ${PWD}/md2pdfLib:/md2pdfLib -v ${PWD}/data:/data --name mypandoc -h mypandoc ghcr.io/kataglyphis/kataglyphis_md2pdf
 ```
 
 ### Build presentation
@@ -160,6 +160,10 @@ or run steps manually:
 1. Clone the repo
    ```bash
    git clone --recurse-submodules git@github.com:Kataglyphis/mdToPdf.git
+   ```
+
+   ```bash
+   git submodule update --init --recursive
    ```
 
 ### How i created my customized pandoc latex template

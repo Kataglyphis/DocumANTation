@@ -1,28 +1,40 @@
-# Motivation
-\section{Motivation}
-**__Why a personal blog?__**
+# Why this talk?
 
-  1. Website about me
-      - You can find my interests
-          - much technical (LaTeX/**__AI__**/Rust/Embedded projects)
-          - books/films/...
-      - Blog posts
-          - presentation/documentation of my projects
-          - Documentation and source code is **__open source/for free__**
+## Building a personal blog that scales with your projects
 
-**__Why markdown?__**
+- One place to present projects, notes and demos
+- Content stays portable: Markdown in Git
+- Output is not just “a website”: slides + PDFs too
 
-  2. Publish blog entries in pure .md (like this slides)
-      - super light weight
-  3. makes moving the content super easy
+# The problem
 
-# Motivation
-**__Why a website in Flutter/Dart [@flutterdart]?__**
+- Docs drift away from code
+- Publishing is friction (tools differ per OS)
+- Content is trapped in one platform
 
-  3. (Frontend-) code base [@jotrockenmitlockenrepo] for various platforms 
-  (Linux/Windows/Android/iOS/Web/...) **__for free__**
-      - usage for my Rust projects
-  4. **__WASM support__**
+# The goal
+
+- One source of truth (Markdown)
+- Reproducible builds (same output everywhere)
+- Easy to share: web + PDF
+
+# Markdown-first content
+
+- Fast to write, easy to review (diffs)
+- Reusable across formats
+- Long-term ownership: text files, no lock-in
+
+# Why Flutter/Dart? [@flutterdart]
+
+- One UI codebase for Web/Desktop/Mobile
+- Great for polished UI and consistent design
+- Plays well as a frontend for Rust projects [@jotrockenmitlockenrepo]
+
+# What you’ll see today
+
+- The content workflow (Markdown $\rightarrow$ output)
+- The reproducible build pipeline (Docker)
+- A quick demo + the main takeaways
 
 <!-- # How to get started
 
