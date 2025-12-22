@@ -25,6 +25,7 @@ pandoc_cmd = [
     "--log=data/out/beamer.json",
     "--resource-path=.",
     "--columns=10",
+    "--slide-level=2",
     "--metadata-file",
     "md2pdfLib/presentation/pandoc/metadata.yml",
     "-t",

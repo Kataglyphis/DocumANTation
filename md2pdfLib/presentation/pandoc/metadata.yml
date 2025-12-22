@@ -10,7 +10,7 @@ institute: Institute of Muscle Building
 location: Schwäbisch Hall
 date: \today
 biblio-title: References
-section-titles: true
+# section-titles: true
 toc-color: black
 sec-num-depth: 3
 number-sections: true
