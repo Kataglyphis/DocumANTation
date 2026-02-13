@@ -129,8 +129,17 @@ entries. Therefore the workflow changes to the following:
 Execute the bash script for making life easy:
 
 ```bash
+  # IMPORTANT: run this INSIDE the container image
+  # ghcr.io/kataglyphis/kataglyphis_md2pdf
   chmod +x md2pdfLib/book/scripts/compile_with_glossaries_and_nomenclature.sh
   ./md2pdfLib/book/scripts/compile_with_glossaries_and_nomenclature.sh
+```
+
+Alternatively, from the host you can run the full build automatically inside the container:
+
+```bash
+  chmod +x scripts/build_book_with_glossaries_in_container.sh
+  ./scripts/build_book_with_glossaries_in_container.sh
 ```
 
 or run steps manually:

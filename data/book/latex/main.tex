@@ -93,6 +93,34 @@
 %% --------------------------------
 \input{md2pdfLib/book/template/latex/c_code_style.tex}
 
+% ----------------------------------------------------------------
+% Printer-friendly code blocks (Pandoc fenced code):
+% - light background (good for printing)
+% - rounded corners
+% - colored frame
+% Pandoc emits: \begin{Shaded}\begin{Highlighting}...\end{Highlighting}\end{Shaded}
+% The highlight theme defines the Shaded env; we override it at begin-document.
+\tcbuselibrary{breakable,skins}
+\AtBeginDocument{%
+	\colorlet{shadecolor}{black!2}% enforce a light background even if a dark theme is used
+	\ifdefined\Shaded
+		\renewenvironment{Shaded}%
+		{\begin{tcolorbox}[
+			enhanced,
+			breakable,
+			colback=shadecolor,
+			colframe=greenAccent,
+			boxrule=0.6pt,
+			arc=2mm,
+			left=3.0mm,
+			right=3.0mm,
+			top=2.5mm,
+			bottom=2.5mm
+		]}%
+		{\end{tcolorbox}}%
+	\fi
+}
+
 %% ------------------------
 %% |    Including files   |
 %% ------------------------
