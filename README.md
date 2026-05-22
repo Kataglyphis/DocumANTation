@@ -49,7 +49,7 @@ nerdctl build . -t pandoc_all
 
 ### Build docs
 ```bash
-uv run --with "sphinx>=8,<9" sphinx-build -W -b html docs docs/_build/html
+uv run --extra docs sphinx-build -W -b html docs docs/_build/html
 ```
 
 The generated HTML lands in `docs/_build/html/`.

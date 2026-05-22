@@ -5,7 +5,7 @@ requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = ["ruff", "ty"]
-docs = ["sphinx>=8,<9"]
+docs = ["sphinx>=8,<9", "myst-parser", "sphinx-book-theme", "sphinx-design"]
 
 [tool.ruff]
 line-length = 100
