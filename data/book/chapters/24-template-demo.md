@@ -1,6 +1,6 @@
 # Template demo (showcase)
 
-This chapter exists to showcase common elements and how they render with your current Pandoc → LuaLaTeX book template.
+This chapter exists to showcase common elements and how they render with your current Pandoc to LuaLaTeX book template.
 
 ```{=latex}
 % Add a few entries so the nomenclature/glossary pages show something
@@ -133,11 +133,11 @@ Bash:
 
 ```bash
 # Build the book TeX file
-uv run python md2pdfLib/book/scripts/md2pdf.py book_output.tex
+uv run python build.py book book_output.tex
 
 # Full build (with glossary + nomenclature) via helper script
-chmod +x md2pdfLib/book/scripts/compile_with_glossaries_and_nomenclature.sh
-./md2pdfLib/book/scripts/compile_with_glossaries_and_nomenclature.sh
+chmod +x md2pdfLib/scripts/compile_with_glossaries.sh
+./md2pdfLib/scripts/compile_with_glossaries.sh --type book
 ```
 
 ## Tables

@@ -164,7 +164,7 @@ configure_network_device("Router1", configuration_mode="advanced", interface="et
 # Output: Configuring Router1 in advanced mode on interface eth1.
 ```
 
-In this scenario, the function `configure_network_device` has a regular argument `device_name` and two default arguments, `configuration_mode` and `interface`. By using keyword arguments, the order of the arguments becomes flexible. This allows you to specify values for particular parameters, making your function calls more explicit.
+In this scenario, `configure_network_device` has one regular argument, `device_name`. It also has two default arguments: `configuration_mode` and `interface`. Keyword arguments make the call order more flexible and the call itself more explicit.
 
 With keyword arguments, the positions of the arguments become less critical. However, it's important to note that keyword arguments should come after positional arguments and before default arguments in a function call. Here's an example:
 

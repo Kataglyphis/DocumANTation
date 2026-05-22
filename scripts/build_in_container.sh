@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+CONTAINER_RUNTIME="${CONTAINER_RUNTIME:-nerdctl}"
+IMAGE="${IMAGE:-pandoc_all}"
+STRICT_WARNINGS="${STRICT_WARNINGS:-0}"
+
+usage() {
+    printf 'Usage: %s <book|diss|beamer|cv>\n' "$0" >&2
+    printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
+    exit 2
+}
+
+if [ $# -ne 1 ]; then
+    usage
+fi
+
+TARGET="$1"
+
+case "$TARGET" in
+    book|diss)
+        CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/scripts/compile_with_glossaries.sh && /md2pdfLib/scripts/compile_with_glossaries.sh'
+        if [ "$STRICT_WARNINGS" = "1" ]; then
+            CMD+=" --strict-warnings"
+        fi
+        CMD+=" --type ${TARGET}"
+        ;;
+    beamer)
+        CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/presentation/scripts/update_own_sty.sh && /md2pdfLib/presentation/scripts/update_own_sty.sh && uv run python /md2pdfLib/build.py beamer'
+        if [ "$STRICT_WARNINGS" = "1" ]; then
+            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/beamer.json --format pandoc-json'
+        fi
+        ;;
+    cv)
+        CMD='. md2pdf/bin/activate && cd /data/cv && lualatex -interaction=nonstopmode -halt-on-error cv.tex && lualatex -interaction=nonstopmode -halt-on-error cv.tex'
+        if [ "$STRICT_WARNINGS" = "1" ]; then
+            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/cv/cv.log --format latex'
+        fi
+        ;;
+    *)
+        usage
+        ;;
+esac
+
+"${CONTAINER_RUNTIME}" run --rm \
+  --entrypoint "" \
+  -v "${PROJECT_ROOT}/md2pdfLib:/md2pdfLib" \
+  -v "${PROJECT_ROOT}/data:/data" \
+  "$IMAGE" \
+  sh -c "$CMD"

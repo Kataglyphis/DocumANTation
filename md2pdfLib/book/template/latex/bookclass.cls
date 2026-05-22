@@ -9,8 +9,9 @@
 %% Additions by: Jonas Heinle, 2023 for own book project
 
 \NeedsTeXFormat{LaTeX2e}										% We do need LaTeX2e
-\ProvidesClass{bookclass}
+\ProvidesClass{md2pdfLib/book/template/latex/bookclass}
 \LoadClass[a4paper,11pt,titlepage,openany,oneside]{scrbook}	% Class based on scrbook
+\PassOptionsToPackage{nopatch=footnote}{microtype}
 % IM Style: Add openany,oneside to avoid blank pages after every chapter
 
 %\RequirePackage{ngerman}										% New german orthography
@@ -23,13 +24,8 @@
 
 \usepackage{fontspec}
 
-% Set the main font
 \setmainfont{Roboto}
 
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc} % Input in ISO 8859-1 (Latin1)
-
-% for the big tables
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage[table,xcdraw]{xcolor}
@@ -39,11 +35,10 @@
 \usepackage{tabularray}
 \usepackage{tabularx}
 
-\usepackage{ae}               % Almost european, virtual T1-Font
 \usepackage{graphicx}
 \usepackage{vmargin}          % Adjust margins in a simple way
 \usepackage{rotating}
-\usepackage{fancyhdr}         % Define simple headings
+\usepackage[automark,headsepline=false,footsepline=false,singlespacing=true]{scrlayer-scrpage}
 %\usepackage{subfigure}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -88,6 +83,7 @@
 	bookmarksopenlevel=1,
 	bookmarksopen=true,
 	bookmarksnumbered=true,
+	hyperfootnotes=false,
 	hyperindex=true,
 	plainpages=false,
 	pdfpagelabels=true,
@@ -100,6 +96,7 @@
 %% IM Packages
 \usepackage{setspace} % 1.5 line spacing
 \onehalfspacing
+\setlength{\footheight}{\baselineskip}
 
 %\usepackage{natbib} % Bibliography style
 
@@ -141,8 +138,9 @@
 
 % Render author's github (optional)
 % Usage: \github{<github-nick>}
-\newcommand{\githubSymbol}{\faGithub}
-\newcommand*{\github}[1]{\sociallink{\githubSymbol}{https://github.com/Kataglyphis/#1}{https://github.com/Kataglyphis/#1}}           % Github icon + URL
+\providecommand{\githubSymbol}{\faGithub}
+\providecommand{\githubBase}{https://github.com/Kataglyphis}
+\providecommand*{\github}[1]{\sociallink{\githubSymbol}{\githubBase/#1}{\githubBase/#1}}
 
 %% --- End of New Commands ---
 
@@ -165,6 +163,10 @@
 %% -------------------------------
 %% |          Title page         |
 %% -------------------------------
+
+% Personal info — use \providecommand so metadata can override
+\providecommand{\myauthor}{Jonas Heinle}
+\providecommand{\myurl}{www.jonasheinle.de}
 
 % coordinates for the bg shape on the titlepage
 \newcommand{\mydiameter}{20}
@@ -221,13 +223,13 @@
 
 		\begin{textblock}{10}[0,0](5,16.8)
 			\large{
-				Jonas Heinle
+				\myauthor
 			}
 		\end{textblock}
 
 		\begin{textblock}{10}[0,0](12,16.8)
 			\large{
-				\textbf{\url{www.jonasheinle.de}}
+				\textbf{\url{\myurl}}
 			}
 		\end{textblock}
 	\end{titlepage}
@@ -238,111 +240,63 @@
 %% -------------------------------
 %% |          Headings           |
 %% -------------------------------
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
-\fancyhf{}
-%\fancyhead[LE,RO]{{\headfont\thepage}}						% Left/right header for even/odd pages
-%\fancyhead[LO]{\headfont\nouppercase{\rightmark}}	% Header for left page (odd)
-%\fancyhead[RE]{\headfont\nouppercase{\leftmark}}	% Header for right page (even)
-\fancyhead[R]{\headfont\nouppercase{\rightmark}}   % Header for onesided Version
-\fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0.5pt}
-\renewcommand{\footrulewidth}{0pt}
-\fancypagestyle{plain}{%
-	\fancyhf{}													% No Header and Footer fields
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
-	\fancyfoot[C]{\thepage}
-}
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\renewcommand{\chaptermark}[1]{\markright{\thechapter.\ #1}}
+\ohead{\headmark}
+\cfoot{\pagemark}
 %% --- End of Headings ---
 
 
 
 %% -------------------------------
-%% |      Style of captions      |
+%% |          Headings           |
 %% -------------------------------
 \renewcommand{\chaptername}{}
 
-\renewcommand{\section}{%
-	\@startsection{section}%
-	{1}		% Structure level
-	{0mm}	% Indention
-	{2ex plus 1ex minus 1ex}			% Pre-Margin
-	{0.5ex plus 0.5ex minus 0.5ex}		% Post-Margin
-	{\chapterheadfont\Large\bfseries}	% Style
-}
-\renewcommand{\subsection}{%
-	\@startsection{subsection}%
-	{2}		% Structure level
-	{0mm}	% Indention
-	{1.5ex plus 1ex minus 0.5ex}		% Pre-Margin
-	{0.3ex plus 0.3ex minus 0.3ex}		% Post-Margin
-	{\chapterheadfont\large\bfseries}	% Style
-}
-\renewcommand{\subsubsection}{%
-	\@startsection{subsubsection}%
-	{3}		% Structure level
-	{0mm}	% Indention
-	{1.5ex plus 1ex minus 0.5ex}			% Pre-Margin
-	{0.2ex plus 0.2ex minus 0.2ex}			% Post-Margin
-	{\chapterheadfont\normalsize\bfseries}	% Style
-}
-\renewcommand{\paragraph}{%
-	\@startsection{paragraph}%
-	{4}		% Structure level
-	{0mm}	% Indention
-	{1.3ex plus 1ex minus 0.3ex}			% Pre-Margin
-	{0.2ex plus 0.2ex minus 0.2ex}			% Post-Margin
-	{\chapterheadfont\normalsize\bfseries}	% Style
-}
-\renewcommand{\subparagraph}{%
-	\@startsection{subparagraph}%
-	{5}		% Structure level
-	{0mm}	% Indention
-	{1ex plus 1ex minus 0.2ex}				% Pre-Margin
-	{0.1ex plus 0.1ex minus 0.1ex}			% Post-Margin
-	{\chapterheadfont\normalsize\bfseries}	% Style
-}
-%% --- End of captions style ---
+\setkomafont{chapter}{\chapterheadfont\huge\bfseries}
+\setkomafont{section}{\chapterheadfont\Large\bfseries}
+\setkomafont{subsection}{\chapterheadfont\large\bfseries}
+\setkomafont{subsubsection}{\chapterheadfont\normalsize\bfseries}
+\setkomafont{paragraph}{\chapterheadfont\normalsize\bfseries}
+\setkomafont{subparagraph}{\chapterheadfont\normalsize\bfseries}
 
+\RedeclareSectionCommand[
+	indent=0mm,
+	beforeskip=2ex plus 1ex minus 1ex,
+	afterskip=0.5ex plus 0.5ex minus 0.5ex
+]{section}
+\RedeclareSectionCommand[
+	indent=0mm,
+	beforeskip=1.5ex plus 1ex minus 0.5ex,
+	afterskip=0.3ex plus 0.3ex minus 0.3ex
+]{subsection}
+\RedeclareSectionCommand[
+	indent=0mm,
+	beforeskip=1.5ex plus 1ex minus 0.5ex,
+	afterskip=0.2ex plus 0.2ex minus 0.2ex
+]{subsubsection}
+\RedeclareSectionCommand[
+	runin=false,
+	afterindent=false,
+	indent=0mm,
+	beforeskip=1.3ex plus 1ex minus 0.3ex,
+	afterskip=0.2ex plus 0.2ex minus 0.2ex
+]{paragraph}
+\RedeclareSectionCommand[
+	runin=false,
+	afterindent=false,
+	indent=0mm,
+	beforeskip=1ex plus 1ex minus 0.2ex,
+	afterskip=0.1ex plus 0.1ex minus 0.1ex
+]{subparagraph}
 
-
-%% ---------------------------------
-%% |   Style of chapter captions   |
-%% ---------------------------------
-\newlength{\chapnolen}
-\newlength{\chapparlen}
-\newsavebox{\chapno}
-\renewcommand{\@makechapterhead}[1]{
-	%\vspace*{0.2\textheight}
-	%\vskip 15\p@
-	{\parindent \z@ \raggedright \normalfont
-			\ifnum \c@secnumdepth >\m@ne
-				\if@mainmatter
-					\savebox{\chapno}{\chapterheadfont\huge\bfseries \thechapter.}
-					\settowidth{\chapnolen}{\usebox{\chapno}}
-					\parbox[t]{\chapnolen}{\usebox{\chapno}}\nobreak\leavevmode
-				\fi
-			\fi
-			\interlinepenalty\@MM
-			\setlength{\chapparlen}{\textwidth}
-			\addtolength{\chapparlen}{-1.0\chapnolen}
-			\addtolength{\chapparlen}{-2ex}
-			\leavevmode\nobreak
-			\parbox[t]{\chapparlen}{\raggedright\chapterheadfont\huge \bfseries #1\par\nobreak}
-			%\vskip 40\p@
-		}}
-
-\renewcommand{\@makeschapterhead}[1]{
-	\vspace*{50\p@}
-	{\parindent \z@ \raggedright
-		\normalfont
-		\interlinepenalty\@M
-		\chapterheadfont \huge \bfseries  #1\par\nobreak
-		\vskip 40\p@
-	}
+\renewcommand*{\chapterformat}{\thechapter\autodot\enskip}
+\renewcommand*{\chapterlinesformat}[3]{%
+	\raggedchapter
+	\IfArgIsEmpty{#2}{#3}{\@hangfrom{#2}{#3}}%
 }
-%% --- End of chapter captions style ---
+%% --- End of headings ---
 
 
 
@@ -351,8 +305,12 @@
 %% ---------------------------------
 \let\oldtableofcontents\tableofcontents
 \renewcommand{\tableofcontents}{{\pdfbookmark{\contentsname}{\contentsname}\chapterheadfont\oldtableofcontents}}
+\renewcommand*{\@pnumwidth}{3em}
 \let\@olddottedtocline\@dottedtocline
 \renewcommand{\@dottedtocline}[5]{\@olddottedtocline{#1}{#2}{#3}{#4}{\chapterheadfont #5}}
+\DeclareTOCStyleEntry[pagenumberwidth=3em]{tocline}{chapter}
+\DeclareTOCStyleEntry[numwidth=30pt,pagenumberwidth=3em]{tocline}{section}
+\DeclareTOCStyleEntry[numwidth=40pt,pagenumberwidth=3em]{tocline}{subsection}
 %% --- End of content directory style ---
 
 

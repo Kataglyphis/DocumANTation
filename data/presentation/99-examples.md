@@ -41,9 +41,9 @@
 
 | Column | Example | Notes |
 |---:|:---:|:---|
-| 1 | `code` | right aligned header |
-| 2 | **bold** | centered header |
-| 3 | *italic* | left aligned header |
+| 1 | `code` | right |
+| 2 | **bold** | center |
+| 3 | *italic* | left |
 
 ---
 
@@ -72,7 +72,7 @@ A footnote example.[^1]
 
 ## Image
 
-![Background image test](data/presentation/images/shrek.jpg)
+![Background image test](data/presentation/images/shrek.jpg){height=60%}
 
 ---
 
@@ -82,10 +82,12 @@ The next code block contains very long lines to confirm wrapping (no overflow).
 
 ```bash
 # A long line (should wrap nicely instead of overflowing):
-export REALLY_LONG_ENV_VARIABLE_NAME_THAT_SHOULD_WRAP="this-is-a-very-very-very-very-very-long-value-that-keeps-going-to-test-line-wrapping" && echo "$REALLY_LONG_ENV_VARIABLE_NAME_THAT_SHOULD_WRAP"
+export LONG_WRAP_DEMO="this-is-a-very-very-long-value-"
+export LONG_WRAP_DEMO="${LONG_WRAP_DEMO}that-keeps-going-to-test-line-wrapping"
+echo "$LONG_WRAP_DEMO"
 
 # Another long command:
-docker run --rm -v "${PWD}/md2pdfLib:/md2pdfLib" -v "${PWD}/data:/data" ghcr.io/kataglyphis/kataglyphis_md2pdf bash -lc "cd /md2pdfLib/presentation && python ./scripts/md2beamerpdf.py"
+nerdctl run --rm --entrypoint "" -v "${PWD}/md2pdfLib:/md2pdfLib" -v "${PWD}/data:/data" pandoc_all sh -c '. md2pdf/bin/activate && uv run python md2pdfLib/build.py beamer'
 ```
 
 ---
@@ -133,7 +135,7 @@ class Project {
 }
 
 void main() {
-  const p = Project(title: 'md→pdf', tags: ['pandoc', 'latex', 'docker']);
+  const p = Project(title: 'md-to-pdf', tags: ['pandoc', 'latex', 'docker']);
   print(p.headline);
 }
 ```
@@ -213,5 +215,5 @@ ORDER BY
 
 ## Edge cases
 
-- Unicode in code: `md→pdf`, `λ`, `äöüß`
-- Long inline code should wrap too (or at least not break layout): `this_is_a_really_long_inline_identifier_that_might_force_overflow_in_some_templates_so_we_test_it_here`
+- Unicode in code: `md-to-pdf`, `λ`, `äöüß`
+- Long inline code sample: `long_inline_identifier_that_tests_layout`

@@ -53,11 +53,11 @@
 
 % Dependences
 %A Few Useful Packages
-\RequirePackage[french,german,main=english]{babel} % 
+\RequirePackage[french,ngerman,main=english]{babel} % 
 \RequirePackage[utf8]{luainputenc}
 \RequirePackage{fontspec} 					                 % for loading fonts
 \RequirePackage{url,parskip} 	    % other packages for formatting
-\RequirePackage[usenames,dvipsnames]{xcolor}
+\RequirePackage[dvipsnames]{xcolor}
 \RequirePackage{fullpage}
 \RequirePackage[margin=1.5cm]{geometry}
 \RequirePackage{fontawesome}
@@ -480,10 +480,12 @@
 
 \newcommand*\twocolumnsection[2]{
 	\begin{minipage}[t]{\dimexpr(\linewidth/2) - 3em}
+		\raggedright
 		#1
 	\end{minipage}
 	\hfill
 	\begin{minipage}[t]{\dimexpr(\linewidth/2) - 3em}
+		\raggedright
 		#2
 	\end{minipage}
 }

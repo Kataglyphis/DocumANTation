@@ -37,16 +37,18 @@ Application-oriented AI software development, scene analysis, mixed reality and 
 \emph{Web:} \url{https://jonasheinle.de} \quad
 \emph{GitHub:} \url{https://github.com/Kataglyphis}
 \end{tcolorbox}
-\end{minipage}%
+\end{minipage}
 \hfill
 \begin{minipage}[t]{0.26\linewidth}
 \vspace{1mm}
 \begin{center}
+\resizebox{\linewidth}{!}{%
 \begin{tikzpicture}
   \clip (0,0) circle(2.35cm);
-  \node[anchor=center] at (0,0) {\includegraphics[width=6.8cm]{data/book/images/22e2a944.jpg}};
+  \node[anchor=center] at (0,0) {\includegraphics[width=6.0cm]{data/book/images/22e2a944.jpg}};
   \draw[greenAccent, line width=0.8pt] (0,0) circle(2.35cm);
 \end{tikzpicture}
+}
 \end{center}
 \end{minipage}
 
@@ -122,7 +124,7 @@ I’m Jonas Heinle (Information Scientist | M.Sc.). My professional focus is app
   title={\faBriefcase\hspace{0.6em}\bfseries Research Associate — Fraunhofer IPA (Stuttgart)},
   borderline west={2.2pt}{0pt}{greenAccent}
 ]
-\emph{February 2024 — today}\\[1mm]
+\emph{February 2024 — today}\par\smallskip
 \begin{itemize}[leftmargin=*,itemsep=0.35em]
 \item Scene analysis software development (2D/3D person/object motion detection and analysis)
 \item Application-oriented, AI-based software development
@@ -145,7 +147,7 @@ I’m Jonas Heinle (Information Scientist | M.Sc.). My professional focus is app
   title={\faBriefcase\hspace{0.6em}\bfseries Research Assistant — CAS Software AG (Karlsruhe)},
   borderline west={2.2pt}{0pt}{greenAccent}
 ]
-\emph{October 2018 — August 2022}\\[1mm]
+\emph{October 2018 — August 2022}\par\smallskip
 \begin{itemize}[leftmargin=*,itemsep=0.35em]
 \item User guidance in mixed reality applications
 \item Machine learning approaches combined with eye tracking
@@ -167,7 +169,7 @@ I’m Jonas Heinle (Information Scientist | M.Sc.). My professional focus is app
   title={\faGraduationCap\hspace{0.6em}\bfseries Master of Science — Computer Science (KIT, Karlsruhe)},
   borderline west={2.2pt}{0pt}{greenAccent}
 ]
-\emph{April 2020 — September 2023} \hfill \emph{Overall grade: 1.9}\\[1mm]
+\emph{April 2020 — September 2023} \hfill \emph{Overall grade: 1.9}\par\smallskip
 \emph{Thesis:} Designing User-adaptive Guidance for Mixed Reality Using Eye Tracking
 \end{tcolorbox}
 
@@ -184,7 +186,7 @@ I’m Jonas Heinle (Information Scientist | M.Sc.). My professional focus is app
   title={\faGraduationCap\hspace{0.6em}\bfseries Bachelor of Science — Computer Science (KIT, Karlsruhe)},
   borderline west={2.2pt}{0pt}{greenAccent}
 ]
-\emph{October 2015 — March 2020} \hfill \emph{Overall grade: 2.5}\\[1mm]
+\emph{October 2015 — March 2020} \hfill \emph{Overall grade: 2.5}\par\smallskip
 \emph{Thesis:} Temporally Stable Blue Noise Error Distribution in Screen Space for Real Time Applications Path Tracing
 \end{tcolorbox}
 
@@ -201,7 +203,7 @@ I’m Jonas Heinle (Information Scientist | M.Sc.). My professional focus is app
   title={\faUniversity\hspace{0.6em}\bfseries A-levels — Gymnasium bei St. Michael (Schwäbisch Hall)},
   borderline west={2.2pt}{0pt}{greenAccent}
 ]
-\emph{2006 — 2014} \hfill \emph{Overall grade: 2.2}\\[1mm]
+\emph{2006 — 2014} \hfill \emph{Overall grade: 2.2}\par\smallskip
 \begin{itemize}[leftmargin=*,itemsep=0.35em]
 \item First steps in procedural programming (Sudoku project)
 \item Started learning Java autodidactically
@@ -223,7 +225,7 @@ I’m Jonas Heinle (Information Scientist | M.Sc.). My professional focus is app
   title={\faUsers\hspace{0.6em}\bfseries Tutor / Research Assistant — Technical Computer Science (KIT)},
   borderline west={2.2pt}{0pt}{greenAccent}
 ]
-\emph{October 2018 — August 2022}\\[1mm]
+\emph{October 2018 — August 2022}\par\smallskip
 \begin{itemize}[leftmargin=*,itemsep=0.35em]
 \item Teaching undergraduates in digital technology and computer organization (e.g., control units, caches, assembler, memory organization, pipelining)
 \end{itemize}
@@ -242,7 +244,7 @@ I’m Jonas Heinle (Information Scientist | M.Sc.). My professional focus is app
   title={\faUsers\hspace{0.6em}\bfseries Mathematics Tutor (Freelancer, Karlsruhe)},
   borderline west={2.2pt}{0pt}{greenAccent}
 ]
-\emph{January 2020 — August 2021}\\[1mm]
+\emph{January 2020 — August 2021}\par\smallskip
 \begin{itemize}[leftmargin=*,itemsep=0.35em]
 \item Teaching pupils in mathematics
 \end{itemize}

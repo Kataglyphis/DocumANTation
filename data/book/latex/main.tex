@@ -17,7 +17,7 @@
 % Thesis - Main document
 % ----------------------------------------------------------------
 
-\usepackage[english, german]{babel}
+\usepackage[english]{babel}
 \usepackage{csquotes} % for citing more advanced
 
 %% ---------------------------------
@@ -61,14 +61,16 @@
 %% | Information about the book    |
 %% ---------------------------------
 
-\newcommand{\mytitle}{Computer Graphics}
-\newcommand{\mytitleger}{Introduction into the world of rendering}
+% Canonical pandoc metadata lives in md2pdfLib/pandoc/base.yml
+% Use \providecommand so these can be overridden from the preamble.
+\providecommand{\mytitle}{Computer Graphics}
+\providecommand{\mytitleger}{Introduction into the world of rendering}
 
-\newcommand{\reviewerone}{Max Mustermann}
-\newcommand{\reviewertwo}{Johannes Heinle}
-\newcommand{\submissiontime}{22.05.2023}
+\providecommand{\reviewerone}{Max Mustermann}
+\providecommand{\reviewertwo}{Johannes Heinle}
+\providecommand{\submissiontime}{22.05.2023}
 
-\newcommand{\myname}{Jonas Heinle}
+\providecommand{\myname}{Jonas Heinle}
 %% -------------------------------
 %% |  Information for PDF file   |
 %% -------------------------------

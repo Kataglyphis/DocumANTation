@@ -148,7 +148,7 @@ la_minus_sf = la_addr - sf_addr
 # Output: {'20.1.1.1', '20.1.1.2'}
 ```
 
-`sf_minus_la` will contain elements that are in `sf_addr` but not in `la_addr`, while `la_minus_sf` will contain elements that are in `la_addr` but not in `sf_addr`.
+`sf_minus_la` contains the elements in `sf_addr` but not in `la_addr`. `la_minus_sf` contains the elements in `la_addr` but not in `sf_addr`.
 
 Understanding these fundamental concepts and set operations will empower you to work effectively with sets in Python. Sets are a valuable data structure for handling collections of unique elements, making them an essential tool for various programming tasks.
 

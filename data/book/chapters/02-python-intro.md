@@ -23,7 +23,7 @@ It’s important to note that even the most advanced computers lack true intelli
 
 ### The anatomy of a language
 
-Every language, whether natural or machine-based, comprises the following key elements:
+Every language, whether natural or machine-based, has four key elements:
 
 
 - ***Alphabet:*** A set of symbols used to construct words within the language.

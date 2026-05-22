@@ -27,18 +27,14 @@
 
 ## Practical details
 
-- Code blocks: `minted` (needs `-shell-escape`)
+- Code blocks: pandoc syntax highlighting in a styled `tcolorbox`
 - Citations: keep sources in `refs.bib`
 - Resource paths: images can live next to the repo
 
 ## Code example: build the PDF (Docker)
 
 ```bash
-docker run --rm \
-	-v "${PWD}/md2pdfLib:/md2pdfLib" \
-	-v "${PWD}/data:/data" \
-	ghcr.io/kataglyphis/kataglyphis_md2pdf \
-	bash -lc "cd /md2pdfLib/presentation; ./scripts/update_own_sty.sh; python ./scripts/md2beamerpdf.py"
+make beamer
 ```
 
 ## Code example: Rust (tiny CLI-like utility)
@@ -64,7 +60,7 @@ class Project {
 }
 
 void main() {
-	const p = Project(title: 'md→pdf', tags: ['pandoc', 'latex', 'docker']);
+	const p = Project(title: 'md-to-pdf', tags: ['pandoc', 'latex', 'docker']);
 	print(p.headline);
 }
 ```

@@ -1,27 +1,12 @@
-\tcbuselibrary{all}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
 
-% Ich fixiere jetzt die Ursache: Pandoc setzt bei Tabellen \LTcaptype{none}; 
-% irgendein Caption/Longtable-Hook macht daraus \refstepcounter{none} → Boom. 
-% Ich mache einen minimalen, robusten Fix, indem ich einen Dummy-Counter none im Header 
-% definiere, sodass Beamer-Compiles nicht mehr abbrechen.
-
-% main.tex lesen
-
-% Ich mache jetzt den minimalen Fix im Header-Include, damit none als Counter existiert 
-% und der Beamer-Run nicht mehr mit No counter 'none' defined abbricht. 
-% Danach lasse ich Codacy über die geänderte Datei laufen.
 \makeatletter
 \@ifundefined{c@none}{\newcounter{none}}{}
 \makeatother
 
-% this is afix for keeping pandoc from complaining about undefined commands
-% when including images
 \providecommand{\pandocbounded}[1]{#1}
 
-% Pandoc renders fenced code blocks as:
-%   \begin{Shaded}\begin{Highlighting}...\end{Highlighting}\end{Shaded}
-% The --highlight-style file defines Shaded via framed/snugshade by default.
-% Override Shaded to a tcolorbox with rounded corners.
 \AtBeginDocument{%
     \renewenvironment{Shaded}%
     {\begin{tcolorbox}[
@@ -39,44 +24,22 @@
     {\end{tcolorbox}}%
 }
 
-\usepackage{minted}
-% Configure minted with Pygments
-\setminted{
-    frame=single,
-    framesep=3mm,
-    bgcolor=white,
-    fontsize=\small,
-    linenos=false,
-    breaklines=true,
-    resetmargins,
-    xleftmargin=0pt,
-    autogobble=true
-}
-% If pandoc (or raw LaTeX) uses the listings package (lstlisting), apply similar padding.
-\usepackage{listings}
-\lstset{framexleftmargin=3mm}
-% Choose a Pygments style: monokai, vim, colorful, fruity, native, murphy, pastie, solarized, xcode
-\usemintedstyle{monokai}
-
-% Pandoc typically renders fenced code blocks using its own "Highlighting" (Verbatim)
-% environment (driven by --highlight-style=...). Verbatim does NOT wrap by default.
-% fvextra enables reliable line wrapping so code doesn't overflow to the right.
 \usepackage{fvextra}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
     commandchars=\\\{\},
     fontsize=\scriptsize,
     breaklines=true,
     breakanywhere=true,
-    breaksymbolleft=\textcolor{white}{\ensuremath{\hookrightarrow}},
-    breaksymbolright=\textcolor{white}{\ensuremath{\hookleftarrow}}
+    breaksymbolleft={},
+    breaksymbolright={},
+    breaksymbolsepleft=0pt,
+    breaksymbolsepright=0pt
 }
 
-\background{data/presentation/images/shrek2.png} % The World's First AI.jpg
+\background{data/presentation/images/shrek2.png}
 \email{contact@jonasheinle.de}
-% Social row (optional): uncomment + adjust
 \social{%
 	\socialitem{GH}{Kataglyphis}{https://github.com/Kataglyphis}\hspace{1em}%
-	\socialitem{in}{Jonas Heinle}{https://www.linkedin.com/in/your-handle}\hspace{1em}%
 	\socialitem{www}{jonasheinle.de}{https://jonasheinle.de}%
 }
 \uni{Life university}

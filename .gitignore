@@ -1,4 +1,33 @@
 data/out/
 
-#Ignore vscode AI rules
-.github\instructions\codacy.instructions.md
+# Python cache artifacts
+__pycache__/
+*.pyc
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.ind
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+*.glo
+*.gls
+*.glg
+*.nlo
+*.nls
+*.ilg
+
+# Generated PDFs from LaTeX (keep source-only)
+data/cv/cv.pdf
+
+# Sphinx build output
+docs/_build/

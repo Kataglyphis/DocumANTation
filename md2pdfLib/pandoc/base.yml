@@ -1,0 +1,9 @@
+mainfont: Roboto
+title: Computer graphics
+subtitle: A practical approach
+titlepage: true
+author: Jonas Heinle
+date: \today
+documentclass: md2pdfLib/book/template/latex/bookclass
+toc-title: Table of contents
+linkcolor: blue

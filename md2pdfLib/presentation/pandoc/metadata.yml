@@ -2,8 +2,9 @@
 theme:
   - awesome
 mainfont: Roboto #DejaVuSerif
+monofont: FreeMono
 author: Jonas Heinle
-background: data/presentation/images/The World's First AI.jpg
+background: data/presentation/images/title-background.jpg
 title: Create personal blog in flutter/dart
 subtitle: Cross platform UI toolkit for web
 institute: Institute of Muscle Building
@@ -17,13 +18,11 @@ number-sections: true
 toc: true
 toc-title: Table of contents
 toc-depth: 2
-pdf-engine-opts:
-  - "-shell-escape"
 link-citations: true
 # bibliography: data/presentation/latex/refs.bib,
 aspectratio: 169
 handout: true
-# highlight-style: tango # md2pdfLib/pygments.theme
+# highlight-style: tango # md2pdfLib/themes/pygments.theme
 # background-image: data/presentation/images/22e2a944.jpg
 # include-in-header: data/presentation/latex/main.tex
 ---
