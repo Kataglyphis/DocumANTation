@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main, master]
 
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -21,13 +26,16 @@ jobs:
       # Dev tools (ruff, ty, pytest) are pinned in the uv lockfile; `uv run
       # --extra dev` installs exactly those versions so lint is reproducible.
       - name: Ruff check
-        run: uv run --extra dev ruff check md2pdfLib/ build.py docs/conf.py docs-tooling/ sphinx-kataglyphis-theme/ tests/
+        run: uv run --extra dev ruff check md2pdfLib/ build.py docs/conf.py docs-tooling/ sphinx-kataglyphis-theme/ style/ tests/
 
       - name: Ruff format check
-        run: uv run --extra dev ruff format --check md2pdfLib/ build.py docs/conf.py docs-tooling/ sphinx-kataglyphis-theme/ tests/
+        run: uv run --extra dev ruff format --check md2pdfLib/ build.py docs/conf.py docs-tooling/ sphinx-kataglyphis-theme/ style/ tests/
 
       - name: Type check
         run: uv run --extra dev ty check md2pdfLib/
+
+      - name: Brand style in sync with style/brand.json
+        run: uv run python style/generate_style.py --check
 
       - name: Tests
         run: uv run --extra dev pytest

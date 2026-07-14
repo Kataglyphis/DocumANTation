@@ -1,3 +1,5 @@
+/* generated:brand-tokens:start */
+/* GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand. */
 :root {
   --brand-accent: #6af0ad;
   --brand-accent-strong: #2ad488;
@@ -6,6 +8,7 @@
   --surface-soft: #f7fbf9;
   --surface-border: #dcefe5;
 }
+/* generated:brand-tokens:end */
 
 html[data-theme="light"] {
   --pst-color-primary: var(--brand-accent-strong);

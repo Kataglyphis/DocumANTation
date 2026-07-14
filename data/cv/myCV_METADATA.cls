@@ -84,10 +84,9 @@
 \newcommand{\insertInterSectionSpace}{\vspace{1cm}}
 
 \DeclareUnicodeCharacter{00E9}{\'{e}}
-% Define default accent colors
-% \definecolor{basecolor}{HTML}{3CD070}       %BLUE000066%GREEN00FF00
-\definecolor{basecolor}{RGB}{105,240,174}       %BLUE000066%GREEN00FF00
-%green 39FF14
+% Define default accent colors — single source of truth: style/brand.json.
+% CV builds run from data/cv/, so reach the repo root with ../../.
+\input{../../md2pdfLib/style/brand-colors.tex}   % basecolor := brandAccent
 \colorlet{headingcolor}{black}
 
 \ifundef{\@green} {

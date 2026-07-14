@@ -11,6 +11,12 @@ __pycache__/
 build/
 dist/
 
+# Test / coverage artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+
 # LaTeX build artifacts
 *.aux
 *.log

@@ -69,8 +69,9 @@
 %% -------------------------------
 %% |         New colors          |
 %% -------------------------------
-% Main theme color 
-\definecolor{greenAccent}{RGB}{105,240,174}
+% Main theme color — single source of truth: style/brand.json
+% (defines brandAccent + the greenAccent/myGreenAccent/basecolor aliases).
+\input{md2pdfLib/style/brand-colors.tex}
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}

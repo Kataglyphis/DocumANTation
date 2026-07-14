@@ -1,0 +1,23 @@
+# Keep the Docker build context small. The image only needs pyproject.toml,
+# uv.lock and the beamer/smile theme submodules (ADD'd in the Dockerfile);
+# everything below is irrelevant at build time.
+.git
+.github
+.venv
+**/__pycache__
+**/*.pyc
+.ruff_cache
+.pytest_cache
+
+# Build outputs / generated PDFs and logs
+data/out/
+data/cv/*.pdf
+docs/_build/
+*.log
+
+# Docs, tests and tooling not used by the image build
+docs/
+tests/
+images/
+.vscode/
+.codacy/
