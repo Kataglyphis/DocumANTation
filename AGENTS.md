@@ -247,7 +247,10 @@ All auxiliary tools run inside `data/out/` (subshell cd).
 - **Do not** duplicate LaTeX templates — use `md2pdfLib/book/template/latex/` as the
   shared location for book/diss templates
 - **Do not** add comments to code unless the logic is truly non-obvious
-- **Do not** use `docker` for commands — use **nerdctl** in this environment
+- **Do not** use `docker` for **local** commands — use **nerdctl** locally
+  (BuildKit / rootless). CI on GitHub-hosted runners uses `docker` (via
+  `CONTAINER_RUNTIME=docker`) because nerdctl isn't preinstalled; both build the
+  same `Dockerfile`, so keep them equivalent.
 - **Do not** commit `data/out/` (it is in `.gitignore`)
 - **Do not** run `nerdctl build` without ensuring buildkitd is running
   (`systemctl --user status buildkit.service`)

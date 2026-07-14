@@ -35,9 +35,7 @@ def configure_paths(
     """Point the module-level path globals at the consuming repository."""
     global REPO_ROOT, DEPS_JSON, VERSIONS_ENV, ASSETS_DIR
     REPO_ROOT = repo_root.resolve()
-    DEPS_JSON = (
-        deps_json.resolve() if deps_json is not None else REPO_ROOT / "docs/deps/deps.json"
-    )
+    DEPS_JSON = deps_json.resolve() if deps_json is not None else REPO_ROOT / "docs/deps/deps.json"
     VERSIONS_ENV = (
         versions_env.resolve()
         if versions_env is not None
@@ -48,6 +46,7 @@ def configure_paths(
         if assets_dir is not None
         else REPO_ROOT / "linux/webserver/dist/assets/assets/documents/footer"
     )
+
 
 EN_TEMPLATE = """# Open Source Licenses
 
@@ -238,7 +237,10 @@ def main() -> int:
             print("Website license files are up to date.")
             return 0
         print("Website license files are out of date.", file=sys.stderr)
-        print("Run: python external/Kataglyphis-DocumANTation/docs-tooling/scripts/generate-website-licenses.py --write", file=sys.stderr)
+        print(
+            "Run: python external/Kataglyphis-DocumANTation/docs-tooling/scripts/generate-website-licenses.py --write",
+            file=sys.stderr,
+        )
         return 1
 
     paths = write_files(en_content, de_content)

@@ -1,11 +1,44 @@
 [project]
 name = "kataglyphis-md2pdf"
 version = "0.1.0"
+description = "Convert Markdown into modern LaTeX books, dissertations, beamer slides and CVs via Pandoc + LuaLaTeX."
+readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Jonas Heinle", email = "jonasheinle@googlemail.com" }]
+keywords = ["pandoc", "latex", "markdown", "pdf", "beamer", "documentation"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Text Processing :: Markup :: LaTeX",
+    "Topic :: Documentation",
+]
+# Runtime Python dependency (used by the LaTeX minted/highlighting pipeline).
+# Pandoc + a TeX distribution are system dependencies provided by the container.
+dependencies = ["pygments>=2.17"]
 
 [project.optional-dependencies]
-dev = ["ruff", "ty"]
+dev = ["ruff>=0.15.21", "ty>=0.0.38", "pytest>=8"]
 docs = ["sphinx>=8,<9", "myst-parser", "sphinx-book-theme", "sphinx-design"]
+
+[project.urls]
+Homepage = "https://jonasheinle.de"
+Repository = "https://github.com/Kataglyphis/Kataglyphis-mdToPdf"
+
+# The project runs from a mounted volume (/md2pdfLib) and resolves its templates
+# by path relative to the repo root, so it is intentionally NOT installed as a
+# package. This keeps `uv run` / `uv sync` dependency-only.
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ty]
+# Type-checking environment for `ty check`.
+environment = { python-version = "3.10" }
 
 [tool.ruff]
 line-length = 100
@@ -13,6 +46,11 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# Doc-generation scripts emit long literal strings (generated markdown table
+# rows and help text containing full submodule paths) that don't wrap cleanly.
+"docs-tooling/scripts/*.py" = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"

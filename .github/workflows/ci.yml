@@ -18,17 +18,19 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install dev tools
-        run: uv pip install ruff ty
-
+      # Dev tools (ruff, ty, pytest) are pinned in the uv lockfile; `uv run
+      # --extra dev` installs exactly those versions so lint is reproducible.
       - name: Ruff check
-        run: uv run ruff check md2pdfLib/ build.py docs/conf.py
+        run: uv run --extra dev ruff check md2pdfLib/ build.py docs/conf.py docs-tooling/ sphinx-kataglyphis-theme/ tests/
 
       - name: Ruff format check
-        run: uv run ruff format --check md2pdfLib/ build.py docs/conf.py
+        run: uv run --extra dev ruff format --check md2pdfLib/ build.py docs/conf.py docs-tooling/ sphinx-kataglyphis-theme/ tests/
 
       - name: Type check
-        run: uv run ty check md2pdfLib/
+        run: uv run --extra dev ty check md2pdfLib/
+
+      - name: Tests
+        run: uv run --extra dev pytest
 
       - name: Shell syntax check
         run: bash -n md2pdfLib/scripts/compile_with_glossaries.sh scripts/build_in_container.sh scripts/build_book_with_glossaries_in_container.sh

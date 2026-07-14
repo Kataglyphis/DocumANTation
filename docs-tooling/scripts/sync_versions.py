@@ -7,7 +7,6 @@ import re
 import sys
 from pathlib import Path
 
-
 START_MARKER = "<!-- generated:version-snapshot:start -->"
 END_MARKER = "<!-- generated:version-snapshot:end -->"
 
@@ -58,12 +57,9 @@ INLINE_MARKER_MAP: dict[str, tuple[str, str]] = {
     "tvm": ("TVM_REF", "raw"),
     "ubuntu": ("UBUNTU_VERSION", "raw"),
     "onnx_genai": ("ONNXRUNTIME_GENAI_VERSION", "no_v"),
-    "litert": ("LITERT_VERSION", "no_v"),
 }
 
-INLINE_MARKER_RE = re.compile(
-    r"<!-- generated:(\w+) -->(.*?)<!-- /generated:\1 -->", re.DOTALL
-)
+INLINE_MARKER_RE = re.compile(r"<!-- generated:(\w+) -->(.*?)<!-- /generated:\1 -->", re.DOTALL)
 
 
 def transform_value(value: str, transform: str) -> str:
@@ -79,9 +75,7 @@ def transform_value(value: str, transform: str) -> str:
     return value
 
 
-def resolve_inline_marker_value(
-    versions: dict[str, str], marker_name: str
-) -> str | None:
+def resolve_inline_marker_value(versions: dict[str, str], marker_name: str) -> str | None:
     if marker_name not in INLINE_MARKER_MAP:
         return None
     env_var, transform = INLINE_MARKER_MAP[marker_name]
@@ -138,7 +132,6 @@ def collect_versions() -> dict[str, str]:
 
     linux_webserver = read_repo_file("linux/webserver/Dockerfile")
     windows_base = read_repo_file("windows/Dockerfile.base")
-    windows_sdk = read_repo_file("windows/Dockerfile.sdk")
     windows_nvidia = read_repo_file("windows/Dockerfile.nvidia")
     windows_media = read_repo_file("windows/Dockerfile.media")
     windows_vs = read_repo_file("windows/scripts/setup-vs.ps1")
@@ -160,16 +153,26 @@ def collect_versions() -> dict[str, str]:
         "android_sdk": v["ANDROID_SDK_VERSION"],
         "android_ndk": v["ANDROID_NDK_VERSION"],
         "android_cmake": v["ANDROID_CMAKE_VERSION"],
-        "webserver_ubuntu": extract(r"^FROM ubuntu:([^\s]+)$", linux_webserver, "Webserver Ubuntu version"),
+        "webserver_ubuntu": extract(
+            r"^FROM ubuntu:([^\s]+)$", linux_webserver, "Webserver Ubuntu version"
+        ),
         "windows_ltsc": extract(
             r"^ARG WINDOWS_LTSC=([^\s]+)$",
             windows_base,
             "Windows LTSC version",
         ),
-        "windows_vulkan": extract(r"^ARG VULKAN_VERSION=([^\s]+)$", windows_base, "Windows Vulkan version"),
-        "windows_gstreamer": extract(r"^ARG GSTREAMER_VERSION=([^\s]+)$", windows_base, "Windows GStreamer version"),
-        "windows_cuda": extract(r"^ARG CUDA_VERSION=([^\s]+)$", windows_nvidia, "Windows CUDA version"),
-        "windows_onnx": extract(r"^ARG ONNXRUNTIME_VERSION=([^\s]+)$", windows_media, "Windows ONNX Runtime version"),
+        "windows_vulkan": extract(
+            r"^ARG VULKAN_VERSION=([^\s]+)$", windows_base, "Windows Vulkan version"
+        ),
+        "windows_gstreamer": extract(
+            r"^ARG GSTREAMER_VERSION=([^\s]+)$", windows_base, "Windows GStreamer version"
+        ),
+        "windows_cuda": extract(
+            r"^ARG CUDA_VERSION=([^\s]+)$", windows_nvidia, "Windows CUDA version"
+        ),
+        "windows_onnx": extract(
+            r"^ARG ONNXRUNTIME_VERSION=([^\s]+)$", windows_media, "Windows ONNX Runtime version"
+        ),
         "windows_vs": extract(
             r"Visual Studio\\([0-9]+)\\BuildTools",
             windows_vs,
@@ -253,6 +256,7 @@ def inline_marker_target_files() -> list[Path]:
 def resolve_all_inline_markers(text: str, versions: dict[str, str]) -> str:
     def _replacer(match: re.Match) -> str:
         return inline_marker_replacement(match, versions)
+
     return INLINE_MARKER_RE.sub(_replacer, text)
 
 
@@ -280,7 +284,10 @@ def check_inline_markers(versions: dict[str, str]) -> int:
         print("Inline version markers are stale in:", file=sys.stderr)
         for p in stale:
             print(f"- {p}", file=sys.stderr)
-        print("Run: python3 external/Kataglyphis-DocumANTation/docs-tooling/scripts/sync_versions.py --write", file=sys.stderr)
+        print(
+            "Run: python3 external/Kataglyphis-DocumANTation/docs-tooling/scripts/sync_versions.py --write",
+            file=sys.stderr,
+        )
         return 1
     print("Inline version markers are up to date.")
     return 0
@@ -308,9 +315,7 @@ DEPS_JSON_PATH = REPO_ROOT / "docs/deps/deps.json"
 DEPS_TABLE_FILE = REPO_ROOT / "docs/third-party-licenses.md"
 
 
-def configure_paths(
-    repo_root: Path, versions_env: Path | None, deps_json: Path | None
-) -> None:
+def configure_paths(repo_root: Path, versions_env: Path | None, deps_json: Path | None) -> None:
     """Point the module-level path globals at the consuming repository."""
     global REPO_ROOT, VERSIONS_ENV, DEPS_JSON_PATH, DEPS_TABLE_FILE
     REPO_ROOT = repo_root.resolve()
@@ -327,6 +332,7 @@ def configure_paths(
 
 def load_deps_metadata() -> dict:
     import json
+
     return json.loads(DEPS_JSON_PATH.read_text(encoding="utf-8"))
 
 
@@ -384,9 +390,7 @@ def render_deps_table(versions: dict[str, str]) -> str:
 
 
 def _deps_marker_pattern() -> re.Pattern:
-    return re.compile(
-        re.escape(DEPS_START_MARKER) + r".*?" + re.escape(DEPS_END_MARKER), re.DOTALL
-    )
+    return re.compile(re.escape(DEPS_START_MARKER) + r".*?" + re.escape(DEPS_END_MARKER), re.DOTALL)
 
 
 def update_deps_table(file_path: Path, replacement: str) -> bool:
@@ -421,7 +425,10 @@ def check_deps_table(versions: dict[str, str]) -> int:
             print("Dependency table is up to date.")
             return 0
         print("Dependency table is out of date.", file=sys.stderr)
-        print("Run: python3 external/Kataglyphis-DocumANTation/docs-tooling/scripts/sync_versions.py --write", file=sys.stderr)
+        print(
+            "Run: python3 external/Kataglyphis-DocumANTation/docs-tooling/scripts/sync_versions.py --write",
+            file=sys.stderr,
+        )
         return 1
     except ValueError as e:
         print(str(e), file=sys.stderr)
@@ -450,7 +457,9 @@ def write_deps_table(versions: dict[str, str]) -> int:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Sync generated documentation version snapshots.")
-    parser.add_argument("--check", action="store_true", help="Fail if generated sections are out of date.")
+    parser.add_argument(
+        "--check", action="store_true", help="Fail if generated sections are out of date."
+    )
     parser.add_argument("--write", action="store_true", help="Rewrite generated sections in place.")
     parser.add_argument(
         "--repo-root",
@@ -487,7 +496,10 @@ def check_snapshot(replacement: str) -> int:
         print("Generated version snapshot is out of date in:", file=sys.stderr)
         for path in stale_files:
             print(f"- {path}", file=sys.stderr)
-        print("Run: python3 external/Kataglyphis-DocumANTation/docs-tooling/scripts/sync_versions.py --write", file=sys.stderr)
+        print(
+            "Run: python3 external/Kataglyphis-DocumANTation/docs-tooling/scripts/sync_versions.py --write",
+            file=sys.stderr,
+        )
         return 1
     print("Generated version snapshot is up to date.")
     return 0

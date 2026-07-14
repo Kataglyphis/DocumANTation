@@ -46,8 +46,7 @@ def _markdown_sort_key(path: Path) -> int:
     prefix = path.stem.split("-", 1)[0]
     if not prefix.isdigit():
         raise BuildError(
-            "Markdown files must start with a numeric prefix like '01-'. "
-            f"Invalid file: {path.name}"
+            f"Markdown files must start with a numeric prefix like '01-'. Invalid file: {path.name}"
         )
     return int(prefix)
 
