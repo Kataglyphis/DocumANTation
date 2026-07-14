@@ -18,7 +18,8 @@ It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow c
 | `docs/` | Sphinx documentation site for this repository |
 | `md2pdfLib/` | Shared Python build logic, Pandoc presets, LaTeX templates, and shell scripts |
 | `scripts/` | Top-level wrappers for containerized builds |
-| `ExternalLib/Kataglyphis-ContainerHub/` | Reusable Kataglyphis docs styling and shared container components |
+| `sphinx-kataglyphis-theme/` | Reusable Sphinx theme package (`sphinx_kataglyphis`) shared across Kataglyphis docs sites |
+| `docs-tooling/` | Shared Sphinx templates and doc-generation scripts consumed by downstream repos as a submodule |
 
 ## Important Entry Points
 

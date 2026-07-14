@@ -5,6 +5,3 @@
 [submodule "md2pdfLib/presentation/template/latex/smile"]
 	path = md2pdfLib/presentation/template/latex/smile
 	url = https://github.com/Kataglyphis/smile
-[submodule "ExternalLib/Kataglyphis-ContainerHub"]
-	path = ExternalLib/Kataglyphis-ContainerHub
-	url = https://github.com/Kataglyphis/Kataglyphis-ContainerHub.git

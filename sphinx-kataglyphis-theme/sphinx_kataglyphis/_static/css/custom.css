@@ -1,0 +1,424 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --brand-accent: #6af0ad;
+  --brand-accent-strong: #2ad488;
+  --brand-accent-soft: #e9fbf2;
+  --text-main: #1f2a24;
+  --surface-soft: #f7fbf9;
+  --surface-border: #dcefe5;
+}
+
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
+html[data-theme="light"] {
+  --pst-color-primary: var(--brand-accent-strong);
+  --pst-color-link: #1ca06a;
+  --pst-color-link-hover: #167d52;
+}
+
+html[data-theme="dark"] {
+  --pst-color-primary: var(--brand-accent);
+  --pst-color-link: #7df5ba;
+  --pst-color-link-hover: #a0f9cc;
+  --pst-color-text-base: #e7efe9;
+  --pst-color-text-muted: #b8cbc0;
+}
+
+/* -- Header gradient -------------------------------------------- */
+
+.bd-header {
+  background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-strong));
+}
+
+/* -- Primary sidebar -------------------------------------------- */
+
+.bd-sidebar-primary {
+  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
+  border-right: 1px solid var(--surface-border);
+  max-height: 100vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+}
+
+/* -- Secondary sidebar: re-enabled for page TOC on desktop ------ */
+
+.bd-sidebar-secondary {
+  display: block;
+}
+
+.bd-main .bd-content {
+  max-width: 100%;
+}
+
+/* -- Cards ------------------------------------------------------ */
+
+.sd-card {
+  border-radius: 14px;
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 6px 18px rgba(32, 78, 56, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.sd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(32, 78, 56, 0.14);
+}
+
+.sd-card-header {
+  background: var(--brand-accent-soft);
+  border-bottom: 2px solid var(--brand-accent-strong);
+}
+
+/* -- Hero section ----------------------------------------------- */
+
+.hero-section {
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  padding: 1rem 1.2rem 0.2rem;
+  margin-bottom: 1.4rem;
+  background: linear-gradient(140deg, #ffffff 10%, #f1fbf5 100%);
+  box-shadow: 0 8px 24px rgba(33, 82, 59, 0.1);
+  border-left: 4px solid var(--brand-accent-strong);
+}
+
+/* -- Headings: green underline accent --------------------------- */
+
+.bd-article-container section h1,
+.bd-article-container section h2,
+.bd-article-container section h3 {
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid var(--surface-border);
+  position: relative;
+}
+
+.bd-article-container section h1::after,
+.bd-article-container section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 80px;
+  height: 2px;
+  background: var(--brand-accent-strong);
+}
+
+/* -- Links ------------------------------------------------------ */
+
+.bd-article-container section a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.bd-article-container section a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -- Code styling ----------------------------------------------- */
+
+.bd-article-container section code,
+.bd-article-container section .docutils.literal {
+  background: var(--brand-accent-soft);
+  border: 1px solid var(--surface-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.875em;
+}
+
+html[data-theme="dark"] .bd-article-container section code,
+html[data-theme="dark"] .bd-article-container section .docutils.literal {
+  background: #1a2d23;
+  border-color: #2b4a3a;
+}
+
+/* -- Blockquotes: green left accent ----------------------------- */
+
+.bd-article-container section blockquote {
+  border-left: 4px solid var(--brand-accent-strong);
+  background: var(--brand-accent-soft);
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+}
+
+html[data-theme="dark"] .bd-article-container section blockquote {
+  background: #0f1f17;
+}
+
+/* -- Tables ----------------------------------------------------- */
+
+.pst-scrollable-table-container table th {
+  background: var(--brand-accent-strong);
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+}
+
+.pst-scrollable-table-container table th a {
+  color: #fff !important;
+}
+
+.pst-scrollable-table-container table tr:nth-child(even) {
+  background: var(--brand-accent-soft);
+}
+
+html[data-theme="dark"] .pst-scrollable-table-container table tr:nth-child(even) {
+  background: #132018;
+}
+
+.pst-scrollable-table-container table th,
+.pst-scrollable-table-container table td {
+  padding: 0.6rem 0.8rem;
+}
+
+/* -- Admonitions (green-tinted note) ---------------------------- */
+
+.admonition.note,
+div.admonition.note {
+  border-left: 4px solid var(--brand-accent-strong);
+  border-radius: 0 8px 8px 0;
+  background: var(--brand-accent-soft);
+}
+
+.admonition.note .admonition-title,
+div.admonition.note .admonition-title {
+  background: var(--brand-accent-strong);
+  color: #fff;
+  font-weight: 600;
+}
+
+html[data-theme="dark"] .admonition.note,
+html[data-theme="dark"] div.admonition.note {
+  background: #0f1f17;
+}
+
+/* -- kbd styling ------------------------------------------------ */
+
+kbd,
+.kbd {
+  background: var(--brand-accent-strong);
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.15em 0.5em;
+  border: none;
+  box-shadow: 0 2px 0 #145a3c;
+  font-size: 0.8em;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* -- Sidebar active link (light mode) --------------------------- */
+
+html[data-theme="light"] .bd-sidebar-primary .nav-link.active {
+  color: #0f6b47 !important;
+  background: var(--brand-accent-soft) !important;
+  border-left: 3px solid var(--brand-accent-strong) !important;
+  font-weight: 600;
+}
+
+/* -- Sidebar caption text (green tint) -------------------------- */
+
+.bd-sidebar-primary .caption-text {
+  color: var(--brand-accent-strong) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+}
+
+/* -- Sidebar search button (green) ------------------------------ */
+
+.sidebar-primary-item .search-button-field {
+  border-color: var(--brand-accent-strong) !important;
+}
+
+.sidebar-primary-item .search-button-field:hover {
+  border-color: #145a3c !important;
+}
+
+/* -- TOC active item -------------------------------------------- */
+
+nav#pst-page-toc-nav .nav-link.active {
+  border-left: 3px solid var(--brand-accent-strong);
+  color: var(--brand-accent-strong) !important;
+  font-weight: 600;
+}
+
+/* -- Card titles in green --------------------------------------- */
+
+.sd-card-title {
+  color: var(--brand-accent-strong) !important;
+  font-weight: 600;
+}
+
+/* -- Dark theme specific overrides ------------------------------ */
+
+html[data-theme="dark"] .bd-sidebar-primary {
+  background: linear-gradient(180deg, #101712 0%, #0d1410 100%) !important;
+  border-right: 1px solid #2b3b33 !important;
+}
+
+html[data-theme="dark"] .bd-sidebar-primary a,
+html[data-theme="dark"] .bd-sidebar-primary .nav-link {
+  color: #d7e7de !important;
+}
+
+html[data-theme="dark"] .bd-sidebar-primary .nav-link:hover {
+  color: #f0fbf5 !important;
+  background: #1d2d25 !important;
+}
+
+html[data-theme="dark"] .bd-sidebar-primary .nav-link.active {
+  color: #f4fdf8 !important;
+  background: #233a2f !important;
+  border-left: 3px solid var(--brand-accent) !important;
+}
+
+html[data-theme="dark"] .hero-section {
+  color: #000000 !important;
+}
+
+html[data-theme="dark"] .hero-section a {
+  color: var(--brand-accent-strong) !important;
+}
+
+/* -- Primary sidebar dialog fix: slide from left, not centered - */
+
+#pst-primary-sidebar-modal {
+  border: 0;
+  height: 100vh;
+  left: 0;
+  margin: 0;
+  max-height: 100vh;
+  max-width: 350px;
+  overflow-y: auto;
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  width: 75%;
+  z-index: 1055;
+  background: var(--pst-color-background);
+  color: var(--pst-color-text-base);
+}
+
+#pst-primary-sidebar-modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+#pst-primary-sidebar-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] #pst-primary-sidebar-modal {
+  background: linear-gradient(180deg, #101712 0%, #0d1410 100%);
+  border-right: 1px solid #2b3b33;
+}
+
+html[data-theme="light"] #pst-primary-sidebar-modal {
+  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
+  border-right: 1px solid var(--surface-border);
+}
+
+/* -- Force long links / URLs to wrap on narrow screens --------- */
+
+.bd-article-container section,
+.bd-article-container section a,
+.bd-article-container section a code,
+.bd-article-container section a .pre,
+.bd-article-container section code,
+.bd-article-container section .docutils.literal,
+.pst-scrollable-table-container th,
+.pst-scrollable-table-container td {
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  white-space: pre-wrap !important;
+}
+
+/* Inline code: aggressive break to force long unbroken strings to wrap */
+.bd-article-container section span.pre {
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+  hyphens: none !important;
+}
+
+/* Code blocks: horizontal scroll instead of overflow clipping -- */
+
+.bd-content div.highlight pre {
+  white-space: pre !important;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Article container: fill width on small viewports ------------- */
+
+.bd-main .bd-content .bd-article-container {
+  max-width: 1100px;
+  width: 100%;
+}
+
+/* -- Secondary sidebar dialog: slide from the right on mobile -- */
+
+#pst-secondary-sidebar-modal {
+  border: 0;
+  height: 100vh;
+  margin: 0;
+  max-height: 100vh;
+  max-width: 350px;
+  overflow-y: auto;
+  padding: 1rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 75%;
+  z-index: 1055;
+  background: var(--pst-color-background);
+  color: var(--pst-color-text-base);
+}
+
+#pst-secondary-sidebar-modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+#pst-secondary-sidebar-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] #pst-secondary-sidebar-modal {
+  background: linear-gradient(180deg, #101712 0%, #0d1410 100%);
+  border-left: 1px solid #2b3b33;
+}
+
+html[data-theme="light"] #pst-secondary-sidebar-modal {
+  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
+  border-left: 1px solid var(--surface-border);
+}
+
+/* -- Mobile responsive overrides ------------------------------- */
+
+@media (max-width: 575.98px) {
+  .sd-row-cols-xs-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Tables: horizontal scroll on narrow viewports ---------------- */
+
+.pst-scrollable-table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+}
+
+.pst-scrollable-table-container table {
+  width: 100%;
+  min-width: 0;
+}
+
+

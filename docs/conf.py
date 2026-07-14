@@ -11,15 +11,18 @@ author = "Jonas Heinle"
 copyright = f"{datetime.now():%Y}, {author}"
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SHARED_DOCS_ROOT = REPO_ROOT / "ExternalLib" / "Kataglyphis-ContainerHub" / "docs"
-SHARED_THEME_CONF = SHARED_DOCS_ROOT / "source_templates" / "sphinx-book" / "conf_base.py"
+# The shared docs theme now lives in this repository (docs-tooling/), which is
+# the single source of truth consumed as a submodule by downstream projects.
+SHARED_THEME_CONF = (
+    REPO_ROOT / "docs-tooling" / "source_templates" / "sphinx-book" / "conf_base.py"
+)
+THEME_STATIC = REPO_ROOT / "sphinx-kataglyphis-theme" / "sphinx_kataglyphis" / "_static"
 DOCS_LOGO = REPO_ROOT / "images" / "logo.png"
 DOCS_LOGO_RELATIVE = "../images/logo.png"
 
 if not SHARED_THEME_CONF.exists():
     raise FileNotFoundError(
-        "Missing shared docs theme in ExternalLib/Kataglyphis-ContainerHub. "
-        "Run `git submodule update --init --recursive`."
+        f"Missing shared docs theme at {SHARED_THEME_CONF}."
     )
 
 if not DOCS_LOGO.exists():
@@ -52,7 +55,7 @@ html_theme_options["logo"] = {
 }
 html_static_path = [
     *shared_conf.HTML_STATIC_PATH,
-    str(SHARED_DOCS_ROOT / "_static"),
+    str(THEME_STATIC),
     str(REPO_ROOT / "images"),
 ]
 html_css_files = list(shared_conf.HTML_CSS_FILES)

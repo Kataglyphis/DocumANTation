@@ -13,7 +13,10 @@
 - LuaLaTeX and related TeX tooling for final PDF generation
 - `beamerthemeawesome` as the presentation theme submodule
 - `smile` as an additional presentation theme submodule
-- `ExternalLib/Kataglyphis-ContainerHub` for shared Kataglyphis docs styling and reusable components
+
+This repository is also the single source of truth for the shared Kataglyphis
+docs theme (`sphinx-kataglyphis-theme/`) and docs tooling (`docs-tooling/`),
+which downstream repositories consume as a submodule.
 
 ## Contribution Flow
 
