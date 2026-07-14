@@ -4,6 +4,13 @@ data/out/
 __pycache__/
 *.pyc
 
+# Python packaging / editable-install artifacts
+# (`pip install -e sphinx-kataglyphis-theme` generates these)
+*.egg-info/
+.eggs/
+build/
+dist/
+
 # LaTeX build artifacts
 *.aux
 *.log
