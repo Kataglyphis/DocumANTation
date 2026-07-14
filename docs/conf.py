@@ -13,17 +13,13 @@ copyright = f"{datetime.now():%Y}, {author}"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 # The shared docs theme now lives in this repository (docs-tooling/), which is
 # the single source of truth consumed as a submodule by downstream projects.
-SHARED_THEME_CONF = (
-    REPO_ROOT / "docs-tooling" / "source_templates" / "sphinx-book" / "conf_base.py"
-)
+SHARED_THEME_CONF = REPO_ROOT / "docs-tooling" / "source_templates" / "sphinx-book" / "conf_base.py"
 THEME_STATIC = REPO_ROOT / "sphinx-kataglyphis-theme" / "sphinx_kataglyphis" / "_static"
 DOCS_LOGO = REPO_ROOT / "images" / "logo.png"
 DOCS_LOGO_RELATIVE = "../images/logo.png"
 
 if not SHARED_THEME_CONF.exists():
-    raise FileNotFoundError(
-        f"Missing shared docs theme at {SHARED_THEME_CONF}."
-    )
+    raise FileNotFoundError(f"Missing shared docs theme at {SHARED_THEME_CONF}.")
 
 if not DOCS_LOGO.exists():
     raise FileNotFoundError(f"Missing docs logo at {DOCS_LOGO}")
