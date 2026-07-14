@@ -19,6 +19,13 @@ md2pdfLib/scripts/            → shared shell scripts
 Dockerfile         → container build definition
 ```
 
+### Related documentation
+
+- [`Dockerfile`](Dockerfile) — the `pandoc_all` image (Ubuntu + TeX Live + Pandoc + the beamer/smile themes)
+- [Getting Started](docs/getting-started.md) — clone → build image → build a document, step by step
+- [Build Pipeline](docs/build-pipeline.md) — the per-target Pandoc/LuaLaTeX compilation stages
+- [Overview](docs/overview.md) — repository structure and shared components
+
 ---
 
 ## Quick Commands
