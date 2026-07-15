@@ -8,8 +8,11 @@ downstream repos as a git submodule.
 ## Included files
 
 - `conf_base.py` – baseline Sphinx theme settings for `sphinx-book-theme`
-- `custom.css` – shared visual style (light/dark mode)
 - `index_template.rst` – modern landing page template with cards
+
+The visual style is **not** duplicated here. It lives once, in
+`sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css`, and its
+brand tokens are generated from [`style/brand.json`](../../../style/brand.json).
 
 ## Two ways to consume
 
@@ -36,11 +39,14 @@ setup_theme(
 
 ### Option B — reference these template files directly
 
-1. Copy the shared assets into your docs tree:
+Prefer Option A. Copying the CSS forks it, and a fork drifts — the copy that
+used to live in this folder silently fell ~270 lines behind the original before
+it was deleted. If you must, copy from the one canonical file rather than a
+second checked-in version of it:
 
 ```bash
 mkdir -p docs/source/_static/css
-cp external/Kataglyphis-DocumANTation/docs-tooling/source_templates/sphinx-book/custom.css docs/source/_static/css/custom.css
+cp external/Kataglyphis-DocumANTation/sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css docs/source/_static/css/custom.css
 cp external/Kataglyphis-DocumANTation/docs-tooling/source_templates/sphinx-book/index_template.rst docs/source/index.rst
 ```
 

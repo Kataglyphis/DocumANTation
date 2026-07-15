@@ -1,15 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
-
 /* generated:brand-tokens:start */
 /* GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand. */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+
 :root {
+  --brand-font-main: 'Roboto', sans-serif;
+  --brand-font-mono: 'FreeMono', monospace;
+
+  --brand-white: #ffffff;
+  --brand-black: #000000;
   --brand-accent: #6af0ad;
   --brand-accent-strong: #2ad488;
   --brand-accent-soft: #e9fbf2;
-  --text-main: #1f2a24;
-  --surface-soft: #f7fbf9;
-  --surface-border: #dcefe5;
-  --brand-font-main: 'Roboto', sans-serif;
+  --brand-accent-deep: #145a3c;
+  --brand-link: #1ca06a;
+  --brand-link-hover: #167d52;
+  --brand-link-active: #0f6b47;
+  --brand-text-main: #1f2a24;
+  --brand-text-on-accent: #ffffff;
+  --brand-surface-soft: #f7fbf9;
+  --brand-surface-border: #dcefe5;
+  --brand-surface-gradient-from: #fbfefd;
+  --brand-surface-gradient-to: #f3fbf7;
+  --brand-card-gradient-from: #ffffff;
+  --brand-card-gradient-to: #f1fbf5;
+
+  /* dark-mode palette */
+  --brand-dark-link: #7df5ba;
+  --brand-dark-link-hover: #a0f9cc;
+  --brand-dark-text-base: #e7efe9;
+  --brand-dark-text-muted: #b8cbc0;
+  --brand-dark-hero-text: #000000;
+  --brand-dark-surface-gradient-from: #101712;
+  --brand-dark-surface-gradient-to: #0d1410;
+  --brand-dark-surface-border: #2b3b33;
+  --brand-dark-code-bg: #1a2d23;
+  --brand-dark-code-border: #2b4a3a;
+  --brand-dark-quote-bg: #0f1f17;
+  --brand-dark-table-stripe-bg: #132018;
+  --brand-dark-sidebar-link: #d7e7de;
+  --brand-dark-sidebar-link-hover: #f0fbf5;
+  --brand-dark-sidebar-link-hover-bg: #1d2d25;
+  --brand-dark-sidebar-link-active: #f4fdf8;
+  --brand-dark-sidebar-link-active-bg: #233a2f;
 }
 /* generated:brand-tokens:end */
 
@@ -19,16 +51,16 @@ html {
 
 html[data-theme="light"] {
   --pst-color-primary: var(--brand-accent-strong);
-  --pst-color-link: #1ca06a;
-  --pst-color-link-hover: #167d52;
+  --pst-color-link: var(--brand-link);
+  --pst-color-link-hover: var(--brand-link-hover);
 }
 
 html[data-theme="dark"] {
   --pst-color-primary: var(--brand-accent);
-  --pst-color-link: #7df5ba;
-  --pst-color-link-hover: #a0f9cc;
-  --pst-color-text-base: #e7efe9;
-  --pst-color-text-muted: #b8cbc0;
+  --pst-color-link: var(--brand-dark-link);
+  --pst-color-link-hover: var(--brand-dark-link-hover);
+  --pst-color-text-base: var(--brand-dark-text-base);
+  --pst-color-text-muted: var(--brand-dark-text-muted);
 }
 
 /* -- Header gradient -------------------------------------------- */
@@ -40,8 +72,8 @@ html[data-theme="dark"] {
 /* -- Primary sidebar -------------------------------------------- */
 
 .bd-sidebar-primary {
-  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
-  border-right: 1px solid var(--surface-border);
+  background: linear-gradient(180deg, var(--brand-surface-gradient-from) 0%, var(--brand-surface-gradient-to) 100%);
+  border-right: 1px solid var(--brand-surface-border);
   max-height: 100vh;
   overflow-y: auto;
   position: sticky;
@@ -62,7 +94,7 @@ html[data-theme="dark"] {
 
 .sd-card {
   border-radius: 14px;
-  border: 1px solid var(--surface-border);
+  border: 1px solid var(--brand-surface-border);
   box-shadow: 0 6px 18px rgba(32, 78, 56, 0.08);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
@@ -80,11 +112,11 @@ html[data-theme="dark"] {
 /* -- Hero section ----------------------------------------------- */
 
 .hero-section {
-  border: 1px solid var(--surface-border);
+  border: 1px solid var(--brand-surface-border);
   border-radius: 16px;
   padding: 1rem 1.2rem 0.2rem;
   margin-bottom: 1.4rem;
-  background: linear-gradient(140deg, #ffffff 10%, #f1fbf5 100%);
+  background: linear-gradient(140deg, var(--brand-card-gradient-from) 10%, var(--brand-card-gradient-to) 100%);
   box-shadow: 0 8px 24px rgba(33, 82, 59, 0.1);
   border-left: 4px solid var(--brand-accent-strong);
 }
@@ -95,7 +127,7 @@ html[data-theme="dark"] {
 .bd-article-container section h2,
 .bd-article-container section h3 {
   padding-bottom: 0.3rem;
-  border-bottom: 2px solid var(--surface-border);
+  border-bottom: 2px solid var(--brand-surface-border);
   position: relative;
 }
 
@@ -127,7 +159,7 @@ html[data-theme="dark"] {
 .bd-article-container section code,
 .bd-article-container section .docutils.literal {
   background: var(--brand-accent-soft);
-  border: 1px solid var(--surface-border);
+  border: 1px solid var(--brand-surface-border);
   border-radius: 4px;
   padding: 0.1em 0.35em;
   font-size: 0.875em;
@@ -135,8 +167,8 @@ html[data-theme="dark"] {
 
 html[data-theme="dark"] .bd-article-container section code,
 html[data-theme="dark"] .bd-article-container section .docutils.literal {
-  background: #1a2d23;
-  border-color: #2b4a3a;
+  background: var(--brand-dark-code-bg);
+  border-color: var(--brand-dark-code-border);
 }
 
 /* -- Blockquotes: green left accent ----------------------------- */
@@ -150,14 +182,14 @@ html[data-theme="dark"] .bd-article-container section .docutils.literal {
 }
 
 html[data-theme="dark"] .bd-article-container section blockquote {
-  background: #0f1f17;
+  background: var(--brand-dark-quote-bg);
 }
 
 /* -- Tables ----------------------------------------------------- */
 
 .pst-scrollable-table-container table th {
   background: var(--brand-accent-strong);
-  color: #fff;
+  color: var(--brand-text-on-accent);
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.85em;
@@ -165,7 +197,7 @@ html[data-theme="dark"] .bd-article-container section blockquote {
 }
 
 .pst-scrollable-table-container table th a {
-  color: #fff !important;
+  color: var(--brand-text-on-accent) !important;
 }
 
 .pst-scrollable-table-container table tr:nth-child(even) {
@@ -173,7 +205,7 @@ html[data-theme="dark"] .bd-article-container section blockquote {
 }
 
 html[data-theme="dark"] .pst-scrollable-table-container table tr:nth-child(even) {
-  background: #132018;
+  background: var(--brand-dark-table-stripe-bg);
 }
 
 .pst-scrollable-table-container table th,
@@ -193,13 +225,13 @@ div.admonition.note {
 .admonition.note .admonition-title,
 div.admonition.note .admonition-title {
   background: var(--brand-accent-strong);
-  color: #fff;
+  color: var(--brand-text-on-accent);
   font-weight: 600;
 }
 
 html[data-theme="dark"] .admonition.note,
 html[data-theme="dark"] div.admonition.note {
-  background: #0f1f17;
+  background: var(--brand-dark-quote-bg);
 }
 
 /* -- kbd styling ------------------------------------------------ */
@@ -207,11 +239,11 @@ html[data-theme="dark"] div.admonition.note {
 kbd,
 .kbd {
   background: var(--brand-accent-strong);
-  color: #fff;
+  color: var(--brand-text-on-accent);
   border-radius: 4px;
   padding: 0.15em 0.5em;
   border: none;
-  box-shadow: 0 2px 0 #145a3c;
+  box-shadow: 0 2px 0 var(--brand-accent-deep);
   font-size: 0.8em;
   font-family: var(--brand-font-main);
 }
@@ -219,7 +251,7 @@ kbd,
 /* -- Sidebar active link (light mode) --------------------------- */
 
 html[data-theme="light"] .bd-sidebar-primary .nav-link.active {
-  color: #0f6b47 !important;
+  color: var(--brand-link-active) !important;
   background: var(--brand-accent-soft) !important;
   border-left: 3px solid var(--brand-accent-strong) !important;
   font-weight: 600;
@@ -240,7 +272,7 @@ html[data-theme="light"] .bd-sidebar-primary .nav-link.active {
 }
 
 .sidebar-primary-item .search-button-field:hover {
-  border-color: #145a3c !important;
+  border-color: var(--brand-accent-deep) !important;
 }
 
 /* -- TOC active item -------------------------------------------- */
@@ -261,28 +293,28 @@ nav#pst-page-toc-nav .nav-link.active {
 /* -- Dark theme specific overrides ------------------------------ */
 
 html[data-theme="dark"] .bd-sidebar-primary {
-  background: linear-gradient(180deg, #101712 0%, #0d1410 100%) !important;
-  border-right: 1px solid #2b3b33 !important;
+  background: linear-gradient(180deg, var(--brand-dark-surface-gradient-from) 0%, var(--brand-dark-surface-gradient-to) 100%) !important;
+  border-right: 1px solid var(--brand-dark-surface-border) !important;
 }
 
 html[data-theme="dark"] .bd-sidebar-primary a,
 html[data-theme="dark"] .bd-sidebar-primary .nav-link {
-  color: #d7e7de !important;
+  color: var(--brand-dark-sidebar-link) !important;
 }
 
 html[data-theme="dark"] .bd-sidebar-primary .nav-link:hover {
-  color: #f0fbf5 !important;
-  background: #1d2d25 !important;
+  color: var(--brand-dark-sidebar-link-hover) !important;
+  background: var(--brand-dark-sidebar-link-hover-bg) !important;
 }
 
 html[data-theme="dark"] .bd-sidebar-primary .nav-link.active {
-  color: #f4fdf8 !important;
-  background: #233a2f !important;
+  color: var(--brand-dark-sidebar-link-active) !important;
+  background: var(--brand-dark-sidebar-link-active-bg) !important;
   border-left: 3px solid var(--brand-accent) !important;
 }
 
 html[data-theme="dark"] .hero-section {
-  color: #000000 !important;
+  color: var(--brand-dark-hero-text) !important;
 }
 
 html[data-theme="dark"] .hero-section a {
@@ -318,13 +350,13 @@ html[data-theme="dark"] .hero-section a {
 }
 
 html[data-theme="dark"] #pst-primary-sidebar-modal {
-  background: linear-gradient(180deg, #101712 0%, #0d1410 100%);
-  border-right: 1px solid #2b3b33;
+  background: linear-gradient(180deg, var(--brand-dark-surface-gradient-from) 0%, var(--brand-dark-surface-gradient-to) 100%);
+  border-right: 1px solid var(--brand-dark-surface-border);
 }
 
 html[data-theme="light"] #pst-primary-sidebar-modal {
-  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
-  border-right: 1px solid var(--surface-border);
+  background: linear-gradient(180deg, var(--brand-surface-gradient-from) 0%, var(--brand-surface-gradient-to) 100%);
+  border-right: 1px solid var(--brand-surface-border);
 }
 
 /* -- Force long links / URLs to wrap on narrow screens --------- */
@@ -395,13 +427,13 @@ html[data-theme="light"] #pst-primary-sidebar-modal {
 }
 
 html[data-theme="dark"] #pst-secondary-sidebar-modal {
-  background: linear-gradient(180deg, #101712 0%, #0d1410 100%);
-  border-left: 1px solid #2b3b33;
+  background: linear-gradient(180deg, var(--brand-dark-surface-gradient-from) 0%, var(--brand-dark-surface-gradient-to) 100%);
+  border-left: 1px solid var(--brand-dark-surface-border);
 }
 
 html[data-theme="light"] #pst-secondary-sidebar-modal {
-  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
-  border-left: 1px solid var(--surface-border);
+  background: linear-gradient(180deg, var(--brand-surface-gradient-from) 0%, var(--brand-surface-gradient-to) 100%);
+  border-left: 1px solid var(--brand-surface-border);
 }
 
 /* -- Mobile responsive overrides ------------------------------- */

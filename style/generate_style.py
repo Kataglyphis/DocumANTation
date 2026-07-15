@@ -7,10 +7,14 @@ exactly once and stays identical everywhere:
 
 - LaTeX:  md2pdfLib/style/brand-colors.tex  (\\definecolor + aliases)
 - LaTeX:  md2pdfLib/style/brand-fonts.tex   (\\brandMainFont + \\brandSetMainFont)
-- CSS:    the ``:root`` brand-token block inside each themed custom.css,
-          maintained between generated markers.
+- CSS:    the token block inside the theme's custom.css, maintained between
+          generated markers. That file is the only web stylesheet -- the theme
+          package ships it, so consuming repos install it instead of copying it.
 - YAML:   the ``mainfont:`` key in each Pandoc metadata file (Pandoc reads YAML,
           not LaTeX, so the value is generated in place between markers).
+- JSON:   style/brand.tokens.json -- brand.json with aliases resolved, for any
+          other application that wants to read the brand without implementing
+          alias resolution.
 
 Usage:
     python style/generate_style.py --check   # fail if derived files drifted
@@ -27,12 +31,15 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BRAND_JSON = REPO_ROOT / "style" / "brand.json"
+TOKENS_JSON = REPO_ROOT / "style" / "brand.tokens.json"
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"
 FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
+# The web style lives in exactly one file: the theme package ships it and
+# setup_theme() puts it on html_static_path, so every consuming repo gets the
+# same CSS without copying it. Do not add a second target here.
 CSS_TARGETS = [
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css",
-    REPO_ROOT / "docs-tooling/source_templates/sphinx-book/custom.css",
 ]
 
 YAML_TARGETS = [
@@ -47,8 +54,48 @@ YAML_END = "# generated:brand-font:end"
 NOTE = "GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand."
 
 
+def _resolve_group(group: dict[str, str], fallback: dict[str, str] | None = None) -> dict[str, str]:
+    """Resolve ``@alias`` values against the group, then *fallback*.
+
+    Keeps a literal from being written twice in brand.json: `"text_on_accent":
+    "@white"` means "the same colour as white", not "a copy of #ffffff".
+    """
+    resolved: dict[str, str] = {}
+    for key, value in group.items():
+        seen = [key]
+        while isinstance(value, str) and value.startswith("@"):
+            target = value[1:]
+            if target in seen:
+                raise SystemExit(f"Alias cycle in brand.json: {' -> '.join(seen)} -> {target}")
+            seen.append(target)
+            if target in group:
+                value = group[target]
+            elif fallback and target in fallback:
+                value = fallback[target]
+            else:
+                raise SystemExit(f"brand.json: '{key}' aliases unknown token '@{target}'")
+        resolved[key] = value
+    return resolved
+
+
+def resolve_brand(raw: dict) -> dict:
+    """Return *raw* with every ``@alias`` replaced by its literal value.
+
+    The ``render_*`` functions require resolved input -- an unresolved dict
+    would emit a literal ``@accent`` into the CSS. Idempotent, so resolving
+    twice is harmless.
+    """
+    colors = _resolve_group(raw["colors"])
+    return {
+        **raw,
+        "colors": colors,
+        "colors_dark": _resolve_group(raw["colors_dark"], fallback=colors),
+    }
+
+
 def load_brand() -> dict:
-    return json.loads(BRAND_JSON.read_text(encoding="utf-8"))
+    """Load brand.json with every ``@alias`` resolved to its literal value."""
+    return resolve_brand(json.loads(BRAND_JSON.read_text(encoding="utf-8")))
 
 
 def _hex(value: str) -> str:
@@ -92,24 +139,47 @@ def render_latex_fonts(brand: dict) -> str:
     )
 
 
+def _css_var(name: str, prefix: str = "--brand-") -> str:
+    """`accent_strong` -> `--brand-accent-strong`."""
+    return prefix + name.replace("_", "-")
+
+
 def render_css_block(brand: dict) -> str:
-    c = brand["colors"]
-    return "\n".join(
-        [
-            CSS_START,
-            f"/* {NOTE} */",
-            ":root {",
-            f"  --brand-accent: {c['accent']};",
-            f"  --brand-accent-strong: {c['accent_strong']};",
-            f"  --brand-accent-soft: {c['accent_soft']};",
-            f"  --text-main: {c['text_main']};",
-            f"  --surface-soft: {c['surface_soft']};",
-            f"  --surface-border: {c['surface_border']};",
-            f"  --brand-font-main: '{brand['fonts']['main']}', sans-serif;",
-            "}",
-            CSS_END,
-        ]
-    )
+    """Render every brand token as a CSS custom property.
+
+    Dark tokens get their own ``--brand-dark-*`` names rather than shadowing the
+    light ones inside a ``[data-theme="dark"]`` block: shadowing would silently
+    retint every existing ``var(--brand-*)`` use in dark mode.
+    """
+    fonts = brand["fonts"]
+    lines = [
+        CSS_START,
+        f"/* {NOTE} */",
+        f"@import url('https://fonts.googleapis.com/css2?family={fonts['main']}"
+        f":wght@{fonts['main_weights']}&display=swap');",
+        "",
+        ":root {",
+        f"  --brand-font-main: '{fonts['main']}', sans-serif;",
+        f"  --brand-font-mono: '{fonts['mono']}', monospace;",
+        "",
+    ]
+    lines += [f"  {_css_var(k)}: {v};" for k, v in brand["colors"].items()]
+    lines += ["", "  /* dark-mode palette */"]
+    lines += [f"  {_css_var(k, '--brand-dark-')}: {v};" for k, v in brand["colors_dark"].items()]
+    lines += ["}", CSS_END]
+    return "\n".join(lines)
+
+
+def render_tokens_json(brand: dict) -> str:
+    """brand.json with aliases resolved -- the read-me-from-anywhere artifact."""
+    payload = {
+        "_comment": NOTE + " Read this file (not brand.json) from other applications.",
+        "name": brand["name"],
+        "colors": brand["colors"],
+        "colors_dark": brand["colors_dark"],
+        "fonts": brand["fonts"],
+    }
+    return json.dumps(payload, indent=2) + "\n"
 
 
 def render_yaml_block(brand: dict) -> str:
@@ -152,6 +222,7 @@ def desired_outputs() -> dict[Path, str]:
     outputs: dict[Path, str] = {
         STY_PATH: render_latex(brand),
         FONTS_PATH: render_latex_fonts(brand),
+        TOKENS_JSON: render_tokens_json(brand),
     }
     css_block = render_css_block(brand)
     for css in CSS_TARGETS:
