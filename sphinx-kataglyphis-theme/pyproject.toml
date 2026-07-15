@@ -8,7 +8,15 @@ dependencies = [
     "sphinx-book-theme>=1",
     "myst-parser>=3",
     "sphinx-design>=0.6",
+    "pygments>=2.17",
 ]
+
+# Register the shared Kataglyphis code palette as real Pygments styles, so the
+# website highlights code the same way the book and slides do. Generated from
+# style/brand.json -- see sphinx_kataglyphis/highlight.py.
+[project.entry-points."pygments.styles"]
+kataglyphis-light = "sphinx_kataglyphis.highlight:KataglyphisLightStyle"
+kataglyphis-dark = "sphinx_kataglyphis.highlight:KataglyphisDarkStyle"
 
 [build-system]
 requires = ["setuptools>=64"]

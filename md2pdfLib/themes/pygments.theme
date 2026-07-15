@@ -78,7 +78,7 @@
             "text-color": "#ffa657",
             "background-color": null,
             "bold": false,
-            "italic": true,
+            "italic": false,
             "underline": false
         },
         "DecVal": {

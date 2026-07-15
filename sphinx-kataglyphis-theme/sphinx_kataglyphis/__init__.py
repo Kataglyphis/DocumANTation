@@ -139,6 +139,10 @@ def setup_theme(
         "show_toc_level": 2,
         "secondary_sidebar_items": ["page-toc"],
         "primary_sidebar_end": [],
+        # Same code palette as the book and the slides -- see
+        # sphinx_kataglyphis/highlight.py, generated from style/brand.json.
+        "pygments_light_style": "kataglyphis-light",
+        "pygments_dark_style": "kataglyphis-dark",
     }
     if repository_url:
         theme_options["repository_url"] = repository_url

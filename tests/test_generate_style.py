@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import json
 import re
 
 import pytest
 
 from style.generate_style import (
+    PYGMENTS_TOKENS,
+    SYNTAX_TOKENS,
     _resolve_group,
     apply_css_block,
     apply_yaml_block,
@@ -15,6 +18,8 @@ from style.generate_style import (
     render_css_block,
     render_latex,
     render_latex_fonts,
+    render_pygments_module,
+    render_syntax_theme,
     render_tokens_json,
     render_yaml_block,
     resolve_brand,
@@ -32,6 +37,42 @@ RAW_BRAND = {
         "text_on_accent": "@white",
     },
     "colors_dark": {"link": "#7df5ba", "hero_text": "@accent"},
+    "syntax": {
+        "fg": "#111111",
+        "bg": "#f6f8fa",
+        "line_number": "@comment",
+        "line_number_bg": "#ffffff",
+        "comment": "#6a737d",
+        "keyword": "#d73a49",
+        "error": "#b31d28",
+        "error_bg": "#ffebee",
+        "string": "#032f62",
+        "constant": "#005cc5",
+        "float": "@constant",
+        "function": "#6f42c1",
+        "type": "@function",
+        "preprocessor": "#e36209",
+        "warning": "@preprocessor",
+        "attribute": "#22863a",
+    },
+    "syntax_dark": {
+        "fg": "#c9d1d9",
+        "bg": "#0d1117",
+        "line_number": "@comment",
+        "line_number_bg": "#161b22",
+        "comment": "#8b949e",
+        "keyword": "#ff7b72",
+        "error": "@keyword",
+        "error_bg": "#2d0b0f",
+        "string": "#a5d6ff",
+        "constant": "#79c0ff",
+        "float": "#ae81ff",
+        "function": "#d2a8ff",
+        "type": "#ffa657",
+        "preprocessor": "@type",
+        "warning": "@type",
+        "attribute": "#7ee787",
+    },
     "fonts": {
         "main": "Roboto",
         "main_weights": "400;700",
@@ -238,3 +279,45 @@ def test_tokens_ship_inside_the_installable_package():
     assert any("sphinx_kataglyphis" in p.parts for p in targets)
     # Both copies are generated from the same render, so they cannot diverge.
     assert len({desired_outputs()[p] for p in targets}) == 1
+
+
+# -- Code highlighting: shared between the PDFs and the website ---------------
+
+
+def test_syntax_theme_is_a_valid_pandoc_theme():
+    payload = json.loads(render_syntax_theme(BRAND["syntax"]))
+    assert payload["background-color"] == "#f6f8fa"
+    assert set(payload["text-styles"]) == set(SYNTAX_TOKENS)
+    assert payload["text-styles"]["Keyword"] == {
+        "text-color": "#d73a49",
+        "background-color": None,
+        "bold": True,
+        "italic": False,
+        "underline": False,
+    }
+    # Error is the only token with a background.
+    assert payload["text-styles"]["Error"]["background-color"] == "#ffebee"
+    assert payload["text-styles"]["Extension"]["text-color"] is None
+
+
+def test_pygments_and_pandoc_draw_from_the_same_palette():
+    # The whole point: a code block must not look different in the book and on
+    # the website. Neither mapping may reference a key the palettes don't have.
+    pandoc_keys = {key for key, _, _ in SYNTAX_TOKENS.values() if key}
+    pygments_keys = {key for _, key, _ in PYGMENTS_TOKENS}
+    for palette in (BRAND["syntax"], BRAND["syntax_dark"]):
+        assert pandoc_keys <= set(palette), pandoc_keys - set(palette)
+        assert pygments_keys <= set(palette), pygments_keys - set(palette)
+
+
+def test_pygments_module_defines_both_registered_styles():
+    out = render_pygments_module(BRAND)
+    assert 'name = "kataglyphis-light"' in out
+    assert 'name = "kataglyphis-dark"' in out
+    assert 'background_color = "#0d1117"' in out
+    assert 'Keyword: "bold #ff7b72",' in out
+    assert 'Keyword: "bold #d73a49",' in out
+
+
+def test_pygments_module_is_importable_python():
+    compile(render_pygments_module(BRAND), "highlight.py", "exec")

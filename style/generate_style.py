@@ -46,6 +46,10 @@ TOKENS_TARGETS = [
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"
 FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
+# Code highlighting: the same palette drives Pandoc (PDFs) and Pygments (web).
+SYNTAX_THEME_LIGHT = REPO_ROOT / "md2pdfLib/themes/pygments-print.theme"
+SYNTAX_THEME_DARK = REPO_ROOT / "md2pdfLib/themes/pygments.theme"
+PYGMENTS_MODULE = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py"
 # The web style lives in exactly one file: the theme package ships it and
 # setup_theme() puts it on html_static_path, so every consuming repo gets the
 # same CSS without copying it. Do not add a second target here.
@@ -112,6 +116,8 @@ def resolve_brand(raw: dict) -> dict:
         **raw,
         "colors": colors,
         "colors_dark": _resolve_group(raw["colors_dark"], fallback=colors),
+        "syntax": _resolve_group(raw["syntax"]),
+        "syntax_dark": _resolve_group(raw["syntax_dark"]),
     }
 
 
@@ -200,6 +206,142 @@ def render_css_block(brand: dict) -> str:
     return "\n".join(lines)
 
 
+# Pandoc/KDE highlight token -> (palette key, bold, italic). The emphasis is
+# structural and identical in both palettes, so it lives here rather than in
+# brand.json, which stays a pure colour/font file.
+SYNTAX_TOKENS: dict[str, tuple[str | None, bool, bool]] = {
+    "Alert": ("error", True, False),
+    "Annotation": ("comment", False, True),
+    "Attribute": ("attribute", False, False),
+    "BaseN": ("constant", False, False),
+    "BuiltIn": ("constant", False, False),
+    "Char": ("string", False, False),
+    "Comment": ("comment", False, True),
+    "CommentVar": ("comment", True, True),
+    "Constant": ("constant", False, False),
+    "ControlFlow": ("keyword", True, False),
+    "DataType": ("type", False, False),
+    "DecVal": ("constant", False, False),
+    "Documentation": ("comment", False, True),
+    "Error": ("error", True, False),
+    "Extension": (None, False, False),
+    "Float": ("float", False, False),
+    "Function": ("function", False, False),
+    "Import": ("keyword", False, False),
+    "Information": ("comment", True, True),
+    "Keyword": ("keyword", True, False),
+    "Operator": ("keyword", False, False),
+    "Other": ("fg", False, False),
+    "Preprocessor": ("preprocessor", False, False),
+    "SpecialChar": ("constant", False, False),
+    "SpecialString": ("string", False, False),
+    "String": ("string", False, False),
+    "Variable": ("fg", False, False),
+    "VerbatimString": ("string", False, False),
+    "Warning": ("warning", True, True),
+}
+
+# Pygments token -> palette key. Same palette as SYNTAX_TOKENS above, so a code
+# block on the website matches the same code block in the book.
+PYGMENTS_TOKENS: list[tuple[str, str, str]] = [
+    # (Pygments token, palette key, extra emphasis)
+    ("Text", "fg", ""),
+    ("Comment", "comment", "italic "),
+    ("Comment.Preproc", "preprocessor", ""),
+    ("Comment.Special", "comment", "bold italic "),
+    ("Keyword", "keyword", "bold "),
+    ("Keyword.Constant", "constant", ""),
+    ("Keyword.Type", "type", ""),
+    ("Operator", "keyword", ""),
+    ("Operator.Word", "keyword", "bold "),
+    ("Name.Builtin", "constant", ""),
+    ("Name.Function", "function", ""),
+    ("Name.Class", "type", ""),
+    ("Name.Decorator", "preprocessor", ""),
+    ("Name.Exception", "error", ""),
+    ("Name.Attribute", "attribute", ""),
+    ("Name.Tag", "keyword", ""),
+    ("Name.Variable", "fg", ""),
+    ("Name.Constant", "constant", ""),
+    ("String", "string", ""),
+    ("String.Escape", "constant", ""),
+    ("Number", "constant", ""),
+    ("Number.Float", "float", ""),
+    ("Generic.Deleted", "error", ""),
+    ("Generic.Inserted", "attribute", ""),
+    ("Generic.Emph", "fg", "italic "),
+    ("Generic.Strong", "fg", "bold "),
+    ("Generic.Heading", "function", "bold "),
+    ("Error", "error", "bold "),
+]
+
+
+def render_syntax_theme(palette: dict) -> str:
+    """Render a Pandoc (KDE) highlight theme from a syntax palette."""
+    styles: dict[str, dict] = {}
+    for token, (key, bold, italic) in sorted(SYNTAX_TOKENS.items()):
+        styles[token] = {
+            "text-color": palette[key] if key else None,
+            "background-color": palette["error_bg"] if token == "Error" else None,
+            "bold": bold,
+            "italic": italic,
+            "underline": False,
+        }
+    payload = {
+        "text-color": palette["fg"],
+        "background-color": palette["bg"],
+        "line-number-color": palette["line_number"],
+        "line-number-background-color": palette["line_number_bg"],
+        "text-styles": styles,
+    }
+    return json.dumps(payload, indent=4) + "\n"
+
+
+def _pygments_style_class(class_name: str, style_name: str, palette: dict) -> list[str]:
+    lines = [
+        f"class {class_name}(Style):",
+        f'    """Kataglyphis {style_name} code highlighting."""',
+        "",
+        f'    name = "{style_name}"',
+        f'    background_color = "{palette["bg"]}"',
+        f'    highlight_color = "{palette["error_bg"]}"',
+        f'    line_number_color = "{palette["line_number"]}"',
+        f'    line_number_background_color = "{palette["line_number_bg"]}"',
+        "",
+        "    styles = {",
+    ]
+    for token, key, emphasis in PYGMENTS_TOKENS:
+        lines.append(f'        {token}: "{emphasis}{palette[key]}",')
+    lines += ["    }", ""]
+    return lines
+
+
+def render_pygments_module(brand: dict) -> str:
+    """Render the Pygments styles that give the website the book's code colours."""
+    tokens = sorted({t.split(".")[0] for t, _, _ in PYGMENTS_TOKENS})
+    lines = [
+        f'"""{NOTE}',
+        "",
+        "Pygments styles carrying the Kataglyphis code palette, so code blocks on",
+        "the docs website match the book and the slides. Registered as the",
+        '"kataglyphis-light" / "kataglyphis-dark" Pygments styles via entry points.',
+        '"""',
+        "",
+        "from pygments.style import Style",
+        "from pygments.token import (",
+        *[f"    {t}," for t in tokens],
+        ")",
+        "",
+        "",
+    ]
+    lines += _pygments_style_class("KataglyphisLightStyle", "kataglyphis-light", brand["syntax"])
+    lines += [
+        "",
+    ]
+    lines += _pygments_style_class("KataglyphisDarkStyle", "kataglyphis-dark", brand["syntax_dark"])
+    return "\n".join(lines)
+
+
 def render_tokens_json(brand: dict) -> str:
     """brand.json with aliases resolved -- the read-me-from-anywhere artifact."""
     payload = {
@@ -275,6 +417,9 @@ def desired_outputs() -> dict[Path, str]:
     outputs: dict[Path, str] = {
         STY_PATH: render_latex(brand),
         FONTS_PATH: render_latex_fonts(brand),
+        SYNTAX_THEME_LIGHT: render_syntax_theme(brand["syntax"]),
+        SYNTAX_THEME_DARK: render_syntax_theme(brand["syntax_dark"]),
+        PYGMENTS_MODULE: render_pygments_module(brand),
     }
     tokens = render_tokens_json(brand)
     for target in TOKENS_TARGETS:

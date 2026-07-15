@@ -17,6 +17,21 @@ drifted, so a hand-edit to a derived file cannot survive review.
 Values of the form `"@other_key"` are aliases, so a literal is never written
 twice (`"text_on_accent": "@white"`). `colors_dark` may alias into `colors`.
 
+## Sections
+
+| Section | Drives |
+| --- | --- |
+| `colors` / `colors_dark` | Brand identity: accent, links, surfaces (LaTeX, CSS) |
+| `syntax` / `syntax_dark` | Code highlighting, shared by the PDFs (Pandoc) and the website (Pygments) |
+| `fonts` | Main + mono font, for LaTeX, Pandoc and the web |
+
+`syntax` is the light/print palette and `syntax_dark` the dark one. The book
+renders with the light palette, the dissertation and slides with the dark one,
+and the website uses **both** — it switches with the site's light/dark toggle.
+Which token gets bold or italic is structural and lives in `SYNTAX_TOKENS` /
+`PYGMENTS_TOKENS` in `generate_style.py`, not here; `brand.json` stays a pure
+colour/font file.
+
 ## Generated files — do not edit by hand
 
 | File | Consumer |
@@ -25,6 +40,9 @@ twice (`"text_on_accent": "@white"`). `colors_dark` may alias into `colors`.
 | `md2pdfLib/style/brand-fonts.tex` | LaTeX: `\brandSetMainFont`, `\brandSetMonoFont` |
 | `md2pdfLib/pandoc/base.yml`, `md2pdfLib/presentation/pandoc/metadata.yml` | Pandoc: `mainfont`, `monofont`, `monofontoptions`, `linkcolor`, `urlcolor`, `citecolor` (between `# generated:brand:` markers) |
 | `sphinx-kataglyphis-theme/.../_static/css/custom.css` | Web: `--brand-*` custom properties (between `/* generated:brand-tokens: */` markers) |
+| `md2pdfLib/themes/pygments-print.theme` | Pandoc code highlighting, light/print — used by the **book** |
+| `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by the **dissertation** and **slides** |
+| `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json` | Same, shipped inside the pip package |
 
@@ -61,6 +79,16 @@ Style your own rules with the tokens rather than literals:
 .my-thing { color: var(--brand-accent-strong); border: 1px solid var(--brand-surface-border); }
 ```
 
+`setup_theme()` also points `pygments_light_style` / `pygments_dark_style` at the
+shared `kataglyphis-light` / `kataglyphis-dark` styles, so code blocks on the
+site match the book. Installing the theme registers them with Pygments, so they
+work in any Pygments consumer, not just Sphinx:
+
+```python
+from pygments.styles import get_style_by_name
+get_style_by_name("kataglyphis-dark")
+```
+
 ### LaTeX
 
 Put the style directory on the LaTeX search path, then `\input` by bare name —
@@ -92,9 +120,9 @@ needed:
 
 These are per-document values that live with the document, not in `brand.json`:
 
-- Code/listing palettes (`mygreen`, `mymauve`, `amber` in `bookclass.cls`,
-  `Light` in `inline_code.tex`, `shadecolor`) — syntax-highlighting colours, not
-  brand identity.
+- A few LaTeX listing helpers (`mygreen`, `mymauve`, `amber` in `bookclass.cls`,
+  `Light` in `inline_code.tex`, `shadecolor`) are per-document leftovers. The
+  actual code highlighting comes from the `syntax` palettes above.
 - Neutral greys and blacks used for CV body text and headings.
 - `fonts.mono` names a TeX font (Latin Modern Mono) and is **not** emitted to
   CSS, because no browser has it; the web keeps the generic monospace stack.
