@@ -3,6 +3,8 @@
 import sys
 from pathlib import Path
 
+from sphinx_kataglyphis import brand
+
 
 def get_python_project_config(
     project_name: str,
@@ -68,19 +70,16 @@ AUTODOC_DEFAULT_OPTIONS = {
     "special-members": True,
 }
 
+# Read the accent rather than repeating it: style/brand.json is the only place
+# a brand colour is written.
 SPHINX_RTD_THEME_OPTIONS = {
-    "style_nav_header_background": "#6af0ad",
+    "style_nav_header_background": brand()["colors"]["accent"],
 }
 
-SPHINX_BOOK_THEME_OPTIONS = {
-    "repository_url": "https://github.com/Kataglyphis/Kataglyphis-ContainerHub",
-    "use_repository_button": True,
-    "show_navbar_depth": 2,
-    "navigation_with_keys": True,
-    "show_toc_level": 2,
-    "secondary_sidebar_items": [],
-    "primary_sidebar_end": [],
-}
+# There is deliberately no SPHINX_BOOK_THEME_OPTIONS here. For the book theme,
+# call sphinx_kataglyphis.setup_theme() -- it is the single baseline, and it
+# also wires up the brand CSS and the shared code palette. A dict of theme
+# options duplicated in this file would only drift away from it.
 
 SOURCE_SUFFIX = {
     ".rst": "restructuredtext",

@@ -1,31 +1,33 @@
 # Sphinx Book Theme Template Kit
 
-This folder contains reusable files to bootstrap a documentation website across
-multiple repositories. It lives in **Kataglyphis-DocumANTation**, the single
-source of truth for shared Kataglyphis docs tooling, and is consumed by
-downstream repos as a git submodule.
+Files to bootstrap a documentation website across repositories. This lives in
+**Kataglyphis-DocumANTation**, the single source of truth for shared Kataglyphis
+docs tooling, and is consumed by downstream repos as a git submodule.
 
 ## Included files
 
-- `conf_base.py` – baseline Sphinx theme settings for `sphinx-book-theme`
-- `index_template.rst` – modern landing page template with cards
+- `index_template.rst` – landing page template with cards
 
-The visual style is **not** duplicated here. It lives once, in
-`sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css`, and its
-brand tokens are generated from [`style/brand.json`](../../../style/brand.json).
+That is all that belongs here. The theme baseline and the visual style are
+**not** duplicated in this folder — they live once, in the
+`sphinx-kataglyphis-theme/` package, and its brand tokens are generated from
+[`style/brand.json`](../../../style/README.md).
 
-## Two ways to consume
+## How to consume
 
-### Option A — install the theme package (recommended)
+Install the theme and call `setup_theme()`. There is no second way, on purpose:
+this folder used to offer a "copy the files" option, and both copies it produced
+rotted — the stylesheet fork fell ~270 lines behind the original, and a
+duplicated `conf_base.py` drifted away from `setup_theme()` until this repo's
+own docs silently lost the shared code palette.
 
-The sibling `sphinx-kataglyphis-theme/` package wraps all of this behind a single
-`setup_theme()` call. Add it to your `requirements.txt`:
+`requirements.txt`:
 
 ```text
 -e ./external/Kataglyphis-DocumANTation/sphinx-kataglyphis-theme
 ```
 
-and in `docs/conf.py`:
+`docs/conf.py`:
 
 ```python
 from sphinx_kataglyphis import setup_theme
@@ -37,34 +39,20 @@ setup_theme(
 )
 ```
 
-### Option B — reference these template files directly
+That gives you the theme, the brand CSS, the shared code palette, and the
+Kataglyphis fonts. This repo's own `docs/conf.py` uses exactly the same call —
+if it works here, it works downstream.
 
-Prefer Option A. Copying the CSS forks it, and a fork drifts — the copy that
-used to live in this folder silently fell ~270 lines behind the original before
-it was deleted. If you must, copy from the one canonical file rather than a
-second checked-in version of it:
+## Per-project tweaks
 
-```bash
-mkdir -p docs/source/_static/css
-cp external/Kataglyphis-DocumANTation/sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css docs/source/_static/css/custom.css
-cp external/Kataglyphis-DocumANTation/docs-tooling/source_templates/sphinx-book/index_template.rst docs/source/index.rst
-```
-
-2. Add dependencies to your `requirements.txt`:
-
-```text
-sphinx-book-theme
-sphinx_design
-myst-parser
-```
-
-3. Configure `docs/source/conf.py`:
+Do not fork the stylesheet. Put project rules in their own file and use the
+brand tokens rather than literals:
 
 ```python
-extensions = ["myst_parser", "sphinx_design"]
-html_theme = "sphinx_book_theme"
-html_static_path = ["_static"]
-html_css_files = ["css/custom.css"]
+setup_theme(globals(), ..., html_css_files_extra=["css/my-project.css"])
 ```
 
-4. Build docs as usual.
+```css
+/* docs/_static/css/my-project.css */
+.my-thing { color: var(--brand-accent-strong); border: 1px solid var(--brand-surface-border); }
+```
