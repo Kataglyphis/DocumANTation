@@ -22,6 +22,7 @@ from md2pdfLib.presentation.pptx.make_reference import (
     build_reference,
     patch_theme_xml,
 )
+from md2pdfLib.presentation.pptx.verify_brand import brand_hexes, off_brand_colors
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BRAND = json.loads((REPO_ROOT / "style" / "brand.tokens.json").read_text("utf-8"))
@@ -144,3 +145,60 @@ def test_build_reference_against_real_pandoc(tmp_path):
             assert _colors(xml)["accent1"] == BRAND["colors"]["accent"].lstrip("#").upper()
             assert BRAND["fonts"]["main"] in xml
     assert not (tmp_path / "reference.default.pptx").exists(), "temp file left behind"
+
+
+# ── the on-brand gate ────────────────────────────────────────────────────────
+
+
+def _deck(path: Path, theme: str = "", slide: str = "") -> Path:
+    with zipfile.ZipFile(path, "w") as z:
+        z.writestr("ppt/theme/theme1.xml", f"<a:theme>{theme}</a:theme>")
+        z.writestr("ppt/slides/slide1.xml", f"<p:sld>{slide}</p:sld>")
+    return path
+
+
+def test_brand_hexes_covers_colours_and_syntax():
+    """Slides carry syntax colours, so a colours-only allowlist would reject them."""
+    hexes = brand_hexes(BRAND)
+    assert BRAND["colors"]["accent"].lstrip("#").upper() in hexes
+    assert BRAND["syntax_dark"]["keyword"].lstrip("#").upper() in hexes
+
+
+def test_gate_passes_an_on_brand_deck(tmp_path):
+    accent = BRAND["colors"]["accent"].lstrip("#").upper()
+    kw = BRAND["syntax_dark"]["keyword"].lstrip("#").upper()
+    deck = _deck(
+        tmp_path / "ok.pptx",
+        theme=f'<a:srgbClr val="{accent}"/>',
+        slide=f'<a:srgbClr val="{kw}"/>',
+    )
+    assert off_brand_colors(deck, brand_hexes(BRAND)) == {}
+
+
+def test_gate_catches_stock_office_blue_in_the_theme(tmp_path):
+    """The failure this gate exists for: --reference-doc silently not applied."""
+    deck = _deck(tmp_path / "bad.pptx", theme='<a:srgbClr val="4F81BD"/>')
+    assert off_brand_colors(deck, brand_hexes(BRAND)) == {"ppt/theme/theme1.xml": {"4F81BD"}}
+
+
+def test_gate_catches_an_off_brand_colour_on_a_slide(tmp_path):
+    """e.g. --syntax-highlighting dropped, so code renders in stock colours."""
+    deck = _deck(tmp_path / "bad.pptx", slide='<a:srgbClr val="123456"/>')
+    assert off_brand_colors(deck, brand_hexes(BRAND)) == {"ppt/slides/slide1.xml": {"123456"}}
+
+
+def test_gate_is_case_insensitive_about_hex(tmp_path):
+    """OOXML writes uppercase; brand.json stores lowercase. A gate that missed
+    this would pass everything and check nothing."""
+    accent = BRAND["colors"]["accent"].lstrip("#").lower()
+    deck = _deck(tmp_path / "ok.pptx", theme=f'<a:srgbClr val="{accent}"/>')
+    assert off_brand_colors(deck, brand_hexes(BRAND)) == {}
+
+
+def test_gate_refuses_a_deck_with_nothing_to_check(tmp_path):
+    """An empty/renamed-parts deck must not silently pass as 'no offenders'."""
+    empty = tmp_path / "empty.pptx"
+    with zipfile.ZipFile(empty, "w") as z:
+        z.writestr("docProps/app.xml", "<x/>")
+    with pytest.raises(SystemExit):
+        off_brand_colors(empty, brand_hexes(BRAND))

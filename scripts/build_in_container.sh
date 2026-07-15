@@ -39,6 +39,10 @@ case "$TARGET" in
         CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/presentation/pptx/make_reference.py /data/out/reference.pptx && uv run python /md2pdfLib/build.py pptx'
         if [ "$STRICT_WARNINGS" = "1" ]; then
             CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/pptx.json --format pandoc-json'
+            # The log gate only sees what pandoc complains about. A deck that
+            # builds cleanly and comes out stock Office blue would pass it, so
+            # check the artifact itself.
+            CMD+=' && uv run python /md2pdfLib/presentation/pptx/verify_brand.py /data/out/presentation.pptx'
         fi
         ;;
     cv)
