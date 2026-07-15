@@ -154,7 +154,16 @@ def setup_theme(
     conf_globals["html_theme_options"] = theme_options
 
     # ---- static paths & CSS ----
-    static_paths = ["_static", str(pkg_dir / "_static")]
+    # The package's _static comes last so the theme's css/custom.css wins over a
+    # same-named local copy: a project that forks the stylesheet gets its fork
+    # silently discarded, which is worse than not having one. Put per-project
+    # rules in their own file and pass html_css_files_extra.
+    # A project with no _static of its own is normal -- Sphinx warns about a
+    # missing html_static_path entry, so only list it when it exists.
+    conf_dir = Path(conf_globals.get("__file__", "conf.py")).resolve().parent
+    static_paths = [str(pkg_dir / "_static")]
+    if (conf_dir / "_static").is_dir():
+        static_paths.insert(0, "_static")
     conf_globals["html_static_path"] = static_paths
 
     css_files: list[str] = ["css/custom.css"]

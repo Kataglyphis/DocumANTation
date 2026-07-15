@@ -266,11 +266,18 @@ def test_repo_brand_json_renders_every_target():
     } <= targets
 
 
-def test_web_style_has_exactly_one_css_target():
-    # A second CSS target would mean the style is copied, which is how the old
-    # source_templates/sphinx-book/custom.css silently drifted ~270 lines.
-    css = [p for p in desired_outputs() if p.suffix == ".css"]
-    assert len(css) == 1
+def test_only_one_stylesheet_is_maintained_in_place():
+    # CSS_TARGETS are hand-written stylesheets with a generated token block. A
+    # second one would mean the style is forked, which is how the old
+    # source_templates/sphinx-book/custom.css silently drifted ~270 lines (and
+    # how ContainerHub's docs/_static copy ended up silently discarded).
+    assert len(CSS_TARGETS) == 1
+
+    # brand.css is different: fully generated, tokens only, for consumers that
+    # cannot install the theme (the Flutter site). It carries no rules to drift.
+    generated_css = [p for p in desired_outputs() if p.name == "brand.css"]
+    assert len(generated_css) == 1
+    assert "{" in desired_outputs()[generated_css[0]]  # it really is a stylesheet
 
 
 def test_resolve_brand_is_idempotent():

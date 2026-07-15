@@ -50,6 +50,9 @@ FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
 SYNTAX_THEME_LIGHT = REPO_ROOT / "md2pdfLib/themes/pygments-print.theme"
 SYNTAX_THEME_DARK = REPO_ROOT / "md2pdfLib/themes/pygments.theme"
 PYGMENTS_MODULE = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py"
+# Standalone token stylesheet for web projects that are not Sphinx (the
+# Flutter site): a plain <link> away from the same brand, no build step.
+BRAND_CSS = REPO_ROOT / "style" / "brand.css"
 # The web style lives in exactly one file: the theme package ships it and
 # setup_theme() puts it on html_static_path, so every consuming repo gets the
 # same CSS without copying it. Do not add a second target here.
@@ -343,6 +346,24 @@ def render_pygments_module(brand: dict) -> str:
     return "\n".join(lines)
 
 
+def render_brand_css(brand: dict) -> str:
+    """Standalone token stylesheet, for web projects outside the Sphinx theme."""
+    return (
+        "\n".join(
+            [
+                "/* Standalone Kataglyphis brand tokens. Link this and use the",
+                "   custom properties -- never copy the values:",
+                '     <link rel="stylesheet" href="brand.css">',
+                "     .thing { color: var(--brand-accent); }",
+                "   Consumed by the Flutter site; the Sphinx theme has the same",
+                "   tokens generated into its own custom.css. */",
+                render_css_block(brand).replace(CSS_START + "\n", "").replace("\n" + CSS_END, ""),
+            ]
+        )
+        + "\n"
+    )
+
+
 def render_tokens_json(brand: dict) -> str:
     """brand.json with aliases resolved -- the read-me-from-anywhere artifact."""
     payload = {
@@ -423,6 +444,7 @@ def desired_outputs() -> dict[Path, str]:
         SYNTAX_THEME_LIGHT: render_syntax_theme(brand["syntax"]),
         SYNTAX_THEME_DARK: render_syntax_theme(brand["syntax_dark"]),
         PYGMENTS_MODULE: render_pygments_module(brand),
+        BRAND_CSS: render_brand_css(brand),
     }
     tokens = render_tokens_json(brand)
     for target in TOKENS_TARGETS:

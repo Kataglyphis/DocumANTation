@@ -48,6 +48,7 @@ colour/font file.
 | `md2pdfLib/themes/pygments-print.theme` | Pandoc code highlighting, light/print — used by the **book** |
 | `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by the **dissertation** and **slides** |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
+| `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json` | Same, shipped inside the pip package |
 
@@ -110,6 +111,20 @@ TEXINPUTS="/path/to/Kataglyphis-DocumANTation/md2pdfLib/style:" lualatex mydoc.t
 
 Both files are safe to `\input` more than once. `brand-colors.tex` needs
 `xcolor` loaded; `brand-fonts.tex` needs `fontspec`.
+
+### A website that is not Sphinx
+
+Link the standalone token sheet and use the custom properties. Never copy a hex
+value into the site — that is how the site ended up one digit off the brand
+(`#69f0ae` instead of `#6af0ad`):
+
+```html
+<link rel="stylesheet" href="brand.css">
+```
+
+```css
+.loading { background: linear-gradient(45deg, var(--brand-white), var(--brand-accent)); }
+```
 
 ### Any other language
 

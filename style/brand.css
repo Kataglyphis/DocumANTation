@@ -1,0 +1,49 @@
+/* Standalone Kataglyphis brand tokens. Link this and use the
+   custom properties -- never copy the values:
+     <link rel="stylesheet" href="brand.css">
+     .thing { color: var(--brand-accent); }
+   Consumed by the Flutter site; the Sphinx theme has the same
+   tokens generated into its own custom.css. */
+/* GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand. */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --brand-font-main: 'Roboto', sans-serif;
+
+  --brand-white: #ffffff;
+  --brand-black: #000000;
+  --brand-accent: #6af0ad;
+  --brand-accent-strong: #2ad488;
+  --brand-accent-soft: #e9fbf2;
+  --brand-accent-deep: #145a3c;
+  --brand-link: #1ca06a;
+  --brand-link-hover: #167d52;
+  --brand-link-active: #0f6b47;
+  --brand-text-main: #1f2a24;
+  --brand-text-on-accent: #ffffff;
+  --brand-surface-soft: #f7fbf9;
+  --brand-surface-border: #dcefe5;
+  --brand-surface-gradient-from: #fbfefd;
+  --brand-surface-gradient-to: #f3fbf7;
+  --brand-card-gradient-from: #ffffff;
+  --brand-card-gradient-to: #f1fbf5;
+
+  /* dark-mode palette */
+  --brand-dark-link: #7df5ba;
+  --brand-dark-link-hover: #a0f9cc;
+  --brand-dark-text-base: #e7efe9;
+  --brand-dark-text-muted: #b8cbc0;
+  --brand-dark-hero-text: #000000;
+  --brand-dark-surface-gradient-from: #101712;
+  --brand-dark-surface-gradient-to: #0d1410;
+  --brand-dark-surface-border: #2b3b33;
+  --brand-dark-code-bg: #1a2d23;
+  --brand-dark-code-border: #2b4a3a;
+  --brand-dark-quote-bg: #0f1f17;
+  --brand-dark-table-stripe-bg: #132018;
+  --brand-dark-sidebar-link: #d7e7de;
+  --brand-dark-sidebar-link-hover: #f0fbf5;
+  --brand-dark-sidebar-link-hover-bg: #1d2d25;
+  --brand-dark-sidebar-link-active: #f4fdf8;
+  --brand-dark-sidebar-link-active-bg: #233a2f;
+}
