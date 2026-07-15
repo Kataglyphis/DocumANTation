@@ -1,0 +1,93 @@
+{
+  "_comment": "GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand. Read this file (not brand.json) from other applications.",
+  "name": "Kataglyphis",
+  "colors": {
+    "white": "#ffffff",
+    "black": "#000000",
+    "accent": "#6af0ad",
+    "accent_strong": "#2ad488",
+    "accent_soft": "#e9fbf2",
+    "accent_deep": "#145a3c",
+    "link": "#1ca06a",
+    "link_hover": "#167d52",
+    "link_active": "#0f6b47",
+    "text_main": "#1f2a24",
+    "text_on_accent": "#ffffff",
+    "surface_soft": "#f7fbf9",
+    "surface_border": "#dcefe5",
+    "surface_gradient_from": "#fbfefd",
+    "surface_gradient_to": "#f3fbf7",
+    "card_gradient_from": "#ffffff",
+    "card_gradient_to": "#f1fbf5"
+  },
+  "colors_dark": {
+    "link": "#7df5ba",
+    "link_hover": "#a0f9cc",
+    "text_base": "#e7efe9",
+    "text_muted": "#b8cbc0",
+    "hero_text": "#000000",
+    "surface_gradient_from": "#101712",
+    "surface_gradient_to": "#0d1410",
+    "surface_border": "#2b3b33",
+    "code_bg": "#1a2d23",
+    "code_border": "#2b4a3a",
+    "quote_bg": "#0f1f17",
+    "table_stripe_bg": "#132018",
+    "sidebar_link": "#d7e7de",
+    "sidebar_link_hover": "#f0fbf5",
+    "sidebar_link_hover_bg": "#1d2d25",
+    "sidebar_link_active": "#f4fdf8",
+    "sidebar_link_active_bg": "#233a2f"
+  },
+  "syntax": {
+    "fg": "#111111",
+    "bg": "#f6f8fa",
+    "line_number": "#6a737d",
+    "line_number_bg": "#ffffff",
+    "comment": "#6a737d",
+    "keyword": "#d73a49",
+    "error": "#b31d28",
+    "error_bg": "#ffebee",
+    "string": "#032f62",
+    "constant": "#005cc5",
+    "float": "#005cc5",
+    "function": "#6f42c1",
+    "type": "#6f42c1",
+    "preprocessor": "#e36209",
+    "warning": "#e36209",
+    "attribute": "#22863a"
+  },
+  "syntax_dark": {
+    "fg": "#c9d1d9",
+    "bg": "#0d1117",
+    "line_number": "#8b949e",
+    "line_number_bg": "#161b22",
+    "comment": "#8b949e",
+    "keyword": "#ff7b72",
+    "error": "#ff7b72",
+    "error_bg": "#2d0b0f",
+    "string": "#a5d6ff",
+    "constant": "#79c0ff",
+    "float": "#ae81ff",
+    "function": "#d2a8ff",
+    "type": "#ffa657",
+    "preprocessor": "#ffa657",
+    "warning": "#ffa657",
+    "attribute": "#7ee787"
+  },
+  "fonts": {
+    "main": "Roboto",
+    "main_weights": "300;400;500;600;700",
+    "_mono_comment": "Latin Modern Mono matches the metrics LaTeX uses by default, so the book keeps its tuned line breaking. Scale=1 defeats Pandoc's Scale=MatchLowercase (which would widen it against Roboto), and the explicit faces supply the bold/italic that the 'Latin Modern Mono' family itself lacks -- its bold ships in the 'Light' family. mono_fallback covers glyphs Latin Modern Mono does not have (the slides use λ and ∑); without it LuaTeX drops them from the PDF silently.",
+    "mono": "Latin Modern Mono",
+    "mono_options": [
+      "Scale=1",
+      "BoldFont=lmmonolt10-bold.otf",
+      "ItalicFont=lmmono10-italic.otf",
+      "BoldItalicFont=lmmonolt10-boldoblique.otf"
+    ],
+    "mono_fallback": [
+      "FreeMono:mode=node;"
+    ]
+  }
+}

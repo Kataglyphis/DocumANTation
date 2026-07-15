@@ -42,6 +42,10 @@ BRAND_JSON = REPO_ROOT / "style" / "brand.json"
 TOKENS_TARGETS = [
     REPO_ROOT / "style" / "brand.tokens.json",
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json",
+    # The document builds run in a container that mounts only md2pdfLib/ and
+    # data/, so the pptx reference builder cannot reach style/. These copies are
+    # generated and --check'd, so they cannot drift from brand.json.
+    REPO_ROOT / "md2pdfLib" / "style" / "brand.tokens.json",
 ]
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"

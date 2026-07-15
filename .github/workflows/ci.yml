@@ -83,5 +83,8 @@ jobs:
       - name: Build presentation with strict warnings
         run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh beamer
 
+      - name: Build pptx presentation with strict warnings
+        run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh pptx
+
       - name: Build CV with strict warnings
         run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh cv

@@ -8,7 +8,7 @@ IMAGE="${IMAGE:-pandoc_all}"
 STRICT_WARNINGS="${STRICT_WARNINGS:-0}"
 
 usage() {
-    printf 'Usage: %s <book|diss|beamer|cv>\n' "$0" >&2
+    printf 'Usage: %s <book|diss|beamer|pptx|cv>\n' "$0" >&2
     printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
     exit 2
 }
@@ -31,6 +31,14 @@ case "$TARGET" in
         CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/presentation/scripts/update_own_sty.sh && /md2pdfLib/presentation/scripts/update_own_sty.sh && uv run python /md2pdfLib/build.py beamer'
         if [ "$STRICT_WARNINGS" = "1" ]; then
             CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/beamer.json --format pandoc-json'
+        fi
+        ;;
+    pptx)
+        # The reference deck carries the brand for pptx and is generated from
+        # brand.json here, every build, rather than committed as a binary.
+        CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/presentation/pptx/make_reference.py /data/out/reference.pptx && uv run python /md2pdfLib/build.py pptx'
+        if [ "$STRICT_WARNINGS" = "1" ]; then
+            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/pptx.json --format pandoc-json'
         fi
         ;;
     cv)

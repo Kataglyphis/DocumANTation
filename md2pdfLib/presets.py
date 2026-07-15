@@ -4,6 +4,10 @@ from collections.abc import Callable
 
 from md2pdfLib.pandoc_builder import BuildConfig
 
+# Generated from brand.json at build time, not committed -- see
+# presentation/pptx/make_reference.py.
+PPTX_REFERENCE = "data/out/reference.pptx"
+
 
 def _book_like(highlight_style: str, log_file: str) -> BuildConfig:
     return BuildConfig(
@@ -62,8 +66,38 @@ def beamer() -> BuildConfig:
     )
 
 
+def pptx() -> BuildConfig:
+    """PowerPoint deck from the same markdown the beamer slides are built from.
+
+    One source, two outputs -- the deck cannot drift from the slides because
+    there is nothing to keep in sync. The brand comes from the reference deck
+    that ``presentation/pptx/make_reference.py`` generates from brand.json at
+    build time; ``--reference-doc`` is the only way pptx accepts colours and
+    fonts, and pandoc's default one is stock Office blue.
+    """
+    return BuildConfig(
+        input_dir="data/presentation",
+        output_dir="data/out",
+        default_output_name="presentation.pptx",
+        metadata_file="md2pdfLib/presentation/pandoc/metadata.yml",
+        highlight_style="md2pdfLib/themes/pygments.theme",
+        log_file="data/out/pptx.json",
+        bibliography="data/presentation/latex/refs.bib",
+        citeproc=True,
+        output_suffix=".pptx",
+        extra_args=[
+            "--slide-level=2",
+            "-t",
+            "pptx",
+            "--reference-doc",
+            PPTX_REFERENCE,
+        ],
+    )
+
+
 PRESETS: dict[str, Callable[[], BuildConfig]] = {
     "book": book,
     "diss": diss,
     "beamer": beamer,
+    "pptx": pptx,
 }

@@ -30,7 +30,9 @@ def safe_output_name(raw_name: str, default_suffix: str = ".tex") -> str:
         raise BuildError(
             "Invalid output filename. Use only letters, numbers, dot, underscore and hyphen."
         )
-    for suffix in (".tex", ".pdf", ".log"):
+    # default_suffix is included so a format whose extension is not in the fixed
+    # list still round-trips: "deck.pptx" must not become "deck.pptx.pptx".
+    for suffix in {".tex", ".pdf", ".log", default_suffix}:
         if name.endswith(suffix):
             return name
     return name + default_suffix

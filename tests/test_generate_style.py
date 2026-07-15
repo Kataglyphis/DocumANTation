@@ -301,10 +301,22 @@ def test_tokens_ship_inside_the_installable_package():
     # Without this, `pip install sphinx-kataglyphis-theme` gives you the CSS but
     # no way to read the brand from Python, and projects re-type the hex.
     targets = [p for p in desired_outputs() if p.name == "brand.tokens.json"]
-    assert len(targets) == 2
     assert any("sphinx_kataglyphis" in p.parts for p in targets)
-    # Both copies are generated from the same render, so they cannot diverge.
-    assert len({desired_outputs()[p] for p in targets}) == 1
+
+
+def test_tokens_are_reachable_from_the_build_container():
+    # The document builds mount only md2pdfLib/ and data/, so the pptx reference
+    # builder cannot read style/brand.tokens.json.
+    targets = [p for p in desired_outputs() if p.name == "brand.tokens.json"]
+    assert any(p.parent.parent.name == "md2pdfLib" for p in targets)
+
+
+def test_every_tokens_copy_is_byte_identical():
+    """They are generated from one render, so they cannot diverge."""
+    outputs = desired_outputs()
+    targets = [p for p in outputs if p.name == "brand.tokens.json"]
+    assert len(targets) > 1
+    assert len({outputs[p] for p in targets}) == 1
 
 
 # -- Code highlighting: shared between the PDFs and the website ---------------

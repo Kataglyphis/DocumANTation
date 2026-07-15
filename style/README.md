@@ -1,8 +1,8 @@
 # Kataglyphis brand style
 
 `brand.json` is the **single source of truth** for every colour and font used by
-the CV, the book, the presentation and the docs website. Nothing else defines a
-brand value; everything below is generated from it.
+the CV, the book, the beamer slides, the PowerPoint deck and the docs website.
+Nothing else defines a brand value; everything below is generated from it.
 
 Every colour token declared here is consumed by something — a test fails if you
 add one and nothing reads it, so `brand.json` cannot fill up with values that
@@ -51,6 +51,7 @@ colour/font file.
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json` | Same, shipped inside the pip package |
+| `md2pdfLib/style/brand.tokens.json` | Same, reachable from the build container (it mounts only `md2pdfLib/` and `data/`) |
 
 ## Reusing the brand in another project
 
@@ -111,6 +112,23 @@ TEXINPUTS="/path/to/Kataglyphis-DocumANTation/md2pdfLib/style:" lualatex mydoc.t
 
 Both files are safe to `\input` more than once. `brand-colors.tex` needs
 `xcolor` loaded; `brand-fonts.tex` needs `fontspec`.
+
+### PowerPoint
+
+A pptx takes its colours and fonts only from a `--reference-doc`, which is a
+binary deck. Rather than commit one — brand values in a file nothing can diff
+or drift-check — `md2pdfLib/presentation/pptx/make_reference.py` builds it from
+these tokens at build time, by patching the Office theme inside pandoc's own
+default reference deck. It is a build artifact and is never committed:
+
+```bash
+python md2pdfLib/presentation/pptx/make_reference.py data/out/reference.pptx
+```
+
+The twelve Office colour slots are the one place the brand meets PowerPoint's
+vocabulary; `accent1` is the brand accent, `hlink` the brand link. If pandoc
+ever changes its default deck's layout the build fails loudly rather than
+emitting a half-branded deck.
 
 ### A website that is not Sphinx
 
