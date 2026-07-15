@@ -1,7 +1,10 @@
 ---
 theme:
   - awesome
-mainfont: Roboto #DejaVuSerif
+# generated:brand-font:start
+# GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand.
+mainfont: Roboto
+# generated:brand-font:end
 monofont: FreeMono
 author: Jonas Heinle
 background: data/presentation/images/title-background.jpg

@@ -9,11 +9,12 @@
   --text-main: #1f2a24;
   --surface-soft: #f7fbf9;
   --surface-border: #dcefe5;
+  --brand-font-main: 'Roboto', sans-serif;
 }
 /* generated:brand-tokens:end */
 
 html {
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--brand-font-main);
 }
 
 html[data-theme="light"] {
@@ -212,7 +213,7 @@ kbd,
   border: none;
   box-shadow: 0 2px 0 #145a3c;
   font-size: 0.8em;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--brand-font-main);
 }
 
 /* -- Sidebar active link (light mode) --------------------------- */

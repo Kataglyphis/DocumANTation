@@ -115,7 +115,9 @@ $endif$
 $-- Set Beamer theme before user font settings so they can override theme
 $if(beamer)$
 $if(theme)$
-\definecolor{myGreenAccent}{RGB}{105, 240, 174}
+$-- Brand colors — single source of truth: style/brand.json. Must be defined
+$-- before \usetheme so the theme can reference them.
+\input{md2pdfLib/style/brand-colors.tex}
 \usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
 $endif$
 $if(colortheme)$

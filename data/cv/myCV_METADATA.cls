@@ -87,6 +87,7 @@
 % Define default accent colors — single source of truth: style/brand.json.
 % CV builds run from data/cv/, so reach the repo root with ../../.
 \input{../../md2pdfLib/style/brand-colors.tex}   % basecolor := brandAccent
+\input{../../md2pdfLib/style/brand-fonts.tex}    % \brandSetMainFont := brand main font
 \colorlet{headingcolor}{black}
 
 \ifundef{\@green} {
@@ -158,16 +159,16 @@
 {
 	%\setmainfont[BoldFont = Helvetica Neue, ItalicFont=Helvetica Neue Thin Italic ,SmallCapsFont = Helvetica Neue Light]{Helvetica Neue Thin}
 	%   \setmainfont{Source Sans Pro Light}[
-	%     BoldFont = SourceSansPro-Regular, 
+	%     BoldFont = SourceSansPro-Regular,
 	%     ItalicFont= Source Sans Pro Light Italic]
-	\setmainfont{Roboto}
+	\brandSetMainFont
 }
 {
 	% \setmainfont{SourceSansPro-Light}[
 	% 	Path = fonts/,
 	% 	BoldFont = SourceSansPro-Regular,
 	% 	ItalicFont = SourceSansPro-LightIt]
-	\setmainfont{Roboto}
+	\brandSetMainFont
 }
 
 %New length definition

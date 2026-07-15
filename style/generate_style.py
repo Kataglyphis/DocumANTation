@@ -6,8 +6,11 @@ script renders the LaTeX and CSS consumers from it so the style is defined
 exactly once and stays identical everywhere:
 
 - LaTeX:  md2pdfLib/style/brand-colors.tex  (\\definecolor + aliases)
+- LaTeX:  md2pdfLib/style/brand-fonts.tex   (\\brandMainFont + \\brandSetMainFont)
 - CSS:    the ``:root`` brand-token block inside each themed custom.css,
           maintained between generated markers.
+- YAML:   the ``mainfont:`` key in each Pandoc metadata file (Pandoc reads YAML,
+          not LaTeX, so the value is generated in place between markers).
 
 Usage:
     python style/generate_style.py --check   # fail if derived files drifted
@@ -26,13 +29,21 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 BRAND_JSON = REPO_ROOT / "style" / "brand.json"
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"
+FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
 CSS_TARGETS = [
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css",
     REPO_ROOT / "docs-tooling/source_templates/sphinx-book/custom.css",
 ]
 
+YAML_TARGETS = [
+    REPO_ROOT / "md2pdfLib/pandoc/base.yml",
+    REPO_ROOT / "md2pdfLib/presentation/pandoc/metadata.yml",
+]
+
 CSS_START = "/* generated:brand-tokens:start */"
 CSS_END = "/* generated:brand-tokens:end */"
+YAML_START = "# generated:brand-font:start"
+YAML_END = "# generated:brand-font:end"
 NOTE = "GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand."
 
 
@@ -65,6 +76,22 @@ def render_latex(brand: dict) -> str:
     )
 
 
+def render_latex_fonts(brand: dict) -> str:
+    font = brand["fonts"]["main"]
+    return (
+        "\n".join(
+            [
+                f"% {NOTE}",
+                "% Assumes fontspec is already loaded by the document/class.",
+                "% \\providecommand keeps this file safe to \\input more than once.",
+                f"\\providecommand{{\\brandMainFont}}{{{font}}}",
+                f"\\providecommand{{\\brandSetMainFont}}{{\\setmainfont{{{font}}}}}",
+            ]
+        )
+        + "\n"
+    )
+
+
 def render_css_block(brand: dict) -> str:
     c = brand["colors"]
     return "\n".join(
@@ -78,10 +105,34 @@ def render_css_block(brand: dict) -> str:
             f"  --text-main: {c['text_main']};",
             f"  --surface-soft: {c['surface_soft']};",
             f"  --surface-border: {c['surface_border']};",
+            f"  --brand-font-main: '{brand['fonts']['main']}', sans-serif;",
             "}",
             CSS_END,
         ]
     )
+
+
+def render_yaml_block(brand: dict) -> str:
+    return "\n".join(
+        [
+            YAML_START,
+            f"# {NOTE}",
+            f"mainfont: {brand['fonts']['main']}",
+            YAML_END,
+        ]
+    )
+
+
+def apply_yaml_block(text: str, block: str) -> str:
+    """Return *text* with the generated ``mainfont:`` block inserted/updated."""
+    marker = re.compile(re.escape(YAML_START) + r".*?" + re.escape(YAML_END), re.DOTALL)
+    if marker.search(text):
+        return marker.sub(block, text)
+    # First run: replace the existing hand-written `mainfont:` line.
+    mainfont = re.compile(r"^mainfont:.*$", re.MULTILINE)
+    if mainfont.search(text):
+        return mainfont.sub(block, text, count=1)
+    raise SystemExit(f"No `mainfont:` key or generated marker found to update in {text[:40]!r}")
 
 
 def apply_css_block(text: str, block: str) -> str:
@@ -98,11 +149,17 @@ def apply_css_block(text: str, block: str) -> str:
 
 def desired_outputs() -> dict[Path, str]:
     brand = load_brand()
-    outputs: dict[Path, str] = {STY_PATH: render_latex(brand)}
+    outputs: dict[Path, str] = {
+        STY_PATH: render_latex(brand),
+        FONTS_PATH: render_latex_fonts(brand),
+    }
     css_block = render_css_block(brand)
     for css in CSS_TARGETS:
         current = css.read_text(encoding="utf-8") if css.exists() else ""
         outputs[css] = apply_css_block(current, css_block)
+    yaml_block = render_yaml_block(brand)
+    for yml in YAML_TARGETS:
+        outputs[yml] = apply_yaml_block(yml.read_text(encoding="utf-8"), yaml_block)
     return outputs
 
 

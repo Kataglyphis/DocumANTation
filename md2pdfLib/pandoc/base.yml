@@ -1,4 +1,7 @@
+# generated:brand-font:start
+# GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand.
 mainfont: Roboto
+# generated:brand-font:end
 title: Computer graphics
 subtitle: A practical approach
 titlepage: true

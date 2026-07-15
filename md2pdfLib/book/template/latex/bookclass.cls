@@ -24,7 +24,9 @@
 
 \usepackage{fontspec}
 
-\setmainfont{Roboto}
+% Main font — single source of truth: style/brand.json
+\input{md2pdfLib/style/brand-fonts.tex}
+\brandSetMainFont
 
 \usepackage{booktabs}
 \usepackage{multirow}
