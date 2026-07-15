@@ -4,6 +4,11 @@
 the CV, the book, the presentation and the docs website. Nothing else defines a
 brand value; everything below is generated from it.
 
+Every colour token declared here is consumed by something — a test fails if you
+add one and nothing reads it, so `brand.json` cannot fill up with values that
+only look central. The two exceptions are `white` and `black`, which exist as
+alias targets (`"text_on_accent": "@white"`).
+
 ## Changing the brand
 
 ```bash

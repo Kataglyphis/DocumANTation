@@ -52,6 +52,8 @@ html[data-theme="light"] {
   --pst-color-primary: var(--brand-accent-strong);
   --pst-color-link: var(--brand-link);
   --pst-color-link-hover: var(--brand-link-hover);
+  --pst-color-text-base: var(--brand-text-main);
+  --pst-color-background: var(--brand-surface-soft);
 }
 
 html[data-theme="dark"] {

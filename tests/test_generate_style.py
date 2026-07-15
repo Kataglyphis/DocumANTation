@@ -8,6 +8,9 @@ import re
 import pytest
 
 from style.generate_style import (
+    CSS_END,
+    CSS_START,
+    CSS_TARGETS,
     PYGMENTS_TOKENS,
     SYNTAX_TOKENS,
     _resolve_group,
@@ -321,3 +324,28 @@ def test_pygments_module_defines_both_registered_styles():
 
 def test_pygments_module_is_importable_python():
     compile(render_pygments_module(BRAND), "highlight.py", "exec")
+
+
+def test_every_brand_colour_token_is_actually_used():
+    """A token nobody reads is a claim the brand does not keep.
+
+    `white`/`black` are the only exceptions: they exist as alias targets inside
+    brand.json (`"text_on_accent": "@white"`), so they are consumed there rather
+    than by a CSS rule.
+    """
+    css = CSS_TARGETS[0].read_text(encoding="utf-8")
+    start = css.index(CSS_START)
+    end = css.index(CSS_END) + len(CSS_END)
+    body = css[:start] + css[end:]
+    used = set(re.findall(r"var\((--[a-z0-9-]+)\)", body))
+
+    brand = load_brand()
+    alias_bases = {"white", "black"}
+    unused = []
+    for group, prefix in (("colors", "--brand-"), ("colors_dark", "--brand-dark-")):
+        for key in brand[group]:
+            if group == "colors" and key in alias_bases:
+                continue
+            if prefix + key.replace("_", "-") not in used:
+                unused.append(f"{group}.{key}")
+    assert not unused, f"declared in brand.json but no rule uses them: {unused}"
