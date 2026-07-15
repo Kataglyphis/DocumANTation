@@ -46,3 +46,23 @@ def test_load_pandoc_json_extracts_latex_output(tmp_path: Path):
     text = _load_pandoc_json_text(log)
     assert "LaTeX Warning: boom" in text
     assert _find_warning_lines(text, []) == ["LaTeX Warning: boom"]
+
+
+def test_detects_missing_characters():
+    # A glyph the font lacks is dropped from the PDF silently; LuaTeX reports it
+    # without the word "Warning", so it needs its own pattern.
+    text = "\n".join(
+        [
+            "Missing character: There is no λ (U+03BB) in font Latin Modern Mono!",
+            "[WARNING] Missing character: There is no ∑ (U+2211) in font ...",
+            "This line is fine.",
+        ]
+    )
+    found = _find_warning_lines(text, [])
+    assert len(found) == 2
+    assert all("fine" not in line for line in found)
+
+
+def test_missing_character_can_be_ignored_explicitly():
+    text = "Missing character: There is no λ (U+03BB) in font X!"
+    assert _find_warning_lines(text, [re.compile(r"U\+03BB")]) == []

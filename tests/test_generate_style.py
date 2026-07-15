@@ -81,6 +81,7 @@ RAW_BRAND = {
         "main_weights": "400;700",
         "mono": "Latin Modern Mono",
         "mono_options": ["Scale=1", "BoldFont=lmmonolt10-bold.otf"],
+        "mono_fallback": ["FreeMono:mode=node;"],
     },
 }
 
@@ -203,6 +204,9 @@ def test_yaml_block_sets_font_and_link_colour_by_name():
     assert "mainfont: Roboto" in out
     assert "monofont: Latin Modern Mono" in out
     assert "monofontoptions:\n  - Scale=1\n  - BoldFont=lmmonolt10-bold.otf" in out
+    # Without a fallback, glyphs the mono lacks (the slides use λ and ∑) are
+    # dropped from the PDF silently.
+    assert "monofontfallback:\n  - FreeMono:mode=node;" in out
     # Naming the LaTeX colour keeps the hex in brand-colors.tex only.
     for key in ("linkcolor", "urlcolor", "citecolor"):
         assert f"{key}: brandLink" in out

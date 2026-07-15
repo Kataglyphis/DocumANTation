@@ -7,6 +7,8 @@ monofontoptions:
   - BoldFont=lmmonolt10-bold.otf
   - ItalicFont=lmmono10-italic.otf
   - BoldItalicFont=lmmonolt10-boldoblique.otf
+monofontfallback:
+  - FreeMono:mode=node;
 linkcolor: brandLink
 urlcolor: brandLink
 citecolor: brandLink

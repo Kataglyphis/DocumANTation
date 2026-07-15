@@ -32,7 +32,7 @@ jobs:
         run: uv run --extra dev ruff format --check md2pdfLib/ build.py docs/conf.py docs-tooling/ sphinx-kataglyphis-theme/ style/ tests/
 
       - name: Type check
-        run: uv run --extra dev ty check md2pdfLib/
+        run: uv run --extra dev ty check md2pdfLib/ style/ sphinx-kataglyphis-theme/
 
       - name: Brand style in sync with style/brand.json
         run: uv run python style/generate_style.py --check
@@ -75,8 +75,13 @@ jobs:
       - name: Build book with strict warnings
         run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh book
 
-      - name: Build presentation
-        run: bash ./scripts/build_in_container.sh beamer
+      - name: Build dissertation with strict warnings
+        run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh diss
+
+      # Strict, like the others: the presentation was the one document CI did
+      # not gate, which is how 81 missing λ/∑ glyphs shipped unnoticed.
+      - name: Build presentation with strict warnings
+        run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh beamer
 
       - name: Build CV with strict warnings
         run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh cv

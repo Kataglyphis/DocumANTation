@@ -42,13 +42,16 @@
   "fonts": {
     "main": "Roboto",
     "main_weights": "300;400;500;600;700",
-    "_mono_comment": "Latin Modern Mono matches the metrics LaTeX uses by default, so the book keeps its tuned line breaking. Scale=1 defeats Pandoc's Scale=MatchLowercase (which would widen it against Roboto), and the explicit faces supply the bold/italic that the 'Latin Modern Mono' family itself lacks -- its bold ships in the 'Light' family.",
+    "_mono_comment": "Latin Modern Mono matches the metrics LaTeX uses by default, so the book keeps its tuned line breaking. Scale=1 defeats Pandoc's Scale=MatchLowercase (which would widen it against Roboto), and the explicit faces supply the bold/italic that the 'Latin Modern Mono' family itself lacks -- its bold ships in the 'Light' family. mono_fallback covers glyphs Latin Modern Mono does not have (the slides use λ and ∑); without it LuaTeX drops them from the PDF silently.",
     "mono": "Latin Modern Mono",
     "mono_options": [
       "Scale=1",
       "BoldFont=lmmonolt10-bold.otf",
       "ItalicFont=lmmono10-italic.otf",
       "BoldItalicFont=lmmonolt10-boldoblique.otf"
+    ],
+    "mono_fallback": [
+      "FreeMono:mode=node;"
     ]
   }
 }

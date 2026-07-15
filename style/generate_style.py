@@ -73,6 +73,7 @@ MANAGED_YAML_KEYS = (
     "mainfont",
     "monofont",
     "monofontoptions",
+    "monofontfallback",
     "linkcolor",
     "urlcolor",
     "citecolor",
@@ -351,7 +352,7 @@ def render_tokens_json(brand: dict) -> str:
         "colors_dark": brand["colors_dark"],
         "fonts": brand["fonts"],
     }
-    return json.dumps(payload, indent=2) + "\n"
+    return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
 
 
 def render_yaml_block(brand: dict) -> str:
@@ -370,6 +371,8 @@ def render_yaml_block(brand: dict) -> str:
             f"monofont: {brand['fonts']['mono']}",
             "monofontoptions:",
             *[f"  - {opt}" for opt in brand["fonts"]["mono_options"]],
+            "monofontfallback:",
+            *[f"  - {fb}" for fb in brand["fonts"]["mono_fallback"]],
             "linkcolor: brandLink",
             "urlcolor: brandLink",
             "citecolor: brandLink",

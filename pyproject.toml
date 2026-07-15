@@ -34,7 +34,7 @@ package = false
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "-ra --cov=md2pdfLib --cov-report=term-missing"
+addopts = "-ra --cov=md2pdfLib --cov=style --cov-report=term-missing"
 
 [tool.ty]
 # Type-checking environment for `ty check`.

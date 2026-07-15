@@ -11,6 +11,11 @@ from pathlib import Path
 WARNING_LINE_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^\s*(?:LaTeX|Package|Class)\b.*Warning:"),
     re.compile(r"^\s*(?:Under|Over)full \\hbox"),
+    # A glyph the font cannot render is dropped silently from the PDF, so it is
+    # a defect, not a nicety. LuaTeX reports it without the word "Warning", and
+    # Pandoc prefixes its own copy with [WARNING] -- neither matched the
+    # patterns above, which is how 81 missing λ/∑ once passed a "strict" build.
+    re.compile(r"Missing character: There is no "),
 )
 
 
