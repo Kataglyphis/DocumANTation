@@ -1,9 +1,11 @@
 % hyperref_setup.tex
-% Hyperref setup
+% Hyperref setup. Link colours come from style/brand.json via brand-colors.tex
+% (\input it, or load a class that does, before this file).
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=blue,
+    linkcolor=brandLink,
+    filecolor=brandLink,
+    urlcolor=brandLink,
+    citecolor=brandLink,
 }

@@ -107,7 +107,7 @@
 
 \definecolor{darkGrey}{HTML}{989898}
 
-\colorlet{linkcolor}{headingcolor}
+% linkcolor comes from brand-colors.tex (brandLink) -- shared with the book and slides.
 \colorlet{accentcolor}{basecolor}
 \colorlet{symbolcolor}{basecolor}
 
@@ -170,6 +170,8 @@
 	% 	ItalicFont = SourceSansPro-LightIt]
 	\brandSetMainFont
 }
+% Mono font is brand-wide, so it is not part of the localFont branch above.
+\brandSetMonoFont
 
 %New length definition
 \newlength{\rightcolumnlength}

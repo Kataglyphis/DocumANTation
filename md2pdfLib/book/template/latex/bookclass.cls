@@ -79,7 +79,6 @@
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{amber}{rgb}{1.0, 0.49, 0.0}
 \colorlet{symbolcolor}{greenAccent}
-\colorlet{linkcolor}{blue}
 
 \usepackage[raiselinks=true,
 	bookmarks=true,
@@ -133,7 +132,7 @@
 	\clearpage{\pagestyle{empty}\cleardoublepage}
 }
 
-\newcommand\link[2]{\color{linkcolor}\href{#1}{#2}\color{blue} }
+\newcommand\link[2]{\color{linkcolor}\href{#1}{#2}\color{black} }
 
 % Render a link with its symbol
 % Usage; \sociallink{<icon>}{<label>}

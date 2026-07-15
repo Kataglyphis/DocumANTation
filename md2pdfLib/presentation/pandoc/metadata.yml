@@ -1,11 +1,19 @@
 ---
 theme:
   - awesome
-# generated:brand-font:start
+# generated:brand:start
 # GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand.
 mainfont: Roboto
-# generated:brand-font:end
-monofont: FreeMono
+monofont: Latin Modern Mono
+monofontoptions:
+  - Scale=1
+  - BoldFont=lmmonolt10-bold.otf
+  - ItalicFont=lmmono10-italic.otf
+  - BoldItalicFont=lmmonolt10-boldoblique.otf
+linkcolor: brandLink
+urlcolor: brandLink
+citecolor: brandLink
+# generated:brand:end
 author: Jonas Heinle
 background: data/presentation/images/title-background.jpg
 title: Create personal blog in flutter/dart

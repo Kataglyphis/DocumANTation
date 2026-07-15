@@ -27,11 +27,17 @@ RAW_BRAND = {
         "accent": "#6af0ad",
         "accent_strong": "#2ad488",
         "accent_soft": "#e9fbf2",
+        "link": "#1ca06a",
         "text_main": "#1f2a24",
         "text_on_accent": "@white",
     },
     "colors_dark": {"link": "#7df5ba", "hero_text": "@accent"},
-    "fonts": {"main": "Roboto", "main_weights": "400;700", "mono": "FreeMono"},
+    "fonts": {
+        "main": "Roboto",
+        "main_weights": "400;700",
+        "mono": "Latin Modern Mono",
+        "mono_options": ["Scale=1", "BoldFont=lmmonolt10-bold.otf"],
+    },
 }
 
 # The render_* functions require resolved input, exactly as load_brand() supplies it.
@@ -82,12 +88,27 @@ def test_latex_defines_the_aliases_documents_rely_on():
         assert f"\\colorlet{{{alias}}}{{brandAccent}}" in out
 
 
+def test_latex_defines_the_shared_link_colour():
+    out = render_latex(BRAND)
+    assert "\\definecolor{brandLink}{HTML}{1CA06A}" in out
+    # The book, the CV and the slides all resolve `linkcolor` from here.
+    assert "\\colorlet{linkcolor}{brandLink}" in out
+
+
 def test_latex_fonts_are_safe_to_input_twice():
     out = render_latex_fonts(BRAND)
     # \newcommand would raise "already defined" on a second \input.
     assert "\\newcommand" not in out
     assert "\\providecommand{\\brandMainFont}{Roboto}" in out
     assert "\\providecommand{\\brandSetMainFont}{\\setmainfont{Roboto}}" in out
+
+
+def test_latex_mono_carries_its_options():
+    # Scale=1 defeats Pandoc's Scale=MatchLowercase; without it the mono is
+    # widened against Roboto and the book's line breaking regresses.
+    out = render_latex_fonts(BRAND)
+    assert "\\brandMonoFont}{Latin Modern Mono}" in out
+    assert "\\setmonofont[Scale=1,BoldFont=lmmonolt10-bold.otf]{Latin Modern Mono}" in out
 
 
 # -- CSS ----------------------------------------------------------------------
@@ -97,17 +118,22 @@ def test_css_block_carries_fonts_import_and_every_token():
     out = render_css_block(BRAND)
     assert "family=Roboto:wght@400;700" in out
     assert "--brand-font-main: 'Roboto', sans-serif;" in out
-    assert "--brand-font-mono: 'FreeMono', monospace;" in out
     assert "--brand-accent: #6af0ad;" in out
     assert "--brand-text-on-accent: #ffffff;" in out  # alias resolved
+
+
+def test_css_omits_the_tex_mono_font():
+    # fonts.mono names a TeX font no browser has; emitting it would suggest the
+    # web renders code in it.
+    assert "--brand-font-mono" not in render_css_block(BRAND)
 
 
 def test_dark_tokens_get_their_own_names_and_never_shadow_light_ones():
     out = render_css_block(BRAND)
     assert "--brand-dark-link: #7df5ba;" in out
-    # A bare `--brand-link:` redefinition would retint every var(--brand-link)
-    # use in dark mode, which is exactly the silent breakage we avoid.
-    assert not re.search(r"^\s*--brand-link:", out, re.M)
+    # A second `--brand-link:` would retint every var(--brand-link) use in dark
+    # mode, which is exactly the silent breakage we avoid.
+    assert len(re.findall(r"^\s*--brand-link:", out, re.M)) == 1
 
 
 def test_css_bootstraps_from_an_unmarked_root_block():
@@ -128,12 +154,32 @@ def test_css_update_is_idempotent():
 # -- Pandoc YAML --------------------------------------------------------------
 
 
+def test_yaml_block_sets_font_and_link_colour_by_name():
+    out = render_yaml_block(BRAND)
+    assert "mainfont: Roboto" in out
+    assert "monofont: Latin Modern Mono" in out
+    assert "monofontoptions:\n  - Scale=1\n  - BoldFont=lmmonolt10-bold.otf" in out
+    # Naming the LaTeX colour keeps the hex in brand-colors.tex only.
+    for key in ("linkcolor", "urlcolor", "citecolor"):
+        assert f"{key}: brandLink" in out
+
+
 def test_yaml_bootstraps_from_a_plain_mainfont_line():
-    yml = "theme:\n  - awesome\nmainfont: Georgia #DejaVuSerif\nmonofont: FreeMono\n"
+    yml = "theme:\n  - awesome\nmainfont: Georgia #DejaVuSerif\ntoc: true\n"
     out = apply_yaml_block(yml, render_yaml_block(BRAND))
     assert "mainfont: Roboto" in out
     assert "Georgia" not in out
-    assert "monofont: FreeMono" in out  # neighbouring keys untouched
+    assert "toc: true" in out  # neighbouring keys untouched
+
+
+def test_hand_written_managed_keys_are_removed():
+    # A document must not be able to quietly re-specify the brand.
+    yml = "mainfont: Georgia\nmonofont: Courier\nlinkcolor: blue\ntitle: keep me\n"
+    out = apply_yaml_block(yml, render_yaml_block(BRAND))
+    assert "Courier" not in out
+    assert "linkcolor: blue" not in out
+    assert "title: keep me" in out
+    assert out.count("mainfont:") == 1
 
 
 def test_yaml_update_is_idempotent():

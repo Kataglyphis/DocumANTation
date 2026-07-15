@@ -1,7 +1,16 @@
-# generated:brand-font:start
+# generated:brand:start
 # GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand.
 mainfont: Roboto
-# generated:brand-font:end
+monofont: Latin Modern Mono
+monofontoptions:
+  - Scale=1
+  - BoldFont=lmmonolt10-bold.otf
+  - ItalicFont=lmmono10-italic.otf
+  - BoldItalicFont=lmmonolt10-boldoblique.otf
+linkcolor: brandLink
+urlcolor: brandLink
+citecolor: brandLink
+# generated:brand:end
 title: Computer graphics
 subtitle: A practical approach
 titlepage: true
@@ -9,4 +18,3 @@ author: Jonas Heinle
 date: \today
 documentclass: md2pdfLib/book/template/latex/bookclass
 toc-title: Table of contents
-linkcolor: blue

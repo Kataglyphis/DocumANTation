@@ -49,8 +49,19 @@ YAML_TARGETS = [
 
 CSS_START = "/* generated:brand-tokens:start */"
 CSS_END = "/* generated:brand-tokens:end */"
-YAML_START = "# generated:brand-font:start"
-YAML_END = "# generated:brand-font:end"
+YAML_START = "# generated:brand:start"
+YAML_END = "# generated:brand:end"
+# Pandoc metadata keys owned by brand.json. Any of these written by hand
+# outside the generated block is removed, so a document cannot quietly
+# re-specify the brand font or link colour.
+MANAGED_YAML_KEYS = (
+    "mainfont",
+    "monofont",
+    "monofontoptions",
+    "linkcolor",
+    "urlcolor",
+    "citecolor",
+)
 NOTE = "GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand."
 
 
@@ -113,10 +124,12 @@ def render_latex(brand: dict) -> str:
                 f"\\definecolor{{brandAccentStrong}}{{HTML}}{{{_hex(c['accent_strong'])}}}",
                 f"\\definecolor{{brandAccentSoft}}{{HTML}}{{{_hex(c['accent_soft'])}}}",
                 f"\\definecolor{{brandTextMain}}{{HTML}}{{{_hex(c['text_main'])}}}",
+                f"\\definecolor{{brandLink}}{{HTML}}{{{_hex(c['link'])}}}",
                 "% Backwards-compatible aliases used across the documents:",
                 "\\colorlet{greenAccent}{brandAccent}",
                 "\\colorlet{myGreenAccent}{brandAccent}",
                 "\\colorlet{basecolor}{brandAccent}",
+                "\\colorlet{linkcolor}{brandLink}",
             ]
         )
         + "\n"
@@ -125,6 +138,8 @@ def render_latex(brand: dict) -> str:
 
 def render_latex_fonts(brand: dict) -> str:
     font = brand["fonts"]["main"]
+    mono = brand["fonts"]["mono"]
+    mono_opts = ",".join(brand["fonts"]["mono_options"])
     return (
         "\n".join(
             [
@@ -132,7 +147,9 @@ def render_latex_fonts(brand: dict) -> str:
                 "% Assumes fontspec is already loaded by the document/class.",
                 "% \\providecommand keeps this file safe to \\input more than once.",
                 f"\\providecommand{{\\brandMainFont}}{{{font}}}",
+                f"\\providecommand{{\\brandMonoFont}}{{{mono}}}",
                 f"\\providecommand{{\\brandSetMainFont}}{{\\setmainfont{{{font}}}}}",
+                f"\\providecommand{{\\brandSetMonoFont}}{{\\setmonofont[{mono_opts}]{{{mono}}}}}",
             ]
         )
         + "\n"
@@ -160,7 +177,9 @@ def render_css_block(brand: dict) -> str:
         "",
         ":root {",
         f"  --brand-font-main: '{fonts['main']}', sans-serif;",
-        f"  --brand-font-mono: '{fonts['mono']}', monospace;",
+        # fonts.mono is deliberately not emitted: it names a TeX font (Latin
+        # Modern Mono) that no browser has, so the web keeps the generic
+        # monospace stack.
         "",
     ]
     lines += [f"  {_css_var(k)}: {v};" for k, v in brand["colors"].items()]
@@ -183,26 +202,49 @@ def render_tokens_json(brand: dict) -> str:
 
 
 def render_yaml_block(brand: dict) -> str:
+    """Render the Pandoc metadata keys that brand.json owns.
+
+    ``linkcolor``/``urlcolor``/``citecolor`` name the LaTeX colour defined by
+    brand-colors.tex rather than repeating the hex, so the value still lives in
+    exactly one place. Pandoc turns ``colorlinks`` on implicitly once any of
+    them is set.
+    """
     return "\n".join(
         [
             YAML_START,
             f"# {NOTE}",
             f"mainfont: {brand['fonts']['main']}",
+            f"monofont: {brand['fonts']['mono']}",
+            "monofontoptions:",
+            *[f"  - {opt}" for opt in brand["fonts"]["mono_options"]],
+            "linkcolor: brandLink",
+            "urlcolor: brandLink",
+            "citecolor: brandLink",
             YAML_END,
         ]
     )
 
 
+def _strip_managed_keys_outside_block(text: str) -> str:
+    """Drop hand-written copies of the keys the generated block owns."""
+    start = text.index(YAML_START)
+    end = text.index(YAML_END) + len(YAML_END)
+    stray = re.compile(r"^(?:" + "|".join(MANAGED_YAML_KEYS) + r"):.*\n?", re.MULTILINE)
+    return stray.sub("", text[:start]) + text[start:end] + stray.sub("", text[end:])
+
+
 def apply_yaml_block(text: str, block: str) -> str:
-    """Return *text* with the generated ``mainfont:`` block inserted/updated."""
+    """Return *text* with the generated brand block inserted/updated."""
     marker = re.compile(re.escape(YAML_START) + r".*?" + re.escape(YAML_END), re.DOTALL)
     if marker.search(text):
-        return marker.sub(block, text)
-    # First run: replace the existing hand-written `mainfont:` line.
-    mainfont = re.compile(r"^mainfont:.*$", re.MULTILINE)
-    if mainfont.search(text):
-        return mainfont.sub(block, text, count=1)
-    raise SystemExit(f"No `mainfont:` key or generated marker found to update in {text[:40]!r}")
+        text = marker.sub(block, text)
+    else:
+        # First run: put the block where the hand-written `mainfont:` line was.
+        mainfont = re.compile(r"^mainfont:.*$", re.MULTILINE)
+        if not mainfont.search(text):
+            raise SystemExit(f"No `mainfont:` key or generated marker to update in {text[:40]!r}")
+        text = mainfont.sub(block.replace("\\", "\\\\"), text, count=1)
+    return _strip_managed_keys_outside_block(text)
 
 
 def apply_css_block(text: str, block: str) -> str:
