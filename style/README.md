@@ -130,10 +130,18 @@ value into the site — that is how the site ended up one digit off the brand
 
 Read `style/brand.tokens.json` (or the copy inside the installed Python
 package). It is plain JSON with every alias already resolved — no alias support
-needed:
+needed — and carries **every** section of `brand.json`, including the syntax
+palettes, so a non-LaTeX, non-Sphinx consumer can match the book's code
+colours too:
 
 ```json
-{ "colors": { "accent": "#6af0ad", ... }, "colors_dark": { ... }, "fonts": { ... } }
+{
+  "colors":      { "accent": "#6af0ad", ... },
+  "colors_dark": { ... },
+  "syntax":      { "keyword": "#d73a49", ... },
+  "syntax_dark": { "keyword": "#ff7b72", ... },
+  "fonts":       { "main": "Roboto", ... }
+}
 ```
 
 ## Deliberately not brand-wide

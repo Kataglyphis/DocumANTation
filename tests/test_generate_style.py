@@ -251,6 +251,18 @@ def test_tokens_json_is_fully_resolved_for_other_applications():
     assert "@" not in re.sub(r'"_comment":.*', "", payload)  # no unresolved aliases
 
 
+def test_tokens_json_carries_every_brand_section():
+    """It is documented as brand.json resolved, so it must not drop sections.
+
+    It silently omitted the syntax palettes, leaving any consumer that is
+    neither LaTeX nor Sphinx unable to read the brand's code colours.
+    """
+    source = load_brand()
+    payload = json.loads(render_tokens_json(source))
+    expected = {k for k in source if not k.startswith("_")}
+    assert expected <= set(payload)
+
+
 def test_repo_brand_json_renders_every_target():
     brand = load_brand()
     assert brand["colors"]["accent"].startswith("#")

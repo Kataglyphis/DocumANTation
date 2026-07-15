@@ -15,6 +15,7 @@ project that installs it can read them without vendoring values::
 """
 
 import argparse
+import copy
 import json
 from functools import lru_cache
 from importlib.resources import files
@@ -29,15 +30,25 @@ _PACKAGE = __name__
 
 
 @lru_cache(maxsize=1)
+def _load_brand() -> dict:
+    payload = files(_PACKAGE).joinpath(BRAND_TOKENS_RESOURCE).read_text(encoding="utf-8")
+    return json.loads(payload)
+
+
 def brand() -> dict:
     """Return the Kataglyphis brand tokens, with all aliases resolved.
 
     Generated from ``style/brand.json`` by ``style/generate_style.py``; this is
     the single source of truth for every colour and font. Shipped inside the
     package so ``pip install sphinx-kataglyphis-theme`` is enough to read it.
+
+    Each call returns a fresh copy. The parse is cached, but handing every
+    caller the *same* dict would let one of them assign into it and silently
+    change the brand for every later caller in the process -- a brand that can
+    be edited at a distance is exactly what the single source of truth exists
+    to prevent.
     """
-    payload = files(_PACKAGE).joinpath(BRAND_TOKENS_RESOURCE).read_text(encoding="utf-8")
-    return json.loads(payload)
+    return copy.deepcopy(_load_brand())
 
 
 def brand_css_path() -> Path:
@@ -91,7 +102,10 @@ def setup_theme(
     project_name: str = "",
     copyright_: str = "",
     author: str = "",
-    release: str = "0.0.1",
+    # Empty, like the other metadata defaults: a truthy "0.0.1" default meant
+    # every project that did not pass a release silently published version
+    # 0.0.1 -- including this repo's own docs.
+    release: str = "",
     # ---- auto-discovery ----
     auto_discover: bool = False,
     source_dir: str = ".",
@@ -111,6 +125,19 @@ def setup_theme(
     When *auto_discover* is ``True`` the package scans *source_dir* for
     ``.md`` / ``.rst`` files and writes an ``index.md`` with a toctree that
     references them – so you can simply drop markdown files and build.
+
+    **What this overwrites.** Three groups, deliberately different:
+
+    - *The theme itself* — ``html_theme``, ``html_theme_options``,
+      ``html_static_path``, ``html_css_files``, ``extensions``,
+      ``myst_all_links_external`` are **assigned**, clobbering anything
+      ``conf.py`` set before the call. That is the point: the brand is not
+      negotiable per project. Extend them via ``extensions_extra`` /
+      ``theme_options_extra`` / ``html_css_files_extra`` instead.
+    - *Project metadata* — ``project``, ``copyright``, ``author``, ``release``
+      use ``setdefault``, so a value already in ``conf.py`` wins.
+    - *Anything else* — ``**extra_conf`` is assigned last and wins over
+      everything above.
     """
     pkg_dir = Path(__file__).resolve().parent
 
@@ -256,6 +283,7 @@ def _scaffold(dest: Path) -> None:
             "   The brand itself lives in style/brand.json in\n"
             "   Kataglyphis-DocumANTation; the base theme CSS is generated from\n"
             "   it and ships with this package. */\n",
+            encoding="utf-8",
         )
         print(f"[sphinx-kataglyphis] wrote {overrides}")
 

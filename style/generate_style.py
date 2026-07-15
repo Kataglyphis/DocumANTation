@@ -365,12 +365,21 @@ def render_brand_css(brand: dict) -> str:
 
 
 def render_tokens_json(brand: dict) -> str:
-    """brand.json with aliases resolved -- the read-me-from-anywhere artifact."""
+    """brand.json with aliases resolved -- the read-me-from-anywhere artifact.
+
+    Every brand section, including the syntax palettes: this file is the only
+    way a consumer that is neither LaTeX nor Sphinx can read the brand, and it
+    used to omit `syntax`/`syntax_dark` while claiming to be brand.json
+    resolved -- so such a consumer could not match the book's code colours even
+    though they are part of the brand.
+    """
     payload = {
         "_comment": NOTE + " Read this file (not brand.json) from other applications.",
         "name": brand["name"],
         "colors": brand["colors"],
         "colors_dark": brand["colors_dark"],
+        "syntax": brand["syntax"],
+        "syntax_dark": brand["syntax_dark"],
         "fonts": brand["fonts"],
     }
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
