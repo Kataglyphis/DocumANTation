@@ -126,7 +126,7 @@ needed:
 These are per-document values that live with the document, not in `brand.json`:
 
 - A few LaTeX listing helpers (`mygreen`, `mymauve`, `amber` in `bookclass.cls`,
-  `Light` in `inline_code.tex`, `shadecolor`) are per-document leftovers. The
+  `shadecolor` in `data/book/latex/main.tex`) are per-document leftovers. The
   actual code highlighting comes from the `syntax` palettes above.
 - Neutral greys and blacks used for CV body text and headings.
 - `fonts.mono` names a TeX font (Latin Modern Mono) and is **not** emitted to

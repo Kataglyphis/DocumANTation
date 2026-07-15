@@ -21,3 +21,11 @@ kataglyphis-dark = "sphinx_kataglyphis.highlight:KataglyphisDarkStyle"
 [build-system]
 requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["sphinx_kataglyphis"]
+
+[tool.setuptools.package-data]
+# brand.tokens.json is generated from style/brand.json; shipping it lets any
+# installing project read the brand instead of copying values.
+sphinx_kataglyphis = ["_static/css/*.css", "brand.tokens.json"]

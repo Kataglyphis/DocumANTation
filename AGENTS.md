@@ -168,9 +168,14 @@ It accepts either a `--type` flag or positional arguments:
 
 ```
 md2pdfLib/
+├── style/                   ← generated from style/brand.json — do not edit
+│   ├── brand-colors.tex     ← brandAccent, brandLink, linkcolor, basecolor, …
+│   └── brand-fonts.tex      ← \brandSetMainFont, \brandSetMonoFont
+├── themes/                  ← generated code-highlighting palettes
+│   ├── pygments-print.theme ← light, used by the book
+│   └── pygments.theme       ← dark, used by diss + slides
 ├── book/template/latex/     ← canonical shared templates (used by book + diss)
-│   ├── bookclass.cls        ← KOMA-Script scrbook based document class
-│   ├── titlepage.tex
+│   ├── bookclass.cls        ← KOMA-Script scrbook based document class (+ \maketitle)
 │   ├── glossary_entries.tex
 │   ├── nomenclature.tex
 │   ├── c_code_style.tex
@@ -179,6 +184,10 @@ md2pdfLib/
 │   ├── awesome-beamer/      ← git submodule
 │   └── smile/               ← git submodule
 ```
+
+Colours and fonts are never written in a document — they come from
+`style/brand.json`. See [`style/README.md`](style/README.md).
+The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`.
 
 ### Hardcoded Values
 
