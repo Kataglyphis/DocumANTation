@@ -12,9 +12,12 @@ exactly once and stays identical everywhere:
           package ships it, so consuming repos install it instead of copying it.
 - YAML:   the ``mainfont:`` key in each Pandoc metadata file (Pandoc reads YAML,
           not LaTeX, so the value is generated in place between markers).
-- JSON:   style/brand.tokens.json -- brand.json with aliases resolved, for any
-          other application that wants to read the brand without implementing
-          alias resolution.
+- JSON:   brand.json with aliases resolved, for any other application that wants
+          the brand without implementing alias resolution. Written both to
+          style/brand.tokens.json (stable path for non-Python consumers reading
+          the submodule) and into the theme package, so `pip install
+          sphinx-kataglyphis-theme` + `from sphinx_kataglyphis import brand`
+          works with no repo checkout at all.
 
 Usage:
     python style/generate_style.py --check   # fail if derived files drifted
@@ -31,7 +34,15 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BRAND_JSON = REPO_ROOT / "style" / "brand.json"
-TOKENS_JSON = REPO_ROOT / "style" / "brand.tokens.json"
+# Resolved tokens, for consumers that should not have to understand aliases.
+# Emitted twice on purpose: once at a stable repo path for non-Python projects
+# reading the submodule, and once inside the theme package so that
+# `pip install sphinx-kataglyphis-theme` ships it. Both are generated, so
+# --check keeps them identical to brand.json.
+TOKENS_TARGETS = [
+    REPO_ROOT / "style" / "brand.tokens.json",
+    REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json",
+]
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"
 FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
@@ -264,8 +275,10 @@ def desired_outputs() -> dict[Path, str]:
     outputs: dict[Path, str] = {
         STY_PATH: render_latex(brand),
         FONTS_PATH: render_latex_fonts(brand),
-        TOKENS_JSON: render_tokens_json(brand),
     }
+    tokens = render_tokens_json(brand)
+    for target in TOKENS_TARGETS:
+        outputs[target] = tokens
     css_block = render_css_block(brand)
     for css in CSS_TARGETS:
         current = css.read_text(encoding="utf-8") if css.exists() else ""

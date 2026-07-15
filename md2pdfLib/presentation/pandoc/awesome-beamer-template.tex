@@ -117,7 +117,7 @@ $if(beamer)$
 $if(theme)$
 $-- Brand colors — single source of truth: style/brand.json. Must be defined
 $-- before \usetheme so the theme can reference them.
-\input{md2pdfLib/style/brand-colors.tex}
+\input{brand-colors.tex}
 \usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
 $endif$
 $if(colortheme)$

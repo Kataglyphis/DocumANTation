@@ -25,7 +25,7 @@
 \usepackage{fontspec}
 
 % Main font — single source of truth: style/brand.json
-\input{md2pdfLib/style/brand-fonts.tex}
+\input{brand-fonts.tex}
 \brandSetMainFont
 
 \usepackage{booktabs}
@@ -73,7 +73,7 @@
 %% -------------------------------
 % Main theme color — single source of truth: style/brand.json
 % (defines brandAccent + the greenAccent/myGreenAccent/basecolor aliases).
-\input{md2pdfLib/style/brand-colors.tex}
+\input{brand-colors.tex}
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}

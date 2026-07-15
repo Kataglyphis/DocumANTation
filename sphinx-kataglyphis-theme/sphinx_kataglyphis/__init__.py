@@ -5,10 +5,42 @@ Usage in a new project's ``conf.py``::
 
     from sphinx_kataglyphis import setup_theme
     setup_theme(globals(), repository_url="https://github.com/org/repo")
+
+The brand tokens (colours, fonts) are packaged with the theme, so any Python
+project that installs it can read them without vendoring values::
+
+    from sphinx_kataglyphis import brand
+    brand()["colors"]["accent"]        # '#6af0ad'
+    brand()["fonts"]["main"]           # 'Roboto'
 """
 
 import argparse
+import json
+from functools import lru_cache
+from importlib.resources import files
 from pathlib import Path
+
+# ── brand tokens ─────────────────────────────────────────────────────────────
+
+BRAND_TOKENS_RESOURCE = "brand.tokens.json"
+
+
+@lru_cache(maxsize=1)
+def brand() -> dict:
+    """Return the Kataglyphis brand tokens, with all aliases resolved.
+
+    Generated from ``style/brand.json`` by ``style/generate_style.py``; this is
+    the single source of truth for every colour and font. Shipped inside the
+    package so ``pip install sphinx-kataglyphis-theme`` is enough to read it.
+    """
+    payload = files(__package__).joinpath(BRAND_TOKENS_RESOURCE).read_text(encoding="utf-8")
+    return json.loads(payload)
+
+
+def brand_css_path() -> Path:
+    """Filesystem path to the brand stylesheet, for non-Sphinx consumers."""
+    return Path(str(files(__package__).joinpath("_static/css/custom.css")))
+
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 

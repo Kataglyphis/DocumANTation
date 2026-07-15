@@ -84,10 +84,11 @@
 \newcommand{\insertInterSectionSpace}{\vspace{1cm}}
 
 \DeclareUnicodeCharacter{00E9}{\'{e}}
-% Define default accent colors — single source of truth: style/brand.json.
-% CV builds run from data/cv/, so reach the repo root with ../../.
-\input{../../md2pdfLib/style/brand-colors.tex}   % basecolor := brandAccent
-\input{../../md2pdfLib/style/brand-fonts.tex}    % \brandSetMainFont := brand main font
+% Brand colours and fonts — single source of truth: style/brand.json.
+% Found via TEXINPUTS (see scripts/build_in_container.sh), so this class does
+% not need to know where the style directory sits relative to the build dir.
+\input{brand-colors.tex}   % basecolor := brandAccent, linkcolor := brandLink
+\input{brand-fonts.tex}    % \brandSetMainFont / \brandSetMonoFont
 \colorlet{headingcolor}{black}
 
 \ifundef{\@green} {

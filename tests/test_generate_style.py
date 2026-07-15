@@ -228,3 +228,13 @@ def test_web_style_has_exactly_one_css_target():
 def test_resolve_brand_is_idempotent():
     once = resolve_brand(RAW_BRAND)
     assert resolve_brand(once) == once
+
+
+def test_tokens_ship_inside_the_installable_package():
+    # Without this, `pip install sphinx-kataglyphis-theme` gives you the CSS but
+    # no way to read the brand from Python, and projects re-type the hex.
+    targets = [p for p in desired_outputs() if p.name == "brand.tokens.json"]
+    assert len(targets) == 2
+    assert any("sphinx_kataglyphis" in p.parts for p in targets)
+    # Both copies are generated from the same render, so they cannot diverge.
+    assert len({desired_outputs()[p] for p in targets}) == 1

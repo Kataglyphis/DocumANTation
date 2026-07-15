@@ -44,8 +44,16 @@ case "$TARGET" in
         ;;
 esac
 
+# Put the brand snippets on the LaTeX search path so documents can say
+# \input{brand-colors.tex} without knowing where the style directory sits
+# relative to their build directory. A project consuming this repo as a
+# submodule points TEXINPUTS at its own checkout the same way. The trailing
+# colon keeps the default search path.
+BRAND_TEXINPUTS="/md2pdfLib/style:"
+
 "${CONTAINER_RUNTIME}" run --rm \
   --entrypoint "" \
+  -e "TEXINPUTS=${BRAND_TEXINPUTS}" \
   -v "${PROJECT_ROOT}/md2pdfLib:/md2pdfLib" \
   -v "${PROJECT_ROOT}/data:/data" \
   "$IMAGE" \

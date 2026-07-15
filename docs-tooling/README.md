@@ -10,7 +10,7 @@ consume it as a git submodule.
 
 | Path | Purpose |
 | --- | --- |
-| `source_templates/sphinx-book/` | Baseline `sphinx-book-theme` config, shared CSS, and a landing-page template |
+| `source_templates/sphinx-book/` | Baseline `sphinx-book-theme` config and a landing-page template |
 | `source_templates/sphinx-python/` | Baseline Sphinx config for Python API docs (autodoc/napoleon) |
 | `scripts/sync_versions.py` | Regenerate version snapshots / inline markers / dependency tables from a repo's `versions.env` + `deps.json` |
 | `scripts/generate-website-licenses.py` | Generate the website open-source-license markdown pages from `deps.json` + `versions.env` |
@@ -18,6 +18,11 @@ consume it as a git submodule.
 The Sphinx **theme** itself (the `setup_theme()` helper, scaffold CLI, and base
 CSS) is packaged separately in [`../sphinx-kataglyphis-theme`](../sphinx-kataglyphis-theme)
 so consumers can `pip install -e` it.
+
+**Colours and fonts** are not defined here. They live once in
+[`../style/brand.json`](../style/README.md) and are generated into the LaTeX,
+Pandoc, CSS and JSON consumers — see [`style/README.md`](../style/README.md) for
+how to read the brand from Python, Sphinx, LaTeX, or any other language.
 
 ## Consuming from another repository
 
