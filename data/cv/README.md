@@ -1,227 +1,64 @@
-Table of Contents
-1. About
-2. Acknowledgements
-2. Getting Started with this Template
-3. Tips to writing a good CV
-ABOUT---------------------------------------------------
+# CV
 
-ACKNOWLEDGMENTS-----------------------------------------
-USA STEM CV Template
-This template has been adapted from a template created by Christophe Roger (Darwiin). The further edits were made to make a more academic CV by USA standards include letter size and various sections. 
+The content of Jonas Heinle's CV. The layout lives elsewhere: the
+`myCV_METADATA` class is in `md2pdfLib/cv/template/latex/`, with the book and
+presentation templates, and reaches this directory through `TEXINPUTS`.
 
-Tips on what to include at the bottom of this document.
+## Building
 
-
-Awesome Source CV [![Example](https://img.shields.io/badge/Exemple-pdf-blue.svg)](https://raw.githubusercontent.com/posquit0/Awesome-CV/master/examples/resume.pdf)
-=================
-
-## About
-
-**Awesome Source Latex CV** is based on a CV template created by Alessandro Plasmati. The original template use _XeLaTeX_ engine and _[Fontin Sans](http://www.exljbris.com/fontinsans.html)_ font. 
-
-More informations about the original Alessandro Plasmati template can be found here :
-
-   -  [ Scribd ](http://fr.scribd.com/doc/16335667/Writing-your-Professional-CV-with-LaTeX)
-   -  [ LaTeX Templates ](http://www.latextemplates.com/template/plasmati-graduate-cv)
-   -  [ ShareLatex ](https://www.sharelatex.com/templates/cv-or-resume/professional-cv)
-
-**Personal data** has moved on top of the first page just before the position and _[Fontin Sans](http://www.exljbris.com/fontinsans.html)_ font has been replaced by _[Source Sans Pro Font](https://github.com/adobe-fonts/source-sans-pro)_ from Adobe. _[Font Awesome](http://fontawesome.io/)_ icons are used to highlight important elements.
-
-Unlike _Alessandro Plasmati_ CV template, all layout stuff in **Awesome Source Latex CV** has moved in the Latex class file _awesome-source-cv.cls_.
-
-GETTING STARTED WITH THIS TEMPLATE ---------------------
-
-You can edit online **Awesome Source Latex CV** on [Overleaf](https://www.overleaf.com/latex/templates/awesome-source-cv/wrdjtkkytqcw). Feel free to use my [referal link](https://www.overleaf.com/signup?ref=54c221604cd6) if you want to create your account.
-
-## How to use **Awesome Source CV** latex class
-
-### Construct the header
-
-Outside of the `\socialinfo` wrapper you have to define the mandatory parameters `\name` and `\tagline`.
-
-```latex
-% Define author's name
-% Usage: \name{<firstname>}{<lastname>}
-% Mandatory
-\name{Christophe}{ROGER}
-
-% Define author's photo (optional)
-% Usage \photo{<diameter>}{<photo>}
-\photo{2.5cm}{darwiin}
-
-% Define author's tagline
-% Usage: \tagline{<tag line>} 
-% Mandatory
-\tagline{Chef de projet IT}
+```bash
+./scripts/build_in_container.sh cv                  # English
+CV_LANG=german ./scripts/build_in_container.sh cv   # German
+make cv-all                                         # both
 ```
 
-Most social network have their command to render a clickable link or a simple text entry.
+Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf` — the filenames the
+CV is published under on jonasheinle.de, so the deliverables are reproducible
+rather than committed binaries. Nothing in this directory is a build artifact.
+
+Add `STRICT_WARNINGS=1` to fail the build on LaTeX warnings and bad boxes. CI
+runs both languages that way.
+
+## Bilingual sources
+
+There is one CV, not two. Every section file carries both variants:
 
 ```latex
-% Render author's linked-in (optional)
-% Usage: \linkedin{<linked-in-nick>}
-\linkedin{christopheroger}
-
-% Render author's viadeo(optional)
-% Usage: \viadeo{<viadeo-nick>}
-\viadeo{christopheroger}
-
-% Render author's github (optional)
-% Usage: \github{<github-nick>}
-\github{darwiin}
-
-% Render author's email (optional)
-% Usage: \email{<email adress>}
-\email{christophe.roger@mail.com}
+\IfLanguageName{english}{Experiences}{Berufserfahrung}
 ```
 
-Put these command in the `\socialinfo` wrapper. Feel free to add `\\` when you want to force a new line.
+`CV_LANG` passes a class option that sets the babel main language and the
+`datetime2` style. **Edit both branches when you change a section** — CI builds
+both languages strictly, so German text that overruns a column the English text
+fits will fail there.
 
-```latex
-\socialinfo{
-  \linkedin{christopheroger}
-  \viadeo{christopheroger}
-  \github{darwiin}\\
-  \smartphone{+687 123 456}
-  \email{christophe.roger@mail.com}\\
-  \address{2 Rue du quartier, 98765 Ville, Pays}\\
-  \infos{Né le 23 septembre 1982 (34 ans) à Nouméa, Nouvelle-Calédonie}
-}
-```
+French is loaded for `\foreignlanguage` but is not a main-language choice: the
+sections carry no French text. Adding it means a third branch everywhere, so
+`\IfLanguageName` would want replacing with something that scales.
 
-Use the `\makecvheader`command to generate the header.
+## Layout
 
-```latex
-\makecvheader
-```
+| File | Contents |
+| --- | --- |
+| `cv.tex` | Document root: header, contact details, section order |
+| `section_*.tex` | One section each, in the order `cv.tex` inputs them |
+| `images/` | Header photo. Keep it small — this file *is* the PDF's size |
 
-### Construct the _experiences_ section
+`section_references.tex` is deliberately not input; `cv.tex` keeps the line
+commented so references can be switched back on for applications that ask.
 
-To describe your experiences you have first to declare the `experiences` environment
+The photo is drawn with `fill overzoom image` into a box roughly 4.95cm wide,
+so ~1000px across is already past what print needs. It was once committed at
+4611x3294, which made a two-page CV a 3.8 MB attachment.
 
-```latex
-% Begin a new experiences environment to use experience and consultantexperience macro
-\begin{experiences}
+## Attribution
 
-% Here's go your experiences
+The `myCV_METADATA` class derives from Christophe Roger's
+[YAAC / Awesome Source CV](https://github.com/darwiin/yaac-another-awesome-cv),
+itself based on a template by Alessandro Plasmati. The class is distributed
+under the LPPL and the section templates under CC BY-SA 4.0; both headers carry
+the original notices, which must stay.
 
-\end{experiences}
-```
-
-Then you can describe your experiences using **\experience** and **\consultantexperience** entries. Each
-entry must be separated by the **\emptyseparator** 
-
-```latex
-% Begin a new experiences environment to use experience and consultantexperience macro
-\begin{experiences}
-
-% The experience entry work as below and can be used to describe a job experience
-  \experience
-    {End date}      {Experience title}{Enterprise}{Country}
-    {Begin date}    {
-    				  experience details
-                      \begin{itemize}
-                        \item Item 1: _Item 1 description_
-                        \item Item 2: _Item 2 description_
-                        \item Item 3: _Item 3 description_
-                      \end{itemize}
-                    }
-                    {Technology highlights}
-
-% The emptyseparator macro is used to create white space in your experience
-  \emptySeparator
-
-% The consultantexperience macro is very similar to the experience macro, but offer you 
-% the possibility tu put client details
-  \consultantexperience
-    {End date}        {Experience title}{Enterprise}{Country}
-    {Begin date}      {Client job title}{Clent enterprise}
-                    {
-                      experience details
-                      \begin{itemize}
-                        \item Item 1: _Item 1 description_
-                        \item Item 2: _Item 2 description_
-                        \item Item 3: _Item 3 description_
-                      \end{itemize}
-                    }
-                    {Technology highlights}
-\end{experiences}
-```
-
-## License
-
-Latex class file _awesome-source-cv.cls_ is published under the term of the [LPPL Version 1.3c](https://www.latex-project.org/lppl.txt).
-
-All content files are published under the term of the [CC BY-SA 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/legalcode).
-
-
-
-TIPS to making a good CV /  Sections to include---------
-
-Do's
-Research and Teaching Interests
-Education
-Professional / Academic positions can separate
-Publications / Posters / Presentations
-Awards
-Contact Info
-Include current project and publications in progress
-Teaching experience / tutoring / mentoring
-Grants / Contributions to research grant writing
-Professional initiative / outreach / professional service (creating events not being in a group)
-Possible include references
-Can include coursework but drop after time
-
-Dont Include
-DOB / marital status
-misleading info
-holes in time
-headshot
-do not overinflate
-
-
-SECTIONS
-CONTACT INFORMATION: phome, email, webpage url, address
-EDUCATION: Degrees and certs since end of high school 
-CERTIFICATIONS: Courseera / EdX / Rackham etc
-AWARDS: Fellowships, grants, awards in general etc
-PROFESSIONAL and ACADEMIC EXPERIENCE: grad researcher, internship, industry jobs
-RESEARCH STATEMENT: research interests / experience < 6 lines
-PUBLICATIONS:
-- divide in journal vs conference
-- peer reviewed or not
-- do not mislead: show the complete authors' list
-- you can clarify the practice in your discipline
-- "Accepted for publication" manuscripts go here
-Could report: 
-   - Acceptance rates, and impact factors
-   - Audience sizes
-WORKS IN PROGRESS
-- Papers /scholarly work you are working on, but has not been accepted yet
-PRESENTATIONS AND POSTERS
-PATENTS / PATENTS APPLICATIONS
-GRANTS?
-MENTORING
-- Undergraduates / junior students
-TEACHING EXPERIENCE
-- Graduate instructor, grading
-- Teaching evaluations?
-- can include tutoring
-- pedagogy statement? (<6 lines)
-- guest lecturing
-PROFESSIONAL SERVICE
-- Reviewed Papers
-- contributed to research grant proposals
-- officer ina student group in your discipline or beyond
-- could split within/outside university
-OUTREACH
-- Activities to engage people in your discipline who are not usually exposed to it
-PRESS?
-PROFESSTIONAL SOCIETIES
-MENTORING
-COMMUNITY SERVICE
-
-LAYOUT
-< 3 colors
-Easy to find headers
-full width for content if possible
+Colours and fonts are **not** set here — they come from `style/brand.json`
+through `brand-colors.tex` and `brand-fonts.tex`, shared with the book, the
+slides and the website. See `style/README.md`.
