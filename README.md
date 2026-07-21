@@ -17,7 +17,6 @@
   - [Build book](#build-book)
   - [Build CV](#build-cv)
 - [Dependencies](#dependencies)
-- [Useful tools](#useful-tools)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -92,11 +91,54 @@ Both variants come from the same sources in `data/cv/` and land in `data/out/`
 as `CV_Jonas_Heinle_<language>.pdf`. `make cv-all` builds the pair.
 
 ## Dependencies
-- [beamerthemeawesome](https://github.com/LukasPietzschmann/awesome-beamer) (git submodule)
-- [smile](https://github.com/LukasPietzschmann/smile) (git submodule)
 
-## Useful tools
-- [pandoc](https://github.com/jgm/pandoc)
+Everything the builds need lives in the `pandoc_all` image built from the
+[`Dockerfile`](Dockerfile); nothing has to be installed on the host but a
+container runtime. `pandoc` and `uv` are version-pinned there (the pandoc `.deb`
+additionally by SHA-256); the rest track Ubuntu 26.04.
+
+### Document toolchain
+
+| Component | License | Link |
+| --- | --- | --- |
+| Ubuntu 26.04 LTS (base image) | Various, mostly GPL-family | <https://ubuntu.com> |
+| Pandoc | GPL-2.0-or-later | <https://github.com/jgm/pandoc> |
+| TeX Live (`texlive-full`) | Collection; per package LPPL, GPL, X11, modified BSD | <https://tug.org/texlive/> |
+| Latin Modern (`lmodern`) | GUST Font License (LPPL-style) | <http://www.gust.org.pl/projects/e-foundry/latin-modern> |
+| Ghostscript | AGPL-3.0-or-later | <https://www.ghostscript.com/> |
+| ImageMagick | ImageMagick License (Apache-2.0-style) | <https://imagemagick.org> |
+
+### Python
+
+| Component | License | Link |
+| --- | --- | --- |
+| Python 3 (`python3-full`, `python3-pip`) | PSF-2.0 | <https://www.python.org> |
+| uv | Apache-2.0 OR MIT | <https://github.com/astral-sh/uv> |
+| Pygments | BSD-2-Clause | <https://pygments.org> |
+
+### Base utilities
+
+| Component | License | Link |
+| --- | --- | --- |
+| GNU C Library locales (`locales`) | LGPL-2.1-or-later | <https://www.gnu.org/software/libc/> |
+| curl | curl (MIT/X-style) | <https://curl.se> |
+| GNU Wget | GPL-3.0-or-later | <https://www.gnu.org/software/wget/> |
+| ca-certificates | MPL-2.0 (CA bundle), GPL-2.0-or-later (packaging) | <https://packages.ubuntu.com/ca-certificates> |
+| less | GPL-3.0-or-later or Less License | <https://www.greenwoodsoftware.com/less/> |
+| sudo | ISC (with BSD-2/3-Clause parts) | <https://www.sudo.ws> |
+
+### Vendored LaTeX themes
+
+Git submodules, copied into the image's `texmf` tree at build time.
+
+| Component | License | Link |
+| --- | --- | --- |
+| awesome-beamer | BSD-3-Clause | [fork](https://github.com/Kataglyphis/awesome-beamer) of [LukasPietzschmann/awesome-beamer](https://github.com/LukasPietzschmann/awesome-beamer) |
+| smile | BSD-3-Clause | [fork](https://github.com/Kataglyphis/smile) of [LukasPietzschmann/smile](https://github.com/LukasPietzschmann/smile) |
+
+Ghostscript is the only copyleft-network license in the set. It is invoked as a
+separate program and nothing here links against it, so it does not reach the
+documents this repo produces or the repo's own terms.
 
 ## Contributing
 1. Fork the Project
@@ -106,6 +148,9 @@ as `CV_Jonas_Heinle_<language>.pdf`. `make cv-all` builds the pair.
 5. Open a Pull Request
 
 ## License
+
+Released under the MIT License — see [LICENSE](LICENSE). The third-party
+components listed under [Dependencies](#dependencies) keep their own licenses.
 
 ## Contact
 Jonas Heinle - [@Cataglyphis_](https://twitter.com/Cataglyphis_) - jonasheinle@googlemail.com

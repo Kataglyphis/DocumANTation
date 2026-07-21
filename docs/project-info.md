@@ -9,10 +9,13 @@
 
 ## External Dependencies
 
-- `pandoc` for Markdown-to-LaTeX or Markdown-to-PDF conversion
-- LuaLaTeX and related TeX tooling for final PDF generation
-- `beamerthemeawesome` as the presentation theme submodule
-- `smile` as an additional presentation theme submodule
+Everything the builds need ships in the `pandoc_all` container image, chiefly
+`pandoc` for Markdown conversion and TeX Live/LuaLaTeX for PDF generation, plus
+the `awesome-beamer` and `smile` presentation-theme submodules.
+
+The full list, with the license and upstream of each component, is the table in
+the repository [README](https://github.com/Kataglyphis/Kataglyphis-mdToPdf#dependencies).
+It is kept in one place so the two cannot drift apart.
 
 This repository is also the single source of truth for the shared Kataglyphis
 docs theme (`sphinx-kataglyphis-theme/`) and docs tooling (`docs-tooling/`),
