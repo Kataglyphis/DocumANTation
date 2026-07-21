@@ -39,10 +39,6 @@
 	\def\@monochrome{monochrome}
 }
 
-\DeclareOption{localFont}{
-	\def\@local{local}
-}
-
 \DeclareOption{alternative}{
 	\def\@alternative{alternate}
 }
@@ -155,23 +151,11 @@
 \defaultfontfeatures{Ligatures=TeX}%Mapping=tex-text
 %
 
-% Define font to use according to localFont option
-\ifundef{\@local}
-{
-	%\setmainfont[BoldFont = Helvetica Neue, ItalicFont=Helvetica Neue Thin Italic ,SmallCapsFont = Helvetica Neue Light]{Helvetica Neue Thin}
-	%   \setmainfont{Source Sans Pro Light}[
-	%     BoldFont = SourceSansPro-Regular,
-	%     ItalicFont= Source Sans Pro Light Italic]
-	\brandSetMainFont
-}
-{
-	% \setmainfont{SourceSansPro-Light}[
-	% 	Path = fonts/,
-	% 	BoldFont = SourceSansPro-Regular,
-	% 	ItalicFont = SourceSansPro-LightIt]
-	\brandSetMainFont
-}
-% Mono font is brand-wide, so it is not part of the localFont branch above.
+% Fonts are brand-wide: both come from style/brand.json via brand-fonts.tex.
+% This used to branch on a `localFont` option that loaded a vendored copy of
+% Source Sans Pro from data/cv/fonts/; both branches ended up calling
+% \brandSetMainFont, so the option and the 1.8 MB of OTFs were dead weight.
+\brandSetMainFont
 \brandSetMonoFont
 
 %New length definition
