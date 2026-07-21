@@ -33,7 +33,11 @@ The `beamer` target uses Pandoc's PDF generation flow directly:
 
 The `pptx` target renders the same markdown as a PowerPoint deck:
 
-1. `make_reference.py` builds a brand-themed `reference.pptx` from `style/brand.json`.
+1. `make_reference.py` builds a brand-themed `reference.pptx` from `style/brand.json`:
+   the Office colour scheme and fonts, plus the beamer look ported into the
+   slide layouts — the title slide over the same background image as the beamer
+   title page, section pages accent-on-dark, and an accent separator rule under
+   content titles.
 2. Pandoc renders the deck against that reference document.
 3. In strict mode, `verify_brand.py` fails the build if the emitted deck's
    colours or theme fonts are not brand values.

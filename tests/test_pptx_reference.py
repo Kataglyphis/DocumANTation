@@ -17,10 +17,16 @@ from pathlib import Path
 import pytest
 
 from md2pdfLib.presentation.pptx.make_reference import (
+    TITLE_BG_IMAGE,
+    TITLE_BG_REL_ID,
+    TITLE_BG_SRCRECT,
     ReferenceBuildError,
     brand_theme_colors,
     build_reference,
+    patch_content_layout,
+    patch_section_header_layout,
     patch_theme_xml,
+    patch_title_slide_layout,
 )
 from md2pdfLib.presentation.pptx.verify_brand import brand_hexes, off_brand_colors
 
@@ -144,6 +150,18 @@ def test_build_reference_against_real_pandoc(tmp_path):
             xml = z.read(name).decode()
             assert _colors(xml)["accent1"] == BRAND["colors"]["accent"].lstrip("#").upper()
             assert BRAND["fonts"]["main"] in xml
+        # layout branding landed: media part, title bg, dark section, separators
+        assert "ppt/media/brandTitleBg.jpg" in z.namelist()
+        layouts = {
+            m.group(1): n
+            for n in z.namelist()
+            if n.startswith("ppt/slideLayouts/slideLayout")
+            and n.endswith(".xml")
+            and (m := re.search(r'<p:cSld name="([^"]+)"', z.read(n).decode()))
+        }
+        assert f'r:embed="{TITLE_BG_REL_ID}"' in z.read(layouts["Title Slide"]).decode()
+        assert '<a:schemeClr val="dk1"/>' in z.read(layouts["Section Header"]).decode()
+        assert "Brand Separator" in z.read(layouts["Title and Content"]).decode()
     assert not (tmp_path / "reference.default.pptx").exists(), "temp file left behind"
 
 
@@ -202,3 +220,156 @@ def test_gate_refuses_a_deck_with_nothing_to_check(tmp_path):
         z.writestr("docProps/app.xml", "<x/>")
     with pytest.raises(SystemExit):
         off_brand_colors(empty, brand_hexes(BRAND))
+
+
+# ── layout branding (the beamer look, ported) ───────────────────────────────
+
+# Minimal but structurally faithful to pandoc's default deck: cSld/spTree,
+# placeholders with the lstStyle/spPr shapes observed in the real file.
+TITLE_LAYOUT_XML = (
+    '<p:sldLayout><p:cSld name="Title Slide"><p:spTree>'
+    '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr/>'
+    '<p:nvPr><p:ph type="ctrTitle"/></p:nvPr></p:nvSpPr>'
+    '<p:spPr><a:xfrm><a:off x="685800" y="1597819"/>'
+    '<a:ext cx="7772400" cy="1102519"/></a:xfrm></p:spPr>'
+    "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    '<p:sp><p:nvSpPr><p:cNvPr id="3" name="Subtitle 2"/><p:cNvSpPr/>'
+    '<p:nvPr><p:ph type="subTitle" idx="1"/></p:nvPr></p:nvSpPr>'
+    '<p:spPr><a:xfrm><a:off x="1371600" y="2914650"/>'
+    '<a:ext cx="6400800" cy="1314450"/></a:xfrm></p:spPr>'
+    "<p:txBody><a:bodyPr/><a:lstStyle><a:lvl1pPr/></a:lstStyle><a:p/></p:txBody></p:sp>"
+    "</p:spTree></p:cSld></p:sldLayout>"
+)
+
+SECTION_LAYOUT_XML = (
+    '<p:sldLayout><p:cSld name="Section Header"><p:spTree>'
+    '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr/>'
+    '<p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr>'
+    '<p:spPr><a:xfrm><a:off x="722313" y="3305176"/>'
+    '<a:ext cx="7772400" cy="1021556"/></a:xfrm></p:spPr>'
+    "<p:txBody><a:bodyPr/><a:lstStyle><a:lvl1pPr/></a:lstStyle><a:p/></p:txBody></p:sp>"
+    '<p:sp><p:nvSpPr><p:cNvPr id="3" name="Text 2"/><p:cNvSpPr/>'
+    '<p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr>'
+    "<p:spPr/>"
+    "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    "</p:spTree></p:cSld></p:sldLayout>"
+)
+
+# Title placeholder with no xfrm of its own -- geometry inherited from master,
+# exactly like the real "Title and Content" layout.
+CONTENT_LAYOUT_XML = (
+    '<p:sldLayout><p:cSld name="Title and Content"><p:spTree>'
+    '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr/>'
+    '<p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr>'
+    "<p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    "</p:spTree></p:cSld></p:sldLayout>"
+)
+
+MASTER_XML = (
+    "<p:sldMaster><p:cSld><p:spTree>"
+    '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title"/><p:cNvSpPr/>'
+    '<p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr>'
+    '<p:spPr><a:xfrm><a:off x="457200" y="274638"/>'
+    '<a:ext cx="8229600" cy="1143000"/></a:xfrm></p:spPr>'
+    "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    "</p:spTree></p:cSld></p:sldMaster>"
+)
+
+
+def test_title_layout_gets_background_and_soft_boxes():
+    out = patch_title_slide_layout(TITLE_LAYOUT_XML)
+    # bg is the first child of cSld, referencing the brand image with the crop
+    assert re.search(r'<p:cSld name="Title Slide"><p:bg>', out)
+    assert f'r:embed="{TITLE_BG_REL_ID}"' in out
+    assert f'<a:srcRect t="{TITLE_BG_SRCRECT}" b="{TITLE_BG_SRCRECT}"/>' in out
+    # both text placeholders got the accent_soft info box (accent6 by scheme)
+    assert out.count('<a:schemeClr val="accent6"><a:alpha val="92000"/>') == 2
+
+
+def test_section_layout_goes_accent_on_dark():
+    out = patch_section_header_layout(SECTION_LAYOUT_XML)
+    assert '<a:solidFill><a:schemeClr val="dk1"/></a:solidFill>' in out
+    assert '<a:schemeClr val="accent1"/>' in out  # title text
+    assert '<a:schemeClr val="lt2"/>' in out  # body text
+
+
+def test_content_layout_separator_uses_master_geometry():
+    out = patch_content_layout(CONTENT_LAYOUT_XML, MASTER_XML, 9000)
+    # bar sits at the master title's left edge, directly under its box
+    assert '<a:off x="457200" y="1417638"/>' in out  # 274638 + 1143000
+    assert '<a:ext cx="8229600" cy="27432"/>' in out
+    assert '<a:schemeClr val="accent1"/>' in out
+    assert out.index("Brand Separator") < out.index("</p:spTree>")
+
+
+def test_layout_without_placeholder_fails_loudly():
+    with pytest.raises(ReferenceBuildError, match="ctrTitle"):
+        patch_title_slide_layout(SECTION_LAYOUT_XML.replace("Section Header", "Title Slide"))
+
+
+def _jpeg_size(path: Path) -> tuple[int, int]:
+    """Width/height from JPEG SOF markers -- no imaging dependency needed."""
+    data = path.read_bytes()
+    i = 2
+    while i < len(data):
+        assert data[i] == 0xFF, "not a JPEG marker"
+        marker = data[i + 1]
+        if marker in {0xC0, 0xC1, 0xC2, 0xC3}:  # SOF0..3
+            return (
+                int.from_bytes(data[i + 7 : i + 9]),
+                int.from_bytes(data[i + 5 : i + 7]),
+            )
+        i += 2 + int.from_bytes(data[i + 2 : i + 4])
+    raise AssertionError("no SOF marker found")
+
+
+def test_srcrect_constant_matches_the_actual_asset():
+    """TITLE_BG_SRCRECT is derived from the image's aspect ratio; if the asset
+    is ever replaced or resized, this recomputes the crop and catches drift."""
+    w, h = _jpeg_size(TITLE_BG_IMAGE)
+    visible = w * 9 / 16
+    expected = round((h - visible) / 2 / h * 100_000)
+    assert abs(TITLE_BG_SRCRECT - expected) <= 10
+
+
+# ── finalize: the media pandoc drops, and the gate that notices ─────────────
+
+
+def _mini_deck(tmp_path: Path, with_media: bool) -> Path:
+    """A deck whose Title Slide layout references the brand bg image."""
+    deck = tmp_path / "deck.pptx"
+    rels = (
+        '<Relationships><Relationship Id="rIdBrandTitleBg" '
+        'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" '
+        'Target="../media/brandTitleBg.jpg"/></Relationships>'
+    )
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slideLayouts/slideLayout1.xml", TITLE_LAYOUT_XML)
+        z.writestr("ppt/slideLayouts/_rels/slideLayout1.xml.rels", rels)
+        if with_media:
+            z.writestr("ppt/media/brandTitleBg.jpg", b"\xff\xd8jpegbytes")
+    return deck
+
+
+def test_finalize_reattaches_dropped_layout_media(tmp_path: Path):
+    from md2pdfLib.presentation.pptx.finalize_deck import finalize, missing_layout_media
+
+    deck = _mini_deck(tmp_path, with_media=False)
+    assert missing_layout_media(deck) == {"ppt/media/brandTitleBg.jpg"}
+    added = finalize(deck)
+    assert added == ["ppt/media/brandTitleBg.jpg"]
+    with zipfile.ZipFile(deck) as z:
+        assert z.read("ppt/media/brandTitleBg.jpg") == TITLE_BG_IMAGE.read_bytes()
+    assert missing_layout_media(deck) == set()
+
+
+def test_verify_brand_flags_dangling_layout_media(tmp_path: Path):
+    from md2pdfLib.presentation.pptx.verify_brand import dangling_layout_media
+
+    broken = _mini_deck(tmp_path, with_media=False)
+    assert dangling_layout_media(broken) == {
+        "ppt/slideLayouts/_rels/slideLayout1.xml.rels": {"brandTitleBg.jpg"}
+    }
+    ok_dir = tmp_path / "ok"
+    ok_dir.mkdir()
+    assert dangling_layout_media(_mini_deck(ok_dir, with_media=True)) == {}

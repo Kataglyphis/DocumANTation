@@ -11,22 +11,9 @@
 
 \providecommand{\pandocbounded}[1]{#1}
 
-\AtBeginDocument{%
-    \renewenvironment{Shaded}%
-    {\begin{tcolorbox}[
-        enhanced,
-        breakable,
-        boxrule=1.3pt,
-        colback=shadecolor,
-        colframe=myGreenAccent,
-        arc=2mm,
-        left=3.0mm,
-        right=3.0mm,
-        top=3.0mm,
-        bottom=3.0mm
-    ]}%
-    {\end{tcolorbox}}%
-}
+% Shared brand code frame; the slides keep a heavier rule than the book.
+\input{md2pdfLib/common/latex/brand-code-block.tex}
+\brandCodeBox{boxrule=1.3pt}
 
 \usepackage{fvextra}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{

@@ -1,0 +1,36 @@
+% Shared Pandoc code-block frame -- ONE definition of the brand code box.
+%
+% Pandoc emits \begin{Shaded}\begin{Highlighting}... for fenced code; the
+% highlight theme defines Shaded, and both the book and the slides used to
+% replace it with their own near-identical tcolorbox -- two copies of the
+% brand's code-block look that could drift apart. This is the single copy.
+%
+% Per-document differences are tcolorbox option overrides:
+%   \input{md2pdfLib/common/latex/brand-code-block.tex}
+%   \brandCodeBox{boxrule=0.6pt, top=2.5mm, bottom=2.5mm}   % book (print)
+%   \brandCodeBox{boxrule=1.3pt}                            % slides
+%
+% Requires tcolorbox with the breakable,skins libraries and brand-colors.tex
+% (greenAccent). colback stays `shadecolor` so the box follows the document's
+% pygments theme: light in the book, dark on the slides; the book forces
+% shadecolor light separately because it prints.
+\newcommand{\brandCodeBox}[1]{%
+	\AtBeginDocument{%
+		\ifdefined\Shaded
+			\renewenvironment{Shaded}%
+			{\begin{tcolorbox}[
+				enhanced,
+				breakable,
+				colback=shadecolor,
+				colframe=greenAccent,
+				arc=2mm,
+				left=3mm,
+				right=3mm,
+				top=3mm,
+				bottom=3mm,
+				#1
+			]}%
+			{\end{tcolorbox}}%
+		\fi
+	}%
+}

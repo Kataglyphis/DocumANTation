@@ -80,6 +80,30 @@ def off_brand_fonts(deck: Path, expected: str) -> dict[str, set[str]]:
     return offenders
 
 
+def dangling_layout_media(deck: Path) -> dict[str, set[str]]:
+    """{layout rels part: media targets that do not exist in the archive}.
+
+    Pandoc drops media that only layouts reference (finalize_deck.py puts the
+    known ones back); anything still dangling means a layout's image -- the
+    title background -- will not render. That is an off-brand deck even though
+    every colour checks out.
+    """
+    offenders: dict[str, set[str]] = {}
+    with zipfile.ZipFile(deck) as z:
+        names = set(z.namelist())
+        for name in names:
+            if not re.fullmatch(r"ppt/slideLayouts/_rels/slideLayout\d+\.xml\.rels", name):
+                continue
+            missing = {
+                t
+                for t in re.findall(r'Target="\.\./media/([^"]+)"', z.read(name).decode())
+                if f"ppt/media/{t}" not in names
+            }
+            if missing:
+                offenders[name] = missing
+    return offenders
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
@@ -105,6 +129,13 @@ def main() -> None:
         for part, stray in sorted(bad_fonts.items()):
             print(f"  {part}: {', '.join(sorted(stray))}", file=sys.stderr)
         print(f"Both font slots must name {expected_font} (style/brand.json).", file=sys.stderr)
+        failed = True
+
+    if dangling := dangling_layout_media(deck):
+        print(f"Error: {deck} has layout image references with no media part:", file=sys.stderr)
+        for part, targets in sorted(dangling.items()):
+            print(f"  {part}: {', '.join(sorted(targets))}", file=sys.stderr)
+        print("Run finalize_deck.py after pandoc, or update it for this media.", file=sys.stderr)
         failed = True
 
     # Both checks run before exiting, so one build reports every way the deck

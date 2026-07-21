@@ -101,27 +101,13 @@
 % - rounded corners
 % - colored frame
 % Pandoc emits: \begin{Shaded}\begin{Highlighting}...\end{Highlighting}\end{Shaded}
-% The highlight theme defines the Shaded env; we override it at begin-document.
+% The box itself is the shared brand code frame; only print-specific knobs live
+% here: a thinner rule, tighter padding, and a forced-light background even if
+% a dark highlight theme sneaks in -- this document prints.
 \tcbuselibrary{breakable,skins}
-\AtBeginDocument{%
-	\colorlet{shadecolor}{black!2}% enforce a light background even if a dark theme is used
-	\ifdefined\Shaded
-		\renewenvironment{Shaded}%
-		{\begin{tcolorbox}[
-			enhanced,
-			breakable,
-			colback=shadecolor,
-			colframe=greenAccent,
-			boxrule=0.6pt,
-			arc=2mm,
-			left=3.0mm,
-			right=3.0mm,
-			top=2.5mm,
-			bottom=2.5mm
-		]}%
-		{\end{tcolorbox}}%
-	\fi
-}
+\input{md2pdfLib/common/latex/brand-code-block.tex}
+\AtBeginDocument{\colorlet{shadecolor}{black!2}}
+\brandCodeBox{boxrule=0.6pt, top=2.5mm, bottom=2.5mm}
 
 %% ------------------------
 %% |    Including files   |

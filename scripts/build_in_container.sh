@@ -38,7 +38,10 @@ case "$TARGET" in
     pptx)
         # The reference deck carries the brand for pptx and is generated from
         # brand.json here, every build, rather than committed as a binary.
-        CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/presentation/pptx/make_reference.py /data/out/reference.pptx && uv run python /md2pdfLib/build.py pptx'
+        # finalize_deck.py runs unconditionally: pandoc drops media that only
+        # slide layouts reference, so the title background must be re-attached
+        # to every emitted deck, not just strict-checked ones.
+        CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/presentation/pptx/make_reference.py /data/out/reference.pptx && uv run python /md2pdfLib/build.py pptx && uv run python /md2pdfLib/presentation/pptx/finalize_deck.py /data/out/presentation.pptx'
         if [ "$STRICT_WARNINGS" = "1" ]; then
             CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/pptx.json --format pandoc-json'
             # The log gate only sees what pandoc complains about. A deck that
