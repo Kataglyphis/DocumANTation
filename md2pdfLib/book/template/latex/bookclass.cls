@@ -74,14 +74,8 @@
 % Main theme color — single source of truth: style/brand.json
 % (defines brandAccent + the greenAccent/myGreenAccent/basecolor aliases).
 \input{brand-colors.tex}
-% Deliberately not brand values: these three are the `listings` palette used by
-% c_code_style.tex (comments/line numbers/strings) and are the only place a
-% second, non-brand syntax palette survives. Pandoc-rendered code uses the
-% generated pygments themes instead. `amber` sat here too, defined and used by
-% nothing.
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
+% The `listings` palette (c_code_style.tex) uses the brandSyntax* colours from
+% brand-colors.tex, so hand-written listings match pandoc-rendered code blocks.
 \colorlet{symbolcolor}{greenAccent}
 
 \usepackage[raiselinks=true,

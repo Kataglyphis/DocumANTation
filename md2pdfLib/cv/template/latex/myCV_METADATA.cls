@@ -14,31 +14,17 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 
-\ProvidesClass{myCV_METADATA}[2023/05/26  v0.0.1 'Jonas Heinle CV' Class]
+\ProvidesClass{myCV_METADATA}[2026/07/21 v0.1.0 'Jonas Heinle CV' Class]
 
 \LoadClass[letterpaper]{article}
 
 \newif\if@showLinks   \@showLinksfalse
 
-\DeclareOption{green}{
-	\def\@green{green}
-}
-
-\DeclareOption{red}{
-	\def\@red{red}
-}
-
-\DeclareOption{indigo}{
-	\def\@indigo{indigo}
-}
-\DeclareOption{orange}{
-	\def\@orange{orange}
-}
-
-\DeclareOption{monochrome}{
-	\def\@monochrome{monochrome}
-}
-
+% The accent is not an option: it comes from style/brand.json via
+% brand-colors.tex (basecolor := brandAccent), shared with the book, the
+% slides and the website. The upstream template's green/red/indigo/orange/
+% monochrome options each hardcoded their own basecolor and would have
+% silently overridden the brand.
 \DeclareOption{alternative}{
 	\def\@alternative{alternate}
 }
@@ -65,11 +51,13 @@
 % \edef so the chosen language reaches babel as text, not as a macro name.
 \edef\cv@babelopts{french,ngerman,english,main=\cv@mainlang}
 \expandafter\RequirePackage\expandafter[\cv@babelopts]{babel}
-\RequirePackage[utf8]{luainputenc}
+% No inputenc shim: LuaLaTeX reads UTF-8 natively; luainputenc was a leftover
+% from the template's pdflatex days and fights fontspec.
 \RequirePackage{fontspec} 					                 % for loading fonts
 \RequirePackage{url,parskip} 	    % other packages for formatting
 \RequirePackage[dvipsnames]{xcolor}
-\RequirePackage{fullpage}
+% geometry alone controls the page: fullpage was loaded too and immediately
+% overridden by geometry's margins.
 \RequirePackage[margin=1.5cm]{geometry}
 \RequirePackage{fontawesome}
 \RequirePackage{hyperref}
@@ -93,31 +81,14 @@
 % Date style follows the main language, so a German CV does not print US dates.
 \expandafter\RequirePackage\expandafter[\cv@datestyle]{datetime2}
 
-\newcommand{\insertInterSectionSpace}{\vspace{1cm}}
-
-\DeclareUnicodeCharacter{00E9}{\'{e}}
 % Brand colours and fonts — single source of truth: style/brand.json.
 % Found via TEXINPUTS (see scripts/build_in_container.sh), so this class does
 % not need to know where the style directory sits relative to the build dir.
 \input{brand-colors.tex}   % basecolor := brandAccent, linkcolor := brandLink
 \input{brand-fonts.tex}    % \brandSetMainFont / \brandSetMonoFont
+% Neutral greys/blacks are deliberately per-document, not brand tokens
+% (see style/README.md "Deliberately not brand-wide").
 \colorlet{headingcolor}{black}
-
-\ifundef{\@green} {
-	\ifundef{\@red} {
-		\ifundef{\@indigo}{
-			\ifundef{\@orange} {
-				\ifundef{\@monochrome} {}
-				{ \definecolor{basecolor}{HTML}{000000}}
-			}
-			{ \definecolor{basecolor}{HTML}{e68a00} }
-		}
-		{ \definecolor{basecolor}{rgb}{0.2, 0.07, 0.48} }
-	}
-	{ \definecolor{basecolor}{HTML}{b30000} }     %RED
-}
-{ \definecolor{basecolor}{rgb}{0.0, 0.62, 0.38} }
-
 \definecolor{darkGrey}{HTML}{989898}
 
 % linkcolor comes from brand-colors.tex (brandLink) -- shared with the book and slides.
@@ -125,8 +96,6 @@
 \colorlet{symbolcolor}{basecolor}
 
 % Setup hyperref package, and colours for links
-%\definecolor{linkcolour}{rgb}{0,0.2,0.6}
-
 \if@showLinks
 	\hypersetup{%
 		breaklinks
@@ -143,11 +112,7 @@
 \fancyhfoffset{0em}
 % Remove head rule
 \renewcommand{\headrulewidth}{0pt}
-%\fancyfoot[C]{\thepage}
 \pagestyle{fancy}
-
-%\pagestyle{empty}                         % non-numbered pages
-%\font\fb=''[cmr10]''                      % for use with \LaTeX command
 
 % Setup CV sections
 \titleformat{\section}{\Large\raggedright}{}{0em}{}[\titlerule]
@@ -159,9 +124,6 @@
 
 % Setup Array : new column type
 \newcolumntype{R}[1]{>{\hfill}m{#1}}
-
-%Italian hyphenation for the word: ''corporations''
-\hyphenation{im-pre-se}
 
 % Setup fonts
 \defaultfontfeatures{Ligatures=TeX}%Mapping=tex-text
@@ -186,14 +148,12 @@
 \newcommand{\locationSymbol}{\faMapMarker}
 \newcommand{\infoSymbol}{\faInfo}
 \newcommand{\linkedinSymbol}{\faLinkedin}
-\newcommand{\viadeoSymbol}{\faViadeo}
 \newcommand{\mobileSymbol}{\faMobilePhone}
 \newcommand{\githubSymbol}{\faGithub}
 \newcommand{\youtubeSymbol}{\faYoutube}
 \newcommand{\linkSymbol}{\faLink}
 
 \newcommand\link[2]{\color{linkcolor}\href{#1}{#2}\color{Black} }
-\newcommand\important[1]{\textbf #1}
 
 % Create a tag
 % Usage: \cvtag{<tag label>}
@@ -249,10 +209,6 @@
 \newcommand*{\personalLink}[1]{\sociallink{\linkSymbol}{http://www.#1}{#1}}
 
 
-% Render author's viadeo(optional)
-% Usage: \viadeo{<viadeo-nick>}
-\newcommand*{\viadeo}[1]{\sociallink{\viadeoSymbol}{http://www.viadeo.com/fr/profile/#1}{viadeo.com/fr/profile/#1}}
-
 % Render author's github (optional)
 % Usage: \github{<github-nick>}
 \newcommand*{\github}[1]{\sociallink{\githubSymbol}{https://www.github.com/#1}{github.com/#1}}           % Github icon + URL
@@ -264,10 +220,6 @@
 % Render author's email (optional)
 % Usage: \email{<email adress>}
 \newcommand*{\email}[1]{\sociallink{\mailSymbol}{mailto:#1}{#1}}
-
-% Render a website link (optional)
-% Usage: \email{<email adress>}
-\newcommand*{\website}[2]{\sociallink{\faExternalLink}{#1}{#2}}
 
 % Render author's mobile phone (optional)
 % Usage: \smartphone{<mobile phone number>}
@@ -289,7 +241,6 @@
 	\setlength{\fboxrule}{2pt}
 	\setlength{\fboxsep}{0pt}
 	\textcolor{basecolor}{\fbox{\tikz{\path[fill overzoom image={\@photo}]rectangle (0.9\linewidth,0.64\linewidth)}}}%
-	%  \tikz\path[fill overzoom image={\@photo}]circle(radius = 0.5\linewidth);
 }
 
 % Define social entries to print in header
@@ -361,35 +312,6 @@
 	\textbf{#1} &   #2\\
 }
 
-% Define a new column type for the scholarship environment
-\newcolumntype{Y}{>{\raggedleft}p{\leftcolumn}}
-
-% Define the 'scholarship' environment
-\newenvironment{scholarship}{%
-	\begin{tabular}{Y p{\rightcolumnlength}}
-		}{%
-	\end{tabular}
-}
-
-% Render a scholarshipentry in the scolarship environment
-% Usage: \scholarshipentry{<date>}{<description>}
-\newcommand\scholarshipentry[2]{
-	#1    &  #2 \\
-}
-
-% Define the 'skills' environment
-\newenvironment{skills}{%
-	\begin{longtable}{R{\leftcolumn}p{\rightcolumnlength}}
-		}{%
-	\end{longtable}
-}
-
-% Render a skill in the skills environment
-% Usage: \skill{<skill>}{<level>}
-\newcommand\skill[2]{
-	\textbf{#1}    & \foreach \x in {1,...,5}{{\color{accentcolor!80} \ifnumgreater{\x}{#2}{\faCircleThin}{\faCircle}}\enspace } \\
-}
-
 \newcolumntype{E}{>{\raggedright\arraybackslash}p{\rightcolumnlength}}
 
 % Define the 'experiences' environment
@@ -431,24 +353,6 @@
 		#7
 	\end{minipage}								   \\*
 	& \footnotesize{\foreach \n in {#8}{\cvtag{\n}}} \\
-}
-
-% Render a consultant experience in the experiences environment
-% Usage: 
-% \consultantexperience
-%  {<End date>}      {<Consultant title>}{<Consulting Enterprise>}{<Country>}
-%  {<Start date}     {<Client title>}{<Client business unit>}
-%                    {
-%                      <Experience description (Could be a list)>
-%                    }
-%                    {<Technology list>}
-\newcommand\consultantexperience[9]{
-	\textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   								\\*
-	\textbf{#5}    & \emph{#6} pour \textsc{#7}                       				\\*
-	& 	\begin{minipage}[t]{\rightcolumnlength}
-		#8
-	\end{minipage}										\\*
-	& \footnotesize{\foreach \n in {#9}{\cvtag{\n}}} 	\\
 }
 
 \newcommand\emptySeparator{\multicolumn{2}{c}{}\\}
@@ -527,7 +431,6 @@
 	\end{minipage}%
 }
 
-\RequirePackage{xcolor}
 \RequirePackage{pgffor}
 \RequirePackage{accsupp}
 

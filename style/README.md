@@ -166,15 +166,20 @@ colours too:
 
 These are per-document values that live with the document, not in `brand.json`:
 
-- A few LaTeX listing helpers (`mygreen`, `mymauve`, `amber` in `bookclass.cls`,
-  `shadecolor` in `data/book/latex/main.tex`) are per-document leftovers. The
-  actual code highlighting comes from the `syntax` palettes above.
+- `shadecolor` in `data/book/latex/main.tex` (a near-white code-block
+  background forced light even under a dark theme). The LaTeX `listings`
+  palette itself is no longer an exception: `brand-colors.tex` emits the light
+  `syntax` palette as `brandSyntax*` colours and `c_code_style.tex` uses them,
+  so hand-written listings match pandoc-rendered code.
 - Neutral greys and blacks used for CV body text and headings.
 - `fonts.mono` names a TeX font (Latin Modern Mono) and is **not** emitted to
   CSS, because no browser has it; the web keeps the generic monospace stack.
-- The `green`/`red`/`indigo`/`orange`/`monochrome` class options in
-  `myCV_METADATA.cls` each hardcode their own `basecolor` and would override the
-  brand accent. The CV does not pass any of them, so it uses the brand; treat
-  them as legacy.
 - `md2pdfLib/presentation/template/latex/smile/` is a vendored upstream theme
-  (its own submodule) and is left alone.
+  (its own submodule) and is left alone. Its semantic palette (red/blue/…) is
+  not brand; only its generic `green` is remapped to `brandLink` by the beamer
+  template, because the `examples` blocks use it in a brand-identity role.
+
+The upstream CV template's `green`/`red`/`indigo`/`orange`/`monochrome` class
+options, which each hardcoded a `basecolor` that would have overridden the
+brand accent, have been removed from `myCV_METADATA.cls` — the accent is not a
+per-document choice.

@@ -140,6 +140,7 @@ def _hex(value: str) -> str:
 
 def render_latex(brand: dict) -> str:
     c = brand["colors"]
+    s = brand["syntax"]
     return (
         "\n".join(
             [
@@ -150,6 +151,13 @@ def render_latex(brand: dict) -> str:
                 f"\\definecolor{{brandAccentSoft}}{{HTML}}{{{_hex(c['accent_soft'])}}}",
                 f"\\definecolor{{brandTextMain}}{{HTML}}{{{_hex(c['text_main'])}}}",
                 f"\\definecolor{{brandLink}}{{HTML}}{{{_hex(c['link'])}}}",
+                "% Light/print syntax palette for LaTeX `listings` blocks -- the same",
+                "% values the generated pygments-print theme gives pandoc code blocks,",
+                "% so hand-written listings and pandoc-rendered code match in the book.",
+                f"\\definecolor{{brandSyntaxComment}}{{HTML}}{{{_hex(s['comment'])}}}",
+                f"\\definecolor{{brandSyntaxKeyword}}{{HTML}}{{{_hex(s['keyword'])}}}",
+                f"\\definecolor{{brandSyntaxString}}{{HTML}}{{{_hex(s['string'])}}}",
+                f"\\definecolor{{brandSyntaxLineNumber}}{{HTML}}{{{_hex(s['line_number'])}}}",
                 "% Backwards-compatible aliases used across the documents:",
                 "\\colorlet{greenAccent}{brandAccent}",
                 "\\colorlet{myGreenAccent}{brandAccent}",
