@@ -86,5 +86,12 @@ jobs:
       - name: Build pptx presentation with strict warnings
         run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh pptx
 
-      - name: Build CV with strict warnings
-        run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh cv
+      # Both published variants. The German one is built from the same sources
+      # via the class language option, so a section edited in only one language
+      # -- or German text that overruns a column the English text fits -- fails
+      # here rather than on jonasheinle.de.
+      - name: Build English CV with strict warnings
+        run: STRICT_WARNINGS=1 CV_LANG=english bash ./scripts/build_in_container.sh cv
+
+      - name: Build German CV with strict warnings
+        run: STRICT_WARNINGS=1 CV_LANG=german bash ./scripts/build_in_container.sh cv

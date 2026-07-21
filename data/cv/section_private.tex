@@ -50,8 +50,9 @@
     \vspace{1em}
     \begin{itemize}
     	\item Deutsch
-    	\item Englisch, Level B2
-    	\item Französisch, Level B1
+    	% CEFR levels in parentheses: ", Level B1" overflows this narrow column.
+    	\item Englisch (B2)
+    	\item Französisch (B1)
     	\item Latein
     \end{itemize}}
     {\sectionTitle{Hobbies}{\faBicycle}
@@ -65,9 +66,11 @@
     }{
     \sectionTitle{Tag meines Lebens}{\faInfo}
     \wheelchart{1.5cm}{0.5cm}{%
-          8/8em/accent/{Guter Schlaf},
+          % 6em label boxes throughout, as in the English variant: the 8em ones
+          % pushed the three-column row 2.96pt past \linewidth.
+          8/6em/accent/{Guter Schlaf},
           8/6em/accent/{Studieren},
-          2/8em/accent!30/{Sport},
+          2/6em/accent!30/{Sport},
           0.5/6em/accent!15/Meditation,
           1/6em/accent!15/Gitarre,
           4.5/6em/accent!50/{Zeit mit Freunde und Familie}

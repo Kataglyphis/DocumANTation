@@ -45,11 +45,26 @@
 
 \DeclareOption{showLinks}{ \@showLinkstrue}
 
+% Main document language. Every section file carries an English and a German
+% variant behind \IfLanguageName, so the language is a build-time switch over
+% one set of sources rather than two parallel CVs. Select it as a class option
+% without editing cv.tex:
+%   lualatex "\PassOptionsToClass{german}{myCV_METADATA}\input{cv.tex}"
+% which is what CV_LANG=german in scripts/build_in_container.sh does.
+% French stays loaded for \foreignlanguage but is not a main-language choice:
+% the section files have no French text to select.
+\def\cv@mainlang{english}
+\def\cv@datestyle{en-US}
+\DeclareOption{english}{\def\cv@mainlang{english}\def\cv@datestyle{en-US}}
+\DeclareOption{german}{\def\cv@mainlang{ngerman}\def\cv@datestyle{ngerman}}
+
 \ProcessOptions
 
 % Dependences
 %A Few Useful Packages
-\RequirePackage[french,ngerman,main=english]{babel} % 
+% \edef so the chosen language reaches babel as text, not as a macro name.
+\edef\cv@babelopts{french,ngerman,english,main=\cv@mainlang}
+\expandafter\RequirePackage\expandafter[\cv@babelopts]{babel}
 \RequirePackage[utf8]{luainputenc}
 \RequirePackage{fontspec} 					                 % for loading fonts
 \RequirePackage{url,parskip} 	    % other packages for formatting
@@ -75,7 +90,8 @@
 ]{csquotes}
 
 \RequirePackage{iflang}
-\RequirePackage[en-US]{datetime2}
+% Date style follows the main language, so a German CV does not print US dates.
+\expandafter\RequirePackage\expandafter[\cv@datestyle]{datetime2}
 
 \newcommand{\insertInterSectionSpace}{\vspace{1cm}}
 

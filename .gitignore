@@ -39,8 +39,8 @@ htmlcov/
 *.nls
 *.ilg
 
-# Generated PDFs from LaTeX (keep source-only)
-data/cv/cv.pdf
+# The CV now builds into data/out/ with the other documents, so it needs no
+# rule of its own -- data/out/ at the top of this file already covers it.
 
 # Sphinx build output
 docs/_build/

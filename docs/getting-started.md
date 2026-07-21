@@ -70,8 +70,11 @@ document targets in the next step.
 ### CV
 
 ```bash
-./scripts/build_in_container.sh cv
+./scripts/build_in_container.sh cv                  # English
+CV_LANG=german ./scripts/build_in_container.sh cv   # German
 ```
+
+Both land in `data/out/` as `CV_Jonas_Heinle_<language>.pdf`.
 
 Optional host shortcuts if `make` is installed:
 
@@ -80,6 +83,8 @@ make book
 make diss
 make beamer
 make cv
+make cv CV_LANG=german
+make cv-all              # both published CV variants
 ```
 
 ## 6) Enable Strict Warning Checks

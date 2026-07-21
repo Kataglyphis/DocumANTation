@@ -38,6 +38,20 @@ The `cv` target is a direct LuaLaTeX build:
 1. Run LuaLaTeX once to create auxiliary files.
 2. Run LuaLaTeX a second time to stabilize the output.
 
+Both runs write to `data/out/` with `-jobname=CV_Jonas_Heinle_<language>`, which
+is the filename the CV is published under, so the deliverable is a build output
+rather than a committed binary.
+
+The CV is bilingual from one set of sources: every section file carries an
+English and a German variant behind `\IfLanguageName`, and `CV_LANG` picks
+which one is typeset by passing a class option through to `myCV_METADATA`.
+It also selects the `datetime2` style, so a German CV does not print US dates.
+
+```bash
+CV_LANG=german ./scripts/build_in_container.sh cv
+make cv-all   # both published variants
+```
+
 ## Strict Warning Checks
 
 Strict mode can be enabled with `STRICT_WARNINGS=1` for the shared container wrapper, or with `--strict-warnings` for the glossary build script.

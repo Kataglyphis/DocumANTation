@@ -6,10 +6,12 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CONTAINER_RUNTIME="${CONTAINER_RUNTIME:-nerdctl}"
 IMAGE="${IMAGE:-pandoc_all}"
 STRICT_WARNINGS="${STRICT_WARNINGS:-0}"
+CV_LANG="${CV_LANG:-english}"
 
 usage() {
     printf 'Usage: %s <book|diss|beamer|pptx|cv>\n' "$0" >&2
     printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
+    printf '             CV_LANG=<english|german>  (cv target only)\n' >&2
     exit 2
 }
 
@@ -46,9 +48,28 @@ case "$TARGET" in
         fi
         ;;
     cv)
-        CMD='. md2pdf/bin/activate && cd /data/cv && lualatex -interaction=nonstopmode -halt-on-error cv.tex && lualatex -interaction=nonstopmode -halt-on-error cv.tex'
+        case "$CV_LANG" in
+            english|german) ;;
+            *)
+                printf 'Unknown CV_LANG "%s" (expected english or german)\n' "$CV_LANG" >&2
+                exit 2
+                ;;
+        esac
+        # The job name is the filename the CV is published under on
+        # jonasheinle.de (data/book/chapters/23-about-me.md links to it), so
+        # the deliverable is a reproducible build output rather than a binary
+        # someone has to remember to re-commit. Output goes to /data/out like
+        # every other target, which keeps aux/log/pdf out of the source tree.
+        CV_JOB="CV_Jonas_Heinle_${CV_LANG}"
+        # Selects the language without editing cv.tex; see the class options.
+        CV_ARG="\\PassOptionsToClass{${CV_LANG}}{myCV_METADATA}\\input{cv.tex}"
+        CV_RUN="lualatex -interaction=nonstopmode -halt-on-error"
+        CV_RUN+=" -output-directory=/data/out -jobname=${CV_JOB} '${CV_ARG}'"
+        # Twice: the second pass resolves the hyperref bookmarks written by the first.
+        CMD=". md2pdf/bin/activate && mkdir -p /data/out && cd /data/cv"
+        CMD+=" && ${CV_RUN} && ${CV_RUN}"
         if [ "$STRICT_WARNINGS" = "1" ]; then
-            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/cv/cv.log --format latex'
+            CMD+=" && uv run python /md2pdfLib/check_build_log.py /data/out/${CV_JOB}.log --format latex"
         fi
         ;;
     *)

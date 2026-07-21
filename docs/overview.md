@@ -7,7 +7,7 @@ It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow c
 
 - `book` and `diss` use a shared Pandoc-to-LaTeX pipeline with bibliography, glossary, and nomenclature support.
 - `beamer` produces presentation PDFs through the custom Beamer template stack.
-- `cv` uses a direct LuaLaTeX build from the sources in `data/cv/`.
+- `cv` uses a direct LuaLaTeX build from the sources in `data/cv/`, in English or German.
 - Shared scripts keep host and container workflows aligned across local runs and CI.
 
 ## Repository Structure
@@ -41,7 +41,9 @@ Pandoc generates the presentation PDF through the custom Beamer template and the
 
 ### `cv`
 
-LuaLaTeX builds the curriculum vitae directly from the files stored in `data/cv/`.
+LuaLaTeX builds the curriculum vitae directly from the content in `data/cv/`,
+using the `myCV_METADATA` class from `md2pdfLib/cv/template/latex/`. `CV_LANG`
+selects English (default) or German from the same sources.
 
 ## Where to Continue
 

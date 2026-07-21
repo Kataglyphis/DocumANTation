@@ -84,8 +84,12 @@ STRICT_WARNINGS=1 ./scripts/build_in_container.sh cv
 
 ### Build CV
 ```bash
-./scripts/build_in_container.sh cv
+./scripts/build_in_container.sh cv                  # English
+CV_LANG=german ./scripts/build_in_container.sh cv   # German
 ```
+
+Both variants come from the same sources in `data/cv/` and land in `data/out/`
+as `CV_Jonas_Heinle_<language>.pdf`. `make cv-all` builds the pair.
 
 ## Dependencies
 - [beamerthemeawesome](https://github.com/LukasPietzschmann/awesome-beamer) (git submodule)
