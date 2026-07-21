@@ -75,9 +75,6 @@ jobs:
       - name: Build book with strict warnings
         run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh book
 
-      - name: Build dissertation with strict warnings
-        run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh diss
-
       # Strict, like the others: the presentation was the one document CI did
       # not gate, which is how 81 missing λ/∑ glyphs shipped unnoticed.
       - name: Build presentation with strict warnings

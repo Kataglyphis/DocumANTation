@@ -9,15 +9,19 @@ from md2pdfLib.pandoc_builder import BuildConfig
 PPTX_REFERENCE = "data/out/reference.pptx"
 
 
-def _book_like(highlight_style: str, log_file: str) -> BuildConfig:
+def book() -> BuildConfig:
+    # The dark code palette (md2pdfLib/themes/pygments.theme) is used by the
+    # slides; the book prints, so it takes the light theme. A former `diss`
+    # target was this exact build with the dark theme -- re-add as a preset
+    # with a different highlight_style if a screen-first variant is wanted.
     return BuildConfig(
         input_dir="./data/book/chapters",
         output_dir="./data/out",
         default_output_name="output.tex",
         metadata_file="md2pdfLib/pandoc/base.yml",
-        highlight_style=highlight_style,
+        highlight_style="md2pdfLib/themes/pygments-print.theme",
         include_in_header="data/book/latex/main.tex",
-        log_file=log_file,
+        log_file="data/out/book.json",
         biblatex=True,
         toc=True,
         number_sections=True,
@@ -25,14 +29,6 @@ def _book_like(highlight_style: str, log_file: str) -> BuildConfig:
         top_level_division="chapter",
         output_suffix=".tex",
     )
-
-
-def book() -> BuildConfig:
-    return _book_like("md2pdfLib/themes/pygments-print.theme", "data/out/book.json")
-
-
-def diss() -> BuildConfig:
-    return _book_like("md2pdfLib/themes/pygments.theme", "data/out/diss.json")
 
 
 def beamer() -> BuildConfig:
@@ -101,7 +97,6 @@ def pptx() -> BuildConfig:
 
 PRESETS: dict[str, Callable[[], BuildConfig]] = {
     "book": book,
-    "diss": diss,
     "beamer": beamer,
     "pptx": pptx,
 }

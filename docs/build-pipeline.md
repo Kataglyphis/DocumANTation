@@ -2,9 +2,9 @@
 
 The repository uses slightly different compilation flows depending on the document type, but the build steps stay consistent inside `data/out/`.
 
-## Book and Dissertation
+## Book
 
-`book` and `diss` share the same staged pipeline:
+The `book` target runs a staged pipeline:
 
 1. `pandoc` reads Markdown chapters and writes `data/out/*.tex`.
 2. `lualatex` runs once to create auxiliary files.
@@ -68,7 +68,6 @@ When strict mode is enabled, the final log is inspected and the build fails on w
 
 ```bash
 ./scripts/build_in_container.sh book
-./scripts/build_in_container.sh diss
 ./scripts/build_in_container.sh beamer
 ./scripts/build_in_container.sh pptx
 ./scripts/build_in_container.sh cv

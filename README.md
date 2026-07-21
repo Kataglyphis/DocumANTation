@@ -72,7 +72,6 @@ Optional host shortcuts if `make` is installed:
 make beamer
 make pptx
 make book
-make diss
 make cv
 ```
 

@@ -9,7 +9,7 @@ STRICT_WARNINGS="${STRICT_WARNINGS:-0}"
 CV_LANG="${CV_LANG:-english}"
 
 usage() {
-    printf 'Usage: %s <book|diss|beamer|pptx|cv>\n' "$0" >&2
+    printf 'Usage: %s <book|beamer|pptx|cv>\n' "$0" >&2
     printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
     printf '             CV_LANG=<english|german>  (cv target only)\n' >&2
     exit 2
@@ -22,12 +22,12 @@ fi
 TARGET="$1"
 
 case "$TARGET" in
-    book|diss)
+    book)
         CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/scripts/compile_with_glossaries.sh && /md2pdfLib/scripts/compile_with_glossaries.sh'
         if [ "$STRICT_WARNINGS" = "1" ]; then
             CMD+=" --strict-warnings"
         fi
-        CMD+=" --type ${TARGET}"
+        CMD+=" --type book"
         ;;
     beamer)
         CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/presentation/scripts/update_own_sty.sh && /md2pdfLib/presentation/scripts/update_own_sty.sh && uv run python /md2pdfLib/build.py beamer'

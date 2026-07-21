@@ -3,8 +3,11 @@
 # compile_with_glossaries.sh – LaTeX compilation with glossary support.
 #
 # Usage:
-#   compile_with_glossaries.sh [--strict-warnings] --type book|diss
-#   compile_with_glossaries.sh [--strict-warnings] <python-script> <output-name> [log-name]
+#   compile_with_glossaries.sh [--strict-warnings] --type book
+#
+# A former generic mode (`<python-script> <output-name> [log-name]`) had no
+# callers and is gone; new document types get a --type case, which keeps the
+# valid invocations enumerable.
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
@@ -13,14 +16,12 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 cd "${PROJECT_ROOT}"
 
 usage() {
-    echo "Usage: $0 [--strict-warnings] --type <book|diss> [log-name]" >&2
-    echo "   or: $0 [--strict-warnings] <python-script> <output-name> [log-name]" >&2
+    echo "Usage: $0 [--strict-warnings] --type <book>" >&2
     exit 2
 }
 
 STRICT_WARNINGS=0
 TYPE=""
-POSITIONAL=()
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -35,52 +36,27 @@ while [ $# -gt 0 ]; do
             fi
             shift 2
             ;;
-        -h|--help)
+        -h|--help|*)
             usage
-            ;;
-        *)
-            POSITIONAL+=("$1")
-            shift
             ;;
     esac
 done
 
-if [ -n "$TYPE" ]; then
-    if [ ${#POSITIONAL[@]} -gt 1 ]; then
+case "$TYPE" in
+    book)
+        MD2PDF_CMD=(python md2pdfLib/build.py book)
+        OUTPUT_NAME="book_output"
+        ;;
+    *)
         usage
-    fi
-    case "$TYPE" in
-        book)
-            MD2PDF_CMD=(python md2pdfLib/build.py book)
-            OUTPUT_NAME="book_output"
-            ;;
-        diss)
-            MD2PDF_CMD=(python md2pdfLib/build.py diss)
-            OUTPUT_NAME="diss_output"
-            ;;
-        *)
-            echo "Unknown type: ${TYPE}" >&2
-            exit 2
-            ;;
-    esac
-else
-    if [ ${#POSITIONAL[@]} -lt 2 ] || [ ${#POSITIONAL[@]} -gt 3 ]; then
-        usage
-    fi
-    MD2PDF_SCRIPT="${POSITIONAL[0]}"
-    OUTPUT_NAME="${POSITIONAL[1]}"
-    read -r -a MD2PDF_CMD <<< "${MD2PDF_SCRIPT}"
-fi
+        ;;
+esac
 
 # The pandoc log must NOT be named ${OUTPUT_NAME}.log: lualatex runs with
 # -output-directory="${OUTPUT_DIR}" and writes ${OUTPUT_NAME}.log there, which
 # used to overwrite the teed pandoc output on the first pass -- so pandoc's own
 # warnings were silently lost and the strict gate only ever saw LaTeX's log.
-if [ -n "$TYPE" ]; then
-    LOG_NAME="${POSITIONAL[0]:-${OUTPUT_NAME}.pandoc.log}"
-else
-    LOG_NAME="${POSITIONAL[2]:-${OUTPUT_NAME}.pandoc.log}"
-fi
+LOG_NAME="${OUTPUT_NAME}.pandoc.log"
 OUTPUT_DIR="data/out"
 OUTPUT_TEX="${OUTPUT_NAME}.tex"
 OUTPUT_PDF="${OUTPUT_NAME}.pdf"

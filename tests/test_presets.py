@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from md2pdfLib.pandoc_builder import BuildConfig
-from md2pdfLib.presets import PPTX_REFERENCE, PRESETS, beamer, book, diss, pptx
+from md2pdfLib.presets import PPTX_REFERENCE, PRESETS, beamer, book, pptx
 
 
 def test_presets_registry_keys():
-    assert set(PRESETS) == {"book", "diss", "beamer", "pptx"}
+    assert set(PRESETS) == {"book", "beamer", "pptx"}
 
 
 def test_all_presets_return_buildconfig():
@@ -23,16 +23,6 @@ def test_book_preset_shape():
     assert cfg.toc is True
     assert cfg.number_sections is True
     assert cfg.output_suffix == ".tex"
-
-
-def test_book_and_diss_differ_only_where_expected():
-    b, d = book(), diss()
-    # Same staged book pipeline...
-    assert b.input_dir == d.input_dir
-    assert b.top_level_division == d.top_level_division
-    # ...but a different highlight theme and log file.
-    assert b.highlight_style != d.highlight_style
-    assert b.log_file != d.log_file
 
 
 def test_beamer_preset_targets_beamer():

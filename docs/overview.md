@@ -1,11 +1,11 @@
 # Overview
 
-Kataglyphis-mdToPdf converts Markdown content into PDF outputs for books, dissertations, presentations, and CVs.
+Kataglyphis-mdToPdf converts Markdown content into PDF outputs for books, presentations, and CVs.
 It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow can be reused across document types.
 
 ## Core Capabilities
 
-- `book` and `diss` use a shared Pandoc-to-LaTeX pipeline with bibliography, glossary, and nomenclature support.
+- `book` uses a Pandoc-to-LaTeX pipeline with bibliography, glossary, and nomenclature support.
 - `beamer` produces presentation PDFs through the custom Beamer template stack.
 - `pptx` renders the same presentation markdown as a branded PowerPoint deck.
 - `cv` uses a direct LuaLaTeX build from the sources in `data/cv/`, in English or German.
@@ -24,15 +24,15 @@ It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow c
 
 ## Important Entry Points
 
-- `scripts/build_in_container.sh` is the shared host-side wrapper for `book`, `diss`, `beamer`, `pptx`, and `cv`.
+- `scripts/build_in_container.sh` is the shared host-side wrapper for `book`, `beamer`, `pptx`, and `cv`.
 - `build.py` and `md2pdfLib/build.py` expose the CLI entry point for Pandoc-based document types.
 - `md2pdfLib/pandoc_builder.py` is the shared command builder and execution layer for Pandoc runs.
-- `md2pdfLib/scripts/compile_with_glossaries.sh` drives the full LuaLaTeX, bibliography, glossary, and nomenclature pipeline for `book` and `diss`.
+- `md2pdfLib/scripts/compile_with_glossaries.sh` drives the full LuaLaTeX, bibliography, glossary, and nomenclature pipeline for `book`.
 - `md2pdfLib/check_build_log.py` provides strict warning checks for LaTeX and Pandoc logs.
 
 ## Document Types
 
-### `book` and `diss`
+### `book`
 
 Markdown chapters are rendered through Pandoc into LaTeX, then compiled with the full TeX pipeline.
 

@@ -54,11 +54,10 @@ document targets in the next step.
 
 ## 5) Build a Document Target
 
-### Book or dissertation
+### Book
 
 ```bash
 ./scripts/build_in_container.sh book
-./scripts/build_in_container.sh diss
 ```
 
 ### Presentation
@@ -81,7 +80,6 @@ Optional host shortcuts if `make` is installed:
 
 ```bash
 make book
-make diss
 make beamer
 make pptx
 make cv

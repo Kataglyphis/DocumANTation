@@ -31,7 +31,7 @@ twice (`"text_on_accent": "@white"`). `colors_dark` may alias into `colors`.
 | `fonts` | Main + mono font, for LaTeX, Pandoc and the web |
 
 `syntax` is the light/print palette and `syntax_dark` the dark one. The book
-renders with the light palette, the dissertation and slides with the dark one,
+renders with the light palette, the slides with the dark one,
 and the website uses **both** — it switches with the site's light/dark toggle.
 Which token gets bold or italic is structural and lives in `SYNTAX_TOKENS` /
 `PYGMENTS_TOKENS` in `generate_style.py`, not here; `brand.json` stays a pure
@@ -46,7 +46,7 @@ colour/font file.
 | `md2pdfLib/pandoc/base.yml`, `md2pdfLib/presentation/pandoc/metadata.yml` | Pandoc: `mainfont`, `monofont`, `monofontoptions`, `linkcolor`, `urlcolor`, `citecolor` (between `# generated:brand:` markers) |
 | `sphinx-kataglyphis-theme/.../_static/css/custom.css` | Web: `--brand-*` custom properties (between `/* generated:brand-tokens: */` markers) |
 | `md2pdfLib/themes/pygments-print.theme` | Pandoc code highlighting, light/print — used by the **book** |
-| `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by the **dissertation** and **slides** |
+| `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by the **slides** |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |

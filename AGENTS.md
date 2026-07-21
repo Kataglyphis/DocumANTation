@@ -7,7 +7,7 @@ Follow these rules unless the user explicitly overrides them.
 
 ## Project Overview
 
-This project converts Markdown files into PDFs (books, dissertations, presentations)
+This project converts Markdown files into PDFs (books, presentations)
 via **Pandoc + LuaLaTeX**, orchestrated by Python scripts and driven from within a
 Docker/nerdctl container.
 
@@ -36,7 +36,6 @@ nerdctl build . -t pandoc_all
 
 # Build anything via Makefile
 make book
-make diss
 make beamer
 make cv
 
@@ -45,23 +44,23 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
   pandoc_all sh -c '. md2pdf/bin/activate && ./md2pdfLib/scripts/compile_with_glossaries.sh --type book'
 
 # Or use the shared helper wrapper
-./scripts/build_in_container.sh {book|diss|beamer|cv}
+./scripts/build_in_container.sh {book|beamer|pptx|cv}
 
 # Build presentation (Python-only, no glossaries)
 nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/data:/data" \
   pandoc_all sh -c '. md2pdf/bin/activate && uv run python md2pdfLib/build.py beamer'
 
-# Build book/diss with glossaries (full TeX pipeline)
+# Build the book with glossaries (full TeX pipeline)
 nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/data:/data" \
   pandoc_all sh -c '. md2pdf/bin/activate && ./md2pdfLib/scripts/compile_with_glossaries.sh --type book'
 ```
 
 All build types:
 ```
-python build.py {book|diss|beamer}
-python md2pdfLib/build.py {book|diss|beamer}
-./scripts/build_in_container.sh {book|diss|beamer|cv}
-./md2pdfLib/scripts/compile_with_glossaries.sh --type {book|diss}
+python build.py {book|beamer|pptx}
+python md2pdfLib/build.py {book|beamer|pptx}
+./scripts/build_in_container.sh {book|beamer|pptx|cv}
+./md2pdfLib/scripts/compile_with_glossaries.sh --type book
 ```
 
 ---
@@ -131,7 +130,6 @@ Use the CLI entry point instead of document-specific wrapper scripts:
 
 ```bash
 uv run python build.py book
-uv run python build.py diss
 uv run python build.py beamer
 
 # Inside the container (only /md2pdfLib is mounted):
@@ -153,11 +151,11 @@ uv run python md2pdfLib/build.py book
 ### Shared Compile Script
 
 The canonical compilation script is `md2pdfLib/scripts/compile_with_glossaries.sh`.
-It accepts either a `--type` flag or positional arguments:
+It takes a `--type` flag only — a former generic positional mode had no callers
+and was removed, so the valid invocations stay enumerable:
 
 ```bash
 ./md2pdfLib/scripts/compile_with_glossaries.sh --type book
-./md2pdfLib/scripts/compile_with_glossaries.sh --type diss
 ```
 
 ---
@@ -173,8 +171,8 @@ md2pdfLib/
 │   └── brand-fonts.tex      ← \brandSetMainFont, \brandSetMonoFont
 ├── themes/                  ← generated code-highlighting palettes
 │   ├── pygments-print.theme ← light, used by the book
-│   └── pygments.theme       ← dark, used by diss + slides
-├── book/template/latex/     ← canonical shared templates (used by book + diss)
+│   └── pygments.theme       ← dark, used by the slides
+├── book/template/latex/     ← canonical book templates
 │   ├── bookclass.cls        ← KOMA-Script scrbook based document class (+ \maketitle)
 │   ├── glossary_entries.tex
 │   ├── nomenclature.tex
@@ -191,7 +189,7 @@ The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`
 
 ### Hardcoded Values
 
-- **Canonical Pandoc metadata** lives in `md2pdfLib/pandoc/base.yml` for `book`/`diss`
+- **Canonical Pandoc metadata** lives in `md2pdfLib/pandoc/base.yml` for `book`
   and in document-type `pandoc/metadata.yml` files where applicable
 - In LaTeX header files, use `\providecommand` (not `\newcommand`) so values can be
   overridden from Pandoc metadata or preamble injections
@@ -206,7 +204,7 @@ The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`
 
 ### Pandoc Metadata
 
-- `md2pdfLib/pandoc/base.yml` is the shared metadata source for `book` and `diss`
+- `md2pdfLib/pandoc/base.yml` is the metadata source for `book`
 - Document-type `pandoc/metadata.yml` files are used when a preset needs extra metadata
   (for example `presentation`)
 - `documentclass:` paths are relative to the project root
@@ -242,7 +240,7 @@ All auxiliary tools run inside `data/out/` (subshell cd).
 1. Create input markdown directory under `data/<type>/chapters/`
 2. Create LaTeX header at `data/<type>/latex/main.tex` (or reuse existing)
 3. Create metadata at `md2pdfLib/<type>/pandoc/metadata.yml`, or extend
-   `md2pdfLib/pandoc/base.yml` when the new type intentionally shares the `book`/`diss`
+   `md2pdfLib/pandoc/base.yml` when the new type intentionally shares the `book`
    base
 4. Add a factory function in `md2pdfLib/presets.py`, set `highlight_style` there if
    needed, and register it in `PRESETS`
@@ -254,7 +252,7 @@ All auxiliary tools run inside `data/out/` (subshell cd).
 ## What NOT to Do
 
 - **Do not** duplicate LaTeX templates — use `md2pdfLib/book/template/latex/` as the
-  shared location for book/diss templates
+  shared location for book templates
 - **Do not** add comments to code unless the logic is truly non-obvious
 - **Do not** use `docker` for **local** commands — use **nerdctl** locally
   (BuildKit / rootless). CI on GitHub-hosted runners uses `docker` (via
