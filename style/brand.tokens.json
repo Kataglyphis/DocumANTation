@@ -8,9 +8,9 @@
     "accent_strong": "#2ad488",
     "accent_soft": "#e9fbf2",
     "accent_deep": "#145a3c",
-    "link": "#1ca06a",
-    "link_hover": "#167d52",
-    "link_active": "#0f6b47",
+    "link": "#0e7490",
+    "link_hover": "#155e75",
+    "link_active": "#164e63",
     "text_main": "#1f2a24",
     "text_on_accent": "#ffffff",
     "surface_soft": "#f7fbf9",
@@ -21,8 +21,8 @@
     "card_gradient_to": "#f1fbf5"
   },
   "colors_dark": {
-    "link": "#7df5ba",
-    "link_hover": "#a0f9cc",
+    "link": "#22d3ee",
+    "link_hover": "#67e8f9",
     "text_base": "#e7efe9",
     "text_muted": "#b8cbc0",
     "hero_text": "#000000",

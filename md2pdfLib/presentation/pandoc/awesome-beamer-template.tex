@@ -120,12 +120,14 @@ $-- before \usetheme so the theme can reference them.
 \input{brand-colors.tex}
 \usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
 $-- The awesome theme loads `smile`, whose palette defines a generic `green`
-$-- (#26a269) used for `examples` blocks. Point it at the brand's link green,
-$-- the one brand colour dark enough to stay readable in that role -- the
-$-- accent (#6af0ad) is a light mint and would not. Must come after \usetheme,
-$-- since smile defines `green` when the theme loads it. The rest of smile's
-$-- palette (red/blue/…) is semantic, not brand, and is left alone.
-\colorlet{green}{brandLink}
+$-- (#26a269) used for `examples` blocks. Point it at the brand's deep green:
+$-- dark enough to stay readable in that role, where the accent (#6af0ad) is a
+$-- light mint and would not be. (This used to be brandLink, back when the link
+$-- colour was itself a dark green -- the link is ocean now, and example blocks
+$-- should stay green.) Must come after \usetheme, since smile defines `green`
+$-- when the theme loads it. The rest of smile's palette (red/blue/…) is
+$-- semantic, not brand, and is left alone.
+\colorlet{green}{brandAccentDeep}
 $endif$
 $if(colortheme)$
 \usecolortheme{$colortheme$}

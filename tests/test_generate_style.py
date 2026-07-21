@@ -35,6 +35,7 @@ RAW_BRAND = {
         "accent": "#6af0ad",
         "accent_strong": "#2ad488",
         "accent_soft": "#e9fbf2",
+        "accent_deep": "#145a3c",
         "link": "#1ca06a",
         "text_main": "#1f2a24",
         "text_on_accent": "@white",
@@ -138,6 +139,13 @@ def test_latex_defines_the_shared_link_colour():
     assert "\\definecolor{brandLink}{HTML}{1CA06A}" in out
     # The book, the CV and the slides all resolve `linkcolor` from here.
     assert "\\colorlet{linkcolor}{brandLink}" in out
+
+
+def test_latex_defines_accent_deep_for_the_beamer_examples_remap():
+    # The slide template points smile's generic `green` at brandAccentDeep so
+    # `examples` blocks stay green now that the link colour is not.
+    out = render_latex(BRAND)
+    assert "\\definecolor{brandAccentDeep}{HTML}{145A3C}" in out
 
 
 def test_latex_fonts_are_safe_to_input_twice():

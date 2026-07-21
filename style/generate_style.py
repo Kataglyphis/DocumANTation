@@ -149,6 +149,7 @@ def render_latex(brand: dict) -> str:
                 f"\\definecolor{{brandAccent}}{{HTML}}{{{_hex(c['accent'])}}}",
                 f"\\definecolor{{brandAccentStrong}}{{HTML}}{{{_hex(c['accent_strong'])}}}",
                 f"\\definecolor{{brandAccentSoft}}{{HTML}}{{{_hex(c['accent_soft'])}}}",
+                f"\\definecolor{{brandAccentDeep}}{{HTML}}{{{_hex(c['accent_deep'])}}}",
                 f"\\definecolor{{brandTextMain}}{{HTML}}{{{_hex(c['text_main'])}}}",
                 f"\\definecolor{{brandLink}}{{HTML}}{{{_hex(c['link'])}}}",
                 "% Light/print syntax palette for LaTeX `listings` blocks -- the same",

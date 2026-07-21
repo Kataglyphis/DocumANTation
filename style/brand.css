@@ -16,9 +16,9 @@
   --brand-accent-strong: #2ad488;
   --brand-accent-soft: #e9fbf2;
   --brand-accent-deep: #145a3c;
-  --brand-link: #1ca06a;
-  --brand-link-hover: #167d52;
-  --brand-link-active: #0f6b47;
+  --brand-link: #0e7490;
+  --brand-link-hover: #155e75;
+  --brand-link-active: #164e63;
   --brand-text-main: #1f2a24;
   --brand-text-on-accent: #ffffff;
   --brand-surface-soft: #f7fbf9;
@@ -29,8 +29,8 @@
   --brand-card-gradient-to: #f1fbf5;
 
   /* dark-mode palette */
-  --brand-dark-link: #7df5ba;
-  --brand-dark-link-hover: #a0f9cc;
+  --brand-dark-link: #22d3ee;
+  --brand-dark-link-hover: #67e8f9;
   --brand-dark-text-base: #e7efe9;
   --brand-dark-text-muted: #b8cbc0;
   --brand-dark-hero-text: #000000;
