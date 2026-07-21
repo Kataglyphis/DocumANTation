@@ -19,7 +19,7 @@ kataglyphis-light = "sphinx_kataglyphis.highlight:KataglyphisLightStyle"
 kataglyphis-dark = "sphinx_kataglyphis.highlight:KataglyphisDarkStyle"
 
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
