@@ -8,7 +8,10 @@ Office blue. That is exactly how this repo's docs site lost the shared code
 palette without a single failure, and how 81 missing glyphs shipped.
 
 So check the artifact itself: every colour in the theme and on the slides must
-be a value from brand.tokens.json.
+be a value from brand.tokens.json, and the theme's font slots must name the
+brand font. make_reference.py patches both, and its patching is unit-tested,
+but that only proves the reference deck was built right -- this is the check
+that the deck pandoc actually emitted kept them.
 
 Usage:
     python md2pdfLib/presentation/pptx/verify_brand.py <deck.pptx>
@@ -28,6 +31,9 @@ BRAND_TOKENS = MD2PDF_ROOT / "style" / "brand.tokens.json"
 _SRGB_RE = re.compile(r'srgbClr val="([0-9A-Fa-f]{6})"')
 _THEME_RE = re.compile(r"ppt/theme/theme\d+\.xml")
 _SLIDE_RE = re.compile(r"ppt/slides/slide\d+\.xml")
+# The two theme font slots make_reference.py patches: major is headings, minor
+# is body. Matched the same way it writes them.
+_FONT_RE = re.compile(r'<a:(majorFont|minorFont)>\s*<a:latin typeface="([^"]*)"')
 
 
 def brand_hexes(brand: dict) -> set[str]:
@@ -53,6 +59,27 @@ def off_brand_colors(deck: Path, allowed: set[str]) -> dict[str, set[str]]:
     return offenders
 
 
+def off_brand_fonts(deck: Path, expected: str) -> dict[str, set[str]]:
+    """Return {theme part: font slots naming something other than *expected*}.
+
+    A deck whose theme reverted to Calibri renders in Calibri no matter how
+    correct its colours are, and the colour scan above would pass it.
+    """
+    offenders: dict[str, set[str]] = {}
+    with zipfile.ZipFile(deck) as z:
+        themes = [n for n in z.namelist() if _THEME_RE.fullmatch(n)]
+        if not themes:
+            raise SystemExit(f"Error: {deck} contains no theme part.")
+        for name in themes:
+            found = _FONT_RE.findall(z.read(name).decode("utf-8", "ignore"))
+            if not found:
+                offenders[name] = {"(no majorFont/minorFont latin typeface)"}
+                continue
+            if stray := {f"{role}={face or '(empty)'}" for role, face in found if face != expected}:
+                offenders[name] = stray
+    return offenders
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
@@ -63,14 +90,28 @@ def main() -> None:
         sys.exit(1)
 
     brand = json.loads(BRAND_TOKENS.read_text("utf-8"))
-    offenders = off_brand_colors(deck, brand_hexes(brand))
-    if offenders:
+    failed = False
+
+    if offenders := off_brand_colors(deck, brand_hexes(brand)):
         print(f"Error: {deck} uses colours that are not in the brand:", file=sys.stderr)
         for part, stray in sorted(offenders.items()):
             print(f"  {part}: {', '.join('#' + c for c in sorted(stray))}", file=sys.stderr)
         print("Every colour must come from style/brand.json.", file=sys.stderr)
+        failed = True
+
+    expected_font = brand["fonts"]["main"]
+    if bad_fonts := off_brand_fonts(deck, expected_font):
+        print(f"Error: {deck} theme fonts are not the brand font:", file=sys.stderr)
+        for part, stray in sorted(bad_fonts.items()):
+            print(f"  {part}: {', '.join(sorted(stray))}", file=sys.stderr)
+        print(f"Both font slots must name {expected_font} (style/brand.json).", file=sys.stderr)
+        failed = True
+
+    # Both checks run before exiting, so one build reports every way the deck
+    # is off-brand rather than only the first.
+    if failed:
         sys.exit(1)
-    print(f"{deck.name}: every colour is a brand value.")
+    print(f"{deck.name}: every colour is a brand value; fonts are {expected_font}.")
 
 
 if __name__ == "__main__":

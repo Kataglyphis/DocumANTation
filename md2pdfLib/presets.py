@@ -54,8 +54,12 @@ def beamer() -> BuildConfig:
             "beamer",
             "--template",
             "md2pdfLib/presentation/pandoc/awesome-beamer-template.tex",
-            "-V",
-            "linkcolor:blue",
+            # No `-V linkcolor:...` here. metadata.yml carries linkcolor,
+            # urlcolor and citecolor as brandLink, generated from brand.json,
+            # and a -V wins over the metadata file -- so setting it here made
+            # internal links stock blue while URLs and citations stayed brand
+            # green. The slides were the one document where a hardcoded colour
+            # survived the whole brand pipeline.
             "-V",
             "themeoptions:english",
             "-V",
