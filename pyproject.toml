@@ -18,7 +18,11 @@ classifiers = [
 dependencies = ["pygments>=2.17"]
 
 [project.optional-dependencies]
-dev = ["ruff>=0.15.21", "ty>=0.0.38", "pytest>=8", "pytest-cov>=5"]
+# tests/test_theme.py imports sphinx_kataglyphis to check the brand tokens
+# shipped inside the wheel against style/brand.tokens.json, so the theme is a
+# test dependency, not only a docs one. Without it here `uv run --extra dev
+# pytest` -- what CI runs -- dies at collection and takes the whole suite with it.
+dev = ["ruff>=0.15.21", "ty>=0.0.38", "pytest>=8", "pytest-cov>=5", "sphinx-kataglyphis-theme"]
 # The theme brings sphinx/myst/sphinx-design/book-theme with it, and is what
 # makes this repo's own docs use the Kataglyphis brand rather than a second
 # copy of the baseline.
