@@ -72,6 +72,20 @@ jobs:
       - name: Build Docker image
         run: docker build . -t pandoc_all
 
+      # The reference-deck integration tests need pandoc, which lives only in
+      # the image -- on the host they skip, so without this step the assumption
+      # the pptx patchers rest on (pandoc's actual deck layout) is never tested
+      # anywhere. Runs just the pandoc-dependent module inside the container.
+      # UV_PROJECT_ENVIRONMENT keeps the container's venv OUT of the mounted
+      # checkout -- writing into ./.venv would leave container-path shebangs
+      # behind and break the host's environment for anyone running this
+      # command locally.
+      - name: Test against pandoc's real reference deck (in-container)
+        run: |
+          docker run --rm --entrypoint "" -v "$PWD:/repo" -w /repo \
+            -e UV_PROJECT_ENVIRONMENT=/tmp/ci-venv pandoc_all \
+            sh -c '. /md2pdf/bin/activate && uv run --extra dev pytest tests/test_pptx_reference.py -q'
+
       - name: Build book with strict warnings
         run: STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh book
 

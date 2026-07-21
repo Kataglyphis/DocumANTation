@@ -265,6 +265,9 @@ CONTENT_LAYOUT_XML = (
     '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr/>'
     '<p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr>'
     "<p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    '<p:sp><p:nvSpPr><p:cNvPr id="5" name="Slide Number"/><p:cNvSpPr/>'
+    '<p:nvPr><p:ph type="sldNum" sz="quarter" idx="4"/></p:nvPr></p:nvSpPr>'
+    "<p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
     "</p:spTree></p:cSld></p:sldLayout>"
 )
 
@@ -392,3 +395,34 @@ def test_verify_brand_flags_dangling_layout_media(tmp_path: Path):
     ok_dir = tmp_path / "ok"
     ok_dir.mkdir()
     assert dangling_layout_media(_mini_deck(ok_dir, with_media=True)) == {}
+
+
+def test_finalize_injects_slide_numbers_on_content_slides(tmp_path: Path):
+    from md2pdfLib.presentation.pptx.finalize_deck import finalize
+
+    deck = tmp_path / "deck.pptx"
+    rels = (
+        '<Relationships><Relationship Id="rId1" Type="x" '
+        'Target="../slideLayouts/slideLayout2.xml"/></Relationships>'
+    )
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slideLayouts/slideLayout2.xml", CONTENT_LAYOUT_XML)
+        z.writestr("ppt/slides/slide1.xml", "<p:sld><p:cSld><p:spTree></p:spTree></p:cSld></p:sld>")
+        z.writestr("ppt/slides/_rels/slide1.xml.rels", rels)
+    done = finalize(deck)
+    assert "slide numbers on 1 slides" in done
+    with zipfile.ZipFile(deck) as z:
+        slide = z.read("ppt/slides/slide1.xml").decode()
+    # a plain shape with explicit accent-block geometry -- NOT a placeholder,
+    # which viewers only display with header/footer machinery enabled
+    assert "Brand Slide Number" in slide
+    assert '<a:off x="8229600" y="4914900"/>' in slide
+    assert 'type="slidenum"' in slide and "<p:ph " not in slide
+
+
+def test_content_layout_puts_slide_number_on_the_accent_block():
+    out = patch_content_layout(CONTENT_LAYOUT_XML, MASTER_XML, 9000)
+    assert 'type="sldNum"' in out
+    assert '<a:off x="8229600" y="4914900"/>' in out  # accent block geometry
+    assert '<a:lvl1pPr algn="ctr"><a:defRPr sz="1000" b="1">' in out
+    assert '<a:bodyPr anchor="ctr"' in out

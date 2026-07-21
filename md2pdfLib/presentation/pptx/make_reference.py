@@ -163,6 +163,9 @@ def _style_placeholder_text(
     bold: bool = False,
     small_caps: bool = False,
     align_left: bool = False,
+    align_center: bool = False,
+    size_hundredths: int | None = None,
+    anchor_center: bool = False,
 ) -> str:
     """Replace a placeholder's level-1 list style with the given treatment.
 
@@ -171,9 +174,13 @@ def _style_placeholder_text(
     """
     start, end = _sp_span(xml, ph_type)
     block = xml[start:end]
-    attrs = (' b="1"' if bold else "") + (' cap="small"' if small_caps else "")
+    attrs = (
+        (f' sz="{size_hundredths}"' if size_hundredths else "")
+        + (' b="1"' if bold else "")
+        + (' cap="small"' if small_caps else "")
+    )
     fill = f'<a:solidFill><a:schemeClr val="{scheme}"/></a:solidFill>' if scheme else ""
-    algn = ' algn="l"' if align_left else ""
+    algn = ' algn="l"' if align_left else (' algn="ctr"' if align_center else "")
     lvl = f"<a:lvl1pPr{algn}><a:defRPr{attrs}>{fill}</a:defRPr></a:lvl1pPr>"
     style = f"<a:lstStyle>{lvl}</a:lstStyle>"
     if "<a:lstStyle/>" in block:
@@ -182,6 +189,8 @@ def _style_placeholder_text(
         patched = re.sub(r"<a:lstStyle>.*?</a:lstStyle>", style, block, count=1, flags=re.S)
     else:
         raise ReferenceBuildError(f'"{ph_type}" has no <a:lstStyle> to style.')
+    if anchor_center:
+        patched = re.sub(r"<a:bodyPr(?![^>]*anchor)", '<a:bodyPr anchor="ctr"', patched, count=1)
     return xml[:start] + patched + xml[end:]
 
 
@@ -350,6 +359,27 @@ def patch_content_layout(xml: str, master_xml: str, shape_id: int) -> str:
             FOOTLINE_HEIGHT_EMU,
             accent_fill,
         ),
+    )
+    # The slide number lives ON the accent block, white and bold -- the beamer
+    # footlineright. The layout only styles/positions the placeholder; the
+    # per-slide instances that make it render are injected by finalize_deck.py,
+    # because pandoc does not instantiate sldNum placeholders on slides.
+    xml = _set_placeholder_xfrm(
+        xml,
+        "sldNum",
+        SLIDE_CX - FOOTLINE_ACCENT_CX,
+        foot_y,
+        FOOTLINE_ACCENT_CX,
+        FOOTLINE_HEIGHT_EMU,
+    )
+    xml = _style_placeholder_text(
+        xml,
+        "sldNum",
+        scheme="lt1",
+        bold=True,
+        align_center=True,
+        size_hundredths=1000,
+        anchor_center=True,
     )
     return xml
 
