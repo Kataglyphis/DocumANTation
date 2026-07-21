@@ -55,7 +55,8 @@ The generated HTML lands in `docs/_build/html/`.
 
 ### Build presentation
 ```bash
-./scripts/build_in_container.sh beamer
+./scripts/build_in_container.sh beamer   # PDF slides
+./scripts/build_in_container.sh pptx     # PowerPoint deck, same sources
 ```
 
 ### Build book
@@ -69,6 +70,7 @@ Optional host shortcuts if `make` is installed:
 
 ```bash
 make beamer
+make pptx
 make book
 make diss
 make cv

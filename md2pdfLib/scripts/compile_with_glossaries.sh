@@ -72,10 +72,14 @@ else
     read -r -a MD2PDF_CMD <<< "${MD2PDF_SCRIPT}"
 fi
 
+# The pandoc log must NOT be named ${OUTPUT_NAME}.log: lualatex runs with
+# -output-directory="${OUTPUT_DIR}" and writes ${OUTPUT_NAME}.log there, which
+# used to overwrite the teed pandoc output on the first pass -- so pandoc's own
+# warnings were silently lost and the strict gate only ever saw LaTeX's log.
 if [ -n "$TYPE" ]; then
-    LOG_NAME="${POSITIONAL[0]:-${OUTPUT_NAME}.log}"
+    LOG_NAME="${POSITIONAL[0]:-${OUTPUT_NAME}.pandoc.log}"
 else
-    LOG_NAME="${POSITIONAL[2]:-${OUTPUT_NAME}.log}"
+    LOG_NAME="${POSITIONAL[2]:-${OUTPUT_NAME}.pandoc.log}"
 fi
 OUTPUT_DIR="data/out"
 OUTPUT_TEX="${OUTPUT_NAME}.tex"
@@ -110,7 +114,10 @@ echo "=== Step 7: Third lualatex pass ==="
 lualatex "${LATEX_ARGS[@]}" "${OUTPUT_DIR}/${OUTPUT_TEX}"
 
 if [ "${STRICT_WARNINGS}" -eq 1 ]; then
-    echo "=== Step 8: Check final log for warnings ==="
+    echo "=== Step 8: Check final logs for warnings ==="
+    # Both stages can warn independently: pandoc about the conversion (missing
+    # resources, duplicate identifiers), LaTeX about the typesetting.
+    uv run python md2pdfLib/check_build_log.py "${OUTPUT_DIR}/${LOG_NAME}" --format latex
     uv run python md2pdfLib/check_build_log.py "${OUTPUT_DIR}/${OUTPUT_NAME}.log" --format latex
 fi
 

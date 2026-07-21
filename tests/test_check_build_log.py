@@ -66,3 +66,36 @@ def test_detects_missing_characters():
 def test_missing_character_can_be_ignored_explicitly():
     text = "Missing character: There is no λ (U+03BB) in font X!"
     assert _find_warning_lines(text, [re.compile(r"U\+03BB")]) == []
+
+
+def test_detects_vbox_badness():
+    # A vertically overfull page loses content past the bottom margin just as
+    # an \hbox loses it past the edge; only \hbox used to be caught.
+    text = "\n".join(
+        [
+            "Overfull \\vbox (7.6pt too high) detected at line 42",
+            "Underfull \\vbox (badness 10000) has occurred",
+        ]
+    )
+    assert len(_find_warning_lines(text, [])) == 2
+
+
+def test_detects_pandoc_warning_lines():
+    text = "[WARNING] Could not fetch resource images/missing.png\n[INFO] Loaded thing"
+    found = _find_warning_lines(text, [])
+    assert found == ["[WARNING] Could not fetch resource images/missing.png"]
+
+
+def test_pandoc_json_surfaces_warning_entries_alongside_latex_output(tmp_path: Path):
+    # Pandoc's own WARNING entries used to be read only when no LaTeX output
+    # existed, so any build that reached LaTeX passed the gate with them unseen.
+    payload = [
+        {"verbosity": "WARNING", "pretty": "Duplicate identifier 'intro'"},
+        {"verbosity": "INFO", "pretty": "Loaded template"},
+        {"description": "LaTeX output", "contents": "clean latex log"},
+    ]
+    log = tmp_path / "beamer.json"
+    log.write_text(json.dumps(payload), encoding="utf-8")
+    text = _load_pandoc_json_text(log)
+    assert "clean latex log" in text
+    assert _find_warning_lines(text, []) == ["[WARNING] Duplicate identifier 'intro'"]

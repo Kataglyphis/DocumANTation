@@ -64,7 +64,8 @@ document targets in the next step.
 ### Presentation
 
 ```bash
-./scripts/build_in_container.sh beamer
+./scripts/build_in_container.sh beamer   # PDF slides
+./scripts/build_in_container.sh pptx     # PowerPoint deck, same sources
 ```
 
 ### CV
@@ -82,6 +83,7 @@ Optional host shortcuts if `make` is installed:
 make book
 make diss
 make beamer
+make pptx
 make cv
 make cv CV_LANG=german
 make cv-all              # both published CV variants

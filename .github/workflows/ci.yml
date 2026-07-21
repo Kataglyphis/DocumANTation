@@ -41,7 +41,7 @@ jobs:
         run: uv run --extra dev pytest
 
       - name: Shell syntax check
-        run: bash -n md2pdfLib/scripts/compile_with_glossaries.sh scripts/build_in_container.sh scripts/build_book_with_glossaries_in_container.sh
+        run: bash -n md2pdfLib/scripts/compile_with_glossaries.sh scripts/build_in_container.sh
 
   docs:
     runs-on: ubuntu-latest

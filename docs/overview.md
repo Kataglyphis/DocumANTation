@@ -7,6 +7,7 @@ It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow c
 
 - `book` and `diss` use a shared Pandoc-to-LaTeX pipeline with bibliography, glossary, and nomenclature support.
 - `beamer` produces presentation PDFs through the custom Beamer template stack.
+- `pptx` renders the same presentation markdown as a branded PowerPoint deck.
 - `cv` uses a direct LuaLaTeX build from the sources in `data/cv/`, in English or German.
 - Shared scripts keep host and container workflows aligned across local runs and CI.
 
@@ -23,7 +24,7 @@ It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow c
 
 ## Important Entry Points
 
-- `scripts/build_in_container.sh` is the shared host-side wrapper for `book`, `diss`, `beamer`, and `cv`.
+- `scripts/build_in_container.sh` is the shared host-side wrapper for `book`, `diss`, `beamer`, `pptx`, and `cv`.
 - `build.py` and `md2pdfLib/build.py` expose the CLI entry point for Pandoc-based document types.
 - `md2pdfLib/pandoc_builder.py` is the shared command builder and execution layer for Pandoc runs.
 - `md2pdfLib/scripts/compile_with_glossaries.sh` drives the full LuaLaTeX, bibliography, glossary, and nomenclature pipeline for `book` and `diss`.
@@ -38,6 +39,12 @@ Markdown chapters are rendered through Pandoc into LaTeX, then compiled with the
 ### `beamer`
 
 Pandoc generates the presentation PDF through the custom Beamer template and theme setup.
+
+### `pptx`
+
+The same presentation markdown rendered as a PowerPoint deck. Colours and fonts
+come from a `--reference-doc` generated from `style/brand.json` at build time,
+and `verify_brand.py` gates the emitted deck on staying on-brand.
 
 ### `cv`
 

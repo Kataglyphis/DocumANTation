@@ -44,13 +44,16 @@ def resolve_project_path(path_value: str) -> Path:
     return path if path.is_absolute() else PROJECT_ROOT / path
 
 
-def _markdown_sort_key(path: Path) -> int:
+def _markdown_sort_key(path: Path) -> tuple[int, str]:
     prefix = path.stem.split("-", 1)[0]
     if not prefix.isdigit():
         raise BuildError(
             f"Markdown files must start with a numeric prefix like '01-'. Invalid file: {path.name}"
         )
-    return int(prefix)
+    # Name as tiebreaker: two files sharing a prefix otherwise fall back to
+    # iterdir()'s filesystem order, which differs between machines -- the same
+    # sources could produce differently-ordered documents.
+    return (int(prefix), path.name)
 
 
 def get_sorted_markdown_files(input_dir: str | Path) -> list[str]:

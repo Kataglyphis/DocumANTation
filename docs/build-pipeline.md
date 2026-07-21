@@ -31,6 +31,13 @@ The `beamer` target uses Pandoc's PDF generation flow directly:
 2. Run Pandoc with the custom Beamer template.
 3. Let Pandoc drive repeated LuaLaTeX passes until the PDF is stable.
 
+The `pptx` target renders the same markdown as a PowerPoint deck:
+
+1. `make_reference.py` builds a brand-themed `reference.pptx` from `style/brand.json`.
+2. Pandoc renders the deck against that reference document.
+3. In strict mode, `verify_brand.py` fails the build if the emitted deck's
+   colours or theme fonts are not brand values.
+
 ## CV
 
 The `cv` target is a direct LuaLaTeX build:
@@ -63,6 +70,7 @@ When strict mode is enabled, the final log is inspected and the build fails on w
 ./scripts/build_in_container.sh book
 ./scripts/build_in_container.sh diss
 ./scripts/build_in_container.sh beamer
+./scripts/build_in_container.sh pptx
 ./scripts/build_in_container.sh cv
 ./md2pdfLib/scripts/compile_with_glossaries.sh --type book
 ```

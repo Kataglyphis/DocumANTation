@@ -58,6 +58,15 @@ def test_get_sorted_markdown_files_orders_by_numeric_prefix(tmp_path: Path):
     assert result == ["01-one.md", "02-two.md", "10-ten.md"]
 
 
+def test_get_sorted_markdown_files_ties_break_by_name(tmp_path: Path):
+    # Same numeric prefix must not fall back to filesystem order, which
+    # differs between machines.
+    for name in ["01-beta.md", "01-alpha.md", "02-gamma.md"]:
+        (tmp_path / name).write_text("x", encoding="utf-8")
+    result = [Path(p).name for p in get_sorted_markdown_files(tmp_path)]
+    assert result == ["01-alpha.md", "01-beta.md", "02-gamma.md"]
+
+
 def test_get_sorted_markdown_files_rejects_non_numeric_prefix(tmp_path: Path):
     (tmp_path / "intro.md").write_text("x", encoding="utf-8")
     with pytest.raises(BuildError):

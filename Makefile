@@ -1,13 +1,9 @@
-.PHONY: book diss beamer pptx cv cv-all update-sty
+.PHONY: book diss beamer pptx cv cv-all
 
 IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
 # cv only: english (default) or german. Both come from the same sources.
 CV_LANG ?= english
-ENTRYPOINT := --entrypoint ""
-VOLUMES := -v "$(CURDIR)/md2pdfLib:/md2pdfLib" -v "$(CURDIR)/data:/data"
-RUN := nerdctl run --rm $(ENTRYPOINT) $(VOLUMES) $(IMAGE)
-ACTIVATE := . md2pdf/bin/activate
 
 book diss beamer pptx cv:
 	IMAGE="$(IMAGE)" STRICT_WARNINGS="$(STRICT_WARNINGS)" CV_LANG="$(CV_LANG)" ./scripts/build_in_container.sh $@
@@ -17,5 +13,7 @@ cv-all:
 	$(MAKE) cv CV_LANG=english
 	$(MAKE) cv CV_LANG=german
 
-update-sty:
-	$(RUN) sh -c '$(ACTIVATE) && chmod +x md2pdfLib/presentation/scripts/update_own_sty.sh && ./md2pdfLib/presentation/scripts/update_own_sty.sh'
+# There is deliberately no standalone update-sty target: the theme refresh
+# (md2pdfLib/presentation/scripts/update_own_sty.sh) only makes sense inside a
+# build container, and the beamer target already runs it there. Run standalone
+# in a --rm container, its texmf changes were discarded with the container.

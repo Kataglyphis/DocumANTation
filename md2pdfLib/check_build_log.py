@@ -10,7 +10,12 @@ from pathlib import Path
 
 WARNING_LINE_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^\s*(?:LaTeX|Package|Class)\b.*Warning:"),
-    re.compile(r"^\s*(?:Under|Over)full \\hbox"),
+    # \vbox too: a vertically overfull page loses content past the margin just
+    # as an \hbox loses it past the edge, and only \hbox was caught before.
+    re.compile(r"^\s*(?:Under|Over)full \\[hv]box"),
+    # Pandoc's own warnings (missing resource, duplicate identifier, ...) as
+    # they appear in teed stdout/stderr text logs.
+    re.compile(r"^\[WARNING\]"),
     # A glyph the font cannot render is dropped silently from the PDF, so it is
     # a defect, not a nicety. LuaTeX reports it without the word "Warning", and
     # Pandoc prefixes its own copy with [WARNING] -- neither matched the
@@ -55,9 +60,16 @@ def _load_pandoc_json_text(log_path: Path) -> str:
         sys.exit(1)
 
     latex_outputs: list[str] = []
+    # Pandoc's own WARNING entries are separate from the embedded LaTeX log and
+    # were previously only inspected as a fallback when no LaTeX output existed
+    # -- so for any build that reached LaTeX, pandoc-level warnings passed the
+    # strict gate unseen. Collect them unconditionally.
+    pandoc_warnings: list[str] = []
     for entry in payload:
         if not isinstance(entry, dict):
             continue
+        if entry.get("verbosity") == "WARNING" and isinstance(entry.get("pretty"), str):
+            pandoc_warnings.append(f"[WARNING] {entry['pretty']}")
         if entry.get("description") != "LaTeX output":
             continue
         contents = entry.get("contents")
@@ -65,7 +77,9 @@ def _load_pandoc_json_text(log_path: Path) -> str:
             latex_outputs.append(contents)
 
     if latex_outputs:
-        return latex_outputs[-1]
+        # Only the last LaTeX log matters -- earlier passes legitimately warn
+        # about undefined references that the final pass resolves.
+        return "\n".join([*pandoc_warnings, latex_outputs[-1]])
 
     return "\n".join(
         entry.get("pretty", "")
