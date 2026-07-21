@@ -8,7 +8,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
     apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get -y install sudo && \
     apt-get install -y -o Acquire::Retries=20 \
     --no-install-recommends \
     lmodern \
@@ -18,7 +17,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     ghostscript \
     locales \
     curl \
-    wget \
     ca-certificates \
     texlive-full \
     less && \

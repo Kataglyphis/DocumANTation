@@ -1,7 +1,7 @@
 [project]
 name = "kataglyphis-md2pdf"
 version = "0.1.0"
-description = "Convert Markdown into modern LaTeX books, dissertations, beamer slides and CVs via Pandoc + LuaLaTeX."
+description = "Convert Markdown into modern LaTeX books, beamer slides, pptx decks and CVs via Pandoc + LuaLaTeX."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -30,7 +30,7 @@ docs = ["sphinx>=8,<9", "sphinx-kataglyphis-theme"]
 
 [project.urls]
 Homepage = "https://jonasheinle.de"
-Repository = "https://github.com/Kataglyphis/Kataglyphis-mdToPdf"
+Repository = "https://github.com/Kataglyphis/Kataglyphis-DocumANTation"
 
 # The project runs from a mounted volume (/md2pdfLib) and resolves its templates
 # by path relative to the repo root, so it is intentionally NOT installed as a

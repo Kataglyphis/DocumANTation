@@ -1,4 +1,4 @@
-"""Sphinx configuration for Kataglyphis-mdToPdf.
+"""Sphinx configuration for Kataglyphis-DocumANTation.
 
 Uses the same setup_theme() entry point as every downstream repo, so this
 repo's own docs get the Kataglyphis brand -- colours, fonts and the shared code
@@ -20,12 +20,12 @@ DOCS_LOGO_RELATIVE = "../images/logo.png"
 if not DOCS_LOGO.exists():
     raise FileNotFoundError(f"Missing docs logo at {DOCS_LOGO}")
 
-project = "Kataglyphis-mdToPdf"
+project = "Kataglyphis-DocumANTation"
 author = "Jonas Heinle"
 
 setup_theme(
     globals(),
-    repository_url="https://github.com/Kataglyphis/Kataglyphis-mdToPdf",
+    repository_url="https://github.com/Kataglyphis/Kataglyphis-DocumANTation",
     project_name=project,
     author=author,
     copyright_=f"{datetime.now():%Y}, {author}",

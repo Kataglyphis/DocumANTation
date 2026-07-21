@@ -1,0 +1,57 @@
+name: Publish pandoc_all image
+
+# CI never builds the Dockerfile (see ci.yml) -- this workflow is the single
+# place the image is built, and it only runs when an input of the image
+# changes. Everything else pulls ghcr.io/<owner>/pandoc_all:latest.
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - pyproject.toml
+      - uv.lock
+      - .gitmodules
+      - md2pdfLib/presentation/template/latex/**
+      - .github/workflows/publish-image.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-image
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build image
+        run: |
+          ref="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pandoc_all"
+          docker build . -t "$ref:latest" -t "$ref:${GITHUB_SHA::12}"
+
+      # Verified before publishing: the strict book build exercises Pandoc,
+      # LuaLaTeX, biber, makeglossaries and the brand snippets, so a broken
+      # image never replaces :latest.
+      - name: Smoke-test the image (strict book build)
+        env:
+          CONTAINER_RUNTIME: docker
+        run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pandoc_all:latest" \
+          STRICT_WARNINGS=1 bash ./scripts/build_in_container.sh book
+
+      - name: Push image
+        run: |
+          ref="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pandoc_all"
+          docker push "$ref:latest"
+          docker push "$ref:${GITHUB_SHA::12}"

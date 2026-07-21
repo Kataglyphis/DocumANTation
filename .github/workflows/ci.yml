@@ -15,11 +15,11 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
 
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v9.0.0
         with:
           python-version: "3.10"
 
@@ -47,11 +47,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
 
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v9.0.0
         with:
           python-version: "3.10"
 
@@ -61,16 +61,30 @@ jobs:
   build-and-verify:
     runs-on: ubuntu-latest
     needs: lint
+    permissions:
+      contents: read
+      packages: read
     env:
       CONTAINER_RUNTIME: docker
       IMAGE: pandoc_all
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
 
-      - name: Build Docker image
-        run: docker build . -t pandoc_all
+      # The image is NOT built here -- publish-image.yml builds and pushes it
+      # to GHCR whenever the Dockerfile (or its inputs) changes; every other
+      # push just pulls the prebuilt image. If a push changes the Dockerfile,
+      # publish-image.yml runs on the same commit -- re-run this job after it
+      # finishes to verify against the fresh image.
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Pull prebuilt pandoc_all image
+        run: |
+          ref="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pandoc_all:latest"
+          docker pull "$ref"
+          docker tag "$ref" pandoc_all
 
       # The reference-deck integration tests need pandoc, which lives only in
       # the image -- on the host they skip, so without this step the assumption

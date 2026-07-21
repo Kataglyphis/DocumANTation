@@ -338,10 +338,10 @@ def _jpeg_size(path: Path) -> tuple[int, int]:
         marker = data[i + 1]
         if marker in {0xC0, 0xC1, 0xC2, 0xC3}:  # SOF0..3
             return (
-                int.from_bytes(data[i + 7 : i + 9]),
-                int.from_bytes(data[i + 5 : i + 7]),
+                int.from_bytes(data[i + 7 : i + 9], "big"),
+                int.from_bytes(data[i + 5 : i + 7], "big"),
             )
-        i += 2 + int.from_bytes(data[i + 2 : i + 4])
+        i += 2 + int.from_bytes(data[i + 2 : i + 4], "big")
     raise AssertionError("no SOF marker found")
 
 

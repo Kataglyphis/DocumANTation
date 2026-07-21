@@ -1,0 +1,19 @@
+# Keeps the pinned GitHub Actions, the uv lockfile and the base image fresh.
+# PANDOC_VERSION / UV_VERSION ARGs are deliberately NOT managed here — they
+# are synced from ContainerHub's versions.env (see README, Dependencies).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly

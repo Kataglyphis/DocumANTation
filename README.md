@@ -3,7 +3,7 @@
     <img src="images/logo.png" alt="logo" width="200" />
   </a>
 
-  <h1>Kataglyphis-mdToPdf</h1>
+  <h1>Kataglyphis-DocumANTation</h1>
 
   <h4>Convert markdown to modern slide show or a4paper book. Combining the very light weight markdown language with all the power of LaTeX.</h4>
 </div>
@@ -38,7 +38,7 @@ Formulate everything in markdown. Use LaTeX power via Pandoc. Containerized for 
 - **buildkitd** running (`systemctl --user status buildkit.service`)
 
 ```bash
-git clone --recurse-submodules git@github.com:Kataglyphis/Kataglyphis-mdToPdf.git
+git clone --recurse-submodules git@github.com:Kataglyphis/Kataglyphis-DocumANTation.git
 ```
 
 ### Build Docker image
@@ -107,7 +107,9 @@ single source of truth for every version pin in the toolchain:
 
 `PANDOC_VERSION` and `UV_VERSION` in this Dockerfile are ARG defaults synced
 from ContainerHub's `linux/scripts/01-core/versions.env`; bump them there and
-run `python3 docs/scripts/sync_versions.py --write`, not by editing this file.
+run `python3 docs/scripts/sync_versions.py --write` **in the ContainerHub
+checkout** (the script lives there, not in this repo), not by editing this
+file.
 
 ## Contributing
 1. Fork the Project
@@ -124,4 +126,4 @@ components listed under [Dependencies](#dependencies) keep their own licenses.
 ## Contact
 Jonas Heinle - [@Cataglyphis_](https://twitter.com/Cataglyphis_) - jonasheinle@googlemail.com
 
-Project Link: [https://github.com/Kataglyphis/Kataglyphis-mdToPdf](https://github.com/Kataglyphis/Kataglyphis-mdToPdf)
+Project Link: [https://github.com/Kataglyphis/Kataglyphis-DocumANTation](https://github.com/Kataglyphis/Kataglyphis-DocumANTation)

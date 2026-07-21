@@ -1,4 +1,4 @@
-# AGENTS.md — Kataglyphis-mdToPdf
+# AGENTS.md — Kataglyphis-DocumANTation
 
 Guidance for AI agents and contributors working on this project.
 Follow these rules unless the user explicitly overrides them.
@@ -88,14 +88,18 @@ python md2pdfLib/build.py {book|beamer|pptx}
 
 ### pyproject.toml
 
+Excerpt — [`pyproject.toml`](pyproject.toml) is authoritative; keep this
+snippet in sync when the tooling config changes:
+
 ```toml
 [project]
 name = "kataglyphis-md2pdf"
-version = "0.1.0"
 requires-python = ">=3.10"
+dependencies = ["pygments>=2.17"]
 
 [project.optional-dependencies]
-dev = ["ruff", "ty"]
+dev = ["ruff>=0.15.21", "ty>=0.0.38", "pytest>=8", "pytest-cov>=5", "sphinx-kataglyphis-theme"]
+docs = ["sphinx>=8,<9", "sphinx-kataglyphis-theme"]
 
 [tool.ruff]
 line-length = 100
@@ -109,8 +113,10 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "lf"
-
 ```
+
+Code must stay 3.10-compatible (`requires-python = ">=3.10"`, what CI runs)
+— e.g. `int.from_bytes(...)` needs an explicit `byteorder` before 3.11.
 
 ### Running Tools
 
@@ -256,8 +262,11 @@ All auxiliary tools run inside `data/out/` (subshell cd).
 - **Do not** add comments to code unless the logic is truly non-obvious
 - **Do not** use `docker` for **local** commands — use **nerdctl** locally
   (BuildKit / rootless). CI on GitHub-hosted runners uses `docker` (via
-  `CONTAINER_RUNTIME=docker`) because nerdctl isn't preinstalled; both build the
-  same `Dockerfile`, so keep them equivalent.
+  `CONTAINER_RUNTIME=docker`) because nerdctl isn't preinstalled.
+- **Do not** build the `Dockerfile` in CI — CI pulls the prebuilt
+  `ghcr.io/kataglyphis/pandoc_all:latest`. The only place the image is built
+  in CI is `.github/workflows/publish-image.yml`, which runs when an input of
+  the image changes and pushes to GHCR after a strict smoke build.
 - **Do not** commit `data/out/` (it is in `.gitignore`)
 - **Do not** run `nerdctl build` without ensuring buildkitd is running
   (`systemctl --user status buildkit.service`)
@@ -267,17 +276,25 @@ All auxiliary tools run inside `data/out/` (subshell cd).
   `\providecommand` to allow override
 - **Do not** forget `--entrypoint ""` when running `nerdctl run` with the
   `pandoc_all` image
-- **Do not** install texlive-full in the Dockerfile — use specific texlive collections
+- **Do not** replace `texlive-full` in the Dockerfile with individual texlive
+  collections — the full scheme is deliberate: documents are free to pull in
+  any LaTeX package, and a missing collection fails builds much later and
+  less obviously than the one-time image-size cost
 
 ---
 
 ## Version Pins
 
+The `Dockerfile` and `uv.lock` are authoritative; this table is a snapshot.
+Pandoc and uv pins are synced from ContainerHub's
+`linux/scripts/01-core/versions.env` via its `docs/scripts/sync_versions.py`
+— bump them there, never by editing the Dockerfile directly.
+
 | Component | Version | Source |
 |-----------|---------|--------|
 | Ubuntu | 26.04 | `FROM ubuntu:26.04` in Dockerfile |
-| Pandoc | 3.9.0.2 | Hardcoded in Dockerfile (ARG for future) |
-| TeX Live | 2025 | Ubuntu 26.04 repos |
-| uv | latest | https://astral.sh/uv/install.sh |
-| Pygments | latest | `uv pip install Pygments` |
-| Python | 3.14 | `python3-full` from repos |
+| Pandoc | 3.10 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ContainerHub) |
+| TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
+| uv | 0.11.25 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ContainerHub) |
+| Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
+| Python | 3.14 | `python3-full` from Ubuntu 26.04 repos |

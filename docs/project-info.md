@@ -14,7 +14,7 @@ Everything the builds need ships in the `pandoc_all` container image, chiefly
 the `awesome-beamer` and `smile` presentation-theme submodules.
 
 The full list, with the license and upstream of each component, is the table in
-the repository [README](https://github.com/Kataglyphis/Kataglyphis-mdToPdf#dependencies).
+the repository [README](https://github.com/Kataglyphis/Kataglyphis-DocumANTation#dependencies).
 It is kept in one place so the two cannot drift apart.
 
 This repository is also the single source of truth for the shared Kataglyphis
@@ -36,4 +36,4 @@ This project is released under the MIT License.
 ## Contact
 
 - Jonas Heinle - [@Cataglyphis_](https://twitter.com/Cataglyphis_) - jonasheinle@googlemail.com
-- Project repository: <https://github.com/Kataglyphis/Kataglyphis-mdToPdf>
+- Project repository: <https://github.com/Kataglyphis/Kataglyphis-DocumANTation>

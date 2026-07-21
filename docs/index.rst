@@ -1,9 +1,9 @@
-Kataglyphis-mdToPdf Documentation
-=================================
+Kataglyphis-DocumANTation Documentation
+=======================================
 
 .. rst-class:: hero-section
 
-Containerized Markdown-to-PDF builds for books, dissertations, presentations, and CVs with Pandoc and LuaLaTeX.
+Containerized Markdown-to-PDF builds for books, presentations, and CVs with Pandoc and LuaLaTeX.
 
 - Reproducible container workflows built around ``nerdctl`` and shared wrapper scripts
 - Shared Pandoc presets and LaTeX templates for print, slide, and CV outputs
@@ -43,8 +43,8 @@ Common Commands
 
    nerdctl build . -t pandoc_all
    ./scripts/build_in_container.sh book
-   ./scripts/build_in_container.sh diss
    ./scripts/build_in_container.sh beamer
+   ./scripts/build_in_container.sh pptx
    ./scripts/build_in_container.sh cv
 
 

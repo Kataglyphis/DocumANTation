@@ -167,7 +167,7 @@ int main() {
 
 ```json
 {
-  "name": "mdToPdf",
+  "name": "Kataglyphis-DocumANTation",
   "theme": "github-dark",
   "features": ["wrap", "syntax-highlighting", "beamer"]
 }
