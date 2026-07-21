@@ -17,9 +17,12 @@ from pathlib import Path
 import pytest
 
 from md2pdfLib.presentation.pptx.make_reference import (
+    SLIDE_CY,
     TITLE_BG_IMAGE,
     TITLE_BG_REL_ID,
-    TITLE_BG_SRCRECT,
+    TITLE_BG_SRCRECT_B,
+    TITLE_BG_SRCRECT_T,
+    WEDGE_CX,
     ReferenceBuildError,
     brand_theme_colors,
     build_reference,
@@ -276,14 +279,19 @@ MASTER_XML = (
 )
 
 
-def test_title_layout_gets_background_and_soft_boxes():
+def test_title_layout_is_white_with_image_wedge():
     out = patch_title_slide_layout(TITLE_LAYOUT_XML)
-    # bg is the first child of cSld, referencing the brand image with the crop
+    # bg is white -- the beamer title page is NOT image-covered
     assert re.search(r'<p:cSld name="Title Slide"><p:bg>', out)
+    assert '<a:schemeClr val="lt1"/>' in out.split("</p:bg>")[0]
+    # the image lives in the right-hand wedge, over an accent edge sliver
+    assert "Brand Wedge Edge" in out and "Brand Wedge" in out
+    assert out.index("Brand Wedge Edge") < out.index('"Brand Wedge"')
     assert f'r:embed="{TITLE_BG_REL_ID}"' in out
-    assert f'<a:srcRect t="{TITLE_BG_SRCRECT}" b="{TITLE_BG_SRCRECT}"/>' in out
-    # both text placeholders got the accent_soft info box (accent6 by scheme)
-    assert out.count('<a:schemeClr val="accent6"><a:alpha val="92000"/>') == 2
+    assert f'<a:srcRect t="{TITLE_BG_SRCRECT_T}" b="{TITLE_BG_SRCRECT_B}"/>' in out
+    # title takes the frametitle treatment; the accent rule sits between texts
+    assert '<a:defRPr b="1" cap="small">' in out
+    assert "Brand Title Rule" in out
 
 
 def test_section_layout_goes_accent_on_dark():
@@ -291,6 +299,7 @@ def test_section_layout_goes_accent_on_dark():
     assert '<a:solidFill><a:schemeClr val="dk1"/></a:solidFill>' in out
     assert '<a:schemeClr val="accent1"/>' in out  # title text
     assert '<a:schemeClr val="lt2"/>' in out  # body text
+    assert '<a:defRPr b="1" cap="small">' in out  # frametitle treatment
 
 
 def test_content_layout_separator_uses_master_geometry():
@@ -300,6 +309,15 @@ def test_content_layout_separator_uses_master_geometry():
     assert '<a:ext cx="8229600" cy="27432"/>' in out
     assert '<a:schemeClr val="accent1"/>' in out
     assert out.index("Brand Separator") < out.index("</p:spTree>")
+
+
+def test_content_layout_gets_footline_and_title_treatment():
+    out = patch_content_layout(CONTENT_LAYOUT_XML, MASTER_XML, 9000)
+    # the beamer footline: light strip across the bottom, accent block right
+    assert "Brand Footline" in out and "Brand Footline Accent" in out
+    assert '<a:schemeClr val="dk1"><a:alpha val="8000"/></a:schemeClr>' in out
+    # bold small-caps left-aligned title, like the beamer frametitle
+    assert '<a:lvl1pPr algn="l"><a:defRPr b="1" cap="small">' in out
 
 
 def test_layout_without_placeholder_fails_loudly():
@@ -323,13 +341,14 @@ def _jpeg_size(path: Path) -> tuple[int, int]:
     raise AssertionError("no SOF marker found")
 
 
-def test_srcrect_constant_matches_the_actual_asset():
-    """TITLE_BG_SRCRECT is derived from the image's aspect ratio; if the asset
-    is ever replaced or resized, this recomputes the crop and catches drift."""
+def test_srcrect_constants_match_the_actual_asset():
+    """The wedge crop is derived from the image's aspect against the wedge
+    box; if the asset is replaced or resized, this recomputes it and catches
+    drift. The top/bottom split is a framing choice; only the sum is geometry."""
     w, h = _jpeg_size(TITLE_BG_IMAGE)
-    visible = w * 9 / 16
-    expected = round((h - visible) / 2 / h * 100_000)
-    assert abs(TITLE_BG_SRCRECT - expected) <= 10
+    visible = w * SLIDE_CY / WEDGE_CX
+    expected_total = round((h - visible) / h * 100_000)
+    assert abs((TITLE_BG_SRCRECT_T + TITLE_BG_SRCRECT_B) - expected_total) <= 100
 
 
 # ── finalize: the media pandoc drops, and the gate that notices ─────────────

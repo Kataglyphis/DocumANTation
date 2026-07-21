@@ -28,19 +28,32 @@ from pathlib import Path
 MD2PDF_ROOT = Path(__file__).resolve().parents[2]
 BRAND_TOKENS = MD2PDF_ROOT / "style" / "brand.tokens.json"
 
-# The beamer title page draws over this image (presets.py passes it as
-# titlegraphic); the pptx title layout uses the same asset so the two decks
-# open identically. Resolved relative to the md2pdf root's parent so it works
-# on the host checkout and inside the container (where /data is a sibling
-# mount of /md2pdfLib).
+# The image the beamer title page shows in its right-hand wedge (presets.py
+# passes it as titlegraphic); the pptx title layout reproduces that wedge with
+# the same asset. Resolved relative to the md2pdf root's parent so it works on
+# the host checkout and inside the container (where /data is a sibling mount
+# of /md2pdfLib).
 TITLE_BG_IMAGE = MD2PDF_ROOT.parent / "data/presentation/images/title-background.jpg"
 TITLE_BG_REL_ID = "rIdBrandTitleBg"
 TITLE_BG_MEDIA = "ppt/media/brandTitleBg.jpg"
-# The asset is portrait (1800x4000); a 16:9 slide shows its middle band.
-# OOXML srcRect crops in thousandths of a percent: keep 1800*(9/16)=1012.5px
-# of 4000 -> crop (4000-1012.5)/2/4000 = 37.34% top and bottom. A test
-# recomputes this from the image file, so the constant cannot drift.
-TITLE_BG_SRCRECT = 37344
+
+# Slide geometry of pandoc's default deck (16:9). The patchers position
+# everything in these EMU coordinates; the build fails loudly if the deck's
+# slide size ever changes (see build_reference).
+SLIDE_CX = 9144000
+SLIDE_CY = 5143500
+
+# The title-page wedge: the right ~38% of the slide, with a slanted left edge
+# like the awesome-beamer title page. The image is portrait (1800x4000); the
+# srcRect crop keeps a band matching the wedge box's aspect, biased toward the
+# top of the picture where its subject sits. A test recomputes the total crop
+# from the image file, so these cannot drift from the asset.
+WEDGE_X = 5669280  # 62% across
+WEDGE_CX = SLIDE_CX - WEDGE_X
+WEDGE_SLANT = 25000  # left-edge slant, in 1/100000 of the wedge width
+WEDGE_EDGE_EMU = 91440  # accent sliver peeking out along the slanted edge
+TITLE_BG_SRCRECT_T = 8000
+TITLE_BG_SRCRECT_B = 25390
 
 # Layouts that get the accent separator bar under the title -- the pptx
 # equivalent of the beamer theme's accent `separator` rule.
@@ -52,6 +65,11 @@ SEPARATOR_LAYOUTS = (
     "Content with Caption",
 )
 SEPARATOR_HEIGHT_EMU = 27432  # 0.03in, ~2.2pt -- a rule, not a banner
+
+# The beamer footline: a light strip across the bottom with an accent block on
+# the right (the theme's `footline` / `footlineright` boxes).
+FOOTLINE_HEIGHT_EMU = 228600  # 0.238in
+FOOTLINE_ACCENT_CX = 914400  # 1in accent block, right-aligned
 
 
 class ReferenceBuildError(Exception):
@@ -137,36 +155,86 @@ def _sp_span(xml: str, ph_type: str) -> tuple[int, int]:
     raise ReferenceBuildError(f'Layout has no "{ph_type}" placeholder to patch.')
 
 
-def _fill_placeholder(xml: str, ph_type: str, fill: str) -> str:
-    """Give a placeholder shape a fill, appended at the end of its <p:spPr>."""
+def _style_placeholder_text(
+    xml: str,
+    ph_type: str,
+    *,
+    scheme: str | None = None,
+    bold: bool = False,
+    small_caps: bool = False,
+    align_left: bool = False,
+) -> str:
+    """Replace a placeholder's level-1 list style with the given treatment.
+
+    Replaces the whole <a:lstStyle> rather than merging: unset properties fall
+    back to the master, which is the inheritance PowerPoint uses anyway.
+    """
     start, end = _sp_span(xml, ph_type)
     block = xml[start:end]
-    # Appending before </p:spPr> keeps the schema's element order only when
-    # nothing that must follow a fill is present -- refuse rather than emit an
-    # invalid part PowerPoint would repair (or drop) silently.
-    if "<a:ln" in block.split("</p:spPr>")[0].rsplit("<p:spPr", 1)[-1]:
-        raise ReferenceBuildError(f'"{ph_type}" spPr carries an outline; patcher needs updating.')
-    patched, count = re.subn(r"</p:spPr>", f"{fill}</p:spPr>", block, count=1)
-    if count != 1:
-        raise ReferenceBuildError(f'"{ph_type}" has no closed <p:spPr> to receive a fill.')
-    return xml[:start] + patched + xml[end:]
-
-
-def _color_placeholder_text(xml: str, ph_type: str, scheme: str) -> str:
-    """Force a placeholder's level-1 text colour via its list style."""
-    start, end = _sp_span(xml, ph_type)
-    block = xml[start:end]
-    lvl = (
-        f'<a:lvl1pPr><a:defRPr><a:solidFill><a:schemeClr val="{scheme}"/>'
-        "</a:solidFill></a:defRPr></a:lvl1pPr>"
-    )
+    attrs = (' b="1"' if bold else "") + (' cap="small"' if small_caps else "")
+    fill = f'<a:solidFill><a:schemeClr val="{scheme}"/></a:solidFill>' if scheme else ""
+    algn = ' algn="l"' if align_left else ""
+    lvl = f"<a:lvl1pPr{algn}><a:defRPr{attrs}>{fill}</a:defRPr></a:lvl1pPr>"
+    style = f"<a:lstStyle>{lvl}</a:lstStyle>"
     if "<a:lstStyle/>" in block:
-        patched = block.replace("<a:lstStyle/>", f"<a:lstStyle>{lvl}</a:lstStyle>", 1)
+        patched = block.replace("<a:lstStyle/>", style, 1)
     elif "<a:lstStyle>" in block:
-        patched = block.replace("<a:lstStyle>", f"<a:lstStyle>{lvl}", 1)
+        patched = re.sub(r"<a:lstStyle>.*?</a:lstStyle>", style, block, count=1, flags=re.S)
     else:
-        raise ReferenceBuildError(f'"{ph_type}" has no <a:lstStyle> to colour.')
+        raise ReferenceBuildError(f'"{ph_type}" has no <a:lstStyle> to style.')
     return xml[:start] + patched + xml[end:]
+
+
+def _set_placeholder_xfrm(xml: str, ph_type: str, x: int, y: int, cx: int, cy: int) -> str:
+    """Move/size a placeholder by replacing (or inserting) its <a:xfrm>."""
+    start, end = _sp_span(xml, ph_type)
+    block = xml[start:end]
+    xfrm = f'<a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>'
+    if "<a:xfrm>" in block:
+        patched = re.sub(r"<a:xfrm>.*?</a:xfrm>", xfrm, block, count=1, flags=re.S)
+    elif "<p:spPr/>" in block:
+        patched = block.replace("<p:spPr/>", f"<p:spPr>{xfrm}</p:spPr>", 1)
+    elif "<p:spPr>" in block:
+        patched = block.replace("<p:spPr>", f"<p:spPr>{xfrm}", 1)
+    else:
+        raise ReferenceBuildError(f'"{ph_type}" has no <p:spPr> to position.')
+    return xml[:start] + patched + xml[end:]
+
+
+def _append_shape(xml: str, shape: str) -> str:
+    new, count = re.subn(r"</p:spTree>", f"{shape}</p:spTree>", xml, count=1)
+    if count != 1:
+        raise ReferenceBuildError("Layout has no <p:spTree> to receive a shape.")
+    return new
+
+
+def _rect(shape_id: int, name: str, x: int, y: int, cx: int, cy: int, fill: str) -> str:
+    return (
+        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{name}"/>'
+        '<p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
+        f'<p:spPr><a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>'
+        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>'
+        f"{fill}<a:ln><a:noFill/></a:ln></p:spPr>"
+        "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    )
+
+
+def _wedge(shape_id: int, name: str, x: int, fill: str) -> str:
+    """A full-height quad whose left edge slants -- the beamer title wedge."""
+    return (
+        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{name}"/>'
+        '<p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
+        f'<p:spPr><a:xfrm><a:off x="{x}" y="0"/>'
+        f'<a:ext cx="{WEDGE_CX}" cy="{SLIDE_CY}"/></a:xfrm>'
+        "<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/>"
+        '<a:rect l="0" t="0" r="100000" b="100000"/>'
+        f'<a:pathLst><a:path w="100000" h="100000"><a:moveTo><a:pt x="{WEDGE_SLANT}" y="0"/>'
+        '</a:moveTo><a:lnTo><a:pt x="100000" y="0"/></a:lnTo>'
+        '<a:lnTo><a:pt x="100000" y="100000"/></a:lnTo>'
+        '<a:lnTo><a:pt x="0" y="100000"/></a:lnTo><a:close/></a:path></a:pathLst>'
+        f"</a:custGeom>{fill}<a:ln><a:noFill/></a:ln></p:spPr>"
+        "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    )
 
 
 def _title_geometry(layout_xml: str, master_xml: str) -> tuple[int, int, int, int]:
@@ -190,25 +258,48 @@ def _title_geometry(layout_xml: str, master_xml: str) -> tuple[int, int, int, in
 
 
 def patch_title_slide_layout(xml: str) -> str:
-    """The beamer title page, in OOXML: brand image behind, soft box under the text.
+    """The beamer title page, in OOXML.
 
-    The title info box mirrors the beamer theme's `title info box`
-    (bg=accent!6!white): accent6 is the brand's accent_soft, so the same tint
-    comes from the theme's own colour scheme rather than a literal.
+    What the beamer theme actually renders (verified against the built PDF):
+    a WHITE page -- not an image-covered one -- with the title bold and
+    left-aligned in the top-left, the subtitle in grey below it over an accent
+    rule, and the image confined to a right-hand wedge with a slanted edge,
+    an accent sliver marking the diagonal.
     """
     bg = (
-        "<p:bg><p:bgPr>"
-        f'<a:blipFill rotWithShape="1"><a:blip r:embed="{TITLE_BG_REL_ID}"/>'
-        f'<a:srcRect t="{TITLE_BG_SRCRECT}" b="{TITLE_BG_SRCRECT}"/>'
-        "<a:stretch><a:fillRect/></a:stretch></a:blipFill>"
+        '<p:bg><p:bgPr><a:solidFill><a:schemeClr val="lt1"/></a:solidFill>'
         "<a:effectLst/></p:bgPr></p:bg>"
     )
     xml = _insert_bg(xml, bg)
-    soft = (
-        '<a:solidFill><a:schemeClr val="accent6"><a:alpha val="92000"/></a:schemeClr></a:solidFill>'
+
+    # The wedge: accent quad first, image quad on top shifted right, so only a
+    # sliver of accent shows along the slanted edge -- the beamer diagonal.
+    accent_fill = '<a:solidFill><a:schemeClr val="accent1"/></a:solidFill>'
+    image_fill = (
+        f'<a:blipFill rotWithShape="1"><a:blip r:embed="{TITLE_BG_REL_ID}"/>'
+        f'<a:srcRect t="{TITLE_BG_SRCRECT_T}" b="{TITLE_BG_SRCRECT_B}"/>'
+        "<a:stretch><a:fillRect/></a:stretch></a:blipFill>"
     )
-    for ph in ("ctrTitle", "subTitle"):
-        xml = _fill_placeholder(xml, ph, soft)
+    xml = _append_shape(
+        xml, _wedge(9101, "Brand Wedge Edge", WEDGE_X - WEDGE_EDGE_EMU, accent_fill)
+    )
+    xml = _append_shape(xml, _wedge(9102, "Brand Wedge", WEDGE_X, image_fill))
+
+    # Title and subtitle move to the left column, clear of the wedge, and take
+    # the frametitle treatment: bold small caps, black; subtitle in grey.
+    text_cx = WEDGE_X - int(WEDGE_SLANT / 100000 * WEDGE_CX) - 2 * 457200
+    xml = _set_placeholder_xfrm(xml, "ctrTitle", 457200, 1097280, text_cx, 1600200)
+    xml = _style_placeholder_text(xml, "ctrTitle", bold=True, small_caps=True, align_left=True)
+    xml = _set_placeholder_xfrm(xml, "subTitle", 457200, 2856230, text_cx, 1500000)
+    xml = _style_placeholder_text(xml, "subTitle", scheme="tx2", align_left=True)
+
+    # The accent rule between title and subtitle, like the beamer title page.
+    xml = _append_shape(
+        xml,
+        _rect(
+            9103, "Brand Title Rule", 457200, 2742690, text_cx, SEPARATOR_HEIGHT_EMU, accent_fill
+        ),
+    )
     return xml
 
 
@@ -220,28 +311,47 @@ def patch_section_header_layout(xml: str) -> str:
         "<a:effectLst/></p:bgPr></p:bg>"
     )
     xml = _insert_bg(xml, bg)
-    xml = _color_placeholder_text(xml, "title", "accent1")
-    xml = _color_placeholder_text(xml, "body", "lt2")
+    xml = _style_placeholder_text(
+        xml, "title", scheme="accent1", bold=True, small_caps=True, align_left=True
+    )
+    xml = _style_placeholder_text(xml, "body", scheme="lt2", align_left=True)
     return xml
 
 
 def patch_content_layout(xml: str, master_xml: str, shape_id: int) -> str:
-    """Draw the accent separator rule under the title, beamer-style."""
+    """Content slides take the beamer frame: bold small-caps title, an accent
+    separator rule under it, and the footline strip with its accent block."""
     x, y, cx, cy = _title_geometry(xml, master_xml)
-    bar = (
-        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="Brand Separator"/>'
-        '<p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
-        f'<p:spPr><a:xfrm><a:off x="{x}" y="{y + cy}"/>'
-        f'<a:ext cx="{cx}" cy="{SEPARATOR_HEIGHT_EMU}"/></a:xfrm>'
-        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>'
-        '<a:solidFill><a:schemeClr val="accent1"/></a:solidFill>'
-        "<a:ln><a:noFill/></a:ln></p:spPr>"
-        "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+    accent_fill = '<a:solidFill><a:schemeClr val="accent1"/></a:solidFill>'
+    xml = _style_placeholder_text(xml, "title", bold=True, small_caps=True, align_left=True)
+    xml = _append_shape(
+        xml, _rect(shape_id, "Brand Separator", x, y + cy, cx, SEPARATOR_HEIGHT_EMU, accent_fill)
     )
-    new, count = re.subn(r"</p:spTree>", f"{bar}</p:spTree>", xml, count=1)
-    if count != 1:
-        raise ReferenceBuildError("Layout has no <p:spTree> to receive the separator.")
-    return new
+    # Footline: light full-width strip (a soft grey derived from text-black by
+    # alpha, so it needs no colour slot of its own) + the accent block right.
+    grey_fill = (
+        '<a:solidFill><a:schemeClr val="dk1"><a:alpha val="8000"/></a:schemeClr></a:solidFill>'
+    )
+    foot_y = SLIDE_CY - FOOTLINE_HEIGHT_EMU
+    xml = _append_shape(
+        xml,
+        _rect(
+            shape_id + 100, "Brand Footline", 0, foot_y, SLIDE_CX, FOOTLINE_HEIGHT_EMU, grey_fill
+        ),
+    )
+    xml = _append_shape(
+        xml,
+        _rect(
+            shape_id + 200,
+            "Brand Footline Accent",
+            SLIDE_CX - FOOTLINE_ACCENT_CX,
+            foot_y,
+            FOOTLINE_ACCENT_CX,
+            FOOTLINE_HEIGHT_EMU,
+            accent_fill,
+        ),
+    )
+    return xml
 
 
 def _register_media(content_types: str, rels: str) -> tuple[str, str]:
@@ -299,6 +409,16 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
             themes_patched += 1
     if not themes_patched:
         raise ReferenceBuildError("No ppt/theme/*.xml found in pandoc's reference.pptx.")
+
+    # -- geometry guard: every patcher positions in SLIDE_CX/CY coordinates,
+    #    so a changed slide size must fail here, not misplace shapes quietly.
+    pres = parts["ppt/presentation.xml"].decode("utf-8")
+    size = re.search(r'<p:sldSz cx="(\d+)" cy="(\d+)"', pres)
+    if not size or (int(size.group(1)), int(size.group(2))) != (SLIDE_CX, SLIDE_CY):
+        raise ReferenceBuildError(
+            f"Slide size changed (expected {SLIDE_CX}x{SLIDE_CY}, "
+            f"got {size.groups() if size else 'none'}); update the layout patchers."
+        )
 
     # -- layout branding: the beamer look, one layout at a time, found by the
     #    names pandoc selects layouts with -- never by file number.
