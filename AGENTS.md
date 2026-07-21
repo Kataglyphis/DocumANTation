@@ -115,8 +115,8 @@ skip-magic-trailing-comma = false
 line-ending = "lf"
 ```
 
-Code must stay 3.10-compatible (`requires-python = ">=3.10"`, what CI runs)
-— e.g. `int.from_bytes(...)` needs an explicit `byteorder` before 3.11.
+Code must stay 3.10-compatible (`requires-python = ">=3.10"`) — e.g.
+`int.from_bytes(...)` needs an explicit `byteorder` before 3.11.
 
 ### Running Tools
 
@@ -261,12 +261,11 @@ All auxiliary tools run inside `data/out/` (subshell cd).
   shared location for book templates
 - **Do not** add comments to code unless the logic is truly non-obvious
 - **Do not** use `docker` for **local** commands — use **nerdctl** locally
-  (BuildKit / rootless). CI on GitHub-hosted runners uses `docker` (via
-  `CONTAINER_RUNTIME=docker`) because nerdctl isn't preinstalled.
-- **Do not** build the `Dockerfile` in CI — CI pulls the prebuilt
-  `ghcr.io/kataglyphis/pandoc_all:latest`. The only place the image is built
-  in CI is `.github/workflows/publish-image.yml`, which runs when an input of
-  the image changes and pushes to GHCR after a strict smoke build.
+  (BuildKit / rootless). Scripts accept `CONTAINER_RUNTIME=docker` for
+  environments without nerdctl; both run the same image.
+- **Do not** add a workflow that builds the `Dockerfile` in CI — the image is
+  built locally (`nerdctl build . -t pandoc_all`). The only GitHub workflow is
+  `docs-pages.yml`, which publishes the Sphinx docs to GitHub Pages.
 - **Do not** commit `data/out/` (it is in `.gitignore`)
 - **Do not** run `nerdctl build` without ensuring buildkitd is running
   (`systemctl --user status buildkit.service`)
