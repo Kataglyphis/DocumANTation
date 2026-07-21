@@ -67,9 +67,12 @@ SEPARATOR_LAYOUTS = (
 SEPARATOR_HEIGHT_EMU = 27432  # 0.03in, ~2.2pt -- a rule, not a banner
 
 # The beamer footline: a light strip across the bottom with an accent block on
-# the right (the theme's `footline` / `footlineright` boxes).
+# the right (the theme's `footline` / `footlineright` boxes), the author on
+# the left and the deck title in the centre. Author/title are read from the
+# presentation metadata at build time -- the same file that feeds pandoc.
 FOOTLINE_HEIGHT_EMU = 228600  # 0.238in
 FOOTLINE_ACCENT_CX = 914400  # 1in accent block, right-aligned
+PRESENTATION_METADATA = MD2PDF_ROOT / "presentation/pandoc/metadata.yml"
 
 
 class ReferenceBuildError(Exception):
@@ -228,6 +231,49 @@ def _rect(shape_id: int, name: str, x: int, y: int, cx: int, cy: int, fill: str)
     )
 
 
+def deck_metadata() -> dict[str, str]:
+    """author/title from the presentation metadata, for the footline.
+
+    A two-key regex read rather than a YAML dependency: both values are plain
+    single-line scalars in this repo's metadata, and a missing key just means
+    that footline text is omitted.
+    """
+    out: dict[str, str] = {}
+    if PRESENTATION_METADATA.is_file():
+        text = PRESENTATION_METADATA.read_text("utf-8")
+        for key in ("author", "title"):
+            if m := re.search(rf"^{key}:\s*(\S.*?)\s*$", text, re.M):
+                out[key] = m.group(1)
+    return out
+
+
+def _text_shape(
+    shape_id: int,
+    name: str,
+    x: int,
+    y: int,
+    cx: int,
+    cy: int,
+    text: str,
+    scheme: str,
+    *,
+    align: str = "l",
+) -> str:
+    """A borderless, fill-less text shape for footline labels."""
+    safe = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return (
+        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{name}"/>'
+        '<p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
+        f'<p:spPr><a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>'
+        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln><a:noFill/></a:ln>'
+        "</p:spPr><p:txBody>"
+        '<a:bodyPr anchor="ctr" lIns="0" rIns="0" tIns="0" bIns="0"/><a:lstStyle/>'
+        f'<a:p><a:pPr algn="{align}"/>'
+        f'<a:r><a:rPr lang="en-US" sz="900"><a:solidFill><a:schemeClr val="{scheme}"/>'
+        f"</a:solidFill></a:rPr><a:t>{safe}</a:t></a:r></a:p></p:txBody></p:sp>"
+    )
+
+
 def _wedge(shape_id: int, name: str, x: int, fill: str) -> str:
     """A full-height quad whose left edge slants -- the beamer title wedge."""
     return (
@@ -327,9 +373,12 @@ def patch_section_header_layout(xml: str) -> str:
     return xml
 
 
-def patch_content_layout(xml: str, master_xml: str, shape_id: int) -> str:
+def patch_content_layout(
+    xml: str, master_xml: str, shape_id: int, author: str = "", deck_title: str = ""
+) -> str:
     """Content slides take the beamer frame: bold small-caps title, an accent
-    separator rule under it, and the footline strip with its accent block."""
+    separator rule under it, and the footline -- author left, deck title
+    centre, accent block right (the slide number lands on it later)."""
     x, y, cx, cy = _title_geometry(xml, master_xml)
     accent_fill = '<a:solidFill><a:schemeClr val="accent1"/></a:solidFill>'
     xml = _style_placeholder_text(xml, "title", bold=True, small_caps=True, align_left=True)
@@ -360,6 +409,35 @@ def patch_content_layout(xml: str, master_xml: str, shape_id: int) -> str:
             accent_fill,
         ),
     )
+    if author:
+        xml = _append_shape(
+            xml,
+            _text_shape(
+                shape_id + 300,
+                "Brand Footline Author",
+                182880,
+                foot_y,
+                2286000,
+                FOOTLINE_HEIGHT_EMU,
+                author,
+                "tx1",
+            ),
+        )
+    if deck_title:
+        xml = _append_shape(
+            xml,
+            _text_shape(
+                shape_id + 400,
+                "Brand Footline Title",
+                (SLIDE_CX - 4114800) // 2,
+                foot_y,
+                4114800,
+                FOOTLINE_HEIGHT_EMU,
+                deck_title,
+                "hlink",
+                align="ctr",
+            ),
+        )
     # The slide number lives ON the accent block, white and bold -- the beamer
     # footlineright. The layout only styles/positions the placeholder; the
     # per-slide instances that make it render are injected by finalize_deck.py,
@@ -457,6 +535,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
         raise ReferenceBuildError("No slide master found in pandoc's reference.pptx.")
     master_xml = parts[masters[0]].decode("utf-8")
 
+    meta = deck_metadata()
     seen: set[str] = set()
     for name in sorted(parts):
         if not re.fullmatch(r"ppt/slideLayouts/slideLayout\d+\.xml", name):
@@ -480,7 +559,13 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
             xml = patch_section_header_layout(xml)
         elif layout in SEPARATOR_LAYOUTS:
             # Stable per-layout ids far above the deck's own shape ids.
-            xml = patch_content_layout(xml, master_xml, 9000 + len(seen))
+            xml = patch_content_layout(
+                xml,
+                master_xml,
+                9000 + len(seen),
+                author=meta.get("author", ""),
+                deck_title=meta.get("title", ""),
+            )
         else:
             continue
         seen.add(layout or name)

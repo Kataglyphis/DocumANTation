@@ -85,16 +85,18 @@ def _content_slides(z: zipfile.ZipFile) -> dict[str, str]:
     return result
 
 
-def _sldnum_shape() -> str:
-    """A plain text shape on the footline accent block with a slidenum field.
+def _sldnum_shape(total: int) -> str:
+    """A plain text shape on the footline accent block: "<n> / <total>".
 
     Deliberately NOT a sldNum placeholder: slide-level placeholder instances
     only display when the deck's header/footer machinery is switched on, and
     LibreOffice ignores them without it (verified by rendering). A normal
     shape with an explicit position and an embedded field renders everywhere,
     at the cost of carrying its own styling -- white, bold, centred, like the
-    beamer footlineright.
+    beamer footlineright ("Page 6 / 37"). The total is a static run: the deck
+    is final when this runs, so the count cannot go stale.
     """
+    white = '<a:solidFill><a:schemeClr val="lt1"/></a:solidFill>'
     return (
         '<p:sp><p:nvSpPr><p:cNvPr id="9500" name="Brand Slide Number"/>'
         "<p:cNvSpPr/><p:nvPr/></p:nvSpPr>"
@@ -106,23 +108,66 @@ def _sldnum_shape() -> str:
         '<a:bodyPr anchor="ctr" lIns="0" rIns="0" tIns="0" bIns="0"/><a:lstStyle/>'
         '<a:p><a:pPr algn="ctr"/>'
         f'<a:fld id="{_SLDNUM_FLD_ID}" type="slidenum">'
-        '<a:rPr lang="en-US" sz="1000" b="1"><a:solidFill><a:schemeClr val="lt1"/>'
-        "</a:solidFill></a:rPr><a:t>0</a:t></a:fld></a:p></p:txBody></p:sp>"
+        f'<a:rPr lang="en-US" sz="1000" b="1">{white}</a:rPr><a:t>0</a:t></a:fld>'
+        f'<a:r><a:rPr lang="en-US" sz="1000" b="1">{white}</a:rPr>'
+        f"<a:t> / {total}</a:t></a:r></a:p></p:txBody></p:sp>"
     )
 
 
 def inject_slide_numbers(deck: Path) -> int:
     """Add slide-number shapes to content slides; return how many were added."""
     with zipfile.ZipFile(deck) as z:
+        total = len([n for n in z.namelist() if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)])
         targets = _content_slides(z)
         updates: dict[str, bytes] = {}
         for slide in targets:
             xml = z.read(slide).decode()
             if 'type="slidenum"' in xml:
                 continue  # pandoc grew the feature; nothing to do
-            new, count = re.subn(r"</p:spTree>", f"{_sldnum_shape()}</p:spTree>", xml, count=1)
+            new, count = re.subn(r"</p:spTree>", f"{_sldnum_shape(total)}</p:spTree>", xml, count=1)
             if count == 1:
                 updates[slide] = new.encode()
+        if not updates:
+            return 0
+        parts = {i.filename: z.read(i.filename) for i in z.infolist()}
+    parts.update(updates)
+    with zipfile.ZipFile(deck, "w", zipfile.ZIP_DEFLATED) as z:
+        for name, payload in parts.items():
+            z.writestr(name, payload)
+    return len(updates)
+
+
+_ALTERNATE_RE = re.compile(r"<mc:AlternateContent[^>]*>(.*?)</mc:AlternateContent>", re.S)
+_CHOICE_RE = re.compile(r"<mc:Choice[^>]*>(.*?)</mc:Choice>", re.S)
+
+
+def unwrap_alternate_content(deck: Path) -> int:
+    """Unwrap mc:AlternateContent on slides; return how many slides changed.
+
+    Pandoc wraps the --toc slide's content placeholder in an AlternateContent
+    whose Choice requires the Microsoft a14 extension -- with an EMPTY
+    Fallback. PowerPoint renders the Choice; every other viewer honours the
+    fallback and shows a blank slide (LibreOffice renders literally nothing,
+    verified). The Choice's content is ordinary shapes with ordinary
+    hyperlinks, valid outside the wrapper everywhere, so promote it and drop
+    the wrapper.
+    """
+    with zipfile.ZipFile(deck) as z:
+        updates: dict[str, bytes] = {}
+        for name in z.namelist():
+            if not re.fullmatch(r"ppt/slides/slide\d+\.xml", name):
+                continue
+            xml = z.read(name).decode()
+            if "<mc:AlternateContent" not in xml:
+                continue
+
+            def _promote(m: re.Match[str]) -> str:
+                choices = _CHOICE_RE.findall(m.group(1))
+                return "".join(choices)
+
+            new = _ALTERNATE_RE.sub(_promote, xml)
+            if new != xml:
+                updates[name] = new.encode()
         if not updates:
             return 0
         parts = {i.filename: z.read(i.filename) for i in z.infolist()}
@@ -146,6 +191,8 @@ def finalize(deck: Path) -> list[str]:
         with zipfile.ZipFile(deck, "a", zipfile.ZIP_DEFLATED) as z:
             z.writestr(part, source.read_bytes())
         done.append(part)
+    if unwrapped := unwrap_alternate_content(deck):
+        done.append(f"AlternateContent unwrapped on {unwrapped} slides")
     if numbered := inject_slide_numbers(deck):
         done.append(f"slide numbers on {numbered} slides")
     return done

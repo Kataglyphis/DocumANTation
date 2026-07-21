@@ -91,6 +91,16 @@ def pptx() -> BuildConfig:
             "pptx",
             "--reference-doc",
             PPTX_REFERENCE,
+            # The beamer deck opens with a TOC slide; so does this one. Depth 1
+            # matches the beamer TOC (sections only) and keeps the list on one
+            # slide -- pptx cannot split an overflowing TOC the way beamer
+            # paginates its into (I)/(II).
+            "--toc",
+            "--toc-depth=1",
+            # Beamer numbers its frametitles via the theme; pptx gets the same
+            # numbers via the AST, which the TOC slide then inherits too.
+            "--lua-filter",
+            "md2pdfLib/presentation/pptx/number-titles.lua",
         ],
     )
 

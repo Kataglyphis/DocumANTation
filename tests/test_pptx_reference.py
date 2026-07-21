@@ -32,6 +32,7 @@ from md2pdfLib.presentation.pptx.make_reference import (
     patch_title_slide_layout,
 )
 from md2pdfLib.presentation.pptx.verify_brand import brand_hexes, off_brand_colors
+from md2pdfLib.presets import pptx
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BRAND = json.loads((REPO_ROOT / "style" / "brand.tokens.json").read_text("utf-8"))
@@ -418,6 +419,8 @@ def test_finalize_injects_slide_numbers_on_content_slides(tmp_path: Path):
     assert "Brand Slide Number" in slide
     assert '<a:off x="8229600" y="4914900"/>' in slide
     assert 'type="slidenum"' in slide and "<p:ph " not in slide
+    # beamer-style "n / total": the deck in this test has exactly one slide
+    assert "<a:t> / 1</a:t>" in slide
 
 
 def test_content_layout_puts_slide_number_on_the_accent_block():
@@ -426,3 +429,58 @@ def test_content_layout_puts_slide_number_on_the_accent_block():
     assert '<a:off x="8229600" y="4914900"/>' in out  # accent block geometry
     assert '<a:lvl1pPr algn="ctr"><a:defRPr sz="1000" b="1">' in out
     assert '<a:bodyPr anchor="ctr"' in out
+
+
+def test_content_layout_footline_carries_author_and_title():
+    out = patch_content_layout(
+        CONTENT_LAYOUT_XML, MASTER_XML, 9000, author="Jonas Heinle", deck_title="My & Talk"
+    )
+    assert "Brand Footline Author" in out and ">Jonas Heinle<" in out
+    # XML-escaped, centred, in the link colour -- like the beamer footline
+    assert "My &amp; Talk" in out
+    assert '<a:schemeClr val="hlink"/>' in out
+
+
+def test_content_layout_footline_text_is_optional():
+    out = patch_content_layout(CONTENT_LAYOUT_XML, MASTER_XML, 9000)
+    assert "Brand Footline Author" not in out
+    assert "Brand Footline Title" not in out
+
+
+def test_deck_metadata_reads_author_and_title():
+    from md2pdfLib.presentation.pptx.make_reference import deck_metadata
+
+    meta = deck_metadata()
+    # this repo's presentation metadata carries both keys
+    assert meta.get("author") == "Jonas Heinle"
+    assert meta.get("title")
+
+
+def test_pptx_preset_gets_toc_and_numbering():
+    args = pptx().extra_args
+    assert "--toc" in args
+    assert "--lua-filter" in args
+    lua = args[args.index("--lua-filter") + 1]
+    assert (REPO_ROOT / lua).is_file(), "numbering filter missing from the tree"
+
+
+def test_finalize_unwraps_a14_alternate_content(tmp_path: Path):
+    """Pandoc's --toc slide hides its content in an a14 Choice with an empty
+    Fallback; non-Microsoft viewers render a blank slide unless unwrapped."""
+    from md2pdfLib.presentation.pptx.finalize_deck import unwrap_alternate_content
+
+    deck = tmp_path / "deck.pptx"
+    slide = (
+        "<p:sld><p:cSld><p:spTree>"
+        '<mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">'
+        '<mc:Choice Requires="a14"><p:sp><p:txBody><a:p><a:r><a:t>TOC entry</a:t></a:r></a:p>'
+        "</p:txBody></p:sp></mc:Choice><mc:Fallback></mc:Fallback></mc:AlternateContent>"
+        "</p:spTree></p:cSld></p:sld>"
+    )
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slides/slide1.xml", slide)
+    assert unwrap_alternate_content(deck) == 1
+    with zipfile.ZipFile(deck) as z:
+        out = z.read("ppt/slides/slide1.xml").decode()
+    assert "AlternateContent" not in out
+    assert "TOC entry" in out  # the Choice content survives as plain shapes
