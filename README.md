@@ -93,52 +93,20 @@ as `CV_Jonas_Heinle_<language>.pdf`. `make cv-all` builds the pair.
 ## Dependencies
 
 Everything the builds need lives in the `pandoc_all` image built from the
-[`Dockerfile`](Dockerfile); nothing has to be installed on the host but a
-container runtime. `pandoc` and `uv` are version-pinned there (the pandoc `.deb`
-additionally by SHA-256); the rest track Ubuntu 26.04.
+[`Dockerfile`](Dockerfile) — Pandoc, TeX Live, Ghostscript, ImageMagick, uv and
+the two vendored LaTeX theme submodules. Nothing has to be installed on the host
+but a container runtime.
 
-### Document toolchain
+The full component list, with the version, upstream and license of each, is
+maintained in **Kataglyphis-ContainerHub**, which builds this image and is the
+single source of truth for every version pin in the toolchain:
 
-| Component | License | Link |
-| --- | --- | --- |
-| Ubuntu 26.04 LTS (base image) | Various, mostly GPL-family | <https://ubuntu.com> |
-| Pandoc | GPL-2.0-or-later | <https://github.com/jgm/pandoc> |
-| TeX Live (`texlive-full`) | Collection; per package LPPL, GPL, X11, modified BSD | <https://tug.org/texlive/> |
-| Latin Modern (`lmodern`) | GUST Font License (LPPL-style) | <http://www.gust.org.pl/projects/e-foundry/latin-modern> |
-| Ghostscript | AGPL-3.0-or-later | <https://www.ghostscript.com/> |
-| ImageMagick | ImageMagick License (Apache-2.0-style) | <https://imagemagick.org> |
+- [Third-Party Software & Licenses](https://github.com/Kataglyphis/Kataglyphis-ContainerHub/blob/main/docs/third-party-licenses.md)
+  — see the *Documentation Image (`pandoc_all`)* section.
 
-### Python
-
-| Component | License | Link |
-| --- | --- | --- |
-| Python 3 (`python3-full`, `python3-pip`) | PSF-2.0 | <https://www.python.org> |
-| uv | Apache-2.0 OR MIT | <https://github.com/astral-sh/uv> |
-| Pygments | BSD-2-Clause | <https://pygments.org> |
-
-### Base utilities
-
-| Component | License | Link |
-| --- | --- | --- |
-| GNU C Library locales (`locales`) | LGPL-2.1-or-later | <https://www.gnu.org/software/libc/> |
-| curl | curl (MIT/X-style) | <https://curl.se> |
-| GNU Wget | GPL-3.0-or-later | <https://www.gnu.org/software/wget/> |
-| ca-certificates | MPL-2.0 (CA bundle), GPL-2.0-or-later (packaging) | <https://packages.ubuntu.com/ca-certificates> |
-| less | GPL-3.0-or-later or Less License | <https://www.greenwoodsoftware.com/less/> |
-| sudo | ISC (with BSD-2/3-Clause parts) | <https://www.sudo.ws> |
-
-### Vendored LaTeX themes
-
-Git submodules, copied into the image's `texmf` tree at build time.
-
-| Component | License | Link |
-| --- | --- | --- |
-| awesome-beamer | BSD-3-Clause | [fork](https://github.com/Kataglyphis/awesome-beamer) of [LukasPietzschmann/awesome-beamer](https://github.com/LukasPietzschmann/awesome-beamer) |
-| smile | BSD-3-Clause | [fork](https://github.com/Kataglyphis/smile) of [LukasPietzschmann/smile](https://github.com/LukasPietzschmann/smile) |
-
-Ghostscript is the only copyleft-network license in the set. It is invoked as a
-separate program and nothing here links against it, so it does not reach the
-documents this repo produces or the repo's own terms.
+`PANDOC_VERSION` and `UV_VERSION` in this Dockerfile are ARG defaults synced
+from ContainerHub's `linux/scripts/01-core/versions.env`; bump them there and
+run `python3 docs/scripts/sync_versions.py --write`, not by editing this file.
 
 ## Contributing
 1. Fork the Project
