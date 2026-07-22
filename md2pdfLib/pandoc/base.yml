@@ -20,3 +20,4 @@ author: Jonas Heinle
 date: \today
 documentclass: md2pdfLib/book/template/latex/bookclass
 toc-title: Table of contents
+bibliography: data/book/latex/graphics_literature.bib

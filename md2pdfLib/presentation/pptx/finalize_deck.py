@@ -1,4 +1,4 @@
-"""Repair what pandoc drops from an emitted deck: layout media, slide numbers.
+"""Finish an emitted deck: layout media, slide numbers, code boxes.
 
 Pandoc copies slide layouts and their relationship parts verbatim from the
 reference deck, but rebuilds ppt/media/ only from what the *slides* embed --
@@ -14,6 +14,11 @@ media the reference build put there (make_reference.py's constants), so an
 unexpected dangling reference still fails loudly in verify_brand.py's
 integrity check rather than being papered over here.
 
+Code blocks are finished here too (style_code.py): pandoc leaves them
+unboxed and at body size, which overflows the slide. Everything in this
+module is unconditional -- a deck that skipped it is a broken deck, not a
+less strictly checked one.
+
 Usage:
     python md2pdfLib/presentation/pptx/finalize_deck.py <deck.pptx>
 """
@@ -26,6 +31,7 @@ import zipfile
 from pathlib import Path
 
 try:  # imported as a package module (tests)
+    from md2pdfLib.presentation.pptx.fit_titles import fit_titles
     from md2pdfLib.presentation.pptx.make_reference import (
         FOOTLINE_ACCENT_CX,
         FOOTLINE_HEIGHT_EMU,
@@ -35,7 +41,10 @@ try:  # imported as a package module (tests)
         TITLE_BG_IMAGE,
         TITLE_BG_MEDIA,
     )
+    from md2pdfLib.presentation.pptx.pptx_common import rewrite_zip
+    from md2pdfLib.presentation.pptx.style_code import style_code_blocks
 except ImportError:  # run as a script from its own directory (the build)
+    from fit_titles import fit_titles
     from make_reference import (
         FOOTLINE_ACCENT_CX,
         FOOTLINE_HEIGHT_EMU,
@@ -45,6 +54,8 @@ except ImportError:  # run as a script from its own directory (the build)
         TITLE_BG_IMAGE,
         TITLE_BG_MEDIA,
     )
+    from pptx_common import rewrite_zip
+    from style_code import style_code_blocks
 
 # A fixed field GUID: any stable value is valid; viewers re-evaluate the field.
 _SLDNUM_FLD_ID = "{93BE9E90-0A5C-4E0B-BA7A-1EDB98A1C7DE}"
@@ -129,28 +140,112 @@ def inject_slide_numbers(deck: Path) -> int:
                 updates[slide] = new.encode()
         if not updates:
             return 0
-        parts = {i.filename: z.read(i.filename) for i in z.infolist()}
-    parts.update(updates)
-    with zipfile.ZipFile(deck, "w", zipfile.ZIP_DEFLATED) as z:
-        for name, payload in parts.items():
-            z.writestr(name, payload)
+    rewrite_zip(deck, updates)
     return len(updates)
 
 
-_ALTERNATE_RE = re.compile(r"<mc:AlternateContent[^>]*>(.*?)</mc:AlternateContent>", re.S)
-_CHOICE_RE = re.compile(r"<mc:Choice[^>]*>(.*?)</mc:Choice>", re.S)
+_CNVPR_ID_RE = re.compile(r'(<p:cNvPr\b[^>]*?\bid=")(\d+)(")')
+
+
+def _renumber_duplicate_ids(xml: str) -> str | None:
+    """Give repeat ids in one slide part fresh ones; None when already unique.
+
+    A module-level function rather than a closure in the loop below, so the
+    per-slide state it mutates is its own locals.
+    """
+    ids = [int(i) for _, i, _ in _CNVPR_ID_RE.findall(xml)]
+    if len(ids) == len(set(ids)):
+        return None
+    seen: set[int] = set()
+    highest = max(ids)
+
+    def _fresh(match: re.Match[str]) -> str:
+        nonlocal highest
+        current = int(match.group(2))
+        if current not in seen:
+            seen.add(current)
+            return match.group(0)
+        highest += 1
+        seen.add(highest)
+        return f"{match.group(1)}{highest}{match.group(3)}"
+
+    return _CNVPR_ID_RE.sub(_fresh, xml)
+
+
+def dedupe_shape_ids(deck: Path) -> int:
+    """Make every shape id unique per slide; return how many slides changed.
+
+    Pandoc reuses one id on at least one slide of this deck -- the shape
+    tree's own non-visual id and a TextBox's both come out as 1 -- but
+    ECMA-376 requires cNvPr/@id to be unique within the part, because that is
+    what animations and selection target. PowerPoint renumbers it on load
+    (verified in a deck it had round-tripped: the TextBox came back as 4), so
+    the damage is invisible there and unknown everywhere else.
+
+    The first shape to claim an id keeps it, which is the same choice
+    PowerPoint made. Runs after unwrap_alternate_content, so there are no
+    mc:Choice/mc:Fallback branches left -- inside those, two shapes sharing an
+    id is legitimate, since only one branch ever renders.
+    """
+    with zipfile.ZipFile(deck) as z:
+        updates: dict[str, bytes] = {}
+        for name in z.namelist():
+            if not re.fullmatch(r"ppt/slides/slide\d+\.xml", name):
+                continue
+            xml = z.read(name).decode()
+            new = _renumber_duplicate_ids(xml)
+            if new is not None:
+                updates[name] = new.encode()
+        if not updates:
+            return 0
+    rewrite_zip(deck, updates)
+    return len(updates)
+
+
+_ALTERNATE_RE = re.compile(r"<mc:AlternateContent([^>]*)>(.*?)</mc:AlternateContent>", re.S)
+_CHOICE_RE = re.compile(r"<mc:Choice([^>]*)>(.*?)</mc:Choice>", re.S)
+_XMLNS_RE = re.compile(r'\sxmlns:([A-Za-z_][\w.-]*)\s*=\s*"([^"]*)"')
+_SLD_ROOT_RE = re.compile(r"(<p:sld\b)([^>]*)(>)")
+
+
+def _rebind_namespaces(xml: str, carried: dict[str, str]) -> str:
+    """Re-declare *carried* xmlns prefixes on the ``<p:sld>`` root.
+
+    Args:
+        xml: A slide part whose mc:AlternateContent wrappers were removed.
+        carried: prefix -> URI collected from the dropped wrapper elements.
+
+    Returns:
+        The slide part with any prefix the root does not already declare added
+        to it. Declaring a prefix the content happens not to use is harmless;
+        leaving one unbound is not well-formed.
+    """
+    root = _SLD_ROOT_RE.search(xml)
+    if root is None or not carried:
+        return xml
+    declared = dict(_XMLNS_RE.findall(root.group(2)))
+    missing = {p: uri for p, uri in carried.items() if p not in declared}
+    if not missing:
+        return xml
+    added = "".join(f' xmlns:{p}="{uri}"' for p, uri in sorted(missing.items()))
+    return xml[: root.start(3)] + added + xml[root.start(3) :]
 
 
 def unwrap_alternate_content(deck: Path) -> int:
     """Unwrap mc:AlternateContent on slides; return how many slides changed.
 
-    Pandoc wraps the --toc slide's content placeholder in an AlternateContent
-    whose Choice requires the Microsoft a14 extension -- with an EMPTY
-    Fallback. PowerPoint renders the Choice; every other viewer honours the
-    fallback and shows a blank slide (LibreOffice renders literally nothing,
-    verified). The Choice's content is ordinary shapes with ordinary
-    hyperlinks, valid outside the wrapper everywhere, so promote it and drop
-    the wrapper.
+    Pandoc wraps content in an AlternateContent whose Choice requires the
+    Microsoft a14 extension. Two cases occur: the --toc slide's content
+    placeholder (EMPTY Fallback -- PowerPoint renders the Choice, every other
+    viewer honours the fallback and shows a blank slide; LibreOffice renders
+    literally nothing, verified), and every slide carrying inline or display
+    math (Fallback holds a flattened rendering). Promote the Choice and drop
+    the wrapper in both cases.
+
+    The Choice carries the xmlns declarations its content needs (a14 for the
+    math wrapper), so dropping it would orphan those prefixes and leave the
+    part not well-formed -- PowerPoint then refuses to open the deck without a
+    repair prompt. Re-declare anything the Choice bound on the <p:sld> root.
     """
     with zipfile.ZipFile(deck) as z:
         updates: dict[str, bytes] = {}
@@ -161,25 +256,28 @@ def unwrap_alternate_content(deck: Path) -> int:
             if "<mc:AlternateContent" not in xml:
                 continue
 
-            def _promote(m: re.Match[str]) -> str:
-                choices = _CHOICE_RE.findall(m.group(1))
-                return "".join(choices)
+            carried: dict[str, str] = {}
+
+            def _promote(m: re.Match[str], carried: dict[str, str] = carried) -> str:
+                carried.update(_XMLNS_RE.findall(m.group(1)))
+                promoted: list[str] = []
+                for attrs, body in _CHOICE_RE.findall(m.group(2)):
+                    carried.update(_XMLNS_RE.findall(attrs))
+                    promoted.append(body)
+                return "".join(promoted)
 
             new = _ALTERNATE_RE.sub(_promote, xml)
             if new != xml:
+                new = _rebind_namespaces(new, carried)
                 updates[name] = new.encode()
         if not updates:
             return 0
-        parts = {i.filename: z.read(i.filename) for i in z.infolist()}
-    parts.update(updates)
-    with zipfile.ZipFile(deck, "w", zipfile.ZIP_DEFLATED) as z:
-        for name, payload in parts.items():
-            z.writestr(name, payload)
+    rewrite_zip(deck, updates)
     return len(updates)
 
 
 def finalize(deck: Path) -> list[str]:
-    """Repair what pandoc drops: layout media and slide numbers. Returns a
+    """Repair what pandoc drops and box its code blocks. Returns a
     human-readable list of what was done."""
     known = {TITLE_BG_MEDIA: TITLE_BG_IMAGE}
     done: list[str] = []
@@ -193,8 +291,16 @@ def finalize(deck: Path) -> list[str]:
         done.append(part)
     if unwrapped := unwrap_alternate_content(deck):
         done.append(f"AlternateContent unwrapped on {unwrapped} slides")
+    # After the unwrap, so code inside a promoted mc:Choice is seen too.
+    if boxed := style_code_blocks(deck):
+        done.append(f"code blocks boxed on {boxed} slides")
+    if fitted := fit_titles(deck):
+        done.append(f"titles fitted on {fitted} slides")
     if numbered := inject_slide_numbers(deck):
         done.append(f"slide numbers on {numbered} slides")
+    # Last, so every shape this module added is covered too.
+    if renumbered := dedupe_shape_ids(deck):
+        done.append(f"shape ids deduped on {renumbered} slides")
     return done
 
 

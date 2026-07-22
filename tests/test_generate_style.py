@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+from pathlib import Path
 
 import pytest
 
@@ -392,3 +393,27 @@ def test_every_brand_colour_token_is_actually_used():
             if prefix + key.replace("_", "-") not in used:
                 unused.append(f"{group}.{key}")
     assert not unused, f"declared in brand.json but no rule uses them: {unused}"
+
+
+def test_the_style_readme_quotes_only_real_brand_values():
+    """style/README.md documents brand.json as the single source of truth, and
+    still went stale itself: its Python example quoted a `colors.link` and a
+    `colors_dark.link` that the brand had moved on from. Any hex the file shows
+    must be a value the brand actually holds -- except the near-miss it cites
+    on purpose, as the bug that motivated the shared token sheet.
+    """
+    readme = Path(__file__).resolve().parents[1] / "style" / "README.md"
+    brand = load_brand()
+    real = {
+        value.lstrip("#").lower()
+        for group in ("colors", "colors_dark", "syntax", "syntax_dark")
+        for value in brand[group].values()
+        if isinstance(value, str) and value.startswith("#")
+    }
+    documented_wrong = {"69f0ae"}
+
+    quoted = {h.lower() for h in re.findall(r"#([0-9a-fA-F]{6})\b", readme.read_text("utf-8"))}
+    assert quoted - documented_wrong <= real, (
+        f"style/README.md quotes hexes the brand does not define: "
+        f"{sorted(quoted - documented_wrong - real)}"
+    )

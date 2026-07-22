@@ -3,14 +3,6 @@
 Kataglyphis-DocumANTation converts Markdown content into PDF outputs for books, presentations, and CVs.
 It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow can be reused across document types.
 
-## Core Capabilities
-
-- `book` uses a Pandoc-to-LaTeX pipeline with bibliography, glossary, and nomenclature support.
-- `beamer` produces presentation PDFs through the custom Beamer template stack.
-- `pptx` renders the same presentation markdown as a branded PowerPoint deck.
-- `cv` uses a direct LuaLaTeX build from the sources in `data/cv/`, in English or German.
-- Shared scripts keep host and container workflows aligned across local runs and CI.
-
 ## Repository Structure
 
 | Path | Purpose |
@@ -34,7 +26,8 @@ It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow c
 
 ### `book`
 
-Markdown chapters are rendered through Pandoc into LaTeX, then compiled with the full TeX pipeline.
+Markdown chapters are rendered through Pandoc into LaTeX, then compiled with the
+full TeX pipeline — bibliography, glossary and nomenclature included.
 
 ### `beamer`
 

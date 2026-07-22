@@ -167,6 +167,13 @@
 % Personal info — use \providecommand so metadata can override
 \providecommand{\myauthor}{Jonas Heinle}
 \providecommand{\myurl}{www.jonasheinle.de}
+\providecommand{\mytitle}{}
+\providecommand{\mytitleger}{}
+\providecommand{\myname}{Jonas Heinle}
+\providecommand{\submissiontime}{}
+\providecommand{\reviewerone}{}
+\providecommand{\reviewertwo}{}
+\providecommand{\titlelogo}{md2pdfLib/book/template/latex/logos/Engine_logo.png}
 
 % coordinates for the bg shape on the titlepage
 \newcommand{\mydiameter}{20}
@@ -190,17 +197,17 @@
 			-- (\xone mm, \yone mm);
 		\end{tikzpicture}
 		\begin{center}
-			\includegraphics[width=.3\textwidth]{md2pdfLib/book/template/latex/logos/Engine_logo.png}  % 
+			\includegraphics[width=.3\textwidth]{\titlelogo}
 		\end{center}
 		%\changefont{ppl}{m}{n}    % helvetica    (phv), % IM Style: palatino (ppl) 
 		\vspace*{0.5cm}
 		\begin{center}
-			\Huge{\mytitle}\\
-			\rule{0.05\textwidth}{0.5pt}\\
-			\Large{\mytitleger}\\
+			\Huge{\mytitle}\par
+			\rule{0.05\textwidth}{0.5pt}\par
+			\Large{\mytitleger}\par
 			\vspace*{1cm}
-			\huge{\myname}\\
-			\small\github{GraphicsEngineVulkan}%\newline
+			\huge{\myname}\par
+			\small\github{GraphicsEngineVulkan}
 			\vspace*{1cm}
 		\end{center}
 		%\vspace*{1cm}
@@ -250,7 +257,7 @@
 
 
 %% -------------------------------
-%% |          Headings           |
+%% |    Section Formatting        |
 %% -------------------------------
 \renewcommand{\chaptername}{}
 

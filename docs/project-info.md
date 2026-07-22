@@ -13,9 +13,11 @@ Everything the builds need ships in the `pandoc_all` container image, chiefly
 `pandoc` for Markdown conversion and TeX Live/LuaLaTeX for PDF generation, plus
 the `awesome-beamer` and `smile` presentation-theme submodules.
 
-The full list, with the license and upstream of each component, is the table in
-the repository [README](https://github.com/Kataglyphis/Kataglyphis-DocumANTation#dependencies).
-It is kept in one place so the two cannot drift apart.
+The full list, with the version, upstream and license of each component, is
+maintained in **Kataglyphis-ContainerHub**, which builds this image and is the
+single source of truth for every version pin in the toolchain — see
+[Third-Party Software & Licenses](https://github.com/Kataglyphis/Kataglyphis-ContainerHub/blob/main/docs/third-party-licenses.md),
+under *Documentation Image (`pandoc_all`)*.
 
 This repository is also the single source of truth for the shared Kataglyphis
 docs theme (`sphinx-kataglyphis-theme/`) and docs tooling (`docs-tooling/`),

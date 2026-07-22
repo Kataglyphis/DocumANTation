@@ -484,3 +484,111 @@ def test_finalize_unwraps_a14_alternate_content(tmp_path: Path):
         out = z.read("ppt/slides/slide1.xml").decode()
     assert "AlternateContent" not in out
     assert "TOC entry" in out  # the Choice content survives as plain shapes
+
+
+def test_finalize_keeps_math_slides_well_formed(tmp_path: Path):
+    """Math lands in an a14 Choice that *declares* xmlns:a14 and whose Fallback
+    is not empty. Promoting the Choice drops the element carrying that
+    declaration, so the surviving <a14:m> is left unbound and PowerPoint
+    refuses to open the deck without a repair prompt."""
+    import xml.etree.ElementTree as ET
+
+    from md2pdfLib.presentation.pptx.finalize_deck import unwrap_alternate_content
+
+    deck = tmp_path / "deck.pptx"
+    slide = (
+        '<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"'
+        ' xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
+        "<p:cSld><p:spTree>"
+        '<mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">'
+        '<mc:Choice Requires="a14"'
+        ' xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main">'
+        '<a14:m><m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">'
+        "<m:r><m:t>x</m:t></m:r></m:oMath></a14:m>"
+        "</mc:Choice>"
+        "<mc:Fallback><a:r><a:t>x</a:t></a:r></mc:Fallback>"
+        "</mc:AlternateContent>"
+        "</p:spTree></p:cSld></p:sld>"
+    )
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slides/slide1.xml", slide)
+    assert unwrap_alternate_content(deck) == 1
+    with zipfile.ZipFile(deck) as z:
+        out = z.read("ppt/slides/slide1.xml").decode()
+
+    assert "AlternateContent" not in out
+    assert "<a14:m>" in out, "the Choice's math content must survive"
+    ET.fromstring(out)  # raises ParseError on an unbound prefix
+
+
+def test_verify_brand_rejects_malformed_xml(tmp_path: Path):
+    """The a14 namespace bug shipped a deck PowerPoint could not open, and every
+    regex-based check passed it. The gate must parse what it approves."""
+    from md2pdfLib.presentation.pptx.verify_brand import malformed_parts
+
+    deck = tmp_path / "deck.pptx"
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slides/slide1.xml", "<p:sld xmlns:p='urn:p'><a14:m/></p:sld>")
+        z.writestr("ppt/slides/slide2.xml", "<p:sld xmlns:p='urn:p'/>")
+
+    bad = malformed_parts(deck)
+    assert set(bad) == {"ppt/slides/slide1.xml"}
+    assert "unbound prefix" in bad["ppt/slides/slide1.xml"]
+
+
+def test_verify_brand_accepts_well_formed_xml(tmp_path: Path):
+    from md2pdfLib.presentation.pptx.verify_brand import malformed_parts
+
+    deck = tmp_path / "deck.pptx"
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slides/slide1.xml", "<p:sld xmlns:p='urn:p'/>")
+        z.writestr("ppt/media/image1.png", b"\x89PNG not xml")
+
+    assert malformed_parts(deck) == {}
+
+
+# ── shape ids ────────────────────────────────────────────────────────────────
+
+
+def test_finalize_renumbers_pandocs_duplicate_shape_ids(tmp_path: Path):
+    """Pandoc gives the shape tree and a TextBox the same id on at least one
+    slide of this deck. PowerPoint renumbers it on load -- verified in a deck
+    it had round-tripped -- so nothing downstream reports it; a consumer that
+    does not renumber is left with two shapes claiming one identity."""
+    from md2pdfLib.presentation.pptx.finalize_deck import dedupe_shape_ids
+
+    deck = tmp_path / "deck.pptx"
+    slide = (
+        "<p:sld><p:cSld><p:spTree>"
+        '<p:nvGrpSpPr><p:cNvPr id="1" name=""/></p:nvGrpSpPr>'
+        '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/></p:nvSpPr></p:sp>'
+        '<p:sp><p:nvSpPr><p:cNvPr id="1" name="TextBox 3"/></p:nvSpPr></p:sp>'
+        "</p:spTree></p:cSld></p:sld>"
+    )
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slides/slide1.xml", slide)
+
+    assert dedupe_shape_ids(deck) == 1
+    with zipfile.ZipFile(deck) as z:
+        out = z.read("ppt/slides/slide1.xml").decode()
+    ids = re.findall(r'<p:cNvPr id="(\d+)" name="([^"]*)"', out)
+    assert len(ids) == len(dict(ids)) == 3
+    # The first claim keeps the id, as PowerPoint's own renumbering did.
+    assert ("1", "") in ids and ("2", "Title 1") in ids
+    assert dedupe_shape_ids(deck) == 0, "already unique -- nothing to rewrite"
+
+
+def test_slides_with_unique_ids_are_left_alone(tmp_path: Path):
+    from md2pdfLib.presentation.pptx.finalize_deck import dedupe_shape_ids
+
+    deck = tmp_path / "deck.pptx"
+    slide = (
+        "<p:sld><p:cSld><p:spTree>"
+        '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/></p:nvSpPr></p:sp>'
+        "</p:spTree></p:cSld></p:sld>"
+    )
+    with zipfile.ZipFile(deck, "w") as z:
+        z.writestr("ppt/slides/slide1.xml", slide)
+    assert dedupe_shape_ids(deck) == 0
+    with zipfile.ZipFile(deck) as z:
+        assert z.read("ppt/slides/slide1.xml").decode() == slide

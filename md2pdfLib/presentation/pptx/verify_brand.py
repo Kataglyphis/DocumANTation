@@ -24,6 +24,7 @@ import re
 import sys
 import zipfile
 from pathlib import Path
+from xml.etree import ElementTree
 
 MD2PDF_ROOT = Path(__file__).resolve().parents[2]
 BRAND_TOKENS = MD2PDF_ROOT / "style" / "brand.tokens.json"
@@ -104,6 +105,29 @@ def dangling_layout_media(deck: Path) -> dict[str, set[str]]:
     return offenders
 
 
+def malformed_parts(deck: Path) -> dict[str, str]:
+    """Return {part: parse error} for every XML part that is not well-formed.
+
+    PowerPoint refuses to open a deck with a malformed part until it has
+    "repaired" it, which silently drops content. Every other check in this
+    module scans with regexes, and a regex matches broken markup just as
+    happily as valid markup -- so none of them notice. finalize_deck.py
+    rewrites slide XML by hand (promoting mc:Choice content out of its
+    wrapper), and that is exactly the kind of edit that can orphan a namespace
+    prefix, so the emitted deck gets parsed here before it is called good.
+    """
+    offenders: dict[str, str] = {}
+    with zipfile.ZipFile(deck) as z:
+        for name in z.namelist():
+            if not name.endswith((".xml", ".rels")):
+                continue
+            try:
+                ElementTree.fromstring(z.read(name))
+            except ElementTree.ParseError as exc:
+                offenders[name] = str(exc)
+    return offenders
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
@@ -115,6 +139,13 @@ def main() -> None:
 
     brand = json.loads(BRAND_TOKENS.read_text("utf-8"))
     failed = False
+
+    if malformed := malformed_parts(deck):
+        print(f"Error: {deck} has XML parts that are not well-formed:", file=sys.stderr)
+        for part, err in sorted(malformed.items()):
+            print(f"  {part}: {err}", file=sys.stderr)
+        print("PowerPoint will not open this deck without repairing it.", file=sys.stderr)
+        failed = True
 
     if offenders := off_brand_colors(deck, brand_hexes(brand)):
         print(f"Error: {deck} uses colours that are not in the brand:", file=sys.stderr)
@@ -142,7 +173,7 @@ def main() -> None:
     # is off-brand rather than only the first.
     if failed:
         sys.exit(1)
-    print(f"{deck.name}: every colour is a brand value; fonts are {expected_font}.")
+    print(f"{deck.name}: well-formed; every colour is a brand value; fonts are {expected_font}.")
 
 
 if __name__ == "__main__":

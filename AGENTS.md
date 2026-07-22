@@ -31,37 +31,33 @@ Dockerfile         → container build definition
 ## Quick Commands
 
 ```bash
-# Build the Docker image
+# Build the image (once)
 nerdctl build . -t pandoc_all
 
-# Build anything via Makefile
-make book
-make beamer
-make cv
-
-# Or manually inside the container
-nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/data:/data" \
-  pandoc_all sh -c '. md2pdf/bin/activate && ./md2pdfLib/scripts/compile_with_glossaries.sh --type book'
-
-# Or use the shared helper wrapper
+# Build a document -- the normal path
 ./scripts/build_in_container.sh {book|beamer|pptx|cv}
 
-# Build presentation (Python-only, no glossaries)
-nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/data:/data" \
-  pandoc_all sh -c '. md2pdf/bin/activate && uv run python md2pdfLib/build.py beamer'
+# The same targets via Makefile, plus the CV variants
+make {book|beamer|pptx|cv}
+make cv CV_LANG=german
+make cv-all
 
-# Build the book with glossaries (full TeX pipeline)
-nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/data:/data" \
-  pandoc_all sh -c '. md2pdf/bin/activate && ./md2pdfLib/scripts/compile_with_glossaries.sh --type book'
+# Any target, with the strict warning gates
+STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
 ```
 
-All build types:
+To debug a single stage, drive the container yourself. The mounts and the empty
+entrypoint never change — only the command after `activate &&` does:
+
+```bash
+nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/data:/data" \
+  pandoc_all sh -c '. md2pdf/bin/activate && <command>'
 ```
-python build.py {book|beamer|pptx}
-python md2pdfLib/build.py {book|beamer|pptx}
-./scripts/build_in_container.sh {book|beamer|pptx|cv}
-./md2pdfLib/scripts/compile_with_glossaries.sh --type book
-```
+
+| `<command>` | Builds |
+| --- | --- |
+| `uv run python md2pdfLib/build.py {book\|beamer\|pptx}` | the Pandoc targets, no glossaries |
+| `./md2pdfLib/scripts/compile_with_glossaries.sh --type book` | the book, full TeX pipeline |
 
 ---
 
@@ -88,32 +84,11 @@ python md2pdfLib/build.py {book|beamer|pptx}
 
 ### pyproject.toml
 
-Excerpt — [`pyproject.toml`](pyproject.toml) is authoritative; keep this
-snippet in sync when the tooling config changes:
-
-```toml
-[project]
-name = "kataglyphis-md2pdf"
-requires-python = ">=3.10"
-dependencies = ["pygments>=2.17"]
-
-[project.optional-dependencies]
-dev = ["ruff>=0.15.21", "ty>=0.0.38", "pytest>=8", "pytest-cov>=5", "sphinx-kataglyphis-theme"]
-docs = ["sphinx>=8,<9", "sphinx-kataglyphis-theme"]
-
-[tool.ruff]
-line-length = 100
-target-version = "py310"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "lf"
-```
+[`pyproject.toml`](pyproject.toml) is authoritative — read it rather than a
+copy here, which is one edit away from being wrong. What it sets today: ruff at
+`line-length = 100`, `target-version = "py310"`, lint rules
+`["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]`, double quotes, spaces, LF
+endings; `ty` for type checks; `pytest` + `pytest-cov` under the `dev` extra.
 
 Code must stay 3.10-compatible (`requires-python = ">=3.10"`) — e.g.
 `int.from_bytes(...)` needs an explicit `byteorder` before 3.11.
@@ -132,15 +107,10 @@ uv pip install ruff ty
 
 ### Entry Point
 
-Use the CLI entry point instead of document-specific wrapper scripts:
-
-```bash
-uv run python build.py book
-uv run python build.py beamer
-
-# Inside the container (only /md2pdfLib is mounted):
-uv run python md2pdfLib/build.py book
-```
+Use the `build.py` CLI rather than adding document-specific wrapper scripts:
+`uv run python build.py {book|beamer|pptx}` on the host, or
+`uv run python md2pdfLib/build.py {book|beamer|pptx}` inside the container,
+where only `/md2pdfLib` is mounted.
 
 ---
 
@@ -195,8 +165,6 @@ The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`
 
 ### Hardcoded Values
 
-- **Canonical Pandoc metadata** lives in `md2pdfLib/pandoc/base.yml` for `book`
-  and in document-type `pandoc/metadata.yml` files where applicable
 - In LaTeX header files, use `\providecommand` (not `\newcommand`) so values can be
   overridden from Pandoc metadata or preamble injections
 - All `\url{}`, `\email{}`, `\github{}` references must use consistent values.
@@ -218,26 +186,6 @@ The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`
   `--syntax-highlighting` option
 - **Do not** duplicate values between metadata files and preset args unless Pandoc
   requires a dedicated CLI option
-
----
-
-## Build Pipeline
-
-```
-Markdown (.md) → pandoc (via pandoc_builder.py) → .tex
-     ↓
-lualatex (pass 1) → .aux, .bcf, .glo, .nlo
-     ↓
-biber → bibliography
-makeglossaries → glossary
-makeindex → nomenclature
-     ↓
-lualatex (pass 2) → resolve cross-refs → .aux updated
-     ↓
-lualatex (pass 3) → final PDF
-```
-
-All auxiliary tools run inside `data/out/` (subshell cd).
 
 ---
 

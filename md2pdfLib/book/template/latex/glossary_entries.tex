@@ -1,97 +1,133 @@
-\newglossaryentry{WebRTC}
+\newglossaryentry{gpu}
 {
-    name=WebRTC,
-    description={Web Real-Time Communication}
+    name=GPU,
+    description={Graphics Processing Unit -- a specialized processor designed for parallel computation, primarily used for rendering graphics}
 }
 
-\newglossaryentry{i.i.d}
+\newglossaryentry{cpu}
 {
-    name=i.i.d,
-    description={independent and identically distributed}
+    name=CPU,
+    description={Central Processing Unit -- the general-purpose processor that executes application logic}
 }
 
-\newglossaryentry{MS-COCO}
+\newglossaryentry{api}
 {
-    name=MS-COCO,
-    description={Microsoft Common Objects in Context is a dataset for common computer vision tasks: https://cocodataset.org/}
+    name=API,
+    description={Application Programming Interface -- a set of protocols and tools for building software}
 }
 
-\newglossaryentry{YUV}
+\newglossaryentry{brdf}
 {
-    name=YUV,
-    description={Luminance(Y), chrominance component blue projection(U), chrominance component red projection(V) codification of an image}
+    name=BRDF,
+    description={Bidirectional Reflectance Distribution Function -- describes how light is reflected at a surface point}
 }
 
-\newglossaryentry{RGB}
+\newglossaryentry{pbr}
 {
-    name=RGB,
-    description={Red Green Blue codification of an image}
+    name=PBR,
+    description={Physically Based Rendering -- a rendering approach that models light transport using physically motivated equations}
 }
 
-\newacronym{numberof}{\#}{number of}
-\newacronym{sigmoidFunction}{$\sigma(x)$}{Sigmoid function}
-\newacronym{euclidiandistance}{$\rho(x)$}{Euclidian distance}
-\newacronym{chi}{$\chi(x)$}{indicator function}
-\newacronym{star}{$\star$}{Cross-correlation operator}
+\newglossaryentry{bvh}
+{
+    name=BVH,
+    description={Bounding Volume Hierarchy -- a tree structure of bounding volumes used to accelerate ray-scene intersection tests}
+}
+
+\newglossaryentry{ndc}
+{
+    name=NDC,
+    description={Normalized Device Coordinates -- the coordinate space after perspective divide, where all visible coordinates lie in $[-1, 1]^3$}
+}
+
+\newglossaryentry{fov}
+{
+    name=FOV,
+    description={Field of View -- the angular extent of the observable world seen through the camera}
+}
+
+\newglossaryentry{msaa}
+{
+    name=MSAA,
+    description={Multisample Anti-Aliasing -- a technique that reduces aliasing by sampling each pixel at multiple sub-pixel locations}
+}
+
+\newglossaryentry{taa}
+{
+    name=TAA,
+    description={Temporal Anti-Aliasing -- an anti-aliasing technique that accumulates multiple frames with sub-pixel jitter}
+}
+
+\newglossaryentry{ssao}
+{
+    name=SSAO,
+    description={Screen-Space Ambient Occlusion -- an approximation of ambient occlusion computed from the depth buffer}
+}
+
+\newglossaryentry{ssr}
+{
+    name=SSR,
+    description={Screen-Space Reflections -- a technique that computes reflections by ray-marching through the depth buffer}
+}
+
+\newglossaryentry{gbuffer}
+{
+    name=G-Buffer,
+    description={Geometry Buffer -- a set of screen-space textures storing per-pixel geometry data for deferred shading}
+}
+
+\newglossaryentry{uvmapping}
+{
+    name=UV mapping,
+    description={The process of projecting a 2D texture onto a 3D surface using texture coordinates $(u, v)$}
+}
+
+\newglossaryentry{mipmap}
+{
+    name=Mipmap,
+    description={A pre-computed sequence of textures at decreasing resolutions, used to reduce aliasing when textures are viewed at a distance}
+}
+
+\newglossaryentry{spirv}
+{
+    name=SPIR-V,
+    description={Standard Portable Intermediate Representation -- a binary intermediate language for shaders, consumed by Vulkan}
+}
+
+\newglossaryentry{gbuffer-def}
+{
+    name=Deferred Shading,
+    description={A rendering technique that separates geometry rasterization from lighting computation using a G-Buffer}
+}
+
+\newglossaryentry{ggx}
+{
+    name=GGX,
+    description={Trowbridge-Reitz microfacet normal distribution function, the current standard for PBR specular}
+}
+
+\newglossaryentry{sah}
+{
+    name=SAH,
+    description={Surface Area Heuristic -- a cost model used to optimize BVH construction by minimizing expected traversal cost}
+}
+
+\newglossaryentry{pcf}
+{
+    name=PCF,
+    description={Percentage-Closer Filtering -- a shadow map filtering technique that softens shadow edges by averaging depth comparisons}
+}
+
+\newacronym{vulkan}{Vulkan}{low-overhead cross-platform graphics and compute API}
+\newacronym{opengl}{OpenGL}{Open Graphics Library}
+\newacronym{glsl}{GLSL}{OpenGL Shading Language}
+\newacronym{fbo}{FBO}{Framebuffer Object}
+\newacronym{hdr}{HDR}{High Dynamic Range}
+\newacronym{ldr}{LDR}{Low Dynamic Range}
+\newacronym{ibl}{IBL}{Image-Based Lighting}
+\newacronym{ao}{AO}{Ambient Occlusion}
+\newacronym{fps}{FPS}{Frames per Second}
+\newacronym{lod}{LOD}{Level of Detail}
+\newacronym{zfight}{Z-fighting}{depth buffer precision conflict between coplanar surfaces}
 \newacronym{nan}{NaN}{Not a Number}
-
-\newacronym{sueq}{S-UEQ}{Short User Experience Questionnaire}
-\newacronym{dram}{DRAM}{Dynamic Random Access Memory}
-\newacronym{hsv}{HSV}{Hue Saturation Value}
-\newacronym{csv}{CSV}{Comma-separated values}
-\newacronym{cnn}{CNN}{Convolutional Neural Network}
-\newacronym{rl}{RL}{Reinforcement Learning}
-\newacronym{vr}{VR}{Virtual reality}
-\newacronym{ueqs}{UEQ-S}{Short User Experience Questionnaire}
-\newacronym{dtw}{DTW}{Dynamic time warping}
-\newacronym{knn}{KNN}{k-nearest neighbors}
-\newacronym{ciou}{CIoU}{Complete Intersection over Union}
-\newacronym{mse}{MSE}{Mean Squared Error}
-\newacronym{mscoco}{MSCOCO}{Microsoft Common Objects in Context}
-\newacronym{bce}{BCE}{binary cross entropy}
-\newacronym{silu}{SiLU}{sigmoid linear unit function}
-\newacronym{relu}{ReLU}{rectified linear unit function}
-\newacronym{csp}{CSP}{Cross stage partial}
-\newacronym{spp}{SPP}{Spatial pyramid pooling}
-\newacronym{pan}{PAN}{Path Aggregation Network}
-\newacronym{fpn}{FPN}{Feature Pyramid Networks}
-\newacronym{yolact}{YOLACT}{You Only Look At CoefficienTs}
-\newacronym{uwp}{UWP}{Universal Windows Platform}
-\newacronym{onnx}{onnx}{Open Neural Network Exchange}
-\newacronym{ovr}{OvR}{One-vs-Rest}
-\newacronym{cvf}{CVF}{Computer Vision Foundation}
-\newacronym{tnr}{TNR}{True Negative Rate}
-\newacronym{tpr}{TPR}{True Positive Rate}
-\newacronym{fpr}{FPR}{False Positive Rate}
-\newacronym{mts}{MTS}{multivariate time series}
-\newacronym{fc}{FC}{Fully Connected}
-\newacronym{mlp}{MLP}{Multi Layer Perceptron}
-\newacronym{slr}{SLR}{Systematic Literature Review}
-\newacronym{fov}{FOV}{Field of View}
-\newacronym{ar}{AR}{Augmented Reality}
-\newacronym{rq}{RQ}{Research Question}
-\newacronym{tsc}{TSC}{Time Series Classification}
-\newacronym{cv}{CV}{Computer Vision}
-\newacronym{gpu}{GPU}{Graphics Processing Unit}
-\newacronym{flops}{FLOPS}{Floating Point Operations per Second}
-\newacronym{yolo}{YOLO}{You only look once}
-\newacronym{ui}{UI}{User Interface}
-\newacronym{fps}{FPS}{Frames per second}
-\newacronym{ap}{AP}{Average Precision}
-\newacronym{auc}{AUC}{Area Under Curve}
-\newacronym{map}{mAP}{mean average precision}
-\newacronym{iou}{IOU}{Intersection over Union}
-\newacronym{ml}{ML}{Machine learning}
-\newacronym{roc}{ROC}{Receiver operating characteristic}
-\newacronym{mrtk}{MRTK}{Mixed Reality Toolkit}
-\newacronym{svm}{SVM}{Support Vector Machines}
-\newacronym{nn}{NN}{Neural Nets}
-\newacronym{crisp}{CRISP-DM}{Cross-industry standard process for data mining}
-\newacronym{mr}{MR}{Mixed Reality}
-\newacronym{lr}{LR}{Learning Rate}
-\newacronym{sgd}{SGD}{Stochastic gradient descent}
-\newacronym{tp}{TP}{True Positive}
-\newacronym{tn}{TN}{True Negative}
-\newacronym{fp}{FP}{False Positive}
-\newacronym{fn}{FN}{False Negative}
-\newacronym{pr}{PR}{Precision-Recall}
+\newacronym{rng}{RNG}{Random Number Generator}

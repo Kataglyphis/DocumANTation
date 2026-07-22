@@ -7,21 +7,14 @@ The repository uses slightly different compilation flows depending on the docume
 The `book` target runs a staged pipeline:
 
 1. `pandoc` reads Markdown chapters and writes `data/out/*.tex`.
-2. `lualatex` runs once to create auxiliary files.
+2. `lualatex` runs once, producing `.aux`, `.bcf`, `.glo` and `.nlo`.
 3. `biber` resolves bibliography data.
 4. `makeglossaries` builds glossary output.
 5. `makeindex` builds nomenclature output.
 6. `lualatex` runs twice more to resolve cross-references and produce the final PDF.
 
-```text
-Markdown (.md) -> pandoc -> .tex
-                 -> lualatex pass 1 -> .aux/.bcf/.glo/.nlo
-                 -> biber
-                 -> makeglossaries
-                 -> makeindex
-                 -> lualatex pass 2
-                 -> lualatex pass 3 -> final PDF
-```
+Every auxiliary tool runs inside `data/out/`, so nothing is written next to the
+sources.
 
 ## Presentation
 
@@ -40,7 +33,12 @@ The `pptx` target renders the same markdown as a PowerPoint deck:
    accent-on-dark, an accent separator rule under content titles, and the
    footline strip with its accent block.
 2. Pandoc renders the deck against that reference document.
-3. In strict mode, `verify_brand.py` fails the build if the emitted deck's
+3. `finalize_deck.py` finishes what Pandoc leaves undone: it re-attaches media
+   that only a layout references, unwraps Microsoft-only `mc:AlternateContent`
+   so every viewer renders the content, injects the footline slide numbers,
+   and (via `style_code.py`) lifts each code block into the beamer code box —
+   dark fill, accent frame, sized to fit instead of running off the slide.
+4. In strict mode, `verify_brand.py` fails the build if the emitted deck's
    colours or theme fonts are not brand values.
 
 ## CV

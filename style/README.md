@@ -64,9 +64,9 @@ pip install -e ./external/Kataglyphis-DocumANTation/sphinx-kataglyphis-theme
 ```python
 from sphinx_kataglyphis import brand
 
-brand()["colors"]["accent"]       # '#6af0ad'
-brand()["colors"]["link"]         # '#1ca06a'
-brand()["colors_dark"]["link"]    # '#7df5ba'
+brand()["colors"]["accent"]       # the brand accent
+brand()["colors"]["link"]         # link colour, light theme
+brand()["colors_dark"]["link"]    # ... and dark
 brand()["fonts"]["main"]          # 'Roboto'
 ```
 

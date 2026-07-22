@@ -1,0 +1,23 @@
+# Shell scripts run inside the Linux container — a CRLF checkout (the default
+# with core.autocrlf=true on Windows) breaks their shebangs and `set -euo`
+# lines, so pin them to LF regardless of host git config.
+*.sh text eol=lf
+
+# pyproject.toml sets [tool.ruff.format] line-ending = "lf". Without this a
+# Windows checkout hands ruff CRLF files and `ruff format --check` reports
+# every file in the tree as needing reformatting — on line endings alone,
+# with no content difference.
+*.py text eol=lf
+
+# Deliberately not pinning *.md / *.tex / *.yml: several are stored with CRLF
+# and normalising them would rewrite whole content files for no build benefit.
+# Add them when you are ready for that one-time diff.
+
+# Binary assets: never apply text conversion.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.pdf  binary
+*.pptx binary
+*.otf  binary
+*.ttf  binary

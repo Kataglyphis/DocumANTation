@@ -1,45 +1,13 @@
-% \documentclass{bookclass}
-
-%% -------------------------------
-%% |    ISSD Thesis Template       |
-%% -------------------------------
-%% Further additions by:
-%%   Philipp Stroehle, IM, 2013 
-%%   Jasper Feine, ISSD, 2018
-%%   Merlin Knaeble, ISSD, 2020-2022 
-%% firstname.lastname "at" kit.edu
-
-%% Notes:
-%% Language switch after \begin{document}
-
-% Based on thesisclass.cls of Timo Rohrberg, 2009
-% ----------------------------------------------------------------
-% Thesis - Main document
-% ----------------------------------------------------------------
-
 \usepackage[english]{babel}
-\usepackage{csquotes} % for citing more advanced
-
-%% ---------------------------------
-%% |      Additional packages      |
-%% ---------------------------------
-%% 
+\usepackage{csquotes}
 
 \usepackage{graphicx}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
-\graphicspath{{./figures/},{./text/content/images/}} %Use curly braces for each path to add and don't forget trailing slash '/'
-% \usepackage{epstopdf} %Nice to automatically convert eps figures to pdf format  (from inkscape, etc)
-% \usepackage[style=apa, backend=biber, natbib=true, hyperref=true, uniquelist=true, language=american]{biblatex}
-\addbibresource{data/book/latex/non_peer_reviewed_literature.bib}
-\addbibresource{non_peer_reviewed_literature.bib}
+\graphicspath{{./figures/},{./text/content/images/}}
 \usepackage{booktabs}
 
-%% ---------------------------------
-%% | Needed for the List of Abbreviations |
-%% ---------------------------------
-% create nomenclature
 \usepackage{nomencl}
-\renewcommand{\nomname}{List of Abbreviations}
+\renewcommand{\nomname}{Nomenclature}
 \setlength{\nomlabelwidth}{.40\hsize}
 \renewcommand{\nomlabel}[1]{#1 \dotfill}
 \setlength{\nomitemsep}{-\parsep}
@@ -49,145 +17,35 @@
 
 \input{md2pdfLib/book/template/latex/nomenclature}
 
-% create glossary
 \usepackage{glossaries}
-\input{md2pdfLib/book/template/latex/glossary_entries}
 \makeglossaries
+\input{md2pdfLib/book/template/latex/glossary_entries}
 
-% \usepackage{lipsum} % if you use some additional packages
-% \titleformat{\chapter}[hang]{\huge\bfseries}{\thechapter.}{2pc}{}
-
-%% ---------------------------------
-%% | Information about the book    |
-%% ---------------------------------
-
-% Canonical pandoc metadata lives in md2pdfLib/pandoc/base.yml
-% Use \providecommand so these can be overridden from the preamble.
 \providecommand{\mytitle}{Computer Graphics}
-\providecommand{\mytitleger}{Introduction into the world of rendering}
+\providecommand{\mytitleger}{Introduction into the World of Rendering}
 
 \providecommand{\reviewerone}{Max Mustermann}
-\providecommand{\reviewertwo}{Johannes Heinle}
-\providecommand{\submissiontime}{22.05.2023}
+\providecommand{\reviewertwo}{Jonas Heinle}
+\providecommand{\submissiontime}{\today}
 
 \providecommand{\myname}{Jonas Heinle}
-%% -------------------------------
-%% |  Information for PDF file   |
-%% -------------------------------
+
 \hypersetup{
 	pdfauthor={\myname},
 	pdftitle={\mytitle},
-	pdfsubject={\mytitle},
-	pdfkeywords={\mytitle}
+	pdfsubject={\mytitleger},
+	pdfkeywords={computer graphics, rendering, Vulkan, ray tracing, PBR}
 }
 
-%% --------------------------------
-%% | Settings for word separation |
-%% --------------------------------
-% Describe separation hints here:
 \hyphenation{
-	opos-sum
-	he-lio-trope
+	ras-ter-iza-tion
+	tes-sel-la-tion
+	ba-ry-cen-tric
 }
 
-%% --------------------------------
-%% | Include C-style pseudo code |
-%% --------------------------------
 \input{md2pdfLib/book/template/latex/c_code_style.tex}
 
-% ----------------------------------------------------------------
-% Printer-friendly code blocks (Pandoc fenced code):
-% - light background (good for printing)
-% - rounded corners
-% - colored frame
-% Pandoc emits: \begin{Shaded}\begin{Highlighting}...\end{Highlighting}\end{Shaded}
-% The box itself is the shared brand code frame; only print-specific knobs live
-% here: a thinner rule, tighter padding, and a forced-light background even if
-% a dark highlight theme sneaks in -- this document prints.
 \tcbuselibrary{breakable,skins}
 \input{md2pdfLib/common/latex/brand-code-block.tex}
 \AtBeginDocument{\colorlet{shadecolor}{black!2}}
 \brandCodeBox{boxrule=0.6pt, top=2.5mm, bottom=2.5mm}
-
-%% ------------------------
-%% |    Including files   |
-%% ------------------------
-% Only files listed here will be included!
-% Userful command for partially translating the document (for bug-fixing e.g.)
-% \includeonly{
-% titlepage,
-% text/dedication,
-% text/acknowledgment,
-% text/abstract,
-% text/content,  %feel free to introduce additional files for structuring your thesis
-% text/appendix
-% }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Here, main documents begins %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{document}
-
-% \frontmatter
-% \include{titlepage}
-% \pagenumbering{roman}
-% \include{text/dedication}
-% \include{text/acknowledgment.tex}
-% \include{text/abstract}
-
-% % ISSD Style: No additional blank page
-% % \blankpage
-
-
-% %% -------------------
-% %% |   Directories   |
-% %% -------------------
-% \tableofcontents
-
-% % ISSD Style: No additional blank page
-% % \blankpaage
-
-% % You may elect not to include a list of figures, list of tables and list of abbreviations, if the work is a seminar thesis (comment out the following)
-% \listoffigures \addcontentsline{toc}{chapter}{List of Figures} 
-% \listoftables  \addcontentsline{toc}{chapter}{List of Tables} 
-% % \printnomenclature   \addcontentsline{toc}{chapter}{List of Abbreviations} 
-% %\printglossaries  \addcontentsline{toc}{chapter}{List of Abbreviations}
-% \printglossary[title=List of Abbreviations]
-
-% %% -----------------
-% %% |   Main part   |
-% %% -----------------
-% \mainmatter
-% \pagenumbering{arabic}
-% \include{text/content}
-
-
-% \backmatter
-% \pagenumbering{Roman}
-
-
-% %% --------------------
-% %% |   Bibliography   |
-% %% --------------------
-
-% % src: https://tex.stackexchange.com/questions/112874/sectioning-bibliography-by-type-with-multiple-types-per-section
-% \defbibfilter{papers}{
-%   type=article or
-%   type=inproceedings or 
-%   type=incollection or
-%   type=book
-% }
-
-% \phantomsection
-% \addcontentsline{toc}{chapter}{\bibname}
-% \printbibliography[filter=papers]
-
-% %% ----------------
-% %% |   Appendix   |
-% %% ----------------
-
-% \input{text/appendix}
-
-% \include{text/affidavit}
-% \include{text/prototype_agreement}
-% \end{document}

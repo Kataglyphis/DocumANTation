@@ -8,19 +8,6 @@
   <h4>Convert markdown to modern slide show or a4paper book. Combining the very light weight markdown language with all the power of LaTeX.</h4>
 </div>
 
-## Table of Contents
-- [About The Project](#about-the-project)
-- [Getting Started](#getting-started)
-  - [Build Docker image](#build-docker-image)
-  - [Build docs](#build-docs)
-  - [Build presentation](#build-presentation)
-  - [Build book](#build-book)
-  - [Build CV](#build-cv)
-- [Dependencies](#dependencies)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-
 ## About The Project
 Formulate everything in markdown. Use LaTeX power via Pandoc. Containerized for reproducibility.
 
@@ -39,57 +26,37 @@ Formulate everything in markdown. Use LaTeX power via Pandoc. Containerized for 
 
 ```bash
 git clone --recurse-submodules git@github.com:Kataglyphis/Kataglyphis-DocumANTation.git
-```
-
-### Build Docker image
-```bash
 nerdctl build . -t pandoc_all
 ```
 
-### Build docs
+### Build a document
+
+```bash
+./scripts/build_in_container.sh book     # a4paper book, full TeX pipeline
+./scripts/build_in_container.sh beamer   # PDF slides
+./scripts/build_in_container.sh pptx     # PowerPoint deck, same sources
+./scripts/build_in_container.sh cv       # CV; CV_LANG=german for the German one
+```
+
+Everything lands in `data/out/` — the CV as `CV_Jonas_Heinle_<language>.pdf`,
+both variants from the same sources in `data/cv/`. With `make` installed,
+`make {book|beamer|pptx|cv}` and `make cv-all` do the same, and
+`STRICT_WARNINGS=1` turns build-log warnings into failures on any target.
+
+### Build this documentation site
+
+Sphinx builds it on the host, not in the container:
+
 ```bash
 uv run --extra docs sphinx-build -W -b html docs docs/_build/html
 ```
 
 The generated HTML lands in `docs/_build/html/`.
 
-### Build presentation
-```bash
-./scripts/build_in_container.sh beamer   # PDF slides
-./scripts/build_in_container.sh pptx     # PowerPoint deck, same sources
-```
-
-### Build book
-```bash
-./scripts/build_in_container.sh book
-```
-
-Outputs land in `data/out/`.
-
-Optional host shortcuts if `make` is installed:
-
-```bash
-make beamer
-make pptx
-make book
-make cv
-```
-
-Strict warning checks can be enabled for any build:
-
-```bash
-STRICT_WARNINGS=1 make book
-STRICT_WARNINGS=1 ./scripts/build_in_container.sh cv
-```
-
-### Build CV
-```bash
-./scripts/build_in_container.sh cv                  # English
-CV_LANG=german ./scripts/build_in_container.sh cv   # German
-```
-
-Both variants come from the same sources in `data/cv/` and land in `data/out/`
-as `CV_Jonas_Heinle_<language>.pdf`. `make cv-all` builds the pair.
+> The full guide — what the image contains, driving the container by hand, and
+> the per-target compilation stages — is in
+> [docs/getting-started.md](docs/getting-started.md) and
+> [docs/build-pipeline.md](docs/build-pipeline.md).
 
 ## Dependencies
 

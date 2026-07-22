@@ -156,10 +156,10 @@ A regular figure with caption (uses an existing image from `data/book/images/`):
 
 ## Glossary / Acronyms
 
-If glossary entries exist, you can reference them via raw LaTeX commands, e.g. \gls{gpu}, \gls{cnn}, or \gls{nan}.
+If glossary entries exist, you can reference them via raw LaTeX commands, e.g. \gls{gpu}, \gls{bvh}, or \gls{nan}.
 
 ```{=latex}
-This sentence uses some glossary/acronym entries: \gls{gpu}, \gls{cnn}, and \gls{nan}.
+This sentence uses some glossary/acronym entries: \gls{gpu}, \gls{bvh}, and \gls{nan}.
 ```
 
 ## Definition environment
@@ -203,4 +203,4 @@ Footnotes work like this.[^note]
 
 ## Citations / Bibliography
 
-A citation using your BibLaTeX database: [@Jonas.2021].
+A citation using your BibLaTeX database: [@Shirley2019].

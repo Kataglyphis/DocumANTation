@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -15,18 +16,24 @@ from md2pdfLib.presets import PRESETS  # noqa: E402
 
 def main() -> None:
     """Run the selected document build preset from the command line."""
-    if len(sys.argv) < 2:
-        print(
-            f"Usage: python md2pdfLib/build.py {{{','.join(PRESETS)}}} [output_name]",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    preset_name = sys.argv[1]
-    factory = PRESETS.get(preset_name)
-    if factory is None:
-        print(f"Unknown type: {preset_name}. Choose from: {', '.join(PRESETS)}", file=sys.stderr)
-        sys.exit(1)
-    sys.argv = [sys.argv[0], *sys.argv[2:]]
+    parser = argparse.ArgumentParser(
+        prog=Path(__file__).name,
+        description="Build a document using Pandoc + LuaLaTeX.",
+    )
+    parser.add_argument(
+        "type",
+        choices=sorted(PRESETS.keys()),
+        help=f"Document type to build: {', '.join(sorted(PRESETS.keys()))}",
+    )
+    parser.add_argument(
+        "output",
+        nargs="?",
+        help="Output filename (default: derived from type)",
+    )
+    args = parser.parse_args()
+
+    factory = PRESETS[args.type]
+    sys.argv = [sys.argv[0]] + ([args.output] if args.output else [])
     run_from_cli(factory())
 
 
