@@ -1,22 +1,64 @@
 <div align="center">
   <a href="https://jonasheinle.de">
-    <img src="images/logo.png" alt="logo" width="200" />
+    <img src="images/logo-t3-wireframe.png" alt="Kataglyphis — wireframe desert ant" width="200" />
   </a>
 
   <h1>Kataglyphis-DocumANTation</h1>
 
-  <h4>Convert markdown to modern slide show or a4paper book. Combining the very light weight markdown language with all the power of LaTeX.</h4>
+  <h4>One Markdown source → branded book, slides, PowerPoint and CV. Containerized, reproducible, pixel-perfect.</h4>
+
+  <p>
+    <a href="https://kataglyphis.github.io/Kataglyphis-DocumANTation/"><strong>Documentation</strong></a>
+    ·
+    <a href="#getting-started"><strong>Quick Start</strong></a>
+    ·
+    <a href="#why-not-just-pandoc"><strong>Why this?</strong></a>
+  </p>
 </div>
 
+## One brand, four outputs
+
+Write content in Markdown once. Get a print-ready book, a Beamer slide deck, a
+PowerPoint deck and a bilingual CV — all sharing the same colours, fonts and
+code-block styling, driven from a single `brand.json`.
+
+<p align="center">
+  <a href="images/book-title.png"><img src="images/book-title.png" alt="Book title page with desert ant logo" width="200" /></a>
+  <a href="images/book-page.png"><img src="images/book-page.png" alt="Book page with dark code block" width="280" /></a>
+  <a href="images/beamer-slide.png"><img src="images/beamer-slide.png" alt="Beamer slide" width="280" /></a>
+  <a href="images/cv-page.png"><img src="images/cv-page.png" alt="CV page" width="280" /></a>
+</p>
+
+Change one value in `style/brand.json`, run `generate_style.py --write`, and
+every output rebrands simultaneously — the PDFs, the PowerPoint, and the Sphinx
+documentation website.
+
 ## About The Project
-Formulate everything in markdown. Use LaTeX power via Pandoc. Containerized for reproducibility.
+
+Formulate everything in Markdown. Use LaTeX power via Pandoc. Containerized for
+reproducibility.
 
 ### Key Features
-| Feature | Status |
-| ------- | :----: |
-| Docker image, make everything reproducible | ✔️ |
-| LaTeX templates | ✔️ |
-| Comprehensive python scripts | ✔️ |
+
+| Feature | Detail |
+|---------|--------|
+| **Multi-format from one source** | Book (scrbook), Beamer slides, PowerPoint deck, bilingual CV — same Markdown |
+| **Brand-consistent code blocks** | `brand.json` → Pandoc + Pygments + LaTeX + CSS — same dark palette everywhere |
+| **Containerized builds** | One Dockerfile, SHA-pinned toolchain, zero host dependencies beyond a container runtime |
+| **Strict build gates** | `STRICT_WARNINGS=1` turns Pandoc/LaTeX warnings into CI failures |
+| **Generated style pipeline** | `generate_style.py` fans `brand.json` into 10+ consumer files; `--check` prevents drift |
+| **Reusable Sphinx theme** | `sphinx-kataglyphis-theme` — pip-installable package with brand tokens and Pygments styles |
+
+## Why not just Pandoc?
+
+| | Pandoc + template | Eisvogel | Typst | Kataglyphis-DocumANTation |
+|---|---|---|---|---|
+| Multi-format from one source | Manual | No | No | Book + Beamer + PPTX + CV |
+| Brand-consistent code highlighting | Manual | No | Partial | `brand.json` → all formats |
+| Containerized reproducible build | Manual | No | No | One Dockerfile, SHA-pinned |
+| Strict build-log warning gates | No | No | No | `STRICT_WARNINGS=1` |
+| Bilingual CV from one source | No | No | No | `CV_LANG=english\|german` |
+| Sphinx theme with same brand | No | No | No | `sphinx-kataglyphis-theme` |
 
 ## Getting Started
 
@@ -43,6 +85,18 @@ both variants from the same sources in `data/cv/`. With `make` installed,
 `make {book|beamer|pptx|cv}` and `make cv-all` do the same, and
 `STRICT_WARNINGS=1` turns build-log warnings into failures on any target.
 
+### Live demo mode
+
+Edit Markdown and watch the PDF rebuild automatically:
+
+```bash
+make watch-beamer    # rebuilds on every .md change
+make watch-book      # same for the book
+```
+
+Uses `entr` to watch source files. Pair with a PDF viewer that auto-reloads
+(e.g., `zathura`, `evince`, or `skim` on macOS) for a live editing experience.
+
 ### Build this documentation site
 
 Sphinx builds it on the host, not in the container:
@@ -52,6 +106,8 @@ uv run --extra docs sphinx-build -W -b html docs docs/_build/html
 ```
 
 The generated HTML lands in `docs/_build/html/`.
+The published site is at
+[kataglyphis.github.io/Kataglyphis-DocumANTation](https://kataglyphis.github.io/Kataglyphis-DocumANTation/).
 
 > The full guide — what the image contains, driving the container by hand, and
 > the per-target compilation stages — is in

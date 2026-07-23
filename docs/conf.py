@@ -14,8 +14,8 @@ from pathlib import Path
 from sphinx_kataglyphis import setup_theme
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DOCS_LOGO = REPO_ROOT / "images" / "logo.png"
-DOCS_LOGO_RELATIVE = "../images/logo.png"
+DOCS_LOGO = REPO_ROOT / "images" / "logo-t3-wireframe.png"
+DOCS_LOGO_RELATIVE = "../images/logo-t3-wireframe.png"
 
 if not DOCS_LOGO.exists():
     raise FileNotFoundError(f"Missing docs logo at {DOCS_LOGO}")

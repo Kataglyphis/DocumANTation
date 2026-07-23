@@ -15,17 +15,13 @@
 \input{md2pdfLib/common/latex/brand-code-block.tex}
 \brandCodeBox{boxrule=1.3pt}
 
-\usepackage{fvextra}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
-    commandchars=\\\{\},
-    fontsize=\scriptsize,
-    breaklines=true,
-    breakanywhere=true,
-    breaksymbolleft={},
-    breaksymbolright={},
-    breaksymbolsepleft=0pt,
-    breaksymbolsepright=0pt
-}
+% Shared inner code formatting (fvextra + Highlighting environment).
+% Beamer overrides the font size to \scriptsize for slide density.
+% Override must come AFTER \input (which \providecommand's the default).
+\input{md2pdfLib/common/latex/brand-code-inner.tex}
+\renewcommand{\brandCodeFontSize}{\scriptsize}
+
+\logo{md2pdfLib/presentation/images/logo.png}
 
 \background{data/presentation/images/title-background.jpg}
 \email{contact@jonasheinle.de}

@@ -1,0 +1,46 @@
+% Shared admonition boxes for the book (LaTeX/PDF output).
+% Beamer already provides block/alertblock/examples/definition via the theme,
+% so this file is for the book only. The Lua filter brand-divs.lua maps
+% fenced divs (::: {.note}, ::: {.warning}, etc.) to these environments.
+%
+% Requires: tcolorbox with breakable,skins; brand-colors.tex loaded first.
+
+\newtcolorbox{note}[1][]{%
+	enhanced, breakable,
+	colback=brandAccentSoft, colframe=brandAccent,
+	coltitle=white, fonttitle=\bfseries,
+	title={#1}, arc=2mm,
+	boxrule=0.6pt, left=3mm, right=3mm, top=2mm, bottom=2mm
+}
+
+\newtcolorbox{warning}[1][]{%
+	enhanced, breakable,
+	colback=red!5!white, colframe=red!70!black,
+	coltitle=white, fonttitle=\bfseries,
+	title={#1}, arc=2mm,
+	boxrule=0.6pt, left=3mm, right=3mm, top=2mm, bottom=2mm
+}
+
+\newtcolorbox{tip}[1][]{%
+	enhanced, breakable,
+	colback=brandLink!8!white, colframe=brandLink,
+	coltitle=white, fonttitle=\bfseries,
+	title={#1}, arc=2mm,
+	boxrule=0.6pt, left=3mm, right=3mm, top=2mm, bottom=2mm
+}
+
+\newtcolorbox{important}[1][]{%
+	enhanced, breakable,
+	colback=brandAccentDeep!8!white, colframe=brandAccentDeep,
+	coltitle=white, fonttitle=\bfseries,
+	title={#1}, arc=2mm,
+	boxrule=0.6pt, left=3mm, right=3mm, top=2mm, bottom=2mm
+}
+
+\newtcolorbox{example}[1][]{%
+	enhanced, breakable,
+	colback=gray!5!white, colframe=gray!70!black,
+	coltitle=white, fonttitle=\bfseries,
+	title={#1}, arc=2mm,
+	boxrule=0.6pt, left=3mm, right=3mm, top=2mm, bottom=2mm
+}

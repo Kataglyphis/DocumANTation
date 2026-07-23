@@ -1,0 +1,62 @@
+% CV-specific environments: timeline entries and language proficiency.
+% Loaded by the CV build script; not part of the shared book/slide pipeline.
+%
+% Requires: tcolorbox with breakable,skins; brand-colors.tex loaded first;
+% fontawesome loaded by myCV_METADATA.cls.
+
+% Timeline entry — a compact, branded alternative to \experience for short
+% entries (talks, awards, short stints) that don't need a full itemize block.
+%
+% Usage:
+%   \begin{cvtimeline}
+%     \tventry{2024 -- present}{Senior Engineer}{Acme Corp}{Berlin}
+%     \tventry{2022 -- 2024}{Engineer}{Startup GmbH}{Munich}
+%   \end{cvtimeline}
+
+\newenvironment{cvtimeline}{%
+	\begin{tcolorbox}[
+		enhanced, breakable,
+		colback=white, colframe=white,
+		boxrule=0pt, arc=0mm,
+		left=0mm, right=0mm, top=0mm, bottom=0mm,
+		before skip=0pt, after skip=0pt,
+		borderline west={2pt}{0pt}{basecolor},
+	]
+	\begin{description}[
+		leftmargin=2.8cm, style=nextline,
+		font=\normalfont\small\bfseries\color{basecolor},
+		itemsep=0.8ex, parsep=0pt
+	]
+}{%
+	\end{description}%
+	\end{tcolorbox}%
+}
+
+\newcommand{\tventry}[4]{%
+	\item[#1] \textbf{#2}, \textsc{#3}\ifx\\#4\\\else\ -- #4\fi%
+}
+
+% Language proficiency with CEFR level bar.
+%
+% Usage:
+%   \langproficiency{English}{C2}
+%   \langproficiency{German}{C1}
+
+\newcommand{\langproficiency}[2]{%
+	\begin{tabular}{@{}p{3cm}p{1cm}p{8cm}@{}}
+		\textbf{#1} & \textsc{#2} &
+		{\color{basecolor!30}\rule{8cm}{2.5ex}}%
+		\hspace{-8cm}%
+		{\color{basecolor}\rule{\dimexpr 8cm * \langlevel{#2} / 6\relax}{2.5ex}}%
+	\end{tabular}\par\vspace{0.3em}%
+}
+
+% CEFR level → numeric (A1=1 … C2=6) for the proficiency bar width.
+\newcommand{\langlevel}[1]{%
+	\ifstrequal{#1}{A1}{1}{%
+	\ifstrequal{#1}{A2}{2}{%
+	\ifstrequal{#1}{B1}{3}{%
+	\ifstrequal{#1}{B2}{4}{%
+	\ifstrequal{#1}{C1}{5}{%
+	\ifstrequal{#1}{C2}{6}{0}}}}}}%
+}

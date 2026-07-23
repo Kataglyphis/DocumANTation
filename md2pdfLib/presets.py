@@ -8,18 +8,19 @@ from md2pdfLib.pandoc_builder import BuildConfig
 # presentation/pptx/make_reference.py.
 PPTX_REFERENCE = "data/out/reference.pptx"
 
+# Lua filter mapping fenced divs (::: {.note}, ::: {.theorem}, etc.) to
+# LaTeX environments. Shared by book and beamer; the filter emits raw LaTeX
+# that targets environments defined by each document's preamble.
+BRAND_DIVS_FILTER = "md2pdfLib/common/filters/brand-divs.lua"
+
 
 def book() -> BuildConfig:
-    # The dark code palette (md2pdfLib/themes/pygments.theme) is used by the
-    # slides; the book prints, so it takes the light theme. A former `diss`
-    # target was this exact build with the dark theme -- re-add as a preset
-    # with a different highlight_style if a screen-first variant is wanted.
     return BuildConfig(
         input_dir="./data/book/chapters",
         output_dir="./data/out",
         default_output_name="output.tex",
         metadata_file="md2pdfLib/pandoc/base.yml",
-        highlight_style="md2pdfLib/themes/pygments-print.theme",
+        highlight_style="md2pdfLib/themes/pygments.theme",
         include_in_header="data/book/latex/main.tex",
         log_file="data/out/book.json",
         biblatex=True,
@@ -28,6 +29,9 @@ def book() -> BuildConfig:
         number_offset=2,
         top_level_division="chapter",
         output_suffix=".tex",
+        extra_args=[
+            "--lua-filter", BRAND_DIVS_FILTER,
+        ],
     )
 
 
@@ -50,12 +54,7 @@ def beamer() -> BuildConfig:
             "beamer",
             "--template",
             "md2pdfLib/presentation/pandoc/awesome-beamer-template.tex",
-            # No `-V linkcolor:...` here. metadata.yml carries linkcolor,
-            # urlcolor and citecolor as brandLink, generated from brand.json,
-            # and a -V wins over the metadata file -- so setting it here made
-            # internal links stock blue while URLs and citations stayed brand
-            # green. The slides were the one document where a hardcoded colour
-            # survived the whole brand pipeline.
+            "--lua-filter", BRAND_DIVS_FILTER,
             "-V",
             "themeoptions:english",
             "-V",

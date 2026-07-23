@@ -83,7 +83,7 @@ def test_setup_theme_wires_the_shared_code_palette(conf):
     code with stock Pygments colours instead of the brand.
     """
     setup_theme(conf)
-    assert conf["html_theme_options"]["pygments_light_style"] == "kataglyphis-light"
+    assert conf["html_theme_options"]["pygments_light_style"] == "kataglyphis-dark"
     assert conf["html_theme_options"]["pygments_dark_style"] == "kataglyphis-dark"
 
 
@@ -121,7 +121,7 @@ def test_extras_extend_rather_than_replace(conf):
     assert conf["html_css_files"] == ["css/custom.css", "css/mine.css"]
     assert conf["html_theme_options"]["show_toc_level"] == 9
     # Extending options must not drop the rest of the baseline.
-    assert conf["html_theme_options"]["pygments_light_style"] == "kataglyphis-light"
+    assert conf["html_theme_options"]["pygments_light_style"] == "kataglyphis-dark"
 
 
 def test_repository_button_only_when_there_is_a_repository(conf):

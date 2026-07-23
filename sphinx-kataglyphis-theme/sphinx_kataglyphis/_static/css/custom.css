@@ -214,12 +214,28 @@ html[data-theme="dark"] .pst-scrollable-table-container table tr:nth-child(even)
   padding: 0.6rem 0.8rem;
 }
 
-/* -- Admonitions (green-tinted note) ---------------------------- */
+/* -- Admonitions ----------------------------------------------- */
 
+/* Shared base for all admonition types */
+.admonition {
+  border-radius: 0 8px 8px 0;
+  border-left-width: 4px;
+  border-left-style: solid;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+}
+
+.admonition .admonition-title {
+  font-weight: 600;
+  margin: -0.75rem -1rem 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 0 8px 0 0;
+}
+
+/* note: green (brand accent) */
 .admonition.note,
 div.admonition.note {
-  border-left: 4px solid var(--brand-accent-strong);
-  border-radius: 0 8px 8px 0;
+  border-left-color: var(--brand-accent-strong);
   background: var(--brand-accent-soft);
 }
 
@@ -227,12 +243,84 @@ div.admonition.note {
 div.admonition.note .admonition-title {
   background: var(--brand-accent-strong);
   color: var(--brand-text-on-accent);
-  font-weight: 600;
 }
 
-html[data-theme="dark"] .admonition.note,
-html[data-theme="dark"] div.admonition.note {
+/* warning: amber */
+.admonition.warning,
+div.admonition.warning {
+  border-left-color: #d97706;
+  background: #fffbeb;
+}
+
+.admonition.warning .admonition-title,
+div.admonition.warning .admonition-title {
+  background: #d97706;
+  color: white;
+}
+
+/* tip: blue (brand link) */
+.admonition.tip,
+div.admonition.tip {
+  border-left-color: var(--brand-link);
+  background: #eff6ff;
+}
+
+.admonition.tip .admonition-title,
+div.admonition.tip .admonition-title {
+  background: var(--brand-link);
+  color: white;
+}
+
+/* important: deep green */
+.admonition.important,
+div.admonition.important {
+  border-left-color: var(--brand-accent-deep);
+  background: #ecfdf5;
+}
+
+.admonition.important .admonition-title,
+div.admonition.important .admonition-title {
+  background: var(--brand-accent-deep);
+  color: white;
+}
+
+/* danger: red */
+.admonition.danger,
+div.admonition.danger,
+.admonition.error,
+div.admonition.error {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+}
+
+.admonition.danger .admonition-title,
+div.admonition.danger .admonition-title,
+.admonition.error .admonition-title,
+div.admonition.error .admonition-title {
+  background: #dc2626;
+  color: white;
+}
+
+/* seealso: purple */
+.admonition.seealso,
+div.admonition.seealso {
+  border-left-color: #7c3aed;
+  background: #f5f3ff;
+}
+
+.admonition.seealso .admonition-title,
+div.admonition.seealso .admonition-title {
+  background: #7c3aed;
+  color: white;
+}
+
+/* Dark mode: all admonitions share the dark surface */
+html[data-theme="dark"] .admonition {
   background: var(--brand-dark-quote-bg);
+}
+
+html[data-theme="dark"] .admonition .admonition-title {
+  opacity: 0.9;
 }
 
 /* -- kbd styling ------------------------------------------------ */
@@ -384,12 +472,32 @@ html[data-theme="light"] #pst-primary-sidebar-modal {
   hyphens: none !important;
 }
 
-/* Code blocks: horizontal scroll instead of overflow clipping -- */
+/* Code blocks: tcolorbox brand look — accent border, dark bg, rounded corners.
+   Matches brand-code-block.tex (colframe=greenAccent, colback=shadecolor =
+   brandSyntaxBg #0d1117, arc=2mm). The dark code palette is the single brand
+   look: LaTeX PDFs (book + slides), PPTX and the Sphinx site all use it. */
+
+.bd-content div.highlight {
+  border: 1px solid var(--brand-accent);
+  border-radius: 8px;
+  background: var(--brand-dark-code-bg);
+  overflow: hidden;
+}
 
 .bd-content div.highlight pre {
   white-space: pre !important;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--brand-dark-text-base);
+}
+
+html[data-theme="dark"] .bd-content div.highlight {
+  border-color: var(--brand-dark-code-border);
 }
 
 /* Article container: fill width on small viewports ------------- */
@@ -456,6 +564,84 @@ html[data-theme="light"] #pst-secondary-sidebar-modal {
 .pst-scrollable-table-container table {
   width: 100%;
   min-width: 0;
+}
+
+/* -- Two-column layouts from markdown ::: {.columns} ---------- */
+
+.bd-article-container section div.columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.bd-article-container section div.column {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .bd-article-container section div.columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -- Tab sets from markdown ::: {.tab-set} -------------------- */
+
+.bd-article-container section div.tab-set {
+  border: 1px solid var(--brand-surface-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-set {
+  border-color: var(--brand-dark-surface-border);
+}
+
+.bd-article-container section div.tab-set > div.tab {
+  display: none;
+  padding: 1rem;
+}
+
+.bd-article-container section div.tab-set > div.tab:first-child {
+  display: block;
+}
+
+/* Tab labels */
+.bd-article-container section div.tab-labels {
+  display: flex;
+  border-bottom: 2px solid var(--brand-surface-border);
+  background: var(--brand-surface-soft);
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-labels {
+  border-bottom-color: var(--brand-dark-surface-border);
+  background: var(--brand-dark-code-bg);
+}
+
+.bd-article-container section div.tab-labels span {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9em;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: var(--brand-text-main);
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-labels span {
+  color: var(--brand-dark-text-muted);
+}
+
+.bd-article-container section div.tab-labels span.active,
+.bd-article-container section div.tab-labels span:first-child {
+  color: var(--brand-accent-strong);
+  border-bottom-color: var(--brand-accent-strong);
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-labels span.active {
+  color: var(--brand-accent);
+  border-bottom-color: var(--brand-accent);
 }
 
 

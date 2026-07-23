@@ -146,8 +146,7 @@ md2pdfLib/
 │   ├── brand-colors.tex     ← brandAccent, brandLink, linkcolor, basecolor, …
 │   └── brand-fonts.tex      ← \brandSetMainFont, \brandSetMonoFont
 ├── themes/                  ← generated code-highlighting palettes
-│   ├── pygments-print.theme ← light, used by the book
-│   └── pygments.theme       ← dark, used by the slides
+│   └── pygments.theme       ← dark, used by all documents (book, slides, pptx)
 ├── book/template/latex/     ← canonical book templates
 │   ├── bookclass.cls        ← KOMA-Script scrbook based document class (+ \maketitle)
 │   ├── glossary_entries.tex

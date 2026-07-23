@@ -27,6 +27,7 @@
 % Main font — single source of truth: style/brand.json
 \input{brand-fonts.tex}
 \brandSetMainFont
+\brandSetMonoFont
 
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -60,6 +61,12 @@
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
 \usepackage{enumitem}
 
 % included for importing paths to my .pdf_tex files
@@ -74,8 +81,6 @@
 % Main theme color — single source of truth: style/brand.json
 % (defines brandAccent + the greenAccent/myGreenAccent/basecolor aliases).
 \input{brand-colors.tex}
-% The `listings` palette (c_code_style.tex) uses the brandSyntax* colours from
-% brand-colors.tex, so hand-written listings match pandoc-rendered code blocks.
 \colorlet{symbolcolor}{greenAccent}
 
 \usepackage[raiselinks=true,

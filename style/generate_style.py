@@ -50,8 +50,9 @@ TOKENS_TARGETS = [
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"
 FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
-# Code highlighting: the same palette drives Pandoc (PDFs) and Pygments (web).
-SYNTAX_THEME_LIGHT = REPO_ROOT / "md2pdfLib/themes/pygments-print.theme"
+# Code highlighting: the dark palette drives every code block (book, slides,
+# pptx, web). A former light/print theme was removed -- all documents now use
+# the same dark syntax palette for a single brand code-block look.
 SYNTAX_THEME_DARK = REPO_ROOT / "md2pdfLib/themes/pygments.theme"
 PYGMENTS_MODULE = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py"
 # Standalone token stylesheet for web projects that are not Sphinx (the
@@ -140,7 +141,7 @@ def _hex(value: str) -> str:
 
 def render_latex(brand: dict) -> str:
     c = brand["colors"]
-    s = brand["syntax"]
+    sd = brand["syntax_dark"]
     return (
         "\n".join(
             [
@@ -152,18 +153,14 @@ def render_latex(brand: dict) -> str:
                 f"\\definecolor{{brandAccentDeep}}{{HTML}}{{{_hex(c['accent_deep'])}}}",
                 f"\\definecolor{{brandTextMain}}{{HTML}}{{{_hex(c['text_main'])}}}",
                 f"\\definecolor{{brandLink}}{{HTML}}{{{_hex(c['link'])}}}",
-                "% Light/print syntax palette for LaTeX `listings` blocks -- the same",
-                "% values the generated pygments-print theme gives pandoc code blocks,",
-                "% so hand-written listings and pandoc-rendered code match in the book.",
-                f"\\definecolor{{brandSyntaxComment}}{{HTML}}{{{_hex(s['comment'])}}}",
-                f"\\definecolor{{brandSyntaxKeyword}}{{HTML}}{{{_hex(s['keyword'])}}}",
-                f"\\definecolor{{brandSyntaxString}}{{HTML}}{{{_hex(s['string'])}}}",
-                f"\\definecolor{{brandSyntaxLineNumber}}{{HTML}}{{{_hex(s['line_number'])}}}",
+                "% Dark syntax background -- the brand code-block bg for all documents.",
+                f"\\definecolor{{brandSyntaxBg}}{{HTML}}{{{_hex(sd['bg'])}}}",
                 "% Backwards-compatible aliases used across the documents:",
                 "\\colorlet{greenAccent}{brandAccent}",
                 "\\colorlet{myGreenAccent}{brandAccent}",
                 "\\colorlet{basecolor}{brandAccent}",
                 "\\colorlet{linkcolor}{brandLink}",
+                "\\colorlet{shadecolor}{brandSyntaxBg}",
             ]
         )
         + "\n"
@@ -463,7 +460,6 @@ def desired_outputs() -> dict[Path, str]:
     outputs: dict[Path, str] = {
         STY_PATH: render_latex(brand),
         FONTS_PATH: render_latex_fonts(brand),
-        SYNTAX_THEME_LIGHT: render_syntax_theme(brand["syntax"]),
         SYNTAX_THEME_DARK: render_syntax_theme(brand["syntax_dark"]),
         PYGMENTS_MODULE: render_pygments_module(brand),
         BRAND_CSS: render_brand_css(brand),

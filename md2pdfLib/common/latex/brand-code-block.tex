@@ -11,9 +11,10 @@
 %   \brandCodeBox{boxrule=1.3pt}                            % slides
 %
 % Requires tcolorbox with the breakable,skins libraries and brand-colors.tex
-% (greenAccent). colback stays `shadecolor` so the box follows the document's
-% pygments theme: light in the book, dark on the slides; the book forces
-% shadecolor light separately because it prints.
+% (greenAccent, shadecolor). shadecolor comes from brand-colors.tex as
+% brandSyntaxBg (the dark syntax palette bg) -- every document shares the
+% same code-block background. Pandoc's highlighting macros also define
+% shadecolor from the theme; with the unified dark theme, both agree.
 \newcommand{\brandCodeBox}[1]{%
 	\AtBeginDocument{%
 		\ifdefined\Shaded

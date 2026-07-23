@@ -80,12 +80,13 @@ case "$TARGET" in
         ;;
 esac
 
-# Put the brand snippets and the document classes on the LaTeX search path so
-# documents can say \input{brand-colors.tex} or \documentclass{myCV_METADATA}
-# without knowing where those live relative to their build directory. A project
-# consuming this repo as a submodule points TEXINPUTS at its own checkout the
-# same way. The trailing colon keeps the default search path.
-BRAND_TEXINPUTS="/md2pdfLib/style:/md2pdfLib/cv/template/latex:"
+# Put the brand snippets, shared environments and the document classes on the
+# LaTeX search path so documents can say \input{brand-colors.tex},
+# \input{brand-cv.tex} or \documentclass{myCV_METADATA} without knowing where
+# those live relative to their build directory. A project consuming this repo
+# as a submodule points TEXINPUTS at its own checkout the same way. The
+# trailing colon keeps the default search path.
+BRAND_TEXINPUTS="/md2pdfLib/style:/md2pdfLib/cv/template/latex:/md2pdfLib/common/latex:"
 
 "${CONTAINER_RUNTIME}" run --rm \
   --entrypoint "" \

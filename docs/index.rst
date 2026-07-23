@@ -12,7 +12,13 @@ Containerized Markdown-to-PDF builds for books, presentations, and CVs with Pand
 .. grid:: 2
    :gutter: 2
 
-   .. grid-item-card:: Overview
+   .. grid-item-card:: Gallery
+      :link: gallery
+      :link-type: doc
+
+      See the output: book pages, beamer slides, and CV rendered from the same sources.
+
+    .. grid-item-card:: Overview
       :link: overview
       :link-type: doc
 
@@ -52,6 +58,7 @@ Common Commands
    :maxdepth: 2
    :caption: Contents:
 
+   gallery
    overview
    getting-started
    build-pipeline

@@ -11,9 +11,14 @@
 
 \documentclass[alternative]{myCV_METADATA}
 
+% Brand CV environments: timeline, language proficiency.
+% Found via TEXINPUTS (see scripts/build_in_container.sh).
+\tcbuselibrary{breakable}
+\input{brand-cv.tex}
+
 \name{Jonas}{Heinle}
 \tagline{\IfLanguageName{english}{Information Scientist | Master of Science}{Informatiker Master of Science}}%| 
-\photo{5.5cm}{images/portrait}
+\photo{5.5cm}{images/logo}
 
 \socialinfo{
     \github{Kataglyphis}\newline

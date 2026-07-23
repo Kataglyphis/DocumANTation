@@ -30,9 +30,10 @@ twice (`"text_on_accent": "@white"`). `colors_dark` may alias into `colors`.
 | `syntax` / `syntax_dark` | Code highlighting, shared by the PDFs (Pandoc) and the website (Pygments) |
 | `fonts` | Main + mono font, for LaTeX, Pandoc and the web |
 
-`syntax` is the light/print palette and `syntax_dark` the dark one. The book
-renders with the light palette, the slides with the dark one,
-and the website uses **both** — it switches with the site's light/dark toggle.
+`syntax` is the light/print palette and `syntax_dark` the dark one. All PDF
+documents (book, slides, pptx) render with the **dark** palette for a single
+brand code-block look. The website uses **both** — it switches with the site's
+light/dark toggle.
 Which token gets bold or italic is structural and lives in `SYNTAX_TOKENS` /
 `PYGMENTS_TOKENS` in `generate_style.py`, not here; `brand.json` stays a pure
 colour/font file.
@@ -45,8 +46,7 @@ colour/font file.
 | `md2pdfLib/style/brand-fonts.tex` | LaTeX: `\brandSetMainFont`, `\brandSetMonoFont` |
 | `md2pdfLib/pandoc/base.yml`, `md2pdfLib/presentation/pandoc/metadata.yml` | Pandoc: `mainfont`, `monofont`, `monofontoptions`, `linkcolor`, `urlcolor`, `citecolor` (between `# generated:brand:` markers) |
 | `sphinx-kataglyphis-theme/.../_static/css/custom.css` | Web: `--brand-*` custom properties (between `/* generated:brand-tokens: */` markers) |
-| `md2pdfLib/themes/pygments-print.theme` | Pandoc code highlighting, light/print — used by the **book** |
-| `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by the **slides** |
+| `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by **all** documents (book, slides, pptx) |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |
@@ -166,18 +166,20 @@ colours too:
 
 These are per-document values that live with the document, not in `brand.json`:
 
-- `shadecolor` in `data/book/latex/main.tex` (a near-white code-block
-  background forced light even under a dark theme). The LaTeX `listings`
-  palette itself is no longer an exception: `brand-colors.tex` emits the light
-  `syntax` palette as `brandSyntax*` colours and `c_code_style.tex` uses them,
-  so hand-written listings match pandoc-rendered code.
+- `shadecolor` is now defined in `brand-colors.tex` as `brandSyntaxBg` (the
+  dark syntax palette bg, `#0d1117`). Every document shares the same
+  code-block background — no per-document override needed.
 - Neutral greys and blacks used for CV body text and headings.
 - `fonts.mono` names a TeX font (Latin Modern Mono) and is **not** emitted to
   CSS, because no browser has it; the web keeps the generic monospace stack.
 - `md2pdfLib/presentation/template/latex/smile/` is a vendored upstream theme
   (its own submodule) and is left alone. Its semantic palette (red/blue/…) is
-  not brand; only its generic `green` is remapped to `brandLink` by the beamer
-  template, because the `examples` blocks use it in a brand-identity role.
+  not brand; only its generic `green` is remapped to `brandAccentDeep` by the
+  beamer template, because the `examples` blocks use it in a brand-identity
+  role. Note: smile's `listings` option (88 lines of `lstdefinestyle` code) is
+  **never activated** — `beamerthemeawesome.sty` does not pass `[listings]` to
+  `\RequirePackage{smile}`, so that entire module is dead code in the
+  vendored submodule.
 
 The upstream CV template's `green`/`red`/`indigo`/`orange`/`monochrome` class
 options, which each hardcoded a `basecolor` that would have overridden the
