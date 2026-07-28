@@ -64,7 +64,7 @@ jobs:
           CONTAINER_RUNTIME: docker
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: documents
           path: |
