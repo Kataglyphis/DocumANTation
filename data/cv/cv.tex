@@ -17,8 +17,21 @@
 \input{brand-cv.tex}
 
 \name{Jonas}{Heinle}
-\tagline{\IfLanguageName{english}{Information Scientist | Master of Science}{Informatiker Master of Science}}%| 
+\tagline{\IfLanguageName{english}{Applied AI Scientist | M.Sc. Computer Science}{Applied AI Scientist | M.Sc. Informatik}}%|
+% \photo{5.5cm}{images/logo} -- replaced with the Gauss citation below.
 \photo{5.5cm}{images/logo}
+
+% Photo slot repurposed to show the Gauss citation (moved here from
+% section_headline.tex, commented out there to avoid repeating it and to
+% save vertical space) instead of the logo image.
+\renewcommand{\idphoto}{%
+	\footnotesize\itshape
+	\IfLanguageName{english}{%
+		\textquote[Carl Friedrich Gauss]{Truly, it is not knowledge, but learning; not possession, but acquisition; not being there, but arriving -- that grants the greatest joy.}%
+	}{%
+		\textquote[Carl Friedrich Gau\ss]{Wahrlich es ist nicht das Wissen, sondern das Lernen, nicht das Besitzen, sondern das Erwerben, nicht das Da-Seyn, sondern das Hinkommen, was den grössten Genuss gewährt.}%
+	}%
+}
 
 \socialinfo{
     \github{Kataglyphis}\newline
@@ -26,7 +39,7 @@
 	\personalLink{jonasheinle.de}\newline
 	\email{contact@jonasheinle.de}\newline
     \youtube{jotrockenmitlocken}\newline
-	\address{\IfLanguageName{english}{\hspace{0.3em}Schwäbisch Hall}{\hspace{0.3em}Schwäbisch Hall}}
+	\address{\IfLanguageName{english}{\hspace{0.3em}Stuttgart}{\hspace{0.3em}Stuttgart}}
 	\infos{\IfLanguageName{english}{German Citizen}{Deutscher Staatsbürger}}\newline
 	\infos{\IfLanguageName{english}{\hspace{0.5em}Birthday: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall, Germany}{\hspace{0.5em}Geburtstag: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall, Deutschland}}\newline
     \smartphone{\hspace{0.4em}+49 15678111689}
@@ -45,12 +58,17 @@
 \vspace{0.5cm}
 \input{section_experience}
 \input{section_education}
-\input{section_skills}
-\input{section_projects}
-\input{section_teaching_mentoring}
+% Commented out to fit the CV on one page -- restore by uncommenting.
+% \input{section_skills}
+% Commented out to fit the CV on one page -- restore by uncommenting.
+% \input{section_projects}
+% Commented out to fit the CV on one page -- restore by uncommenting.
+% \input{section_teaching_mentoring}
 \input{section_private}
-\input{section_international_experiences_volunteering.tex}
-\input{section_extracurricular_courses_certificates.tex}
-\input{section_references}
+% Commented out to fit the CV on one page -- restore by uncommenting.
+% \input{section_international_experiences_volunteering.tex}
+% Commented out to fit the CV on one page -- restore by uncommenting.
+% \input{section_extracurricular_courses_certificates.tex}
+% \input{section_references}
 
 \end{document}

@@ -138,10 +138,14 @@
 
 %New length definition
 \newlength{\rightcolumnlength}
-\setlength{\rightcolumnlength}{14.8cm}
+\setlength{\rightcolumnlength}{14.3cm}
 
+% 2.5cm was just short of "September 2023" (the longest month name in both
+% English and German), wrapping it to a second line and breaking the
+% right-alignment from column type R's \hfill. Widened by the same amount
+% \rightcolumnlength shrank, so the table's total width is unchanged.
 \newlength{\leftcolumn}
-\setlength{\leftcolumn}{2.5cm}
+\setlength{\leftcolumn}{3.0cm}
 
 % Font Awesome icons aliases
 \newcommand{\mailSymbol}{\faAt}
