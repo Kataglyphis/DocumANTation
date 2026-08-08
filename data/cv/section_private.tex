@@ -9,20 +9,22 @@
 % Template license:
 % CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
 
+% Languages / Hobbies / Publications share one \threecolumnsection row.
+% \small and the dropped \vspace{1em} under each title are what keep that row
+% inside the space left on page one -- the CV is a strict one-pager.
 \IfLanguageName{english}{
     %Section: Languages
-    %\twocolumnsection
+    \par\noindent
+    \small
     \threecolumnsection
     {\sectionTitle{Languages}{\faLanguage}
-    \vspace{1em}
     \begin{itemize}
-    	\item German
+    	\item German (native)
     	\item English, level C1
     	\item French, level B1
     	\item Latin
     \end{itemize}}
     {\sectionTitle{Hobbies}{\faBicycle}
-    \vspace{1em}
     \begin{itemize}
         \item Powerlifting
         % Commented out per request -- restore by uncommenting.
@@ -32,51 +34,41 @@
         \item Politics
     \end{itemize}
     }
-    {
-    % Commented out to fit the CV on one page -- restore by uncommenting.
-    %\vspace{1em}
-    %\sectionTitle{A Day of My Life}{\faInfo}
-    %\wheelchart{1.5cm}{0.5cm}{%
-    %  8/6em/accent/{sleep/recovery},
-    %  8/6em/accent/studying,
-    %  2/6em/accent!30/{sports(lifting weights, bouldering)},
-    %  1/6em/accent!15/meditation,
-    %  1/6em/accent!15/guitar,
-    %  4/6em/accent!50/spending time with family \& friends
-    %}
+    {\sectionTitle{Publications}{\faFileTextO}
+    % \raggedright as in \twocolumnsection: justifying one long title across
+    % this wide column stretches the interword spaces visibly.
+    \raggedright
+    \begin{itemize}
+        \item \textquote{Semantic Robustness Probing via Inpainting} -- ECML PKDD 2026 Demo Track (with N.\ Steckhan)
+    \end{itemize}
     }
 }{
     %Section: Languages
+    \par\noindent
+    \small
     \threecolumnsection
     {\sectionTitle{Sprachen}{\faLanguage}
-    \vspace{1em}
     \begin{itemize}
-    	\item Deutsch
+    	\item Deutsch (Muttersprache)
     	% CEFR levels in parentheses: ", Level B1" overflows this narrow column.
     	\item Englisch (C1)
     	\item Französisch (B1)
     	\item Latein
     \end{itemize}}
     {\sectionTitle{Hobbies}{\faBicycle}
-    \vspace{1em}
     \begin{itemize}
         \item Powerbuilding
         \item Gitarre
         \item Philosophie
         \item Politik
     \end{itemize}
-    }{
-    % Commented out to fit the CV on one page -- restore by uncommenting.
-    %\sectionTitle{Tag meines Lebens}{\faInfo}
-    %\wheelchart{1.5cm}{0.5cm}{%
-          % 6em label boxes throughout, as in the English variant: the 8em ones
-          % pushed the three-column row 2.96pt past \linewidth.
-    %      8/6em/accent/{Guter Schlaf},
-    %      8/6em/accent/{Studieren},
-    %      2/6em/accent!30/{Sport},
-    %      0.5/6em/accent!15/Meditation,
-    %      1/6em/accent!15/Gitarre,
-    %      4.5/6em/accent!50/{Zeit mit Freunde und Familie}
-    %  }
+    }
+    {\sectionTitle{Publikationen}{\faFileTextO}
+    % \raggedright as in \twocolumnsection: justifying one long title across
+    % this wide column stretches the interword spaces visibly.
+    \raggedright
+    \begin{itemize}
+        \item \textquote{Semantic Robustness Probing via Inpainting} -- ECML PKDD 2026 Demo Track (mit N.\ Steckhan)
+    \end{itemize}
     }
 }
