@@ -24,7 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     rm -rf /var/lib/apt/lists/*
 
 # Pinned uv installer (reproducible; avoids "curl | sh" pulling a moving target).
-ARG UV_VERSION=0.12.1
+ARG UV_VERSION=0.12.3
 RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
 
 # Install the pinned runtime dependencies from the lockfile into the md2pdf venv.
