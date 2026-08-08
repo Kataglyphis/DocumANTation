@@ -401,18 +401,24 @@
 	\end{minipage}
 }
 
-\newcommand*\threecolumnsection[3]{
-	\begin{minipage}[t]{\dimexpr(\linewidth/4) - 2em}
+% The three columns must stay on ONE line. Fractions summing to 0.96\linewidth
+% leave the \hfill glue real slack, and the line-ending comment characters
+% suppress the interword spaces the source line breaks would contribute. The
+% previous em-based widths summed to \linewidth - 1em, which those spaces pushed
+% past \hsize -- TeX then broke the row at an \hfill, dropping column 3 onto a
+% line of its own.
+\newcommand*\threecolumnsection[3]{%
+	\begin{minipage}[t]{0.24\linewidth}%
 		#1
-	\end{minipage}
+	\end{minipage}%
 	\hfill
-	\begin{minipage}[t]{\dimexpr(\linewidth/4) - 2em}
+	\begin{minipage}[t]{0.24\linewidth}%
 		#2
-	\end{minipage}
+	\end{minipage}%
 	\hfill
-	\begin{minipage}[t]{\dimexpr(\linewidth/2) + 3em}
+	\begin{minipage}[t]{0.48\linewidth}%
 		#3
-	\end{minipage}
+	\end{minipage}%
 }
 
 % Define the 'referencees' environment
