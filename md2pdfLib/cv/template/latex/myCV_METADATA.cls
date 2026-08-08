@@ -319,7 +319,13 @@
 \newcolumntype{E}{>{\raggedright\arraybackslash}p{\rightcolumnlength}}
 
 % Define the 'experiences' environment
+% longtable surrounds every table with \LTpre/\LTpost, both \bigskipamount by
+% default. The section rule already separates these tables from what precedes
+% and follows them, so that much air is redundant -- and on a one-page CV it is
+% the difference between a comfortable last row and a squeezed one.
 \newenvironment{experiences}{%
+	\setlength{\LTpre}{8pt}%
+	\setlength{\LTpost}{2pt}%
 	\begin{longtable}{R{\leftcolumn}|E}
 		}{%
 	\end{longtable}
@@ -407,16 +413,23 @@
 % previous em-based widths summed to \linewidth - 1em, which those spaces pushed
 % past \hsize -- TeX then broke the row at an \hfill, dropping column 3 onto a
 % line of its own.
+% Widths are content-driven, not equal: column 1 holds language names long
+% enough to hyphenate at 0.24 ("Deutsch (Muttersprache)"), while column 2 holds
+% single short words. \raggedright as in \twocolumnsection -- justifying a
+% column this narrow stretches interword gaps badly.
 \newcommand*\threecolumnsection[3]{%
-	\begin{minipage}[t]{0.24\linewidth}%
+	\begin{minipage}[t]{0.26\linewidth}%
+		\raggedright
 		#1
 	\end{minipage}%
 	\hfill
-	\begin{minipage}[t]{0.24\linewidth}%
+	\begin{minipage}[t]{0.22\linewidth}%
+		\raggedright
 		#2
 	\end{minipage}%
 	\hfill
 	\begin{minipage}[t]{0.48\linewidth}%
+		\raggedright
 		#3
 	\end{minipage}%
 }
