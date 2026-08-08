@@ -116,11 +116,16 @@
 
 % Setup CV sections
 \titleformat{\section}{\Large\raggedright}{}{0em}{}[\titlerule]
-\titlespacing{\section}{0pt}{2pt}{2pt}
+% 2pt above a section left its heading crowded against whatever preceded it;
+% the extra air here is what separates one section from the next.
+\titlespacing{\section}{0pt}{6pt}{3pt}
 
 % Configure list
-\setlist[itemize,1]{label=\faAngleRight, nosep, leftmargin=2em}
-\setlist[itemize,2]{label=\faAngleRight, nosep, leftmargin=1.5em}
+% nosep zeroes topsep/parsep/itemsep; itemsep is then set back to a small
+% positive value (later keys win) so bullets breathe without reintroducing the
+% much larger space nosep exists to remove around the list as a whole.
+\setlist[itemize,1]{label=\faAngleRight, nosep, itemsep=2pt, leftmargin=2em}
+\setlist[itemize,2]{label=\faAngleRight, nosep, itemsep=1pt, leftmargin=1.5em}
 
 % Setup Array : new column type
 \newcolumntype{R}[1]{>{\hfill}m{#1}}
@@ -276,7 +281,9 @@
 			}
 			\color{headingcolor}\user{\@firstname}{\@lastname}\\
 			\resumetitle{\@tagline}
-			\smallskip\\
+			% Was \smallskip (3pt), which ran the contact block straight into
+			% the tagline; the tagline needs to read as its own line.
+			\vspace{8pt}\\
 			\small{\@socialinfo}
 		\end{minipage}
 		\ifdef{\@photodiameter}{
@@ -324,7 +331,7 @@
 % and follows them, so that much air is redundant -- and on a one-page CV it is
 % the difference between a comfortable last row and a squeezed one.
 \newenvironment{experiences}{%
-	\setlength{\LTpre}{8pt}%
+	\setlength{\LTpre}{10pt}%
 	\setlength{\LTpost}{2pt}%
 	\begin{longtable}{R{\leftcolumn}|E}
 		}{%
