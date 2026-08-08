@@ -18,32 +18,73 @@
 
 \name{Jonas}{Heinle}
 \tagline{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA}}%|
-% \photo{5.5cm}{images/logo} -- replaced with the Gauss citation below.
-\photo{5.5cm}{images/logo}
+% No \photo: dropping it makes \makecvheader give the header block the full
+% \linewidth, which is what lets the three columns below span the page. The
+% Gauss citation, which used to occupy the photo slot, is now column three.
+%
+% Contact details stacked in one column ran nine lines deep and set the height
+% of the whole header. Split across two columns beside the citation, the block
+% is five lines instead -- the saving the one-page layout needs.
+%
+% Each entry is an \mbox (see \socialtext in the class), so it cannot wrap: a
+% column narrower than its longest entry overflows rather than reflowing.
+% Widths are therefore sized to the longest line in each column, not evenly.
+%
+% The class appends \hspace{1em} to every entry to separate entries that share
+% a line. Here each entry owns its line, so that 1em is dead width at the right
+% edge of every column -- and it was exactly what pushed the longest entries
+% past their column. Dropped locally rather than in the class, which other
+% documents share.
+\renewcommand{\socialtext}[2]{\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}#2}}
+\renewcommand{\sociallink}[3]{\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}\link{#2}{#3}}}
 
-% Photo slot repurposed to show the Gauss citation (moved here from
-% section_headline.tex, commented out there to avoid repeating it and to
-% save vertical space) instead of the logo image.
-\renewcommand{\idphoto}{%
-	\footnotesize\itshape
-	\IfLanguageName{english}{%
-		\textquote[Carl Friedrich Gauss]{Truly, it is not knowledge, but learning; not possession, but acquisition; not being there, but arriving -- that grants the greatest joy.}%
-	}{%
-		\textquote[Carl Friedrich Gau\ss]{Wahrlich es ist nicht das Wissen, sondern das Lernen, nicht das Besitzen, sondern das Erwerben, nicht das Da-Seyn, sondern das Hinkommen, was den grössten Genuss gewährt.}%
-	}%
-}
+% Handle instead of full URL for these two: their "linkedin.com/in/" and
+% "youtube.com/@" prefixes are already said by the icon beside them, and they
+% were the two widest unbreakable entries in the block. Dropping the prefixes
+% is what leaves the group narrower than \linewidth -- without it there is no
+% spare width and "centred" would be indistinguishable from full-width. The
+% links themselves still point at the full URLs.
+\renewcommand*{\linkedin}[1]{\sociallink{\linkedinSymbol}{https://www.linkedin.com/in/#1/}{#1}}
+\renewcommand*{\youtube}[1]{\sociallink{\youtubeSymbol}{https://youtube.com/@#1}{@#1}}
 
+% \makebox centres the three columns as one group: the gutters are fixed, so
+% the leftover width falls outside the group as equal left/right margins
+% instead of being pushed between the columns by \hfill.
 \socialinfo{
-    \github{Kataglyphis}\newline
-    \linkedin{jonas-heinle-0b2a301a0}\newline
-	\personalLink{jonasheinle.de}\newline
-	\email{jonasheinle@googlemail.com}\newline
-    \youtube{jotrockenmitlocken}\newline
-	\address{\IfLanguageName{english}{\hspace{0.3em}Stuttgart}{\hspace{0.3em}Stuttgart}}
-	\infos{\IfLanguageName{english}{German Citizen}{Deutscher Staatsbürger}}\newline
-	\infos{\IfLanguageName{english}{\hspace{0.5em}Birthday: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall, Germany}{\hspace{0.5em}Geburtstag: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall, Deutschland}}\newline
-	\infos{\IfLanguageName{english}{\hspace{0.5em}Driving License: Class B}{\hspace{0.5em}Führerschein: Klasse B}}\newline
-    \smartphone{\hspace{0.4em}+49 15678111689}
+	\makebox[\linewidth][c]{%
+	% Sized to the e-mail address, now the longest entry in this column.
+	\begin{minipage}[t]{0.26\linewidth}
+		\raggedright
+		\github{Kataglyphis}\newline
+		\linkedin{jonas-heinle-0b2a301a0}\newline
+		\personalLink{jonasheinle.de}\newline
+		\email{jonasheinle@googlemail.com}\newline
+		\youtube{jotrockenmitlocken}
+	\end{minipage}%
+	\hspace{1.5em}%
+	% Widest column: it carries the German "Geburtstag: ..., Schwäbisch Hall",
+	% which is longer than its English counterpart. Sized for the German build.
+	\begin{minipage}[t]{0.395\linewidth}
+		\raggedright
+		\address{\hspace{0.3em}Stuttgart}\newline
+		\infos{\IfLanguageName{english}{German Citizen}{Deutscher Staatsbürger}}\newline
+		% ", Germany" dropped: the citizenship line above already says it, and
+		% this is the longest entry in the column.
+		\infos{\hspace{0.5em}\IfLanguageName{english}{Birthday: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall}{Geburtstag: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall}}\newline
+		\infos{\hspace{0.5em}\IfLanguageName{english}{Driving License: Class B}{Führerschein: Klasse B}}\newline
+		\smartphone{\hspace{0.4em}+49 15678111689}
+	\end{minipage}%
+	\hspace{1.5em}%
+	\begin{minipage}[t]{0.24\linewidth}
+		\raggedright
+		\footnotesize\itshape
+		\IfLanguageName{english}{%
+			\textquote[Carl Friedrich Gauss]{Truly, it is not knowledge, but learning; not possession, but acquisition; not being there, but arriving -- that grants the greatest joy.}%
+		}{%
+			\textquote[Carl Friedrich Gau\ss]{Wahrlich es ist nicht das Wissen, sondern das Lernen, nicht das Besitzen, sondern das Erwerben, nicht das Da-Seyn, sondern das Hinkommen, was den grössten Genuss gewährt.}%
+		}%
+	\end{minipage}%
+	}%
 }
 
 \begin{document}
@@ -56,9 +97,9 @@
 {\thepage}
 
 \input{section_headline}
-% The header block already sits clear of the first section rule; 0.5cm of extra
-% air here was space the one-page layout needed further down.
-\vspace{0.15cm}
+% Trimmed to pay for the larger gap after the tagline above: the space is
+% redistributed inside the header rather than added to the page.
+\vspace{0.25cm}
 \input{section_experience}
 \input{section_education}
 % Commented out to fit the CV on one page -- restore by uncommenting.
