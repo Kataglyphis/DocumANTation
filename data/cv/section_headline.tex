@@ -1,14 +1,29 @@
-% Commented out: this citation now lives in the header photo slot (cv.tex),
-% not repeated here, to fit the CV on one page -- restore by uncommenting.
-% \IfLanguageName{english}{
-%     \textquote[Carl Friedrich Gauss]{Truly, it is not knowledge, but learning; not possession, but acquisition; not being there, but arriving -- that grants the greatest joy.}
-% }{
-%     \textquote[Carl Friedrich Gauß]{Wahrlich es ist nicht das Wissen, sondern das Lernen, nicht das Besitzen, sondern das Erwerben, nicht das Da-Seyn, sondern das Hinkommen, was den grössten Genuss gewährt.}
-% }
-
-% Commented out to fit the CV on one page -- restore by uncommenting.
-% \IfLanguageName{english}{
-%     \par{I studied computer science at the Karlsruhe Institute of Technology (KIT), specializing in computer graphics, geometry processing, and anthropomatics. My Master's thesis investigated user-adaptive guidance in mixed reality using eye tracking. Currently I work as a research associate at Fraunhofer IPA on scene analysis and AI-based software development.}
-% }{
-%     \par{Ich habe Informatik am Karlsruher Institut für Technologie (KIT) mit den Vertiefungsfächern Computergrafik, Geometrieverarbeitung und Anthropomatik studiert. Meine Masterarbeit untersuchte benutzeradaptive Führung in Mixed Reality mittels Eye Tracking. Aktuell arbeite ich als wissenschaftlicher Mitarbeiter am Fraunhofer IPA an Szenenanalyse und KI-basierter Softwareentwicklung.}
-% }
+% Headline paragraph.
+%
+% This was commented out entirely to fit the one-pager, and the space it needs
+% is real. It earns it back by being the only place on the CV that says
+% something a bullet list cannot: why I work the way I do.
+%
+% The open-source line is deliberately NOT "passionate about open source" --
+% that sentence is on every CV and costs nothing to write. What is said here
+% instead is a habit with a consequence ("upstream, not a local patch"), and
+% the Experiences section below names the two PRs that prove it. Claim in the
+% prose, evidence in the timeline.
+%
+% Keep it to three lines. Four pushes the Languages/Hobbies/Publications row
+% off the page -- rebuild and check the page count after any edit.
+\IfLanguageName{english}{
+    \par{I studied computer science at KIT -- computer graphics, geometry
+    processing and anthropomatics -- and now work at Fraunhofer IPA on
+    real-time scene analysis. I learned this field from other people's source
+    code, and I like giving it back: what I build is public, and when a tool I
+    depend on turns out to be broken I fix it upstream instead of quietly
+    carrying a local patch.}
+}{
+    \par{Ich habe Informatik am KIT studiert -- Computergrafik,
+    Geometrieverarbeitung und Anthropomatik -- und arbeite am Fraunhofer IPA an
+    Echtzeit-Szenenanalyse. Ich habe dieses Fach aus dem Quellcode anderer
+    Leute gelernt und gebe gerne zurück: Was ich baue, ist öffentlich, und wenn
+    ein Werkzeug, auf das ich mich verlasse, defekt ist, repariere ich es
+    upstream, statt still einen lokalen Patch zu pflegen.}
+}
