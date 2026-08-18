@@ -1,29 +1,31 @@
-% Headline paragraph.
+% Headline paragraph for the default profile.
 %
 % This was commented out entirely to fit the one-pager, and the space it needs
 % is real. It earns it back by being the only place on the CV that says
 % something a bullet list cannot: why I work the way I do.
 %
-% The open-source line is deliberately NOT "passionate about open source" --
-% that sentence is on every CV and costs nothing to write. What is said here
-% instead is a habit with a consequence ("upstream, not a local patch"), and
-% the Experiences section below names the two PRs that prove it. Claim in the
-% prose, evidence in the timeline.
+% It opened with "I studied computer science at KIT ... and now work at
+% Fraunhofer IPA on real-time scene analysis" -- cut, not for space alone: the
+% tagline in the header already names the employer and the role, and the
+% Education section names KIT and the specializations. A summary that restates
+% the page below it is the first thing a reader learns to skip.
 %
-% Keep it to three lines. Four pushes the Languages/Hobbies/Publications row
-% off the page -- rebuild and check the page count after any edit.
+% What is left is deliberately NOT "passionate about open source" -- that
+% sentence is on every CV and costs nothing to write. It is a habit with a
+% consequence ("upstream, not a local patch"), and the Experiences section
+% names the two PRs that prove it. Claim in the prose, evidence in the
+% timeline.
+%
+% Two lines. A third pushes the Languages/Hobbies/Publications row onto page
+% two -- rebuild and check the page count, in both languages, after any edit.
 \IfLanguageName{english}{
-    \par{I studied computer science at KIT -- computer graphics, geometry
-    processing and anthropomatics -- and now work at Fraunhofer IPA on
-    real-time scene analysis. I learned this field from other people's source
-    code, and I like giving it back: what I build is public, and when a tool I
-    depend on turns out to be broken I fix it upstream instead of quietly
-    carrying a local patch.}
+    \par{I learned this field from other people's source code, and I like
+    giving it back: what I build is public, and when a tool I depend on turns
+    out to be broken I fix it upstream instead of quietly carrying a local
+    patch.}
 }{
-    \par{Ich habe Informatik am KIT studiert -- Computergrafik,
-    Geometrieverarbeitung und Anthropomatik -- und arbeite am Fraunhofer IPA an
-    Echtzeit-Szenenanalyse. Ich habe dieses Fach aus dem Quellcode anderer
-    Leute gelernt und gebe gerne zurück: Was ich baue, ist öffentlich, und wenn
-    ein Werkzeug, auf das ich mich verlasse, defekt ist, repariere ich es
-    upstream, statt still einen lokalen Patch zu pflegen.}
+    \par{Ich habe dieses Fach aus dem Quellcode anderer Leute gelernt und gebe
+    gerne zurück: Was ich baue, ist öffentlich, und wenn ein Werkzeug, auf das
+    ich mich verlasse, defekt ist, repariere ich es upstream, statt still einen
+    lokalen Patch zu pflegen.}
 }

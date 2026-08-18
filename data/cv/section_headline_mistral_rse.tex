@@ -9,14 +9,27 @@
 % is offered against that requirement instead. Do not "improve" this by adding
 % an orchestrator.
 %
-% Three lines, and they cost the A-levels entry in section_education (see the
-% \cvshowschoolfalse in profiles/mistral-rse.tex). Growing this paragraph by a
-% line pushes the Languages/Hobbies/Publications row onto page two -- that row
-% is the first thing to spill. Rebuild and check the page count after editing.
-% No GitHub URL here: the header already carries it, and the line it costs is
-% one the summary does not have to spare.
+% The first sentence used to spell out each item ("custom CUDA kernels and
+% Python bindings to C++, own the institute's GitLab CI/CD pipelines,
+% administer its DGX A100/H200 systems ..."). Every one of those is a bullet in
+% section_experience immediately below, so the long form spent three lines
+% restating the page. Naming them is enough; the bullets carry the detail.
+%
+% The second sentence answers the posting's "open-source contributions"
+% nice-to-have, and is what the compression above pays for. It is a working
+% habit with a consequence, not "passionate about open source" -- the sccache
+% and hcsshim PRs in section_experience are the evidence, named with their
+% numbers so a reader can check them in one click. Worth its line for this
+% employer in particular: Mistral ships open-weight models, and the Fraunhofer
+% bullets are careful to say open-weight where that is what they mean.
+%
+% One page is a hard requirement and this paragraph is the first thing to break
+% it: three lines fit, four push the Languages/Hobbies/Publications row onto
+% page two. Rebuild BOTH languages and check the page count after any edit --
+% German sets ~10% longer, so an English build that fits proves nothing.
+% No GitHub URL here: the header already carries it.
 \IfLanguageName{english}{
-    \par{I make other people's research run faster: at Fraunhofer IPA I accelerate the research team's learning and optimization methods with custom CUDA kernels and Python bindings to C++, own the institute's GitLab CI/CD pipelines, administer its DGX A100/H200 systems, and build the internal tooling the group uses daily -- most recently a vLLM-hosted coding agent, shipped containerized and reproducible.}
+    \par{I make other people's research run faster: at Fraunhofer IPA I own the CUDA kernels and Python bindings behind the research team's methods, the institute's CI/CD, its DGX A100/H200 nodes, and the tooling the group uses daily. I work in the open by preference: what I build is public, and a tool we depend on that turns out to be broken gets fixed upstream, not locally patched.}
 }{
-    \par{Ich sorge dafür, dass die Forschung anderer schneller läuft: Am Fraunhofer IPA beschleunige ich die Lern- und Optimierungsverfahren des Forschungsteams mit eigenen CUDA-Kernels und Python-Bindings an C++, verantworte die GitLab-CI/CD-Pipelines des Instituts, administriere dessen DGX-A100/H200-Systeme und baue das interne Tooling, mit dem die Gruppe täglich arbeitet -- zuletzt einen vLLM-gehosteten Coding-Agenten, containerisiert und reproduzierbar ausgeliefert.}
+    \par{Ich sorge dafür, dass die Forschung anderer schneller läuft: Am Fraunhofer IPA verantworte ich die CUDA-Kernels und Python-Bindings hinter den Verfahren des Forschungsteams, die CI/CD des Instituts, dessen DGX-A100/H200-Knoten und das Tooling der Gruppe. Ich arbeite aus Überzeugung offen: Was ich baue, ist öffentlich, und ein defektes Werkzeug, auf das wir uns verlassen, wird upstream repariert, nicht lokal gepatcht.}
 }
