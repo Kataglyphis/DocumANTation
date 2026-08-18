@@ -1,0 +1,22 @@
+% Summary for the mistral-rse profile: Research Software Engineer, Mistral AI
+% (Paris). Written against that posting's first responsibility -- "accelerate
+% researchers by owning the complex parts of large-scale pipelines and
+% delivering robust internal tooling" -- and says nothing the experience and
+% education sections below do not back up.
+%
+% Deliberately absent: Kubernetes and SLURM. The posting asks for them and the
+% claim would not be true; the reproducible-container and GPU-node work is what
+% is offered against that requirement instead. Do not "improve" this by adding
+% an orchestrator.
+%
+% Three lines, and they cost the A-levels entry in section_education (see the
+% \cvshowschoolfalse in profiles/mistral-rse.tex). Growing this paragraph by a
+% line pushes the Languages/Hobbies/Publications row onto page two -- that row
+% is the first thing to spill. Rebuild and check the page count after editing.
+% No GitHub URL here: the header already carries it, and the line it costs is
+% one the summary does not have to spare.
+\IfLanguageName{english}{
+    \par{I make other people's research run faster: at Fraunhofer IPA I accelerate the research team's learning and optimization methods with custom CUDA kernels and Python bindings to C++, own the institute's GitLab CI/CD pipelines, administer its DGX A100/H200 systems, and build the internal tooling the group uses daily -- most recently a vLLM-hosted coding agent, shipped containerized and reproducible.}
+}{
+    \par{Ich sorge dafür, dass die Forschung anderer schneller läuft: Am Fraunhofer IPA beschleunige ich die Lern- und Optimierungsverfahren des Forschungsteams mit eigenen CUDA-Kernels und Python-Bindings an C++, verantworte die GitLab-CI/CD-Pipelines des Instituts, administriere dessen DGX-A100/H200-Systeme und baue das interne Tooling, mit dem die Gruppe täglich arbeitet -- zuletzt einen vLLM-gehosteten Coding-Agenten, containerisiert und reproduzierbar ausgeliefert.}
+}

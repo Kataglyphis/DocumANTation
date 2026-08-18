@@ -16,8 +16,41 @@
 \tcbuselibrary{breakable}
 \input{brand-cv.tex}
 
+% Profile: which sections this build shows and the tagline above them. One CV,
+% several targets -- the general-purpose one published on jonasheinle.de, and
+% per-application variants that reorder the same sections and swap the summary.
+% Selected at build time like the language, without editing this file:
+%   lualatex "\def\cvprofile{mistral-rse}\input{cv.tex}"
+% which is what CV_PROFILE in scripts/build_in_container.sh does. Every profile
+% defines \cvTagline and \cvBody; see profiles/README.md.
+%
+% Profiles select *sections*, they do not fork prose: a per-profile branch
+% inside every section file is the same trap data/cv/README.md flags for a
+% third language. Role-specific wording lives in its own section_headline_*
+% file, which the profile inputs instead of the general one.
+%
+% The one exception to "profiles do not edit sections": the A-levels entry in
+% section_education.tex. A profile aimed at a role that requires a Master's
+% spends three lines on a 2006 Gymnasium entry it does not need, and the page
+% budget is the whole constraint. A \newif rather than an \ifdefstring: the
+% entry it guards contains blank lines, which an argument-grabbing conditional
+% would choke on. Declared here, before the profile is read, so a profile can
+% flip it.
+\newif\ifcvshowschool \cvshowschooltrue
+% Same idea, one entry up: drops the thesis lines while keeping the degrees,
+% their dates, their grades and their subject tags.
+\newif\ifcvshowthesislines \cvshowthesislinestrue
+% Suppresses the "Teaching and Mentoring" heading so the tutor entry can follow
+% the other jobs under Experiences -- which is what it is, and which is what
+% makes an unbroken 2018-today employment line visible on one page. Only useful
+% for a profile that inputs section_teaching_mentoring directly after
+% section_experience.
+\newif\ifcvshowteachingtitle \cvshowteachingtitletrue
+\providecommand{\cvprofile}{default}
+\input{profiles/\cvprofile.tex}
+
 \name{Jonas}{Heinle}
-\tagline{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA}}%|
+\tagline{\cvTagline}%|
 % No \photo: dropping it makes \makecvheader give the header block the full
 % \linewidth, which is what lets the three columns below span the page. The
 % Gauss citation, which used to occupy the photo slot, is now column three.
@@ -99,23 +132,8 @@
 {\textsc{Jonas Heinle - CV}}
 {\thepage}
 
-\input{section_headline}
-% Trimmed to pay for the larger gap after the tagline above: the space is
-% redistributed inside the header rather than added to the page.
-\vspace{0.25cm}
-\input{section_experience}
-\input{section_education}
-% Commented out to fit the CV on one page -- restore by uncommenting.
-% \input{section_skills}
-% Commented out to fit the CV on one page -- restore by uncommenting.
-% \input{section_projects}
-% Commented out to fit the CV on one page -- restore by uncommenting.
-% \input{section_teaching_mentoring}
-\input{section_private}
-% Commented out to fit the CV on one page -- restore by uncommenting.
-% \input{section_international_experiences_volunteering.tex}
-% Commented out to fit the CV on one page -- restore by uncommenting.
-% \input{section_extracurricular_courses_certificates.tex}
-% \input{section_references}
+% The section list moved into profiles/: which sections fit is a per-target
+% decision, and it was already being made here by commenting lines in and out.
+\cvBody
 
 \end{document}

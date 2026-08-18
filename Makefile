@@ -1,17 +1,28 @@
-.PHONY: book beamer pptx cv cv-all watch-beamer watch-book watch-cv
+.PHONY: book beamer pptx cv cv-all cv-mistral-rse watch-beamer watch-book watch-cv
 
 IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
 # cv only: english (default) or german. Both come from the same sources.
 CV_LANG ?= english
+# cv only: which section set and summary to build, one file per target in
+# data/cv/profiles/. Orthogonal to CV_LANG.
+CV_PROFILE ?= default
+# cv only: output basename. Empty means the script's default, which is the
+# published CV_Jonas_Heinle_<language>. Tailored profiles set it explicitly --
+# the filename is the first thing a recruiter sees.
+CV_JOB ?=
 
 book beamer pptx cv:
-	IMAGE="$(IMAGE)" STRICT_WARNINGS="$(STRICT_WARNINGS)" CV_LANG="$(CV_LANG)" ./scripts/build_in_container.sh $@
+	IMAGE="$(IMAGE)" STRICT_WARNINGS="$(STRICT_WARNINGS)" CV_LANG="$(CV_LANG)" CV_PROFILE="$(CV_PROFILE)" CV_JOB="$(CV_JOB)" ./scripts/build_in_container.sh $@
 
 # Both published CV variants, the pair linked from jonasheinle.de.
 cv-all:
 	$(MAKE) cv CV_LANG=english
 	$(MAKE) cv CV_LANG=german
+
+# Application: Research Software Engineer, Mistral AI (Paris).
+cv-mistral-rse:
+	$(MAKE) cv CV_PROFILE=mistral-rse CV_JOB=CV_Jonas_Heinle_Mistral_RSE
 
 # Live-demo mode: rebuild on every source change. Requires `entr`
 # (apt install entr / brew install entr). Pair with a PDF viewer that

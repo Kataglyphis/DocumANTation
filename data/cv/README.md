@@ -10,11 +10,20 @@ presentation templates, and reaches this directory through `TEXINPUTS`.
 ./scripts/build_in_container.sh cv                  # English
 CV_LANG=german ./scripts/build_in_container.sh cv   # German
 make cv-all                                         # both
+make cv-mistral-rse                                 # a tailored profile
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf` — the filenames the
 CV is published under on jonasheinle.de, so the deliverables are reproducible
 rather than committed binaries. Nothing in this directory is a build artifact.
+
+## Profiles
+
+`CV_PROFILE` selects which sections a build shows and which summary sits above
+them; one file per target in `profiles/`, and `default` is the CV published on
+jonasheinle.de. It is orthogonal to `CV_LANG` — every profile builds in both
+languages. Tailoring an application means adding a profile, never editing
+`cv.tex` or copying a section file. See `profiles/README.md`.
 
 Add `STRICT_WARNINGS=1` to fail the build on LaTeX warnings and bad boxes. CI
 runs both languages that way.
@@ -40,8 +49,10 @@ sections carry no French text. Adding it means a third branch everywhere, so
 
 | File | Contents |
 | --- | --- |
-| `cv.tex` | Document root: header, contact details, section order |
-| `section_*.tex` | One section each, in the order `cv.tex` inputs them |
+| `cv.tex` | Document root: header and contact details. The section order lives in the profile |
+| `profiles/*.tex` | One per target: the tagline and the ordered section list |
+| `section_*.tex` | One section each, shared by every profile |
+| `section_headline_*.tex` | Per-profile summary; the one place wording is tailored |
 | `images/` | Header photo. Keep it small — this file *is* the PDF's size |
 
 `section_references.tex` is deliberately not input; `cv.tex` keeps the line
