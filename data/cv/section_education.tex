@@ -16,31 +16,40 @@
     \begin{experiences}
     \education
     {\DTMlangsetup*{showdayofmonth=false}
-    \DTMdisplaydate{2023}{09}{30}}   {Master of Science Computer Science | Student}{Karlsruhe}{Karlsruhe Institute of Technology}
+    \DTMdisplaydate{2023}{09}{30}}   {Master of Science Computer Science}{Karlsruhe}{Karlsruhe Institute of Technology}
     {\DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2020}{04}{01}}
     {Overall grade: 1.9/ US-GPA: 3.1}
     {
+        % Thesis lines are the first education detail a profile can afford to
+        % lose: the degree, its dates, its grade and its subject tags all stay,
+        % and a thesis title is rarely what an industry reader is deciding on.
+        % Dropping whole entries instead would leave visible holes in the dates.
+        \ifcvshowthesislines
         \begin{itemize}
             \item Thesis: Designing User-adaptive Guidance for Mixed Reality Using Eye Tracking
         \end{itemize}
+        \fi
     }
     {AI, Computer Graphics and Geometry Processing, Anthropomatics and Cognitive Systems}
     \emptySeparator
     \education{\DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2020}{03}{01}}
-    {Bachelor of Science Computer Science | Student}
+    {Bachelor of Science Computer Science}
     {Karlsruhe}
     {Karlsruhe Institute of Technology}
     { \DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2015}{10}{01}}
     {Overall grade: 2.5/ US-GPA: 2.5}
     {
+    \ifcvshowthesislines
     \begin{itemize}
         \item Thesis: Temporally Stable Blue Noise Error Distribution in Screen Space for Real Time Applications
     \end{itemize}
+    \fi
     }
     {Path Tracing, Blue Noise, C++, Real-Time Systems, Low Latency, High Performance}
+    \ifcvshowschool
     \emptySeparator
     \education{2014}
     {Pupil | Higher education entrance qualification (A-levels)}
@@ -56,8 +65,9 @@
         %\end{itemize}
     }
     {Delphi, Pascal, Java}
+    \fi
     \end{experiences}
-    
+
 }{
     
     \sectionTitle{Bildung}{\faMortarBoard}
@@ -65,31 +75,38 @@
     % german
     \education
     {\DTMlangsetup*{showdayofmonth=false}
-    \DTMdisplaydate{2023}{09}{30}}   {Master of Science Informatik | Student}{Karlsruhe}{Karlsruher Institut für Technologie}
+    \DTMdisplaydate{2023}{09}{30}}   {Master of Science Informatik}{Karlsruhe}{Karlsruher Institut für Technologie}
     {\DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2020}{04}{01}}
     {Gesamtnote: 1,9}
     {
+        % Siehe die Anmerkung im englischen Zweig.
+        \ifcvshowthesislines
         \begin{itemize}
             \item Thesis: Entwurf von benutzeranpassbarem Szeneninhalt für Mixed Reality mit Hilfe von Augen- und Handnachverfolgung
         \end{itemize}
+        \fi
     }
     {AI, Computergrafik und Geometrieverarbeitung, Anthropomatik und Kognitive Systeme}
     \emptySeparator
     \education{\DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2020}{03}{01}}
-    {Bachelor of Science Informatik | Student}
+    {Bachelor of Science Informatik}
     {Karlsruhe}
     {Karlsruher Institut für Technologie}
     { \DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2015}{10}{01}}
     {Gesamtnote: 2,5}
     {
+    % Siehe die Anmerkung im englischen Zweig.
+    \ifcvshowthesislines
     \begin{itemize}
         \item Thesis: Zeitlich stabile Blue Noise Fehlerverteilung im Bildraum für Echtzeitanwendungen
     \end{itemize}
+    \fi
     }
     {Path Tracing, Blue Noise, C++, Echtzeitsysteme, Low Latency, High Performance}
+    \ifcvshowschool
     \emptySeparator
     \education{2014}
     {Schüler | Allgemeine Hochschulreife}
@@ -105,7 +122,7 @@
         %\end{itemize}
     }
     {Delphi, Pascal, Java}
-    
+    \fi
     \end{experiences}
 }
   
