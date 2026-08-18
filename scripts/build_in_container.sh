@@ -7,11 +7,17 @@ CONTAINER_RUNTIME="${CONTAINER_RUNTIME:-nerdctl}"
 IMAGE="${IMAGE:-pandoc_all}"
 STRICT_WARNINGS="${STRICT_WARNINGS:-0}"
 CV_LANG="${CV_LANG:-english}"
+# Which section set and summary the CV build shows; one file per target in
+# data/cv/profiles/. Orthogonal to CV_LANG: every profile builds in both
+# languages. See data/cv/profiles/README.md.
+CV_PROFILE="${CV_PROFILE:-default}"
 
 usage() {
     printf 'Usage: %s <book|beamer|pptx|cv>\n' "$0" >&2
     printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
-    printf '             CV_LANG=<english|german>  (cv target only)\n' >&2
+    printf '             CV_LANG=<english|german>          (cv target only)\n' >&2
+    printf '             CV_PROFILE=<data/cv/profiles/*>   (cv target only, default: default)\n' >&2
+    printf '             CV_JOB=<output basename>          (cv target only, default: CV_Jonas_Heinle_<lang>)\n' >&2
     exit 2
 }
 
@@ -63,9 +69,20 @@ case "$TARGET" in
         # the deliverable is a reproducible build output rather than a binary
         # someone has to remember to re-commit. Output goes to /data/out like
         # every other target, which keeps aux/log/pdf out of the source tree.
-        CV_JOB="CV_Jonas_Heinle_${CV_LANG}"
+        if [ ! -f "${PROJECT_ROOT}/data/cv/profiles/${CV_PROFILE}.tex" ]; then
+            printf 'Unknown CV_PROFILE "%s": data/cv/profiles/%s.tex does not exist\n' \
+                "$CV_PROFILE" "$CV_PROFILE" >&2
+            exit 2
+        fi
+        # Tailored profiles are named per application, and the filename is the
+        # first thing the person receiving it sees -- so it is set explicitly by
+        # whoever adds the profile (see the Makefile) rather than mangled out of
+        # the profile slug here. The default keeps the published names.
+        CV_JOB="${CV_JOB:-CV_Jonas_Heinle_${CV_LANG}}"
         # Selects the language without editing cv.tex; see the class options.
-        CV_ARG="\\PassOptionsToClass{${CV_LANG}}{myCV_METADATA}\\input{cv.tex}"
+        # The profile goes in the same way, as a \def cv.tex falls back on.
+        CV_ARG="\\def\\cvprofile{${CV_PROFILE}}"
+        CV_ARG="${CV_ARG}\\PassOptionsToClass{${CV_LANG}}{myCV_METADATA}\\input{cv.tex}"
         CV_RUN="lualatex -interaction=nonstopmode -halt-on-error"
         CV_RUN+=" -output-directory=/data/out -jobname=${CV_JOB} '${CV_ARG}'"
         # Twice: the second pass resolves the hyperref bookmarks written by the first.

@@ -1,0 +1,59 @@
+% Profile: mistral-rse -- Research Software Engineer, Mistral AI (Paris /
+% Research Software Engineering team, Paris + London).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "accelerate researchers by owning the complex parts of large-scale
+%    pipelines and delivering robust internal tooling"
+%        -> the summary's first sentence, and the CUDA/bindings and coding-agent
+%           bullets in section_experience
+%   "enforcing code review, CI, and observability standards"
+%        -> the GitLab CI/CD bullet
+%   "Python fluency plus proficiency in one systems language"
+%        -> the reordered technology tag on the Fraunhofer entry
+%   "GPU cluster or CUDA expertise" (nice-to-have)
+%        -> CUDA kernels + DGX A100/H200 administration
+%   "open-source contributions" (nice-to-have)
+%        -> github.com/Kataglyphis, linked from the summary and the header
+%   Master's in Computer Science
+%        -> section_education, which is why it stays in over Projects/Skills
+%
+% Not claimed: Kubernetes, SLURM. See the note in
+% section_headline_mistral_rse.tex.
+%
+% Paris: section_private carries French at B1, which is the reason that section
+% earns its place here rather than Projects. Do not drop it from this profile.
+
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | GPU acceleration, CI/CD \& research tooling}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | GPU-Beschleunigung, CI/CD \& Forschungstooling}}
+
+% The Gymnasium entry goes: this role requires a Master's, and those three
+% lines buy the summary at the top of the page. See cv.tex.
+\cvshowschoolfalse
+% ... and both thesis lines. Together with the heading below, this is what pays
+% for the tutor entry. Degrees, dates, grades and subject tags all stay.
+\cvshowthesislinesfalse
+% The tutor entry follows the other jobs under Experiences instead of opening a
+% section of its own: it is a paid research-assistant post, it reads correctly
+% there, and the heading it no longer prints is most of what it cost to fit.
+\cvshowteachingtitlefalse
+
+\newcommand{\cvBody}{%
+    \input{section_headline_mistral_rse}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    % Four years of KIT tutoring (2018-2022). Two reasons it is worth its ~4
+    % lines here: it is the only thing on the page covering 2018-2022, which is
+    % what makes the "4+ years" requirement legible, and the posting asks for a
+    % "collaborative, low-ego" engineer -- teaching is the evidence for that.
+    \input{section_teaching_mentoring}%
+    \input{section_education}%
+    % Languages (French B1 -- the role is Paris-based) and the ECML PKDD
+    % publication. Cheap in vertical space: the row's height is set by its
+    % tallest column, and Languages sets it either way.
+    \input{section_private}%
+    % Left out on purpose, not for lack of relevance -- one page. The GitHub
+    % link in the header and in the summary carries the project evidence:
+    % \input{section_projects}%
+    % \input{section_skills}%
+    % \input{section_teaching_mentoring}%
+}

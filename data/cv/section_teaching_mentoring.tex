@@ -12,19 +12,36 @@
 %Section: Scholarships and additional info
 \IfLanguageName{english}{
 
+    % Heading is optional: a profile that inputs this file straight after
+    % section_experience wants the entry to read as one more job under
+    % Experiences (which it is -- a paid research-assistant post), not as a
+    % section of its own. See \ifcvshowteachingtitle in cv.tex.
+    \ifcvshowteachingtitle
     \sectionTitle{Teaching and Mentoring}{\faUsers}
+    \fi
     
     \begin{experiences}
 
         \experience
         {\DTMlangsetup*{showdayofmonth=false}
-        \DTMdisplaydate{2022}{08}{01}}   {Technical computer science | Tutor}{Research Assistant}{Karlsruhe Institute of Technology}
+        % Third argument is the location slot (the class sets it in small caps
+        % beside the institution) -- it held "Research Assistant", which put the
+        % employment type where every other entry has a city and wrapped the
+        % header onto a second line. The role is already in the title.
+        \DTMdisplaydate{2022}{08}{01}}   {Tutor | Technical Computer Science}{Karlsruhe}{Karlsruhe Institute of Technology}
         {\DTMlangsetup*{showdayofmonth=false}
         \DTMdisplaydate{2018}{10}{01}} {
         \begin{itemize}
-            \item Teaching undergraduates in digital technology. This includes inter alias control units, run-time effects, computer arithmetic, boolean algebra, NAN/NOR gates, MOSFET, CMOS, Quine-McClusky, hazards, 
-            sequential circuit
-            \item Teaching undergraduates in computer organization which includes inter alias c programming, caches, assembler, memory organization, DLX-pipelining, RAM, paging, segmentation       
+            % One bullet, not the full curriculum: this section only earns its
+            % place on a one-page CV if it costs ~4 lines, and outside academia
+            % the syllabus detail is not what the section is evidence for --
+            % four years of explaining hard material to people who do not have
+            % the context yet is. The original enumeration is kept below;
+            % restore it for teaching-oriented applications.
+            \item Taught undergraduate digital technology and computer organization for four years: logic design, computer arithmetic, C and assembler, caches, pipelining, virtual memory
+            % \item Teaching undergraduates in digital technology. This includes inter alias control units, run-time effects, computer arithmetic, boolean algebra, NAN/NOR gates, MOSFET, CMOS, Quine-McClusky, hazards,
+            % sequential circuit
+            % \item Teaching undergraduates in computer organization which includes inter alias c programming, caches, assembler, memory organization, DLX-pipelining, RAM, paging, segmentation
         \end{itemize}
         }
         {\LaTeX, C, Assembler, MIPS, RISC-V}
@@ -56,17 +73,24 @@
         %{Volunteering}
     \end{experiences}        
 }{
+    % Siehe die Anmerkung im englischen Zweig.
+    \ifcvshowteachingtitle
     \sectionTitle{Lehre und Mentoring}{\faUsers}
+    \fi
     
     \begin{experiences}
         \experience
         {\DTMlangsetup*{showdayofmonth=false}
-        \DTMdisplaydate{2022}{08}{01}}   {Technische Informatik | Tutor}{Studentische Hilfskraft}{Karlsruher Institut für Technologie}
+        % Siehe die Anmerkung im englischen Zweig zum Orts-Argument.
+        \DTMdisplaydate{2022}{08}{01}}   {Tutor | Technische Informatik}{Karlsruhe}{Karlsruher Institut für Technologie}
         {\DTMlangsetup*{showdayofmonth=false}
         \DTMdisplaydate{2018}{10}{01}} {
         \begin{itemize}
-            \item Unterrichten von Studierenden in Grundlagen der Mikroelektronik, Entwurf und Aufbau von einfachen datenverarbeitenden Systemen, logischen Schaltnetzen und Schaltwerken
-            \item Weitere Themen: boolesche Algebra, boolesche Funktionen, Minimierungsverfahren, Entwurf einfacher arithmetischer Einheiten, Grundlagen des Aufbaus und Organisation von Rechnern, Assemblerprogrammierung, Pipelining, Cache-Speicher, virtuelle Speicherverwaltung, etc.      
+            % Siehe die Anmerkung im englischen Zweig: eine Zeile statt des
+            % vollen Curriculums, das unten erhalten bleibt.
+            \item Vier Jahre Lehre neben dem Studium in Technischer Informatik und Rechnerorganisation: Logikentwurf, Rechnerarithmetik, C und Assembler, Caches, Pipelining, virtuelle Speicherverwaltung
+            % \item Unterrichten von Studierenden in Grundlagen der Mikroelektronik, Entwurf und Aufbau von einfachen datenverarbeitenden Systemen, logischen Schaltnetzen und Schaltwerken
+            % \item Weitere Themen: boolesche Algebra, boolesche Funktionen, Minimierungsverfahren, Entwurf einfacher arithmetischer Einheiten, Grundlagen des Aufbaus und Organisation von Rechnern, Assemblerprogrammierung, Pipelining, Cache-Speicher, virtuelle Speicherverwaltung, etc.
         \end{itemize}
         }
         {\LaTeX, C, Assembler, MIPS, RISC-V}
