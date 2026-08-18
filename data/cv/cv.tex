@@ -92,7 +92,10 @@
 \makecvheader
 
 \makecvfooter
-{\textsc{}} %\selectlanguage{english}\today
+% The left footer field was empty. The most credible line for "I work in the
+% open" is the one showing this PDF is itself the artifact of a public
+% pipeline -- and in the footer it costs the one-page layout nothing.
+{\footnotesize\textsc{Typeset with}\ \link{https://github.com/Kataglyphis/Kataglyphis-DocumANTation}{Kataglyphis-DocumANTation}}
 {\textsc{Jonas Heinle - CV}}
 {\thepage}
 
@@ -102,6 +105,7 @@
 \vspace{0.25cm}
 \input{section_experience}
 \input{section_education}
+\input{section_open_source}
 % Commented out to fit the CV on one page -- restore by uncommenting.
 % \input{section_skills}
 % Commented out to fit the CV on one page -- restore by uncommenting.
