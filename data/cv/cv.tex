@@ -46,6 +46,24 @@
 % for a profile that inputs section_teaching_mentoring directly after
 % section_experience.
 \newif\ifcvshowteachingtitle \cvshowteachingtitletrue
+% \cvshowthesislinesfalse hid the thesis text but not the row holding it:
+% \education always emits its description row, so switching the flag off
+% left an empty minipage -- a blank line under every degree, which is exactly
+% the vertical space the flag was set to reclaim. Emitting that row only when
+% there is something to put in it makes the flag pay what it promises.
+% Overridden here rather than in myCV_METADATA.cls, which other documents
+% share, following the \socialtext/\sociallink precedent below.
+\renewcommand\education[8]{
+	\textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   \\*
+	\textbf{#5}    & #6   \\*
+	\ifcvshowthesislines
+	& \begin{minipage}[t]{\rightcolumnlength}
+		#7
+	\end{minipage}   \\*
+	\fi
+	& \footnotesize{\foreach \n in {#8}{\cvtag{\n}}} \\
+}
+
 \providecommand{\cvprofile}{default}
 \input{profiles/\cvprofile.tex}
 

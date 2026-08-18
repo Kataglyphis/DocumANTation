@@ -37,6 +37,16 @@
 % there, and the heading it no longer prints is most of what it cost to fit.
 \cvshowteachingtitlefalse
 
+% Layout, not content: this profile carries one section body more than the
+% page nominally fits, and the Languages/Hobbies/Publications row missed by
+% about two lines. \emptySeparator is a full blank table row between
+% entries; pulling half a line back out of each recovers that without
+% dropping anything. The README sanctions exactly this -- a profile may
+% redefine what the class exposes, for layout, not for content. If an edit
+% makes this profile spill again, take the line back here first, before
+% touching a bullet.
+\renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-3\baselineskip]}
+
 \newcommand{\cvBody}{%
     \input{section_headline_mistral_rse}%
     \vspace{0.25cm}%
