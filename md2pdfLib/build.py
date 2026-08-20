@@ -32,9 +32,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    factory = PRESETS[args.type]
-    sys.argv = [sys.argv[0]] + ([args.output] if args.output else [])
-    run_from_cli(factory())
+    run_from_cli(PRESETS[args.type](), args.output)
 
 
 if __name__ == "__main__":

@@ -7,9 +7,12 @@ exactly once and stays identical everywhere:
 
 - LaTeX:  md2pdfLib/style/brand-colors.tex  (\\definecolor + aliases)
 - LaTeX:  md2pdfLib/style/brand-fonts.tex   (\\brandMainFont + \\brandSetMainFont)
+- LaTeX:  md2pdfLib/style/brand-identity.tex (\\brandName, \\myurl, \\githubBase, ...)
 - CSS:    the token block inside the theme's custom.css, maintained between
           generated markers. That file is the only web stylesheet -- the theme
           package ships it, so consuming repos install it instead of copying it.
+          The consumers that load it by path instead get a generated verbatim
+          copy (``CSS_COPY_TARGETS``), so their copy cannot drift.
 - YAML:   the ``mainfont:`` key in each Pandoc metadata file (Pandoc reads YAML,
           not LaTeX, so the value is generated in place between markers).
 - JSON:   brand.json with aliases resolved, for any other application that wants
@@ -50,6 +53,9 @@ TOKENS_TARGETS = [
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"
 FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
+# Who the documents are by. On TEXINPUTS, so any document or class can
+# \input{brand-identity.tex} without knowing where it lives.
+IDENTITY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-identity.tex"
 # Code highlighting: the dark palette drives every code block (book, slides,
 # pptx, web). A former light/print theme was removed -- all documents now use
 # the same dark syntax palette for a single brand code-block look.
@@ -64,11 +70,30 @@ BRAND_CSS = REPO_ROOT / "style" / "brand.css"
 CSS_TARGETS = [
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css",
 ]
-
-YAML_TARGETS = [
-    REPO_ROOT / "md2pdfLib/pandoc/base.yml",
-    REPO_ROOT / "md2pdfLib/presentation/pandoc/metadata.yml",
+# Verbatim copies of that stylesheet, for the consumers that cannot install the
+# package. Two repos load source_templates/sphinx-book/conf_base.py by path --
+# Kataglyphis-Cpp-Inference and Kataglyphis-BeschleunigerBallett -- and the first
+# symlinks its _static/css/custom.css into that directory, so the file has to
+# exist there. Deleting it broke that repo's docs site until it was restored.
+#
+# Generated rather than maintained, which is the whole point. The hand-written
+# fork fell ~490 lines behind and still painted links the pre-cyan green
+# (#1ca06a / #7df5ba), so that one site rendered a different brand from every
+# other Kataglyphis site while every drift check passed. A copy the generator
+# owns cannot do that: --check fails the moment one is edited in place.
+CSS_COPY_TARGETS = [
+    REPO_ROOT / "docs-tooling/source_templates/sphinx-book/custom.css",
 ]
+
+# Pandoc metadata files, each with the identity keys that make sense for it.
+# `author` belongs on every document; `institute` is the speaker's affiliation on
+# the slides, and emitting it into the book would put an affiliation line on a
+# book title page that never had one.
+YAML_TARGETS: dict[Path, tuple[str, ...]] = {
+    REPO_ROOT / "md2pdfLib/pandoc/base.yml": (),
+    REPO_ROOT / "md2pdfLib/presentation/pandoc/metadata.yml": ("institute",),
+    REPO_ROOT / "md2pdfLib/example/pandoc/metadata.yml": (),
+}
 
 CSS_START = "/* generated:brand-tokens:start */"
 CSS_END = "/* generated:brand-tokens:end */"
@@ -78,6 +103,8 @@ YAML_END = "# generated:brand:end"
 # outside the generated block is removed, so a document cannot quietly
 # re-specify the brand font or link colour.
 MANAGED_YAML_KEYS = (
+    "author",
+    "institute",
     "mainfont",
     "monofont",
     "monofontoptions",
@@ -165,6 +192,51 @@ def render_latex(brand: dict) -> str:
         )
         + "\n"
     )
+
+
+def render_latex_identity(brand: dict) -> str:
+    r"""Render the identity as LaTeX macros.
+
+    ``\providecommand`` throughout, for two reasons: the file is safe to
+    ``\input`` more than once, and a document that genuinely needs a different
+    value (a CV profile tailored to one application, say) can still define it
+    first and win.
+
+    The ``\my*`` and ``\githubBase`` names are the ones bookclass.cls and the
+    beamer header already used when they carried these literals themselves, so
+    they keep working -- they are just no longer the place the value lives.
+    """
+    identity = brand["identity"]
+    # (macro name, identity key) -- one \providecommand each, in this order.
+    macros = (
+        ("brandName", "name"),
+        ("brandFirstName", "first_name"),
+        ("brandLastName", "last_name"),
+        ("brandEmail", "email"),
+        ("brandContactEmail", "contact_email"),
+        ("brandUrl", "url"),
+        ("brandUrlDisplay", "url_display"),
+        ("brandGithub", "github"),
+        ("brandGithubUrl", "github_url"),
+        ("brandInstitute", "institute"),
+    )
+    # The names bookclass.cls and the beamer header already used, kept as
+    # aliases so neither has to change the macro it renders.
+    aliases = (
+        ("myname", "brandName"),
+        ("myauthor", "brandName"),
+        ("myurl", "brandUrlDisplay"),
+        ("githubBase", "brandGithubUrl"),
+    )
+    lines = [
+        f"% {NOTE}",
+        r"% \providecommand throughout: safe to \input twice, and a document that",
+        "% needs a different value can still define it first and win.",
+        *[rf"\providecommand{{\{macro}}}{{{identity[key]}}}" for macro, key in macros],
+        "% Names the book class and the beamer header already used:",
+        *[rf"\providecommand{{\{alias}}}{{\{target}}}" for alias, target in aliases],
+    ]
+    return "\n".join(lines) + "\n"
 
 
 def render_latex_fonts(brand: dict) -> str:
@@ -391,22 +463,34 @@ def render_tokens_json(brand: dict) -> str:
         "syntax": brand["syntax"],
         "syntax_dark": brand["syntax_dark"],
         "fonts": brand["fonts"],
+        # So a Sphinx conf.py or any other consumer can read the author and the
+        # URLs instead of retyping them: `brand()["identity"]["name"]`.
+        "identity": brand["identity"],
     }
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
 
 
-def render_yaml_block(brand: dict) -> str:
+def render_yaml_block(brand: dict, extra_keys: tuple[str, ...] = ()) -> str:
     """Render the Pandoc metadata keys that brand.json owns.
 
     ``linkcolor``/``urlcolor``/``citecolor`` name the LaTeX colour defined by
     brand-colors.tex rather than repeating the hex, so the value still lives in
     exactly one place. Pandoc turns ``colorlinks`` on implicitly once any of
     them is set.
+
+    Args:
+        brand: The resolved brand.
+        extra_keys: Identity keys this particular document should also carry,
+            beyond ``author`` -- ``institute`` for the slides. Emitting those
+            everywhere would put an affiliation on documents that never had one.
     """
+    identity = brand["identity"]
     return "\n".join(
         [
             YAML_START,
             f"# {NOTE}",
+            f"author: {identity['name']}",
+            *[f"{key}: {identity[key]}" for key in extra_keys],
             f"mainfont: {brand['fonts']['main']}",
             f"monofont: {brand['fonts']['mono']}",
             "monofontoptions:",
@@ -460,6 +544,7 @@ def desired_outputs() -> dict[Path, str]:
     outputs: dict[Path, str] = {
         STY_PATH: render_latex(brand),
         FONTS_PATH: render_latex_fonts(brand),
+        IDENTITY_PATH: render_latex_identity(brand),
         SYNTAX_THEME_DARK: render_syntax_theme(brand["syntax_dark"]),
         PYGMENTS_MODULE: render_pygments_module(brand),
         BRAND_CSS: render_brand_css(brand),
@@ -471,9 +556,12 @@ def desired_outputs() -> dict[Path, str]:
     for css in CSS_TARGETS:
         current = css.read_text(encoding="utf-8") if css.exists() else ""
         outputs[css] = apply_css_block(current, css_block)
-    yaml_block = render_yaml_block(brand)
-    for yml in YAML_TARGETS:
-        outputs[yml] = apply_yaml_block(yml.read_text(encoding="utf-8"), yaml_block)
+    theme_css = outputs[CSS_TARGETS[0]]
+    for target in CSS_COPY_TARGETS:
+        outputs[target] = theme_css
+    for yml, extra_keys in YAML_TARGETS.items():
+        block = render_yaml_block(brand, extra_keys)
+        outputs[yml] = apply_yaml_block(yml.read_text(encoding="utf-8"), block)
     return outputs
 
 

@@ -9,7 +9,7 @@ on:
 
 jobs:
   style-check:
-    name: Brand & Tests
+    name: Brand, Lint & Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
@@ -23,8 +23,21 @@ jobs:
       - name: Brand drift check
         run: uv run python style/generate_style.py --check
 
+      # --extra dev on every step: ruff, ty, pytest and pytest-cov all live in
+      # that extra, and so does the theme package tests/test_theme.py imports.
+      # Without it a fresh checkout resolves pygments alone and the step dies at
+      # "program not found" rather than on a real failure.
+      - name: Lint
+        run: uv run --extra dev ruff check .
+
+      - name: Format check
+        run: uv run --extra dev ruff format --check .
+
+      - name: Type check
+        run: uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
+
       - name: Test suite
-        run: uv run pytest tests/ -q
+        run: uv run --extra dev pytest tests/ -q
 
   build-documents:
     name: Build All Documents
@@ -45,6 +58,22 @@ jobs:
 
       - name: Build beamer
         run: STRICT_WARNINGS=1 ./scripts/build_in_container.sh beamer
+        env:
+          CONTAINER_RUNTIME: docker
+
+      # The primitives showcase, built as its own deck. Its sources sit in a
+      # subdirectory of the beamer input dir, which get_sorted_markdown_files()
+      # does not descend into -- so nothing built them for a long time and two
+      # rotted references sat in them unnoticed. Kept in CI so that cannot recur.
+      - name: Build demo
+        run: STRICT_WARNINGS=1 ./scripts/build_in_container.sh demo
+        env:
+          CONTAINER_RUNTIME: docker
+
+      # The starter document a newcomer is told to edit. If `make example` stops
+      # working, the first thing anyone tries with this repo stops working.
+      - name: Build example
+        run: STRICT_WARNINGS=1 ./scripts/build_in_container.sh example
         env:
           CONTAINER_RUNTIME: docker
 
@@ -70,6 +99,8 @@ jobs:
           path: |
             data/out/book_output.pdf
             data/out/beamer_output.pdf
+            data/out/demo_output.pdf
+            data/out/example_output.pdf
             data/out/presentation.pptx
             data/out/CV_Jonas_Heinle_english.pdf
             data/out/CV_Jonas_Heinle_german.pdf

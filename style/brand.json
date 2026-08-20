@@ -90,5 +90,19 @@
     "mono_fallback": [
       "FreeMono:mode=node;"
     ]
+  },
+  "_identity_comment": "Who the documents are by. Colours and fonts were already defined once here; the author name, URLs, GitHub handle and institute were not -- they were typed by hand into 16 files and had already drifted into three URL spellings, two emails and two institute spellings. These are generated into the Pandoc metadata, md2pdfLib/style/brand-identity.tex and the Sphinx configs the same way the colours are. Two emails on purpose: `email` is the one on the CV and in package metadata, `contact_email` is the public one shown on slides.",
+  "identity": {
+    "name": "Jonas Heinle",
+    "first_name": "Jonas",
+    "last_name": "Heinle",
+    "email": "jonasheinle@googlemail.com",
+    "contact_email": "contact@jonasheinle.de",
+    "url": "https://jonasheinle.de",
+    "url_display": "jonasheinle.de",
+    "github": "Kataglyphis",
+    "github_url": "https://github.com/Kataglyphis",
+    "institute": "Karlsruhe Institute of Technology (KIT)",
+    "copyright_year": "2025"
   }
 }

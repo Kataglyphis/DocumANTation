@@ -3,6 +3,8 @@ theme:
   - awesome
 # generated:brand:start
 # GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand.
+author: Jonas Heinle
+institute: Karlsruhe Institute of Technology (KIT)
 mainfont: Roboto
 monofont: Latin Modern Mono
 monofontoptions:
@@ -16,11 +18,9 @@ linkcolor: brandLink
 urlcolor: brandLink
 citecolor: brandLink
 # generated:brand:end
-author: Jonas Heinle
 background: data/presentation/images/title-background.jpg
 title: Create personal blog in flutter/dart
 subtitle: Cross platform UI toolkit for web
-institute: Karlsruhe Institute of Technology (KIT)
 location: Schwäbisch Hall
 date: \today
 biblio-title: References

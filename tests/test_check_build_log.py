@@ -6,7 +6,11 @@ import json
 import re
 from pathlib import Path
 
-from md2pdfLib.check_build_log import _find_warning_lines, _load_pandoc_json_text
+from md2pdfLib.check_build_log import (
+    _find_warning_lines,
+    _load_pandoc_json_text,
+    _split_advisories,
+)
 
 
 def test_detects_latex_and_badbox_warnings():
@@ -99,3 +103,72 @@ def test_pandoc_json_surfaces_warning_entries_alongside_latex_output(tmp_path: P
     text = _load_pandoc_json_text(log)
     assert "clean latex log" in text
     assert _find_warning_lines(text, []) == ["[WARNING] Duplicate identifier 'intro'"]
+
+
+# ── advisories: reported, never fatal ────────────────────────────────────────
+#
+# The book's strict build treats two diagnostics as advisory (see
+# md2pdfLib/scripts/compile_with_glossaries.sh): a loose line and a tcolorbox
+# page-break hint. Both cost quality and lose nothing, unlike an overfull box.
+
+ADVISORY_PATTERNS = [
+    re.compile(r"^\s*Underfull \\hbox"),
+    re.compile(r"Package tcolorbox Warning: Using nobreak failed"),
+]
+
+
+def test_a_loose_line_is_advisory_but_an_overfull_one_is_not():
+    text = "\n".join(
+        [
+            "Underfull \\hbox (badness 4846) in paragraph at lines 10--12",
+            "Overfull \\hbox (13.1pt too wide) in paragraph at lines 20--22",
+        ]
+    )
+    fatal, advisory = _split_advisories(_find_warning_lines(text, []), ADVISORY_PATTERNS)
+    assert len(advisory) == 1 and "Underfull" in advisory[0]
+    # Text past the margin is a defect, not a nit -- it must still fail.
+    assert len(fatal) == 1 and "Overfull" in fatal[0]
+
+
+def test_an_underfull_vbox_still_fails():
+    """Only \\hbox is advisory: a short \\vbox is a page-content problem."""
+    text = "Underfull \\vbox (badness 10000) has occurred while \\output is active"
+    fatal, advisory = _split_advisories(_find_warning_lines(text, []), ADVISORY_PATTERNS)
+    assert advisory == []
+    assert len(fatal) == 1
+
+
+def test_the_tcolorbox_page_break_hint_is_advisory():
+    text = "Package tcolorbox Warning: Using nobreak failed. Try to enlarge `lines before break'"
+    fatal, advisory = _split_advisories(_find_warning_lines(text, []), ADVISORY_PATTERNS)
+    assert len(advisory) == 1
+    assert fatal == []
+
+
+def test_other_package_warnings_stay_fatal():
+    """Narrowing the gate must not let a real package warning through."""
+    text = "\n".join(
+        [
+            "Package fvextra Warning: csquotes should be loaded after fvextra",
+            "LaTeX Warning: Command \\@parboxrestore  has changed.",
+            "Missing character: There is no lambda in font Roboto!",
+        ]
+    )
+    fatal, advisory = _split_advisories(_find_warning_lines(text, []), ADVISORY_PATTERNS)
+    assert advisory == []
+    assert len(fatal) == 3
+
+
+def test_advisories_are_kept_not_dropped():
+    """--ignore-regex drops a line; --advisory-regex must still report it."""
+    text = "Underfull \\hbox (badness 4846) in paragraph at lines 10--12"
+    dropped = _find_warning_lines(text, [re.compile(r"Underfull \\hbox")])
+    assert dropped == []  # what --ignore-regex would do
+    fatal, advisory = _split_advisories(_find_warning_lines(text, []), ADVISORY_PATTERNS)
+    assert fatal == [] and len(advisory) == 1  # what --advisory-regex does instead
+
+
+def test_no_advisory_patterns_means_everything_is_fatal():
+    text = "Underfull \\hbox (badness 4846) in paragraph at lines 10--12"
+    fatal, advisory = _split_advisories(_find_warning_lines(text, []), [])
+    assert len(fatal) == 1 and advisory == []

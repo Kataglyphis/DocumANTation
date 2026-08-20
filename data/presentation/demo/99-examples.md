@@ -72,7 +72,7 @@ A footnote example.[^1]
 
 ## Image
 
-![Background image test](data/presentation/images/shrek.jpg){height=60%}
+![Background image test](data/presentation/images/title-background.jpg){height=60%}
 
 ---
 
@@ -177,7 +177,7 @@ int main() {
 service:
   name: md2pdf
   engine: lualatex
-  highlight: md2pdfLib/pygments.theme
+  highlight: md2pdfLib/themes/pygments.theme
 ```
 
 ---

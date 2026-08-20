@@ -1,37 +1,88 @@
+/* generated:brand-tokens:start */
+/* GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand. */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+
 :root {
+  --brand-font-main: 'Roboto', sans-serif;
+
+  --brand-white: #ffffff;
+  --brand-black: #000000;
   --brand-accent: #6af0ad;
   --brand-accent-strong: #2ad488;
   --brand-accent-soft: #e9fbf2;
-  --text-main: #1f2a24;
-  --surface-soft: #f7fbf9;
-  --surface-border: #dcefe5;
+  --brand-accent-deep: #145a3c;
+  --brand-link: #0e7490;
+  --brand-link-hover: #155e75;
+  --brand-link-active: #164e63;
+  --brand-text-main: #1f2a24;
+  --brand-text-on-accent: #ffffff;
+  --brand-surface-soft: #f7fbf9;
+  --brand-surface-border: #dcefe5;
+  --brand-surface-gradient-from: #fbfefd;
+  --brand-surface-gradient-to: #f3fbf7;
+  --brand-card-gradient-from: #ffffff;
+  --brand-card-gradient-to: #f1fbf5;
+
+  /* dark-mode palette */
+  --brand-dark-link: #22d3ee;
+  --brand-dark-link-hover: #67e8f9;
+  --brand-dark-text-base: #e7efe9;
+  --brand-dark-text-muted: #b8cbc0;
+  --brand-dark-hero-text: #000000;
+  --brand-dark-surface-gradient-from: #101712;
+  --brand-dark-surface-gradient-to: #0d1410;
+  --brand-dark-surface-border: #2b3b33;
+  --brand-dark-code-bg: #1a2d23;
+  --brand-dark-code-border: #2b4a3a;
+  --brand-dark-quote-bg: #0f1f17;
+  --brand-dark-table-stripe-bg: #132018;
+  --brand-dark-sidebar-link: #d7e7de;
+  --brand-dark-sidebar-link-hover: #f0fbf5;
+  --brand-dark-sidebar-link-hover-bg: #1d2d25;
+  --brand-dark-sidebar-link-active: #f4fdf8;
+  --brand-dark-sidebar-link-active-bg: #233a2f;
+}
+/* generated:brand-tokens:end */
+
+html {
+  font-family: var(--brand-font-main);
 }
 
 html[data-theme="light"] {
   --pst-color-primary: var(--brand-accent-strong);
-  --pst-color-link: #1ca06a;
-  --pst-color-link-hover: #167d52;
+  --pst-color-link: var(--brand-link);
+  --pst-color-link-hover: var(--brand-link-hover);
+  --pst-color-text-base: var(--brand-text-main);
+  --pst-color-background: var(--brand-surface-soft);
 }
 
 html[data-theme="dark"] {
   --pst-color-primary: var(--brand-accent);
-  --pst-color-link: #7df5ba;
-  --pst-color-link-hover: #a0f9cc;
-  --pst-color-text-base: #e7efe9;
-  --pst-color-text-muted: #b8cbc0;
+  --pst-color-link: var(--brand-dark-link);
+  --pst-color-link-hover: var(--brand-dark-link-hover);
+  --pst-color-text-base: var(--brand-dark-text-base);
+  --pst-color-text-muted: var(--brand-dark-text-muted);
 }
+
+/* -- Header gradient -------------------------------------------- */
 
 .bd-header {
   background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-strong));
 }
 
+/* -- Primary sidebar -------------------------------------------- */
+
 .bd-sidebar-primary {
-  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
-  border-right: 1px solid var(--surface-border);
+  background: linear-gradient(180deg, var(--brand-surface-gradient-from) 0%, var(--brand-surface-gradient-to) 100%);
+  border-right: 1px solid var(--brand-surface-border);
+  max-height: 100vh;
   overflow-y: auto;
+  position: sticky;
+  top: 0;
 }
 
-/* Secondary sidebar: re-enabled for page TOC on desktop */
+/* -- Secondary sidebar: re-enabled for page TOC on desktop ------ */
+
 .bd-sidebar-secondary {
   display: block;
 }
@@ -40,13 +91,11 @@ html[data-theme="dark"] {
   max-width: 100%;
 }
 
-.bd-main .bd-content .bd-article-container {
-  max-width: 1100px;
-}
+/* -- Cards ------------------------------------------------------ */
 
 .sd-card {
   border-radius: 14px;
-  border: 1px solid var(--surface-border);
+  border: 1px solid var(--brand-surface-border);
   box-shadow: 0 6px 18px rgba(32, 78, 56, 0.08);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
@@ -56,41 +105,312 @@ html[data-theme="dark"] {
   box-shadow: 0 10px 26px rgba(32, 78, 56, 0.14);
 }
 
+.sd-card-header {
+  background: var(--brand-accent-soft);
+  border-bottom: 2px solid var(--brand-accent-strong);
+}
+
+/* -- Hero section ----------------------------------------------- */
+
 .hero-section {
-  border: 1px solid var(--surface-border);
+  border: 1px solid var(--brand-surface-border);
   border-radius: 16px;
   padding: 1rem 1.2rem 0.2rem;
   margin-bottom: 1.4rem;
-  background: linear-gradient(140deg, #ffffff 10%, #f1fbf5 100%);
+  background: linear-gradient(140deg, var(--brand-card-gradient-from) 10%, var(--brand-card-gradient-to) 100%);
   box-shadow: 0 8px 24px rgba(33, 82, 59, 0.1);
+  border-left: 4px solid var(--brand-accent-strong);
 }
 
+/* -- Headings: green underline accent --------------------------- */
+
+.bd-article-container section h1,
+.bd-article-container section h2,
+.bd-article-container section h3 {
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid var(--brand-surface-border);
+  position: relative;
+}
+
+.bd-article-container section h1::after,
+.bd-article-container section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 80px;
+  height: 2px;
+  background: var(--brand-accent-strong);
+}
+
+/* -- Links ------------------------------------------------------ */
+
+.bd-article-container section a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.bd-article-container section a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -- Code styling ----------------------------------------------- */
+
+.bd-article-container section code,
+.bd-article-container section .docutils.literal {
+  background: var(--brand-accent-soft);
+  border: 1px solid var(--brand-surface-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.875em;
+}
+
+html[data-theme="dark"] .bd-article-container section code,
+html[data-theme="dark"] .bd-article-container section .docutils.literal {
+  background: var(--brand-dark-code-bg);
+  border-color: var(--brand-dark-code-border);
+}
+
+/* -- Blockquotes: green left accent ----------------------------- */
+
+.bd-article-container section blockquote {
+  border-left: 4px solid var(--brand-accent-strong);
+  background: var(--brand-accent-soft);
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+}
+
+html[data-theme="dark"] .bd-article-container section blockquote {
+  background: var(--brand-dark-quote-bg);
+}
+
+/* -- Tables ----------------------------------------------------- */
+
+.pst-scrollable-table-container table th {
+  background: var(--brand-accent-strong);
+  color: var(--brand-text-on-accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+}
+
+.pst-scrollable-table-container table th a {
+  color: var(--brand-text-on-accent) !important;
+}
+
+.pst-scrollable-table-container table tr:nth-child(even) {
+  background: var(--brand-accent-soft);
+}
+
+html[data-theme="dark"] .pst-scrollable-table-container table tr:nth-child(even) {
+  background: var(--brand-dark-table-stripe-bg);
+}
+
+.pst-scrollable-table-container table th,
+.pst-scrollable-table-container table td {
+  padding: 0.6rem 0.8rem;
+}
+
+/* -- Admonitions ----------------------------------------------- */
+
+/* Shared base for all admonition types */
+.admonition {
+  border-radius: 0 8px 8px 0;
+  border-left-width: 4px;
+  border-left-style: solid;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+}
+
+.admonition .admonition-title {
+  font-weight: 600;
+  margin: -0.75rem -1rem 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 0 8px 0 0;
+}
+
+/* note: green (brand accent) */
+.admonition.note,
+div.admonition.note {
+  border-left-color: var(--brand-accent-strong);
+  background: var(--brand-accent-soft);
+}
+
+.admonition.note .admonition-title,
+div.admonition.note .admonition-title {
+  background: var(--brand-accent-strong);
+  color: var(--brand-text-on-accent);
+}
+
+/* warning: amber */
+.admonition.warning,
+div.admonition.warning {
+  border-left-color: #d97706;
+  background: #fffbeb;
+}
+
+.admonition.warning .admonition-title,
+div.admonition.warning .admonition-title {
+  background: #d97706;
+  color: white;
+}
+
+/* tip: blue (brand link) */
+.admonition.tip,
+div.admonition.tip {
+  border-left-color: var(--brand-link);
+  background: #eff6ff;
+}
+
+.admonition.tip .admonition-title,
+div.admonition.tip .admonition-title {
+  background: var(--brand-link);
+  color: white;
+}
+
+/* important: deep green */
+.admonition.important,
+div.admonition.important {
+  border-left-color: var(--brand-accent-deep);
+  background: #ecfdf5;
+}
+
+.admonition.important .admonition-title,
+div.admonition.important .admonition-title {
+  background: var(--brand-accent-deep);
+  color: white;
+}
+
+/* danger: red */
+.admonition.danger,
+div.admonition.danger,
+.admonition.error,
+div.admonition.error {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+}
+
+.admonition.danger .admonition-title,
+div.admonition.danger .admonition-title,
+.admonition.error .admonition-title,
+div.admonition.error .admonition-title {
+  background: #dc2626;
+  color: white;
+}
+
+/* seealso: purple */
+.admonition.seealso,
+div.admonition.seealso {
+  border-left-color: #7c3aed;
+  background: #f5f3ff;
+}
+
+.admonition.seealso .admonition-title,
+div.admonition.seealso .admonition-title {
+  background: #7c3aed;
+  color: white;
+}
+
+/* Dark mode: all admonitions share the dark surface */
+html[data-theme="dark"] .admonition {
+  background: var(--brand-dark-quote-bg);
+}
+
+html[data-theme="dark"] .admonition .admonition-title {
+  opacity: 0.9;
+}
+
+/* -- kbd styling ------------------------------------------------ */
+
+kbd,
+.kbd {
+  background: var(--brand-accent-strong);
+  color: var(--brand-text-on-accent);
+  border-radius: 4px;
+  padding: 0.15em 0.5em;
+  border: none;
+  box-shadow: 0 2px 0 var(--brand-accent-deep);
+  font-size: 0.8em;
+  font-family: var(--brand-font-main);
+}
+
+/* -- Sidebar active link (light mode) --------------------------- */
+
+html[data-theme="light"] .bd-sidebar-primary .nav-link.active {
+  color: var(--brand-link-active) !important;
+  background: var(--brand-accent-soft) !important;
+  border-left: 3px solid var(--brand-accent-strong) !important;
+  font-weight: 600;
+}
+
+/* -- Sidebar caption text (green tint) -------------------------- */
+
+.bd-sidebar-primary .caption-text {
+  color: var(--brand-accent-strong) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+}
+
+/* -- Sidebar search button (green) ------------------------------ */
+
+.sidebar-primary-item .search-button-field {
+  border-color: var(--brand-accent-strong) !important;
+}
+
+.sidebar-primary-item .search-button-field:hover {
+  border-color: var(--brand-accent-deep) !important;
+}
+
+/* -- TOC active item -------------------------------------------- */
+
+nav#pst-page-toc-nav .nav-link.active {
+  border-left: 3px solid var(--brand-accent-strong);
+  color: var(--brand-accent-strong) !important;
+  font-weight: 600;
+}
+
+/* -- Card titles in green --------------------------------------- */
+
+.sd-card-title {
+  color: var(--brand-accent-strong) !important;
+  font-weight: 600;
+}
+
+/* -- Dark theme specific overrides ------------------------------ */
+
 html[data-theme="dark"] .bd-sidebar-primary {
-  background: linear-gradient(180deg, #101712 0%, #0d1410 100%) !important;
-  border-right: 1px solid #2b3b33 !important;
+  background: linear-gradient(180deg, var(--brand-dark-surface-gradient-from) 0%, var(--brand-dark-surface-gradient-to) 100%) !important;
+  border-right: 1px solid var(--brand-dark-surface-border) !important;
 }
 
 html[data-theme="dark"] .bd-sidebar-primary a,
 html[data-theme="dark"] .bd-sidebar-primary .nav-link {
-  color: #d7e7de !important;
+  color: var(--brand-dark-sidebar-link) !important;
 }
 
 html[data-theme="dark"] .bd-sidebar-primary .nav-link:hover {
-  color: #f0fbf5 !important;
-  background: #1d2d25 !important;
+  color: var(--brand-dark-sidebar-link-hover) !important;
+  background: var(--brand-dark-sidebar-link-hover-bg) !important;
 }
 
 html[data-theme="dark"] .bd-sidebar-primary .nav-link.active {
-  color: #f4fdf8 !important;
-  background: #233a2f !important;
+  color: var(--brand-dark-sidebar-link-active) !important;
+  background: var(--brand-dark-sidebar-link-active-bg) !important;
   border-left: 3px solid var(--brand-accent) !important;
 }
 
 html[data-theme="dark"] .hero-section {
-  color: #000000 !important;
+  color: var(--brand-dark-hero-text) !important;
 }
 
-/* -- Primary sidebar dialog fix: slide from left, not centered ---------- */
+html[data-theme="dark"] .hero-section a {
+  color: var(--brand-accent-strong) !important;
+}
+
+/* -- Primary sidebar dialog fix: slide from left, not centered - */
 
 #pst-primary-sidebar-modal {
   border: 0;
@@ -119,30 +439,121 @@ html[data-theme="dark"] .hero-section {
 }
 
 html[data-theme="dark"] #pst-primary-sidebar-modal {
-  background: linear-gradient(180deg, #101712 0%, #0d1410 100%);
-  border-right: 1px solid #2b3b33;
+  background: linear-gradient(180deg, var(--brand-dark-surface-gradient-from) 0%, var(--brand-dark-surface-gradient-to) 100%);
+  border-right: 1px solid var(--brand-dark-surface-border);
 }
 
 html[data-theme="light"] #pst-primary-sidebar-modal {
-  background: linear-gradient(180deg, #fbfefd 0%, #f3fbf7 100%);
-  border-right: 1px solid var(--surface-border);
+  background: linear-gradient(180deg, var(--brand-surface-gradient-from) 0%, var(--brand-surface-gradient-to) 100%);
+  border-right: 1px solid var(--brand-surface-border);
 }
 
-/* -- Force long links / URLs to wrap on narrow screens ------------------- */
-.bd-content a,
+/* -- Force long links / URLs to wrap on narrow screens --------- */
+
+.bd-article-container section,
+.bd-article-container section a,
+.bd-article-container section a code,
+.bd-article-container section a .pre,
+.bd-article-container section code,
+.bd-article-container section .docutils.literal,
 .pst-scrollable-table-container th,
 .pst-scrollable-table-container td {
-  overflow-wrap: break-word;
-  word-break: break-word;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  white-space: pre-wrap !important;
 }
 
-/* -- Mobile responsive overrides ----------------------------------------- */
+/* Inline code: aggressive break to force long unbroken strings to wrap */
+.bd-article-container section span.pre {
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+  hyphens: none !important;
+}
+
+/* Code blocks: tcolorbox brand look — accent border, dark bg, rounded corners.
+   Matches brand-code-block.tex (colframe=greenAccent, colback=shadecolor =
+   brandSyntaxBg #0d1117, arc=2mm). The dark code palette is the single brand
+   look: LaTeX PDFs (book + slides), PPTX and the Sphinx site all use it. */
+
+.bd-content div.highlight {
+  border: 1px solid var(--brand-accent);
+  border-radius: 8px;
+  background: var(--brand-dark-code-bg);
+  overflow: hidden;
+}
+
+.bd-content div.highlight pre {
+  white-space: pre !important;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--brand-dark-text-base);
+}
+
+html[data-theme="dark"] .bd-content div.highlight {
+  border-color: var(--brand-dark-code-border);
+}
+
+/* Article container: fill width on small viewports ------------- */
+
+.bd-main .bd-content .bd-article-container {
+  max-width: 1100px;
+  width: 100%;
+}
+
+/* -- Secondary sidebar dialog: slide from the right on mobile -- */
+
+#pst-secondary-sidebar-modal {
+  border: 0;
+  height: 100vh;
+  margin: 0;
+  max-height: 100vh;
+  max-width: 350px;
+  overflow-y: auto;
+  padding: 1rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 75%;
+  z-index: 1055;
+  background: var(--pst-color-background);
+  color: var(--pst-color-text-base);
+}
+
+#pst-secondary-sidebar-modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+#pst-secondary-sidebar-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] #pst-secondary-sidebar-modal {
+  background: linear-gradient(180deg, var(--brand-dark-surface-gradient-from) 0%, var(--brand-dark-surface-gradient-to) 100%);
+  border-left: 1px solid var(--brand-dark-surface-border);
+}
+
+html[data-theme="light"] #pst-secondary-sidebar-modal {
+  background: linear-gradient(180deg, var(--brand-surface-gradient-from) 0%, var(--brand-surface-gradient-to) 100%);
+  border-left: 1px solid var(--brand-surface-border);
+}
+
+/* -- Mobile responsive overrides ------------------------------- */
 
 @media (max-width: 575.98px) {
   .sd-row-cols-xs-2 {
     grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
   }
 }
+
+/* Tables: horizontal scroll on narrow viewports ---------------- */
 
 .pst-scrollable-table-container {
   overflow-x: auto;
@@ -154,3 +565,83 @@ html[data-theme="light"] #pst-primary-sidebar-modal {
   width: 100%;
   min-width: 0;
 }
+
+/* -- Two-column layouts from markdown ::: {.columns} ---------- */
+
+.bd-article-container section div.columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.bd-article-container section div.column {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .bd-article-container section div.columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -- Tab sets from markdown ::: {.tab-set} -------------------- */
+
+.bd-article-container section div.tab-set {
+  border: 1px solid var(--brand-surface-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-set {
+  border-color: var(--brand-dark-surface-border);
+}
+
+.bd-article-container section div.tab-set > div.tab {
+  display: none;
+  padding: 1rem;
+}
+
+.bd-article-container section div.tab-set > div.tab:first-child {
+  display: block;
+}
+
+/* Tab labels */
+.bd-article-container section div.tab-labels {
+  display: flex;
+  border-bottom: 2px solid var(--brand-surface-border);
+  background: var(--brand-surface-soft);
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-labels {
+  border-bottom-color: var(--brand-dark-surface-border);
+  background: var(--brand-dark-code-bg);
+}
+
+.bd-article-container section div.tab-labels span {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9em;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: var(--brand-text-main);
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-labels span {
+  color: var(--brand-dark-text-muted);
+}
+
+.bd-article-container section div.tab-labels span.active,
+.bd-article-container section div.tab-labels span:first-child {
+  color: var(--brand-accent-strong);
+  border-bottom-color: var(--brand-accent-strong);
+}
+
+html[data-theme="dark"] .bd-article-container section div.tab-labels span.active {
+  color: var(--brand-accent);
+  border-bottom-color: var(--brand-accent);
+}
+
+

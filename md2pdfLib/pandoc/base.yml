@@ -1,5 +1,6 @@
 # generated:brand:start
 # GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand.
+author: Jonas Heinle
 mainfont: Roboto
 monofont: Latin Modern Mono
 monofontoptions:
@@ -16,7 +17,6 @@ citecolor: brandLink
 title: Computer graphics
 subtitle: A practical approach
 titlepage: true
-author: Jonas Heinle
 date: \today
 documentclass: md2pdfLib/book/template/latex/bookclass
 toc-title: Table of contents

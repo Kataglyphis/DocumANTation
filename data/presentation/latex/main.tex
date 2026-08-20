@@ -24,11 +24,13 @@
 \logo{md2pdfLib/presentation/images/logo.png}
 
 \background{data/presentation/images/title-background.jpg}
-\email{contact@jonasheinle.de}
+% Identity from style/brand.json (brand-identity.tex is on TEXINPUTS).
+\input{brand-identity.tex}
+\email{\brandContactEmail}
 \social{%
-	\socialitem{GH}{Kataglyphis}{https://github.com/Kataglyphis}\hspace{1em}%
-	\socialitem{www}{jonasheinle.de}{https://jonasheinle.de}%
+	\socialitem{GH}{\brandGithub}{\brandGithubUrl}\hspace{1em}%
+	\socialitem{www}{\brandUrlDisplay}{\brandUrl}%
 }
-\uni{Karlsruhe Institute of Technology (KIT)}
+\uni{\brandInstitute}
 
 \addtobeamertemplate{title page}{}{}

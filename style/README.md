@@ -44,8 +44,10 @@ colour/font file.
 | --- | --- |
 | `md2pdfLib/style/brand-colors.tex` | LaTeX: `brandAccent`, `brandLink`, plus `greenAccent`/`myGreenAccent`/`basecolor`/`linkcolor` aliases |
 | `md2pdfLib/style/brand-fonts.tex` | LaTeX: `\brandSetMainFont`, `\brandSetMonoFont` |
-| `md2pdfLib/pandoc/base.yml`, `md2pdfLib/presentation/pandoc/metadata.yml` | Pandoc: `mainfont`, `monofont`, `monofontoptions`, `linkcolor`, `urlcolor`, `citecolor` (between `# generated:brand:` markers) |
+| `md2pdfLib/style/brand-identity.tex` | LaTeX: `\brandName`, `\brandEmail`, `\brandGithub`, `\brandUrl`, `\brandInstitute`, plus the `\myname` / `\myurl` / `\githubBase` aliases the book class and beamer header already used |
+| `md2pdfLib/pandoc/base.yml`, `md2pdfLib/presentation/pandoc/metadata.yml`, `md2pdfLib/example/pandoc/metadata.yml` | Pandoc: `author`, `mainfont`, `monofont`, `monofontoptions`, `linkcolor`, `urlcolor`, `citecolor` — plus `institute` on the presentation only (between `# generated:brand:` markers) |
 | `sphinx-kataglyphis-theme/.../_static/css/custom.css` | Web: `--brand-*` custom properties (between `/* generated:brand-tokens: */` markers) |
+| `docs-tooling/source_templates/sphinx-book/custom.css` | Verbatim copy of the file above, for the one consumer that loads it by path instead of installing the package |
 | `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by **all** documents (book, slides, pptx) |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |

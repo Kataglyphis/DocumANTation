@@ -65,7 +65,23 @@ document targets in the next step.
 ```bash
 ./scripts/build_in_container.sh beamer   # PDF slides
 ./scripts/build_in_container.sh pptx     # PowerPoint deck, same sources
+./scripts/build_in_container.sh demo     # the slide primitives showcase
 ```
+
+`beamer` and `pptx` build `data/presentation/`; `demo` builds the showcase
+sources in `data/presentation/demo/` as a deck of its own. They are a
+separate target because `get_sorted_markdown_files()` lists one level, so
+a subdirectory of an input directory is never picked up by its parent.
+
+### Starter document
+
+```bash
+./scripts/build_in_container.sh example
+```
+
+The minimal document in `data/example/chapters/` — one Pandoc call straight
+to `data/out/example_output.pdf`, with no bibliography, glossary or
+nomenclature pass. Replace its Markdown with your own to start a project.
 
 ### CV
 
@@ -81,6 +97,8 @@ Optional host shortcuts if `make` is installed:
 ```bash
 make book
 make beamer
+make demo
+make example
 make pptx
 make cv
 make cv CV_LANG=german

@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from sphinx_kataglyphis import setup_theme
+from sphinx_kataglyphis import brand, setup_theme
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DOCS_LOGO = REPO_ROOT / "images" / "logo-t3-wireframe.png"
@@ -21,11 +21,16 @@ if not DOCS_LOGO.exists():
     raise FileNotFoundError(f"Missing docs logo at {DOCS_LOGO}")
 
 project = "Kataglyphis-DocumANTation"
-author = "Jonas Heinle"
+# The author and the repository URL come from style/brand.json, the same place
+# the colours and fonts do -- see the `identity` section there. Retyping them
+# here is how "Jonas Heinle" ended up in sixteen files and the URL in three
+# spellings.
+IDENTITY = brand()["identity"]
+author = IDENTITY["name"]
 
 setup_theme(
     globals(),
-    repository_url="https://github.com/Kataglyphis/Kataglyphis-DocumANTation",
+    repository_url=f"{IDENTITY['github_url']}/{project}",
     project_name=project,
     author=author,
     copyright_=f"{datetime.now():%Y}, {author}",

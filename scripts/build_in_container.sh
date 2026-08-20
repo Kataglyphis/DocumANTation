@@ -13,7 +13,7 @@ CV_LANG="${CV_LANG:-english}"
 CV_PROFILE="${CV_PROFILE:-default}"
 
 usage() {
-    printf 'Usage: %s <book|beamer|pptx|cv>\n' "$0" >&2
+    printf 'Usage: %s <book|beamer|demo|example|pptx|cv>\n' "$0" >&2
     printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
     printf '             CV_LANG=<english|german>          (cv target only)\n' >&2
     printf '             CV_PROFILE=<data/cv/profiles/*>   (cv target only, default: default)\n' >&2
@@ -35,10 +35,21 @@ case "$TARGET" in
         fi
         CMD+=" --type book"
         ;;
-    beamer)
-        CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/presentation/scripts/update_own_sty.sh && /md2pdfLib/presentation/scripts/update_own_sty.sh && uv run python /md2pdfLib/build.py beamer'
+    beamer|demo)
+        # Same pipeline for both: demo is the primitives showcase in
+        # data/presentation/demo/ built as its own deck (see presets.demo).
+        # Both need the beamer themes installed into the container's texmf.
+        CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/presentation/scripts/update_own_sty.sh && /md2pdfLib/presentation/scripts/update_own_sty.sh'
+        CMD+=" && uv run python /md2pdfLib/build.py ${TARGET}"
         if [ "$STRICT_WARNINGS" = "1" ]; then
-            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/beamer.json --format pandoc-json'
+            CMD+=" && uv run python /md2pdfLib/check_build_log.py /data/out/${TARGET}.json --format pandoc-json"
+        fi
+        ;;
+    example)
+        # The starter document: one pandoc call, no glossary/bibliography pass.
+        CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/build.py example'
+        if [ "$STRICT_WARNINGS" = "1" ]; then
+            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/example.json --format pandoc-json'
         fi
         ;;
     pptx)
@@ -65,10 +76,10 @@ case "$TARGET" in
                 ;;
         esac
         # The job name is the filename the CV is published under on
-        # jonasheinle.de (data/book/chapters/23-about-me.md links to it), so
-        # the deliverable is a reproducible build output rather than a binary
-        # someone has to remember to re-commit. Output goes to /data/out like
-        # every other target, which keeps aux/log/pdf out of the source tree.
+        # jonasheinle.de, so the deliverable is a reproducible build output
+        # rather than a binary someone has to remember to re-commit. Output goes
+        # to /data/out like every other target, which keeps aux/log/pdf out of
+        # the source tree.
         if [ ! -f "${PROJECT_ROOT}/data/cv/profiles/${CV_PROFILE}.tex" ]; then
             printf 'Unknown CV_PROFILE "%s": data/cv/profiles/%s.tex does not exist\n' \
                 "$CV_PROFILE" "$CV_PROFILE" >&2

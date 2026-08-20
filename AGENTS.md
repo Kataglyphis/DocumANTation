@@ -16,8 +16,32 @@ data/              → user-authored markdown content
 md2pdfLib/         → templates, config, scripts, fonts, themes
 md2pdfLib/pandoc_builder.py  → shared Pandoc build logic (single source of truth)
 md2pdfLib/scripts/            → shared shell scripts
+md2pdfLib/presentation/pptx/  → OOXML post-processing for the PowerPoint target
+md2pdfLib/presentation/pptx/pptx_common.py → shared OOXML layer for that package
 Dockerfile         → container build definition
 ```
+
+### The pptx package
+
+Every module there rewrites a .pptx archive, and the shared mechanics live in
+`pptx_common.py` — use them rather than writing the loop again:
+
+| Need | Use |
+| --- | --- |
+| Change some slides and write the deck back | `edit_slides(deck, transform)` |
+| A slide's layout / master / layout name | the `DeckParts` passed to the transform |
+| Name the archive parts | `SLIDE_RE`, `MASTER_RE`, `THEME_RE`, `LAYOUT_RELS_RE` |
+| Pin unsized runs to a font size | `sized_runs(fragment, size)` |
+| Read the brand | `brand_tokens()` (md2pdfLib/style/, the only copy the container mounts) |
+| A `<deck.pptx>` entry point | `run_cli(action, errors=(...))` |
+
+These modules are run **by path** from the build script
+(`uv run python /md2pdfLib/presentation/pptx/finalize_deck.py <deck>`), so each
+one bootstraps `sys.path` with the md2pdf root before importing its siblings as
+`md2pdfLib.presentation.pptx.*`. Do not reintroduce a bare `import pptx_common`
+fallback: it produced a second copy of every module under a top-level name, so a
+test and the build could hold two module objects with two sets of constants —
+and `ty` cannot resolve it.
 
 ### Related documentation
 
@@ -35,16 +59,28 @@ Dockerfile         → container build definition
 nerdctl build . -t pandoc_all
 
 # Build a document -- the normal path
-./scripts/build_in_container.sh {book|beamer|pptx|cv}
+./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv}
 
 # The same targets via Makefile, plus the CV variants
-make {book|beamer|pptx|cv}
+make {book|beamer|demo|example|pptx|cv}
 make cv CV_LANG=german
 make cv-all
 
 # Any target, with the strict warning gates
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
 ```
+
+### What the strict gate fails on
+
+`md2pdfLib/check_build_log.py` fails the build on LaTeX/Package/Class warnings,
+overfull boxes, underfull `\vbox`es, missing glyphs and pandoc's own warnings.
+Two LaTeX diagnostics are passed as `--advisory-regex` by
+`compile_with_glossaries.sh` instead: an underfull `\hbox` (a loose line — it
+loses nothing, unlike an overfull one, and whether it appears depends on where
+the surrounding prose happens to wrap) and tcolorbox's "Using nobreak failed"
+page-break hint. Advisories are **printed with the build and counted**, just not
+fatal. Use `--ignore-regex` only for something that should not be reported at
+all; prefer `--advisory-regex`, which keeps it visible.
 
 To debug a single stage, drive the container yourself. The mounts and the empty
 entrypoint never change — only the command after `activate &&` does:
@@ -56,7 +92,7 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
 
 | `<command>` | Builds |
 | --- | --- |
-| `uv run python md2pdfLib/build.py {book\|beamer\|pptx}` | the Pandoc targets, no glossaries |
+| `uv run python md2pdfLib/build.py {book\|beamer\|demo\|example\|pptx}` | the Pandoc targets, no glossaries |
 | `./md2pdfLib/scripts/compile_with_glossaries.sh --type book` | the book, full TeX pipeline |
 
 ---
@@ -79,7 +115,8 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
 - All `subprocess.run()` calls **must** use `check=True`
 - All public-API functions **must** have docstrings (Google style)
 - Use the top-level `build.py` entry point instead of per-document wrapper scripts
-- `if __name__ == "__main__":` blocks call `run_from_cli()`
+- `if __name__ == "__main__":` blocks call `main()`, which parses arguments and
+  passes them on — nothing reaches back into `sys.argv` to hand a value over
 - Errors raise `BuildError` (from `md2pdfLib.pandoc_builder`) or `sys.exit(1)` — never silent
 
 ### pyproject.toml
@@ -96,20 +133,23 @@ Code must stay 3.10-compatible (`requires-python = ">=3.10"`) — e.g.
 ### Running Tools
 
 ```bash
-# Inside the container (venv activated):
-uv run ruff check md2pdfLib/
-uv run ruff format --check md2pdfLib/
-uv run ty check md2pdfLib/
-
-# Install dev tools (one-time):
-uv pip install ruff ty
+# On the host -- all four are CI gates in build-documents.yml, in this order:
+uv run --extra dev ruff check .
+uv run --extra dev ruff format --check .
+uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
+uv run --extra dev pytest tests/ -q
 ```
+
+`--extra dev` is not optional: ruff, ty, pytest, pytest-cov and the theme
+package `tests/test_theme.py` imports all live in that extra, so a fresh
+checkout without it resolves `pygments` alone and every command above fails with
+"program not found" rather than on a real defect.
 
 ### Entry Point
 
 Use the `build.py` CLI rather than adding document-specific wrapper scripts:
-`uv run python build.py {book|beamer|pptx}` on the host, or
-`uv run python md2pdfLib/build.py {book|beamer|pptx}` inside the container,
+`uv run python build.py {book|beamer|demo|example|pptx}` on the host, or
+`uv run python md2pdfLib/build.py {book|beamer|demo|example|pptx}` inside the container,
 where only `/md2pdfLib` is mounted.
 
 ---
@@ -151,7 +191,6 @@ md2pdfLib/
 │   ├── bookclass.cls        ← KOMA-Script scrbook based document class (+ \maketitle)
 │   ├── glossary_entries.tex
 │   ├── nomenclature.tex
-│   ├── c_code_style.tex
 │   └── logos/
 ├── presentation/template/latex/
 │   ├── awesome-beamer/      ← git submodule
@@ -166,8 +205,17 @@ The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`
 
 - In LaTeX header files, use `\providecommand` (not `\newcommand`) so values can be
   overridden from Pandoc metadata or preamble injections
-- All `\url{}`, `\email{}`, `\github{}` references must use consistent values.
-  The canonical URL is `www.jonasheinle.de` and GitHub handle is `Kataglyphis`
+- **Never write an identity value by hand.** The author name, both e-mail
+  addresses, the URL, the GitHub handle and the institute live in the `identity`
+  section of `style/brand.json` and are generated out, exactly like the colours:
+  `md2pdfLib/style/brand-identity.tex` for LaTeX (`\brandName`, `\brandEmail`,
+  `\brandGithub`, `\brandUrl`, `\brandUrlDisplay`, `\brandInstitute`, plus the
+  `\myname`/`\myurl`/`\githubBase` aliases the classes already used), the
+  generated `author:`/`institute:` keys for Pandoc, and `brand()["identity"]`
+  for Python and Sphinx. This paragraph used to *ask* for consistency and
+  nothing checked it, so the name reached 16 files and the URL acquired three
+  spellings; `tests/test_identity_is_single_source.py` now fails the build
+  instead. Prose may still name the author — a template may not.
 
 ### TeX Engine
 
@@ -194,11 +242,23 @@ The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`
 2. Create LaTeX header at `data/<type>/latex/main.tex` (or reuse existing)
 3. Create metadata at `md2pdfLib/<type>/pandoc/metadata.yml`, or extend
    `md2pdfLib/pandoc/base.yml` when the new type intentionally shares the `book`
-   base
+   base. **A new metadata file must be added to `YAML_TARGETS` in
+   `style/generate_style.py`** and seeded with a `mainfont:` line — that is what
+   generates the brand block into it. Skip this and the document silently builds
+   in Pandoc's default font with no brand link colours, and no check notices.
 4. Add a factory function in `md2pdfLib/presets.py`, set `highlight_style` there if
    needed, and register it in `PRESETS`
-5. Add the type to the `Makefile` targets
-6. Optionally add a `--type` mapping entry in `md2pdfLib/scripts/compile_with_glossaries.sh`
+5. Add the type to `DOC_TARGETS` in the `Makefile` (and to `WATCH_TARGETS` plus a
+   `WATCH_DIR_<type>`/`WATCH_EXT_<type>` pair if it should be watchable)
+6. Add a case in `scripts/build_in_container.sh` — the `beamer|demo` case shows
+   how two targets share one pipeline
+7. Optionally add a `--type` mapping entry in `md2pdfLib/scripts/compile_with_glossaries.sh`
+
+`tests/test_presets_reach_every_source.py` enforces steps 1–4: it fails if a
+preset names a path that does not exist, and if any Markdown under `data/` is
+collected by no preset. Note that `get_sorted_markdown_files()` lists **one
+level** — Markdown in a subdirectory of an `input_dir` is never passed to pandoc,
+so such a subdirectory needs its own preset (that is what `demo` is).
 
 ---
 
@@ -210,9 +270,12 @@ The per-document headers that Pandoc injects live in `data/<doc>/latex/main.tex`
 - **Do not** use `docker` for **local** commands — use **nerdctl** locally
   (BuildKit / rootless). Scripts accept `CONTAINER_RUNTIME=docker` for
   environments without nerdctl; both run the same image.
-- **Do not** add a workflow that builds the `Dockerfile` in CI — the image is
-  built locally (`nerdctl build . -t pandoc_all`). The only GitHub workflow is
-  `docs-pages.yml`, which publishes the Sphinx docs to GitHub Pages.
+- **Do not** add a *fourth* workflow that builds the `Dockerfile`. Three
+  workflows exist and two of them build it on purpose:
+  `build-documents.yml` (brand drift, lint, types, tests, then every document
+  built in the image), `publish-image.yml` (pushes the image to GHCR), and
+  `docs-pages.yml` (publishes the Sphinx docs to GitHub Pages). Local builds
+  still use `nerdctl build . -t pandoc_all`.
 - **Do not** commit `data/out/` (it is in `.gitignore`)
 - **Do not** run `nerdctl build` without ensuring buildkitd is running
   (`systemctl --user status buildkit.service`)
@@ -239,8 +302,8 @@ Pandoc and uv pins are synced from ContainerHub's
 | Component | Version | Source |
 |-----------|---------|--------|
 | Ubuntu | 26.04 | `FROM ubuntu:26.04` in Dockerfile |
-| Pandoc | 3.10 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ContainerHub) |
+| Pandoc | 3.10.2 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ContainerHub) |
 | TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
-| uv | 0.11.25 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ContainerHub) |
+| uv | 0.12.5 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ContainerHub) |
 | Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
 | Python | 3.14 | `python3-full` from Ubuntu 26.04 repos |
