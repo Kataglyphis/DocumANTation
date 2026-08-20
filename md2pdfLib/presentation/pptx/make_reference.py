@@ -17,7 +17,6 @@ Usage:
 
 from __future__ import annotations
 
-import json
 import re
 import shutil
 import subprocess
@@ -25,8 +24,23 @@ import sys
 import zipfile
 from pathlib import Path
 
-MD2PDF_ROOT = Path(__file__).resolve().parents[2]
-BRAND_TOKENS = MD2PDF_ROOT / "style" / "brand.tokens.json"
+# Import as a package module even when run as a script by path -- see the note
+# in fit_titles.py.
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
+    FLUSH_CENTERED_BODY,
+    MD2PDF_ROOT,
+    SP_RE,
+    USER_DRAWN,
+    append_shapes,
+    brand_tokens,
+    geometry_of,
+    layout_name,
+    shape,
+)
 
 # The image the beamer title page shows in its right-hand wedge (presets.py
 # passes it as titlegraphic); the pptx title layout reproduces that wedge with
@@ -137,11 +151,6 @@ def patch_theme_xml(xml: str, colors: dict[str, str], font: str) -> str:
     return xml
 
 
-def _layout_name(xml: str) -> str | None:
-    m = re.search(r'<p:cSld name="([^"]+)"', xml)
-    return m.group(1) if m else None
-
-
 def _insert_bg(xml: str, bg: str) -> str:
     """Insert a <p:bg> as the first child of <p:cSld> (schema-required slot)."""
     new, count = re.subn(r"(<p:cSld[^>]*>)", rf"\1{bg}", xml, count=1)
@@ -152,7 +161,7 @@ def _insert_bg(xml: str, bg: str) -> str:
 
 def _sp_span(xml: str, ph_type: str) -> tuple[int, int]:
     """Return (start, end) of the <p:sp> block holding placeholder *ph_type*."""
-    for m in re.finditer(r"<p:sp>.*?</p:sp>", xml, re.S):
+    for m in SP_RE.finditer(xml):
         if f'<p:ph type="{ph_type}"' in m.group(0):
             return m.span()
     raise ReferenceBuildError(f'Layout has no "{ph_type}" placeholder to patch.')
@@ -213,22 +222,23 @@ def _set_placeholder_xfrm(xml: str, ph_type: str, x: int, y: int, cx: int, cy: i
     return xml[:start] + patched + xml[end:]
 
 
-def _append_shape(xml: str, shape: str) -> str:
-    new, count = re.subn(r"</p:spTree>", f"{shape}</p:spTree>", xml, count=1)
-    if count != 1:
+def _append_shape(xml: str, shape_xml: str) -> str:
+    """Add one shape to a layout's shape tree.
+
+    Was re.subn, which made the replacement string a regex template -- and these
+    shapes carry the deck author and title from the presentation metadata, so a
+    backslash in either would have been read as an escape. append_shapes
+    substitutes literally.
+    """
+    patched = append_shapes(xml, [shape_xml])
+    if patched is None:
         raise ReferenceBuildError("Layout has no <p:spTree> to receive a shape.")
-    return new
+    return patched
 
 
 def _rect(shape_id: int, name: str, x: int, y: int, cx: int, cy: int, fill: str) -> str:
-    return (
-        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{name}"/>'
-        '<p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
-        f'<p:spPr><a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>'
-        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>'
-        f"{fill}<a:ln><a:noFill/></a:ln></p:spPr>"
-        "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
-    )
+    """A plain filled rectangle: the separator rules and the footline blocks."""
+    return shape(shape_id=shape_id, name=name, x=x, y=y, cx=cx, cy=cy, fill=fill, nv_pr=USER_DRAWN)
 
 
 def deck_metadata() -> dict[str, str]:
@@ -261,34 +271,45 @@ def _text_shape(
 ) -> str:
     """A borderless, fill-less text shape for footline labels."""
     safe = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    return (
-        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{name}"/>'
-        '<p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
-        f'<p:spPr><a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>'
-        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln><a:noFill/></a:ln>'
-        "</p:spPr><p:txBody>"
-        '<a:bodyPr anchor="ctr" lIns="0" rIns="0" tIns="0" bIns="0"/><a:lstStyle/>'
+    paragraph = (
         f'<a:p><a:pPr algn="{align}"/>'
         f'<a:r><a:rPr lang="en-US" sz="900"><a:solidFill><a:schemeClr val="{scheme}"/>'
-        f"</a:solidFill></a:rPr><a:t>{safe}</a:t></a:r></a:p></p:txBody></p:sp>"
+        f"</a:solidFill></a:rPr><a:t>{safe}</a:t></a:r></a:p>"
+    )
+    return shape(
+        shape_id=shape_id,
+        name=name,
+        x=x,
+        y=y,
+        cx=cx,
+        cy=cy,
+        nv_pr=USER_DRAWN,
+        body_pr=FLUSH_CENTERED_BODY,
+        body=paragraph,
     )
 
 
 def _wedge(shape_id: int, name: str, x: int, fill: str) -> str:
     """A full-height quad whose left edge slants -- the beamer title wedge."""
-    return (
-        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{name}"/>'
-        '<p:cNvSpPr/><p:nvPr userDrawn="1"/></p:nvSpPr>'
-        f'<p:spPr><a:xfrm><a:off x="{x}" y="0"/>'
-        f'<a:ext cx="{WEDGE_CX}" cy="{SLIDE_CY}"/></a:xfrm>'
+    geometry = (
         "<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/>"
         '<a:rect l="0" t="0" r="100000" b="100000"/>'
         f'<a:pathLst><a:path w="100000" h="100000"><a:moveTo><a:pt x="{WEDGE_SLANT}" y="0"/>'
         '</a:moveTo><a:lnTo><a:pt x="100000" y="0"/></a:lnTo>'
         '<a:lnTo><a:pt x="100000" y="100000"/></a:lnTo>'
         '<a:lnTo><a:pt x="0" y="100000"/></a:lnTo><a:close/></a:path></a:pathLst>'
-        f"</a:custGeom>{fill}<a:ln><a:noFill/></a:ln></p:spPr>"
-        "<p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>"
+        "</a:custGeom>"
+    )
+    return shape(
+        shape_id=shape_id,
+        name=name,
+        x=x,
+        y=0,
+        cx=WEDGE_CX,
+        cy=SLIDE_CY,
+        geometry=geometry,
+        fill=fill,
+        nv_pr=USER_DRAWN,
     )
 
 
@@ -303,12 +324,9 @@ def _title_geometry(layout_xml: str, master_xml: str) -> tuple[int, int, int, in
             start, end = _sp_span(xml, "title")
         except ReferenceBuildError:
             continue
-        m = re.search(
-            r'<a:off x="(-?\d+)" y="(-?\d+)"/><a:ext cx="(\d+)" cy="(\d+)"/>', xml[start:end]
-        )
-        if m:
-            x, y, cx, cy = (int(v) for v in m.groups())
-            return x, y, cx, cy
+        geometry = geometry_of(xml[start:end])
+        if geometry is not None:
+            return geometry
     raise ReferenceBuildError("No title geometry found in layout or master.")
 
 
@@ -495,7 +513,7 @@ def default_reference_pptx(dest: Path) -> None:
 
 def build_reference(output: Path, brand: dict | None = None) -> Path:
     """Write a brand-themed reference deck to *output* and return it."""
-    brand = brand if brand is not None else json.loads(BRAND_TOKENS.read_text("utf-8"))
+    brand = brand if brand is not None else brand_tokens()
     colors = brand_theme_colors(brand)
     font = brand["fonts"]["main"]
 
@@ -541,7 +559,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
         if not re.fullmatch(r"ppt/slideLayouts/slideLayout\d+\.xml", name):
             continue
         xml = parts[name].decode("utf-8")
-        layout = _layout_name(xml)
+        layout = layout_name(xml)
         if layout == "Title Slide":
             xml = patch_title_slide_layout(xml)
             rels_name = f"ppt/slideLayouts/_rels/{name.rsplit('/', 1)[-1]}.rels"

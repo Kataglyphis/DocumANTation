@@ -6,20 +6,52 @@ docs tooling, and is consumed by downstream repos as a git submodule.
 
 ## Included files
 
-- `index_template.rst` – landing page template with cards
+| File | Status |
+| --- | --- |
+| `index_template.rst` | Landing-page template with cards — copy it and edit it |
+| `conf_base.py` | **Frozen legacy shim.** Loaded by path, not by anything here |
+| `custom.css` | **Generated.** A verbatim copy of the theme stylesheet |
 
-That is all that belongs here. The theme baseline and the visual style are
-**not** duplicated in this folder — they live once, in the
-`sphinx-kataglyphis-theme/` package, and its brand tokens are generated from
-[`style/brand.json`](../../../style/README.md).
+The theme baseline and the visual style are not *authored* in this folder — they
+live once, in the `sphinx-kataglyphis-theme/` package, and its brand tokens are
+generated from [`style/brand.json`](../../../style/README.md).
+
+### Why `conf_base.py` and `custom.css` are still here
+
+**Two** repositories load `conf_base.py` **by filesystem path** from their own
+`docs/source/conf.py`:
+
+| Repo | Notes |
+| --- | --- |
+| `Kataglyphis-Cpp-Inference` | also symlinks its `_static/css/custom.css` into this directory |
+| `Kataglyphis-BeschleunigerBallett` | branch `develop`; falls back to an inline copy of these values if the path is missing |
+
+Both read `SPHINX_EXTENSIONS`, `HTML_THEME`, `HTML_THEME_OPTIONS`,
+`HTML_STATIC_PATH` and `HTML_CSS_FILES`, and both set their own
+`repository_url` afterwards. Deleting the two files broke the first of them with
+
+```text
+ImportError: Cannot load shared Sphinx baseline from .../sphinx-book/conf_base.py
+```
+
+until they were restored. So do not delete them — but do not treat them as a
+supported route either:
+
+- `conf_base.py` is **frozen**: pure constants, no imports, no brand values. It
+  is deliberately behind `setup_theme()` — it can only name a Pygments style
+  that Pygments itself ships, because neither consumer installs
+  `sphinx-kataglyphis-theme`. Migrate them to `setup_theme()`; do not grow this
+  file.
+- `custom.css` is **generated** by `style/generate_style.py` — do not edit it.
+  It used to be a hand-written fork, and it rotted exactly as predicted: ~490
+  lines behind the original and still painting links the pre-cyan green, so that
+  one site rendered a different brand while every drift check passed. It is now
+  a byte copy that `--check` and the test suite both enforce.
 
 ## How to consume
 
-Install the theme and call `setup_theme()`. There is no second way, on purpose:
-this folder used to offer a "copy the files" option, and both copies it produced
-rotted — the stylesheet fork fell ~270 lines behind the original, and a
-duplicated `conf_base.py` drifted away from `setup_theme()` until this repo's
-own docs silently lost the shared code palette.
+New consumers: install the theme and call `setup_theme()`. There is no second
+supported way, on purpose — every copy this folder ever handed out drifted.
 
 `requirements.txt`:
 

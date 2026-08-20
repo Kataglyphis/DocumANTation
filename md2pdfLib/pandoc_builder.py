@@ -188,18 +188,31 @@ def run_pandoc(config: BuildConfig) -> None:
         subprocess.run(cmd, check=True, cwd=PROJECT_ROOT)
     except subprocess.CalledProcessError as exc:
         raise BuildError(f"Pandoc failed with exit code {exc.returncode}") from exc
+    except FileNotFoundError as exc:
+        # Running a build target on the host instead of in the container is the
+        # common way to get here, and a raw WinError 2 / ENOENT traceback names
+        # neither the missing program nor the fix.
+        raise BuildError(
+            "pandoc is not on PATH. Builds run in the container: "
+            "./scripts/build_in_container.sh <target>"
+        ) from exc
 
 
-def run_from_cli(config: BuildConfig) -> None:
-    """Entry point suitable for ``if __name__ == '__main__'`` scripts.
+def run_from_cli(config: BuildConfig, output_name: str | None = None) -> None:
+    """Run *config*, reporting a :class:`BuildError` as a message, not a traceback.
 
-    Accepts the optional output name from ``sys.argv[1]``, traps
-    :class:`BuildError` and prints a user-friendly message before exiting
-    with a non-zero code.
+    The output name is a parameter rather than something read back out of
+    ``sys.argv``: the only caller is build.py, which has already parsed the
+    arguments with argparse, and it had to rewrite ``sys.argv`` to hand the
+    name over -- a global mutation that any later argv reader would have seen.
+
+    Args:
+        config: The preset to build.
+        output_name: Overrides the preset's default output filename.
     """
     try:
-        if len(sys.argv) > 1:
-            config.output_name = sys.argv[1]
+        if output_name:
+            config.output_name = output_name
         run_pandoc(config)
     except BuildError as exc:
         print(f"Error: {exc}", file=sys.stderr)

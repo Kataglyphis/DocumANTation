@@ -4,6 +4,12 @@ data/out/
 __pycache__/
 *.pyc
 
+# Virtualenv. uv writes a self-ignoring .venv/.gitignore, so this is belt and
+# braces -- but a venv created any other way (python -m venv, virtualenv) does
+# not, and 5000+ site-packages files then show up as untracked.
+.venv/
+venv/
+
 # Python packaging / editable-install artifacts
 # (`pip install -e sphinx-kataglyphis-theme` generates these)
 *.egg-info/

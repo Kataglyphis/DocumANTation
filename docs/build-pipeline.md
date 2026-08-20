@@ -72,6 +72,8 @@ When strict mode is enabled, the final log is inspected and the build fails on w
 ```bash
 ./scripts/build_in_container.sh book
 ./scripts/build_in_container.sh beamer
+./scripts/build_in_container.sh demo
+./scripts/build_in_container.sh example
 ./scripts/build_in_container.sh pptx
 ./scripts/build_in_container.sh cv
 ./md2pdfLib/scripts/compile_with_glossaries.sh --type book

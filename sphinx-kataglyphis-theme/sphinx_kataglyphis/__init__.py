@@ -92,6 +92,114 @@ def _needs_index(source_dir: Path) -> bool:
     return not (source_dir / "index.md").exists() and not (source_dir / "index.rst").exists()
 
 
+# ── the groups setup_theme applies ───────────────────────────────────────────
+#
+# One function per group of Sphinx settings. setup_theme() had them inline and
+# had grown to the longest function in the project; split out, each is small
+# enough to read whole and says in its name which settings it owns.
+
+
+def _write_index(source_dir: Path, project_name: str) -> None:
+    """Generate index.md over the sources found in *source_dir*.
+
+    A hand-written index (of either suffix) is left alone -- overwriting
+    someone's landing page would be data loss, not a convenience.
+    """
+    if not _needs_index(source_dir):
+        return
+    sources = _discover_markdown_files(source_dir)
+    content = _generate_index_content(project_name or "Documentation", sources)
+    (source_dir / "index.md").write_text(content, encoding="utf-8")
+    print(f"[sphinx-kataglyphis] generated index.md with {len(sources)} page(s)")
+
+
+def _apply_extensions(conf_globals: dict, extensions_extra: list | None) -> None:
+    """Assign the extension list and the one MyST setting the brand fixes."""
+    extensions = ["myst_parser", "sphinx_design"]
+    if extensions_extra:
+        extensions.extend(extensions_extra)
+    conf_globals["extensions"] = extensions
+    conf_globals["myst_all_links_external"] = True
+
+
+def _apply_theme(conf_globals: dict, repository_url: str, theme_options_extra: dict | None) -> None:
+    """Assign the theme and its options -- the part that is not negotiable."""
+    theme_options = {
+        "use_repository_button": bool(repository_url),
+        "show_navbar_depth": 2,
+        "navigation_with_keys": True,
+        "show_toc_level": 2,
+        "secondary_sidebar_items": ["page-toc"],
+        "primary_sidebar_end": [],
+        # Same code palette as the book and the slides -- see
+        # sphinx_kataglyphis/highlight.py, generated from style/brand.json.
+        # Both modes use the dark style: the brand code-block look is dark bg
+        # in every output (PDF, PPTX, web light/dark), so token colours must
+        # be the light-on-dark set regardless of the site's overall theme.
+        "pygments_light_style": "kataglyphis-dark",
+        "pygments_dark_style": "kataglyphis-dark",
+    }
+    if repository_url:
+        theme_options["repository_url"] = repository_url
+    if theme_options_extra:
+        theme_options |= theme_options_extra
+
+    conf_globals["html_theme"] = "sphinx_book_theme"
+    conf_globals["html_theme_options"] = theme_options
+
+
+def _apply_static_paths(conf_globals: dict, html_css_files_extra: list | None) -> None:
+    """Assign html_static_path, html_css_files and templates_path.
+
+    The package's _static comes last so the theme's css/custom.css wins over a
+    same-named local copy: a project that forks the stylesheet gets its fork
+    silently discarded, which is worse than not having one. Put per-project
+    rules in their own file and pass html_css_files_extra.
+
+    A project with no _static of its own is normal -- Sphinx warns about a
+    missing html_static_path entry, so only list it when it exists.
+    """
+    pkg_dir = Path(__file__).resolve().parent
+    conf_dir = Path(conf_globals.get("__file__", "conf.py")).resolve().parent
+
+    static_paths = [str(pkg_dir / "_static")]
+    if (conf_dir / "_static").is_dir():
+        static_paths.insert(0, "_static")
+    conf_globals["html_static_path"] = static_paths
+
+    css_files: list[str] = ["css/custom.css"]
+    if html_css_files_extra:
+        css_files.extend(html_css_files_extra)
+    conf_globals["html_css_files"] = css_files
+
+    conf_globals.setdefault("templates_path", []).append("_templates")
+
+
+def _apply_metadata(
+    conf_globals: dict, project_name: str, copyright_: str, author: str, release: str
+) -> None:
+    """setdefault the project metadata, falling back to the brand identity.
+
+    Author and copyright come from brand.json's ``identity`` section when
+    neither conf.py nor the caller supplies one, so a consuming repo inherits
+    them the same way it inherits the colours. Every downstream conf.py used to
+    retype them; that is how the name reached sixteen files in this repo and
+    why three of the four consuming repos still hold their own copy.
+
+    ``release`` gets no such fallback: a version number is per project, and a
+    truthy default once published every project as 0.0.1.
+    """
+    identity = brand()["identity"]
+    if project_name:
+        conf_globals.setdefault("project", project_name)
+    conf_globals.setdefault(
+        "copyright", copyright_ or f"{identity['copyright_year']}, {identity['name']}"
+    )
+    conf_globals.setdefault("author", author or identity["name"])
+    if release:
+        conf_globals.setdefault("release", release)
+
+
 # ── conf.py helper ───────────────────────────────────────────────────────────
 
 
@@ -135,86 +243,22 @@ def setup_theme(
       negotiable per project. Extend them via ``extensions_extra`` /
       ``theme_options_extra`` / ``html_css_files_extra`` instead.
     - *Project metadata* — ``project``, ``copyright``, ``author``, ``release``
-      use ``setdefault``, so a value already in ``conf.py`` wins.
+      use ``setdefault``, so a value already in ``conf.py`` wins. ``author`` and
+      ``copyright`` fall back to the brand's ``identity`` section when neither
+      ``conf.py`` nor the call supplies one, so a consuming repo inherits them
+      the same way it inherits the colours instead of retyping them.
     - *Anything else* — ``**extra_conf`` is assigned last and wins over
       everything above.
     """
-    pkg_dir = Path(__file__).resolve().parent
-
-    # ---- auto-discover markdown files and generate index.md ----
     if auto_discover:
-        src = Path(source_dir).resolve()
-        if _needs_index(src):
-            sources = _discover_markdown_files(src)
-            idx = _generate_index_content(project_name or "Documentation", sources)
-            (src / "index.md").write_text(idx, encoding="utf-8")
-            print(f"[sphinx-kataglyphis] generated index.md with {len(sources)} page(s)")
+        _write_index(Path(source_dir).resolve(), project_name)
 
-    # ---- extensions ----
-    extensions = ["myst_parser", "sphinx_design"]
-    if extensions_extra:
-        extensions.extend(extensions_extra)
-    conf_globals["extensions"] = extensions
+    _apply_extensions(conf_globals, extensions_extra)
+    _apply_theme(conf_globals, repository_url, theme_options_extra)
+    _apply_static_paths(conf_globals, html_css_files_extra)
+    _apply_metadata(conf_globals, project_name, copyright_, author, release)
 
-    # ---- MyST ----
-    conf_globals["myst_all_links_external"] = True
-
-    # ---- theme ----
-    theme_options = {
-        "use_repository_button": bool(repository_url),
-        "show_navbar_depth": 2,
-        "navigation_with_keys": True,
-        "show_toc_level": 2,
-        "secondary_sidebar_items": ["page-toc"],
-        "primary_sidebar_end": [],
-        # Same code palette as the book and the slides -- see
-        # sphinx_kataglyphis/highlight.py, generated from style/brand.json.
-        # Both modes use the dark style: the brand code-block look is dark bg
-        # in every output (PDF, PPTX, web light/dark), so token colours must
-        # be the light-on-dark set regardless of the site's overall theme.
-        "pygments_light_style": "kataglyphis-dark",
-        "pygments_dark_style": "kataglyphis-dark",
-    }
-    if repository_url:
-        theme_options["repository_url"] = repository_url
-    if theme_options_extra:
-        theme_options |= theme_options_extra
-
-    conf_globals["html_theme"] = "sphinx_book_theme"
-    conf_globals["html_theme_options"] = theme_options
-
-    # ---- static paths & CSS ----
-    # The package's _static comes last so the theme's css/custom.css wins over a
-    # same-named local copy: a project that forks the stylesheet gets its fork
-    # silently discarded, which is worse than not having one. Put per-project
-    # rules in their own file and pass html_css_files_extra.
-    # A project with no _static of its own is normal -- Sphinx warns about a
-    # missing html_static_path entry, so only list it when it exists.
-    conf_dir = Path(conf_globals.get("__file__", "conf.py")).resolve().parent
-    static_paths = [str(pkg_dir / "_static")]
-    if (conf_dir / "_static").is_dir():
-        static_paths.insert(0, "_static")
-    conf_globals["html_static_path"] = static_paths
-
-    css_files: list[str] = ["css/custom.css"]
-    if html_css_files_extra:
-        css_files.extend(html_css_files_extra)
-    conf_globals["html_css_files"] = css_files
-
-    # ---- templates ----
-    conf_globals.setdefault("templates_path", []).append("_templates")
-
-    # ---- project metadata ----
-    if project_name:
-        conf_globals.setdefault("project", project_name)
-    if copyright_:
-        conf_globals.setdefault("copyright", copyright_)
-    if author:
-        conf_globals.setdefault("author", author)
-    if release:
-        conf_globals.setdefault("release", release)
-
-    # ---- extra conf variables ----
+    # Last, so a project can override anything above.
     for key, value in extra_conf.items():
         conf_globals[key] = value
 

@@ -10,8 +10,8 @@ consume it as a git submodule.
 
 | Path | Purpose |
 | --- | --- |
-| `source_templates/sphinx-book/` | Landing-page template for a docs site |
-| `source_templates/sphinx-python/` | Baseline Sphinx config for Python API docs (autodoc/napoleon) |
+| `source_templates/sphinx-book/` | Landing-page template for a docs site, plus a frozen path-loaded shim for one legacy consumer — see its [README](source_templates/sphinx-book/README.md) before touching either |
+| `source_templates/sphinx-python/` | Baseline Sphinx config for Python API docs (autodoc/napoleon). Offered but **currently unused** — see the status note in its `conf_base.py` |
 
 Only genuinely shared things live here. `sync_versions.py` and
 `generate-website-licenses.py` used to, and moved back to ContainerHub: they
@@ -38,5 +38,7 @@ git submodule add https://github.com/Kataglyphis/Kataglyphis-DocumANTation exter
 
 Then install the theme package and call `setup_theme()` — see
 [`source_templates/sphinx-book/README.md`](source_templates/sphinx-book/README.md).
-There is deliberately no second, copy-the-files route: every copy this repo
-ever handed out drifted.
+There is deliberately no second, copy-the-files route for new consumers: every
+copy this repo ever handed out drifted. The one repo that still loads a template
+by path is documented there, and its stylesheet is generated so it cannot drift
+again.

@@ -30,7 +30,8 @@ def book() -> BuildConfig:
         top_level_division="chapter",
         output_suffix=".tex",
         extra_args=[
-            "--lua-filter", BRAND_DIVS_FILTER,
+            "--lua-filter",
+            BRAND_DIVS_FILTER,
         ],
     )
 
@@ -54,7 +55,8 @@ def beamer() -> BuildConfig:
             "beamer",
             "--template",
             "md2pdfLib/presentation/pandoc/awesome-beamer-template.tex",
-            "--lua-filter", BRAND_DIVS_FILTER,
+            "--lua-filter",
+            BRAND_DIVS_FILTER,
             "-V",
             "themeoptions:english",
             "-V",
@@ -104,8 +106,61 @@ def pptx() -> BuildConfig:
     )
 
 
+def demo() -> BuildConfig:
+    """The slide primitives showcase in data/presentation/demo/, as its own deck.
+
+    Those sources sit in a subdirectory, and get_sorted_markdown_files() lists
+    one level, so for a long time nothing built them at all -- two rotted
+    references (a missing image, a moved theme path) sat in them unnoticed
+    because no build ever read them. They are showcase material rather than part
+    of the published talk, so they get a target of their own instead of being
+    folded into it.
+    """
+    config = beamer()
+    config.input_dir = "data/presentation/demo"
+    config.default_output_name = "demo_output.pdf"
+    config.log_file = "data/out/demo.json"
+    # The demo sources cite nothing, and citeproc with no citations still wants
+    # the bibliography to exist.
+    config.bibliography = ""
+    config.citeproc = False
+    return config
+
+
+def example() -> BuildConfig:
+    """The minimal starter document in data/example/chapters/.
+
+    data/example/chapters/02-getting-started.md tells a newcomer to put their
+    Markdown here and run `make book` -- which builds data/book/ instead, so the
+    instruction could not work and the example was unbuildable. This is the
+    target that makes it true.
+
+    A single pandoc call straight to PDF: no bibliography, glossary or
+    nomenclature, so it needs none of the multi-pass TeX pipeline the book does.
+    """
+    return BuildConfig(
+        input_dir="data/example/chapters",
+        output_dir="data/out",
+        default_output_name="example_output.pdf",
+        metadata_file="md2pdfLib/example/pandoc/metadata.yml",
+        highlight_style="md2pdfLib/themes/pygments.theme",
+        include_in_header="data/example/latex/main.tex",
+        log_file="data/out/example.json",
+        toc=True,
+        number_sections=True,
+        top_level_division="chapter",
+        output_suffix=".pdf",
+        extra_args=[
+            "--lua-filter",
+            BRAND_DIVS_FILTER,
+        ],
+    )
+
+
 PRESETS: dict[str, Callable[[], BuildConfig]] = {
     "book": book,
     "beamer": beamer,
+    "demo": demo,
+    "example": example,
     "pptx": pptx,
 }

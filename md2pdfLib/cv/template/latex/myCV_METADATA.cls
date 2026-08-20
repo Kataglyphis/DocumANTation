@@ -14,7 +14,10 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 
-\ProvidesClass{myCV_METADATA}[2026/07/21 v0.1.0 'Jonas Heinle CV' Class]
+% The identification string cannot read brand-identity.tex: LaTeX parses it
+% before a class may \input anything. It names the brand, not the person, so
+% it is not a second copy of the author's name.
+\ProvidesClass{myCV_METADATA}[2026/07/21 v0.1.0 'Kataglyphis CV' Class]
 
 \LoadClass[letterpaper]{article}
 
@@ -86,6 +89,7 @@
 % not need to know where the style directory sits relative to the build dir.
 \input{brand-colors.tex}   % basecolor := brandAccent, linkcolor := brandLink
 \input{brand-fonts.tex}    % \brandSetMainFont / \brandSetMonoFont
+\input{brand-identity.tex} % \brandFirstName, \brandEmail, \brandGithub, ...
 % Neutral greys/blacks are deliberately per-document, not brand tokens
 % (see style/README.md "Deliberately not brand-wide").
 \colorlet{headingcolor}{black}

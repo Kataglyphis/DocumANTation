@@ -26,15 +26,27 @@ from __future__ import annotations
 
 import re
 import sys
-import zipfile
 from pathlib import Path
 
-try:  # imported as a package module (tests)
-    from md2pdfLib.presentation.pptx.pptx_common import layout_for, rewrite_zip
-    from md2pdfLib.presentation.pptx.style_code import EMU_PER_POINT, placeholder_box
-except ImportError:  # run as a script from its own directory (the build)
-    from pptx_common import layout_for, rewrite_zip
-    from style_code import EMU_PER_POINT, placeholder_box
+# Import as a package module even when run as a script by path, which is how the
+# build invokes this. Without it the fallback was a second, top-level copy of
+# every sibling module -- so a test and the build could hold two `style_code`
+# module objects with two sets of constants.
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
+    SP_RE,
+    TEXT_RE,
+    TXBODY_RE,
+    DeckParts,
+    edit_slides,
+    master_style_size,
+    run_cli,
+    sized_runs,
+)
+from md2pdfLib.presentation.pptx.style_code import EMU_PER_POINT, placeholder_box  # noqa: E402
 
 # Advance width per character as a fraction of the font size, measured off a
 # rendered deck rather than guessed: a 40-character title came out at 0.535em
@@ -48,21 +60,15 @@ TITLE_SIZE_STEP = 50
 # string that still does not fit is left as it is rather than shrunk out of
 # the design -- at that length the heading itself is the thing to fix.
 TITLE_SIZE_MIN = 2200
+# What an unsized title run renders at when the master declares no size.
+TITLE_SIZE_DEFAULT = 3300
 
-_SP_RE = re.compile(r"<p:sp>.*?</p:sp>", re.S)
-_TEXT_RE = re.compile(r"<a:t>(.*?)</a:t>", re.S)
-_RPR_RE = re.compile(r"<a:rPr\b((?:[^>\"]|\"[^\"]*\")*?)(/?)>")
 _TITLE_PH_RE = re.compile(r'<p:ph\b[^>]*\btype="title"')
-_TXBODY_RE = re.compile(r"(<p:txBody>)(.*?)(</p:txBody>)", re.S)
-_SLIDE_RE = re.compile(r"ppt/slides/slide\d+\.xml")
-_MASTER_RE = re.compile(r"ppt/slideMasters/slideMaster\d+\.xml")
-_TITLE_SIZE_RE = re.compile(r"<p:titleStyle>.*?<a:lvl1pPr\b.*?<a:defRPr\b[^>]*\bsz=\"(\d+)\"", re.S)
 
 
 def title_text_size(master_xml: str) -> int:
     """The master's title size -- what an unsized title run renders at."""
-    match = _TITLE_SIZE_RE.search(master_xml)
-    return int(match.group(1)) if match else 3300
+    return master_style_size(master_xml, "titleStyle", TITLE_SIZE_DEFAULT)
 
 
 def fits(text: str, size: int, cx: int, cy: int) -> bool:
@@ -86,66 +92,47 @@ def fit_title_size(text: str, cx: int, cy: int, cap: int) -> int:
     return TITLE_SIZE_MIN
 
 
-def _sized_runs(txbody: str, size: int) -> str:
-    return _RPR_RE.sub(
-        lambda m: (
-            f'<a:rPr{m.group(1)} sz="{size}"{m.group(2)}>'
-            if " sz=" not in m.group(1)
-            else m.group(0)
-        ),
-        txbody,
-    )
-
-
 def fit_slide_title(xml: str, layout_xml: str, master_xml: str) -> str | None:
     """Return *xml* with an overflowing title shrunk, or None when it fits."""
     cap = title_text_size(master_xml)
-    for sp in _SP_RE.findall(xml):
+    for sp in SP_RE.findall(xml):
         if not _TITLE_PH_RE.search(sp):
             continue
-        body = _TXBODY_RE.search(sp)
+        body = TXBODY_RE.search(sp)
         geometry = placeholder_box(sp, layout_xml, master_xml)
         if body is None or geometry is None:
             continue
         _, _, cx, cy = geometry
-        text = "".join(_TEXT_RE.findall(body.group(2)))
+        text = "".join(TEXT_RE.findall(body.group(2)))
         if not text or fits(text, cap, cx, cy):
             continue
-        sized = _sized_runs(body.group(2), fit_title_size(text, cx, cy, cap))
+        sized = sized_runs(body.group(2), fit_title_size(text, cx, cy, cap))
         new_sp = sp[: body.start(2)] + sized + sp[body.end(2) :]
+        # A run that already carries a size keeps it, so a title fitted by an
+        # earlier pass comes back unchanged here. Reporting that as a change
+        # rewrote the whole archive and claimed a slide had been fitted again
+        # -- finalize_deck.py runs this after style_code.py, so re-running the
+        # step on a finished deck is the normal case, not an odd one.
+        if new_sp == sp:
+            continue
         return xml.replace(sp, new_sp, 1)
     return None
 
 
 def fit_titles(deck: Path) -> int:
     """Shrink every overflowing frame title in *deck*; return how many."""
-    with zipfile.ZipFile(deck) as z:
-        masters = sorted(n for n in z.namelist() if _MASTER_RE.fullmatch(n))
-        master_xml = z.read(masters[0]).decode() if masters else ""
+
+    def transform(parts: DeckParts, name: str, xml: str) -> str | None:
+        master_xml = parts.master()
         if not master_xml:
-            return 0
-        updates: dict[str, bytes] = {}
-        for name in z.namelist():
-            if not _SLIDE_RE.fullmatch(name):
-                continue
-            fitted = fit_slide_title(z.read(name).decode(), layout_for(z, name), master_xml)
-            if fitted is not None:
-                updates[name] = fitted.encode()
-        if not updates:
-            return 0
-    rewrite_zip(deck, updates)
-    return len(updates)
+            return None
+        return fit_slide_title(xml, parts.layout(name), master_xml)
+
+    return edit_slides(deck, transform)
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
-        sys.exit(2)
-    deck = Path(sys.argv[1])
-    if not deck.is_file():
-        print(f"Error: no such deck: {deck}", file=sys.stderr)
-        sys.exit(1)
-    print(f"{deck.name}: titles fitted on {fit_titles(deck)} slides.")
+    run_cli(lambda deck: f"{deck.name}: titles fitted on {fit_titles(deck)} slides.")
 
 
 if __name__ == "__main__":

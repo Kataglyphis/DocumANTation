@@ -45,7 +45,10 @@ sphinx-kataglyphis-theme = { path = "sphinx-kataglyphis-theme", editable = true 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "-ra --cov=md2pdfLib --cov=style --cov-report=term-missing"
+# sphinx_kataglyphis is measured too: it is the package that ships the brand to
+# every downstream repo, and leaving it out of --cov hid that its two public
+# features -- auto_discover and the scaffold CLI -- had no tests at all.
+addopts = "-ra --cov=md2pdfLib --cov=style --cov=sphinx_kataglyphis --cov-report=term-missing"
 
 [tool.ty]
 # Type-checking environment for `ty check`.
@@ -57,11 +60,6 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
-
-[tool.ruff.lint.per-file-ignores]
-# Doc-generation scripts emit long literal strings (generated markdown table
-# rows and help text containing full submodule paths) that don't wrap cleanly.
-"docs-tooling/scripts/*.py" = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"

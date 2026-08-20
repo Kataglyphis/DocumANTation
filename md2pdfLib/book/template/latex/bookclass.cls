@@ -26,6 +26,9 @@
 
 % Main font — single source of truth: style/brand.json
 \input{brand-fonts.tex}
+% Author, URL and GitHub handle -- generated from style/brand.json, same as
+% the colours and fonts. The \my* names below used to carry the literals.
+\input{brand-identity.tex}
 \brandSetMainFont
 \brandSetMonoFont
 
@@ -144,7 +147,7 @@
 % Render author's github (optional)
 % Usage: \github{<github-nick>}
 \providecommand{\githubSymbol}{\faGithub}
-\providecommand{\githubBase}{https://github.com/Kataglyphis}
+% \githubBase comes from brand-identity.tex.
 \providecommand*{\github}[1]{\sociallink{\githubSymbol}{\githubBase/#1}{\githubBase/#1}}
 
 %% --- End of New Commands ---
@@ -169,12 +172,11 @@
 %% |          Title page         |
 %% -------------------------------
 
-% Personal info — use \providecommand so metadata can override
-\providecommand{\myauthor}{Jonas Heinle}
-\providecommand{\myurl}{www.jonasheinle.de}
+% Personal info — use \providecommand so metadata can override.
+% \myauthor, \myurl and \myname come from brand-identity.tex; only the
+% per-document values are declared here.
 \providecommand{\mytitle}{}
 \providecommand{\mytitleger}{}
-\providecommand{\myname}{Jonas Heinle}
 \providecommand{\submissiontime}{}
 \providecommand{\reviewerone}{}
 \providecommand{\reviewertwo}{}

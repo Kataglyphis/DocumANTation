@@ -1,4 +1,12 @@
 \usepackage[english]{babel}
+% fvextra BEFORE csquotes, and both before anything that pulls in lineno.
+% brand-code-inner.tex needs fvextra and is \input at the bottom of this file,
+% which used to leave csquotes first -- fvextra then said "csquotes should be
+% loaded after fvextra, to avoid a warning from the lineno package", and lineno
+% duly followed with "Command \@parboxrestore has changed". Two warnings from
+% one load order, and both fail STRICT_WARNINGS=1. Loading it here is free:
+% brand-code-inner.tex uses \RequirePackage, so its own load becomes a no-op.
+\usepackage{fvextra}
 \usepackage{csquotes}
 
 \usepackage{graphicx}
@@ -25,10 +33,10 @@
 \providecommand{\mytitleger}{Introduction into the World of Rendering}
 
 \providecommand{\reviewerone}{Max Mustermann}
-\providecommand{\reviewertwo}{Jonas Heinle}
+\providecommand{\reviewertwo}{\brandName}
 \providecommand{\submissiontime}{\today}
 
-\providecommand{\myname}{Jonas Heinle}
+% \myname comes from brand-identity.tex, via bookclass.cls.
 
 \hypersetup{
 	pdfauthor={\myname},

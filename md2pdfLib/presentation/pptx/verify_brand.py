@@ -19,19 +19,27 @@ Usage:
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 import zipfile
+from collections.abc import Callable
 from pathlib import Path
 from xml.etree import ElementTree
 
-MD2PDF_ROOT = Path(__file__).resolve().parents[2]
-BRAND_TOKENS = MD2PDF_ROOT / "style" / "brand.tokens.json"
+# Import as a package module even when run as a script by path -- see the note
+# in fit_titles.py.
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
+    SLIDE_RE,
+    THEME_RE,
+    brand_tokens,
+    dangling_layout_media,
+)
 
 _SRGB_RE = re.compile(r'srgbClr val="([0-9A-Fa-f]{6})"')
-_THEME_RE = re.compile(r"ppt/theme/theme\d+\.xml")
-_SLIDE_RE = re.compile(r"ppt/slides/slide\d+\.xml")
 # The two theme font slots make_reference.py patches: major is headings, minor
 # is body. Matched the same way it writes them.
 _FONT_RE = re.compile(r'<a:(majorFont|minorFont)>\s*<a:latin typeface="([^"]*)"')
@@ -50,7 +58,7 @@ def off_brand_colors(deck: Path, allowed: set[str]) -> dict[str, set[str]]:
     """Return {part: colours that are not brand values}, empty when all good."""
     offenders: dict[str, set[str]] = {}
     with zipfile.ZipFile(deck) as z:
-        parts = [n for n in z.namelist() if _THEME_RE.fullmatch(n) or _SLIDE_RE.fullmatch(n)]
+        parts = [n for n in z.namelist() if THEME_RE.fullmatch(n) or SLIDE_RE.fullmatch(n)]
         if not parts:
             raise SystemExit(f"Error: {deck} contains no theme or slide parts.")
         for name in parts:
@@ -68,7 +76,7 @@ def off_brand_fonts(deck: Path, expected: str) -> dict[str, set[str]]:
     """
     offenders: dict[str, set[str]] = {}
     with zipfile.ZipFile(deck) as z:
-        themes = [n for n in z.namelist() if _THEME_RE.fullmatch(n)]
+        themes = [n for n in z.namelist() if THEME_RE.fullmatch(n)]
         if not themes:
             raise SystemExit(f"Error: {deck} contains no theme part.")
         for name in themes:
@@ -78,30 +86,6 @@ def off_brand_fonts(deck: Path, expected: str) -> dict[str, set[str]]:
                 continue
             if stray := {f"{role}={face or '(empty)'}" for role, face in found if face != expected}:
                 offenders[name] = stray
-    return offenders
-
-
-def dangling_layout_media(deck: Path) -> dict[str, set[str]]:
-    """{layout rels part: media targets that do not exist in the archive}.
-
-    Pandoc drops media that only layouts reference (finalize_deck.py puts the
-    known ones back); anything still dangling means a layout's image -- the
-    title background -- will not render. That is an off-brand deck even though
-    every colour checks out.
-    """
-    offenders: dict[str, set[str]] = {}
-    with zipfile.ZipFile(deck) as z:
-        names = set(z.namelist())
-        for name in names:
-            if not re.fullmatch(r"ppt/slideLayouts/_rels/slideLayout\d+\.xml\.rels", name):
-                continue
-            missing = {
-                t
-                for t in re.findall(r'Target="\.\./media/([^"]+)"', z.read(name).decode())
-                if f"ppt/media/{t}" not in names
-            }
-            if missing:
-                offenders[name] = missing
     return offenders
 
 
@@ -128,6 +112,14 @@ def malformed_parts(deck: Path) -> dict[str, str]:
     return offenders
 
 
+def _report(header: str, offenders: dict[str, set[str]], remedy: str) -> None:
+    """Print one failed check: what is wrong, where, and what to do about it."""
+    print(f"Error: {header}", file=sys.stderr)
+    for part, details in sorted(offenders.items()):
+        print(f"  {part}: {', '.join(sorted(details))}", file=sys.stderr)
+    print(remedy, file=sys.stderr)
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
@@ -137,40 +129,45 @@ def main() -> None:
         print(f"Error: no such deck: {deck}", file=sys.stderr)
         sys.exit(1)
 
-    brand = json.loads(BRAND_TOKENS.read_text("utf-8"))
-    failed = False
-
-    if malformed := malformed_parts(deck):
-        print(f"Error: {deck} has XML parts that are not well-formed:", file=sys.stderr)
-        for part, err in sorted(malformed.items()):
-            print(f"  {part}: {err}", file=sys.stderr)
-        print("PowerPoint will not open this deck without repairing it.", file=sys.stderr)
-        failed = True
-
-    if offenders := off_brand_colors(deck, brand_hexes(brand)):
-        print(f"Error: {deck} uses colours that are not in the brand:", file=sys.stderr)
-        for part, stray in sorted(offenders.items()):
-            print(f"  {part}: {', '.join('#' + c for c in sorted(stray))}", file=sys.stderr)
-        print("Every colour must come from style/brand.json.", file=sys.stderr)
-        failed = True
-
+    brand = brand_tokens()
     expected_font = brand["fonts"]["main"]
-    if bad_fonts := off_brand_fonts(deck, expected_font):
-        print(f"Error: {deck} theme fonts are not the brand font:", file=sys.stderr)
-        for part, stray in sorted(bad_fonts.items()):
-            print(f"  {part}: {', '.join(sorted(stray))}", file=sys.stderr)
-        print(f"Both font slots must name {expected_font} (style/brand.json).", file=sys.stderr)
-        failed = True
 
-    if dangling := dangling_layout_media(deck):
-        print(f"Error: {deck} has layout image references with no media part:", file=sys.stderr)
-        for part, targets in sorted(dangling.items()):
-            print(f"  {part}: {', '.join(sorted(targets))}", file=sys.stderr)
-        print("Run finalize_deck.py after pandoc, or update it for this media.", file=sys.stderr)
-        failed = True
+    # Every check runs before exiting, so one build reports every way the deck
+    # is off-brand rather than only the first. Each reports {part: details}, so
+    # one printer serves all of them.
+    #
+    checks: list[tuple[Callable[[], dict[str, set[str]]], str, str]] = [
+        (
+            lambda: {part: {err} for part, err in malformed_parts(deck).items()},
+            f"{deck} has XML parts that are not well-formed:",
+            "PowerPoint will not open this deck without repairing it.",
+        ),
+        (
+            lambda: {
+                part: {"#" + c for c in stray}
+                for part, stray in off_brand_colors(deck, brand_hexes(brand)).items()
+            },
+            f"{deck} uses colours that are not in the brand:",
+            "Every colour must come from style/brand.json.",
+        ),
+        (
+            lambda: off_brand_fonts(deck, expected_font),
+            f"{deck} theme fonts are not the brand font:",
+            f"Both font slots must name {expected_font} (style/brand.json).",
+        ),
+        (
+            lambda: dangling_layout_media(deck),
+            f"{deck} has layout image references with no media part:",
+            "Run finalize_deck.py after pandoc, or update it for this media.",
+        ),
+    ]
 
-    # Both checks run before exiting, so one build reports every way the deck
-    # is off-brand rather than only the first.
+    failed = False
+    for check, header, remedy in checks:
+        if offenders := check():
+            _report(header, offenders, remedy)
+            failed = True
+
     if failed:
         sys.exit(1)
     print(f"{deck.name}: well-formed; every colour is a brand value; fonts are {expected_font}.")

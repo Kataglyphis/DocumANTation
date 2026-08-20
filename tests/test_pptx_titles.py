@@ -108,3 +108,12 @@ def test_fit_titles_only_rewrites_the_slides_that_overflow(tmp_path: Path):
     with zipfile.ZipFile(deck) as z:
         assert re.search(r'sz="\d+"', z.read("ppt/slides/slide1.xml").decode())
         assert z.read("ppt/slides/slide2.xml").decode() == _slide(SHORT)
+
+    # Fitting an already-fitted deck changes nothing. finalize_deck.py runs this
+    # step on decks that may have been through it before, and reporting a
+    # no-change pass as a fit rewrote the whole archive for nothing.
+    with zipfile.ZipFile(deck) as z:
+        before = {n: z.read(n) for n in z.namelist()}
+    assert fit_titles(deck) == 0
+    with zipfile.ZipFile(deck) as z:
+        assert {n: z.read(n) for n in z.namelist()} == before

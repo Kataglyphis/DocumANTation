@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from style.generate_style import (
+    CSS_COPY_TARGETS,
     CSS_END,
     CSS_START,
     CSS_TARGETS,
@@ -31,6 +32,21 @@ from style.generate_style import (
 
 RAW_BRAND = {
     "name": "Test",
+    # Identity is generated into the Pandoc metadata alongside the fonts, so a
+    # brand without it is not a brand render_yaml_block can serve.
+    "identity": {
+        "name": "Test Author",
+        "first_name": "Test",
+        "last_name": "Author",
+        "email": "test@example.com",
+        "contact_email": "contact@example.com",
+        "url": "https://example.com",
+        "url_display": "example.com",
+        "github": "testhandle",
+        "github_url": "https://github.com/testhandle",
+        "institute": "Test Institute",
+        "copyright_year": "2025",
+    },
     "colors": {
         "white": "#ffffff",
         "accent": "#6af0ad",
@@ -256,8 +272,24 @@ def test_yaml_without_mainfont_is_an_error_not_a_silent_noop():
 
 
 def test_tokens_json_is_fully_resolved_for_other_applications():
-    payload = render_tokens_json(load_brand())
-    assert "@" not in re.sub(r'"_comment":.*', "", payload)  # no unresolved aliases
+    """No value may still be an ``@alias``.
+
+    Checked per value rather than by scanning the text for "@": the identity
+    section carries email addresses, so a bare substring search reports every
+    build as unresolved. An alias is a value that *starts* with @.
+    """
+    payload = json.loads(render_tokens_json(load_brand()))
+
+    def unresolved(value: object, path: str) -> list[str]:
+        if isinstance(value, str):
+            return [f"{path} = {value}"] if value.startswith("@") else []
+        if isinstance(value, dict):
+            return [f for k, v in value.items() for f in unresolved(v, f"{path}.{k}")]
+        if isinstance(value, list):
+            return [f for i, v in enumerate(value) for f in unresolved(v, f"{path}[{i}]")]
+        return []
+
+    assert not unresolved(payload, "brand")
 
 
 def test_tokens_json_carries_every_brand_section():
@@ -299,6 +331,34 @@ def test_only_one_stylesheet_is_maintained_in_place():
     generated_css = [p for p in desired_outputs() if p.name == "brand.css"]
     assert len(generated_css) == 1
     assert "{" in desired_outputs()[generated_css[0]]  # it really is a stylesheet
+
+
+def test_the_path_loaded_copy_is_generated_not_forked():
+    # Kataglyphis-Cpp-Inference loads source_templates/sphinx-book/ by path, so
+    # the stylesheet has to exist there -- but as a copy the generator owns, not
+    # a fork. The hand-written one fell ~490 lines behind and still painted
+    # links the pre-cyan green, so that site rendered a different brand while
+    # every drift check passed.
+    outputs = desired_outputs()
+    assert CSS_COPY_TARGETS, "the path-loading consumer needs its copy declared"
+    for target in CSS_COPY_TARGETS:
+        assert target in outputs, f"{target} is not generated"
+        assert outputs[target] == outputs[CSS_TARGETS[0]]
+
+
+def test_the_path_loaded_copy_on_disk_has_not_been_hand_edited():
+    """The one target with a history of being forked twice, checked in place.
+
+    CI runs ``--check`` over every target, but this file is the one that grew a
+    fork nobody noticed for weeks, so the suite fails on it directly too.
+    """
+    outputs = desired_outputs()
+    for target in CSS_COPY_TARGETS:
+        assert target.exists(), f"{target} is loaded by path from another repo -- keep it"
+        assert target.read_text(encoding="utf-8") == outputs[target], (
+            f"{target} was edited by hand. Edit style/brand.json or the theme "
+            "stylesheet, then run: python style/generate_style.py --write"
+        )
 
 
 def test_resolve_brand_is_idempotent():

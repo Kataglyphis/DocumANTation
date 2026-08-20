@@ -89,5 +89,18 @@
     "mono_fallback": [
       "FreeMono:mode=node;"
     ]
+  },
+  "identity": {
+    "name": "Jonas Heinle",
+    "first_name": "Jonas",
+    "last_name": "Heinle",
+    "email": "jonasheinle@googlemail.com",
+    "contact_email": "contact@jonasheinle.de",
+    "url": "https://jonasheinle.de",
+    "url_display": "jonasheinle.de",
+    "github": "Kataglyphis",
+    "github_url": "https://github.com/Kataglyphis",
+    "institute": "Karlsruhe Institute of Technology (KIT)",
+    "copyright_year": "2025"
   }
 }

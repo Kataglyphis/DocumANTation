@@ -1,4 +1,26 @@
-"""Shared Sphinx baseline for Kataglyphis Python projects."""
+"""Shared Sphinx baseline for Kataglyphis Python projects.
+
+**Status: offered, currently unused.** Every Sphinx `conf.py` in the Kataglyphis
+org was checked (2026-08-19) and none reads anything from this module:
+
+- ``Kataglyphis-ContainerHub`` and this repo call ``setup_theme()``.
+- ``Kataglyphis-Cpp-Inference`` and ``Kataglyphis-BeschleunigerBallett`` load the
+  sibling ``sphinx-book/conf_base.py`` by path.
+- ``Kataglyphis-Orchestr-ANT-ion`` is the one Python project with docs, and it
+  writes these exact values out inline instead -- the same extension list,
+  ``myst_enable_extensions``, ``myst_heading_anchors`` and
+  ``autodoc_default_options`` this file defines. Its ``conf.py`` records that the
+  ``sys.path`` entry for this directory used to be dead and was removed.
+
+So it is kept rather than deleted (the sibling template was deleted once on the
+same reasoning and broke a downstream site), but nothing here is load-bearing
+today. Adopting it in Orchestr-ANT-ion would delete that inline fork; the better
+end state is ``setup_theme()``, which also brings the brand CSS and the shared
+code palette that this file cannot.
+
+Unlike ``sphinx-book/conf_base.py``, this module *does* import the theme package,
+so a consumer must install ``sphinx-kataglyphis-theme``.
+"""
 
 import sys
 from pathlib import Path
@@ -35,10 +57,14 @@ def get_python_project_config(
 
     sys.path.insert(0, str(repo_root))
 
+    # Author and copyright come from style/brand.json's `identity` section, the
+    # same source as the accent colour below. They used to be literals here,
+    # which is how the name ended up in sixteen files.
+    identity = brand()["identity"]
     return {
         "project": project_name,
-        "copyright": "2025, Jonas Heinle",
-        "author": "Jonas Heinle",
+        "copyright": f"{identity['copyright_year']}, {identity['name']}",
+        "author": identity["name"],
         "release": version,
         "version": version.split("+")[0].rsplit(".", 1)[0]
         if "+" in version

@@ -1,0 +1,31 @@
+% Minimal LaTeX header for the starter example.
+%
+% Deliberately smaller than data/book/latex/main.tex: that one also wires up
+% glossaries, nomenclature and a bibliography, which need the multi-pass TeX
+% pipeline in md2pdfLib/scripts/compile_with_glossaries.sh (biber,
+% makeglossaries, makeindex, three lualatex runs). The example stays a single
+% pandoc call, so a newcomer's first build cannot fail inside a tool they have
+% not read about yet.
+%
+% What it does share is the brand: the code box, the admonitions and every
+% colour come from the same files every other document uses.
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+% Brand colours -- single source of truth: style/brand.json.
+% On TEXINPUTS via scripts/build_in_container.sh.
+\input{brand-colors.tex}
+
+% The shared brand code frame, at the book's lighter rule weight.
+\input{md2pdfLib/common/latex/brand-code-block.tex}
+\brandCodeBox{boxrule=0.6pt, top=2.5mm, bottom=2.5mm}
+\input{md2pdfLib/common/latex/brand-code-inner.tex}
+
+% ::: {.note} and friends, via the brand-divs.lua filter the preset passes.
+\input{md2pdfLib/common/latex/brand-admonitions.tex}
+
+% bookclass \providecommand's these, so setting them here overrides the blanks
+% without the class needing to know about this document.
+\providecommand{\mytitle}{A Minimal Example}
+\providecommand{\mytitleger}{Markdown in, branded PDF out}
+% \myname comes from brand-identity.tex, via bookclass.cls.

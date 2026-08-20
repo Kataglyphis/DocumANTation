@@ -35,17 +35,31 @@ import json
 import math
 import re
 import sys
-import zipfile
 from pathlib import Path
 from xml.sax.saxutils import unescape
 
-try:  # imported as a package module (tests)
-    from md2pdfLib.presentation.pptx.pptx_common import layout_for, rewrite_zip
-except ImportError:  # run as a script from its own directory (the build)
-    from pptx_common import layout_for, rewrite_zip
+# Import as a package module even when run as a script by path -- see the note
+# in fit_titles.py.
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-MD2PDF_ROOT = Path(__file__).resolve().parents[2]
-BRAND_TOKENS = MD2PDF_ROOT / "style" / "brand.tokens.json"
+from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
+    MD2PDF_ROOT,
+    SP_RE,
+    TEXT_RE,
+    TXBODY_RE,
+    DeckParts,
+    append_shapes,
+    brand_tokens,
+    edit_slides,
+    geometry_of,
+    master_style_size,
+    run_cli,
+    shape,
+    sized_runs,
+)
+
 # The palette pandoc coloured the runs with -- presets.pptx passes this exact
 # file as --syntax-highlighting, so reading the box fill from it is the only
 # way the fill cannot disagree with the text sitting on it.
@@ -84,6 +98,8 @@ PROSE_ADVANCE = 0.5
 LINE_HEIGHT = 1.25
 # The master's bodyStyle asks for 20% space before each paragraph.
 PROSE_SPACE_BEFORE = 0.2
+# What prose in the placeholder renders at when the master declares no size.
+BODY_SIZE_DEFAULT = 2400
 
 # Ids for the shapes this module adds. Far above pandoc's own (2, 3, ...) and
 # clear of finalize_deck.py's slide numbers at 9500.
@@ -92,28 +108,14 @@ _SHAPE_ID_BASE = 9600
 # finished box still looks exactly like the one pandoc emitted, so a second
 # run over the same deck would box the boxes.
 _CODE_BOX_NAME = "Brand Code Block"
-_SPTREE_CLOSE = "</p:spTree>"
-
 _P_RE = re.compile(r"<a:p>.*?</a:p>|<a:p/>", re.S)
 _RUN_RE = re.compile(r"<a:r>.*?</a:r>", re.S)
-_TEXT_RE = re.compile(r"<a:t>(.*?)</a:t>", re.S)
-_RPR_RE = re.compile(r"<a:rPr\b((?:[^>\"]|\"[^\"]*\")*?)(/?)>")
 _PPR_RE = re.compile(r"<a:pPr\b((?:[^>\"]|\"[^\"]*\")*?)(?:/>|>.*?</a:pPr>)", re.S)
 _BR_RE = re.compile(r"<a:br\s*/>|<a:br>.*?</a:br>", re.S)
-_SP_RE = re.compile(r"<p:sp>.*?</p:sp>", re.S)
 # saxutils only knows the three entities it must; code is full of quotes, and
 # every undecoded &quot; would measure five characters wide instead of one.
 _ENTITIES = {"&quot;": '"', "&apos;": "'"}
-_TXBODY_RE = re.compile(r"(<p:txBody>)(.*?)(</p:txBody>)", re.S)
-_SLIDE_RE = re.compile(r"ppt/slides/slide\d+\.xml")
-_MASTER_RE = re.compile(r"ppt/slideMasters/slideMaster\d+\.xml")
 _PH_RE = re.compile(r"<p:ph\b([^>]*)/>")
-# Whitespace-tolerant: pandoc's reference deck writes `<a:off ... />` with a
-# space before the slash, this repo's own patchers write it without.
-_XFRM_RE = re.compile(
-    r'<a:off\s+x="(-?\d+)"\s+y="(-?\d+)"\s*/>\s*<a:ext\s+cx="(\d+)"\s+cy="(\d+)"\s*/>'
-)
-_BODY_SIZE_RE = re.compile(r"<p:bodyStyle>.*?<a:lvl1pPr\b.*?<a:defRPr\b[^>]*\bsz=\"(\d+)\"", re.S)
 
 
 class CodeStyleError(Exception):
@@ -131,7 +133,7 @@ def code_box_fill() -> str:
 
 def mono_font() -> str:
     """The brand's monospace family -- what marks a run as code."""
-    return json.loads(BRAND_TOKENS.read_text("utf-8"))["fonts"]["mono"]
+    return brand_tokens()["fonts"]["mono"]
 
 
 def mono_run_re(mono: str) -> re.Pattern[str]:
@@ -152,7 +154,7 @@ def is_code_paragraph(paragraph: str, mono: re.Pattern[str]) -> bool:
 
 def _text(fragment: str) -> str:
     """Every ``<a:t>`` in *fragment*, joined and decoded -- what a reader sees."""
-    return "".join(unescape(t, _ENTITIES) for t in _TEXT_RE.findall(fragment))
+    return "".join(unescape(t, _ENTITIES) for t in TEXT_RE.findall(fragment))
 
 
 def code_lines(paragraph: str) -> list[str]:
@@ -213,7 +215,7 @@ def prose_height(paragraphs: list[str], size: int, cx: int) -> int:
     return round(total)
 
 
-def _sized_runs(paragraph: str, size: int) -> str:
+def _code_paragraph_runs(paragraph: str, size: int) -> str:
     """The paragraph with every run pinned to *size* and its list styling dropped."""
     body = _PPR_RE.sub("", paragraph, count=1)
     props = (
@@ -222,14 +224,7 @@ def _sized_runs(paragraph: str, size: int) -> str:
         '<a:spcBef><a:spcPts val="0"/></a:spcBef><a:buNone/></a:pPr>'
     )
     body = body.replace("<a:p>", f"<a:p>{props}", 1)
-    return _RPR_RE.sub(
-        lambda m: (
-            f'<a:rPr{m.group(1)} sz="{size}"{m.group(2)}>'
-            if " sz=" not in m.group(1)
-            else m.group(0)
-        ),
-        body,
-    )
+    return sized_runs(body, size)
 
 
 def code_shape(
@@ -240,18 +235,30 @@ def code_shape(
     # arc has to be recomputed per box to stay a constant 2mm.
     adjust = min(50000, round(BOX_ARC_EMU / min(cx, cy) * 100000))
     pad = BOX_PAD_EMU
-    return (
-        f'<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{_CODE_BOX_NAME} {shape_id}"/>'
-        '<p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>'
-        f'<p:spPr><a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>'
+    geometry = (
         f'<a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val {adjust}"/>'
         "</a:avLst></a:prstGeom>"
-        f'<a:solidFill><a:srgbClr val="{fill}"/></a:solidFill>'
-        f'<a:ln w="{BOX_LINE_EMU}"><a:solidFill><a:schemeClr val="accent1"/></a:solidFill></a:ln>'
-        "</p:spPr><p:txBody>"
+    )
+    body_pr = (
         f'<a:bodyPr wrap="square" lIns="{pad}" tIns="{pad}" rIns="{pad}" bIns="{pad}" '
-        'anchor="t"><a:noAutofit/></a:bodyPr><a:lstStyle/>'
-        f"{_sized_runs(paragraph, size)}</p:txBody></p:sp>"
+        'anchor="t"><a:noAutofit/></a:bodyPr>'
+    )
+    return shape(
+        shape_id=shape_id,
+        name=f"{_CODE_BOX_NAME} {shape_id}",
+        x=x,
+        y=y,
+        cx=cx,
+        cy=cy,
+        geometry=geometry,
+        fill=f'<a:solidFill><a:srgbClr val="{fill}"/></a:solidFill>',
+        line=(
+            f'<a:ln w="{BOX_LINE_EMU}"><a:solidFill>'
+            '<a:schemeClr val="accent1"/></a:solidFill></a:ln>'
+        ),
+        cnv_sp_pr='<p:cNvSpPr txBox="1"/>',
+        body_pr=body_pr,
+        body=_code_paragraph_runs(paragraph, size),
     )
 
 
@@ -262,13 +269,14 @@ def _append_shapes(xml: str, shapes: list[str]) -> str:
     shape tree does not match would otherwise lose its code boxes silently
     while still being counted as styled.
 
-    Substitution is literal, not ``re.sub``: unlike the shapes make_reference
-    builds, these carry the deck's own code, and a slide holding LaTeX
-    (``\\int_0^\\infty``) puts a backslash escape in the replacement string.
+    The literal-substitution reason lives with append_shapes now, which
+    make_reference.py shares -- its own shapes carry the deck title, so it had
+    the same exposure through a regex-based version.
     """
-    if _SPTREE_CLOSE not in xml:
+    patched = append_shapes(xml, shapes)
+    if patched is None:
         raise CodeStyleError("Slide has no <p:spTree> to receive its code boxes.")
-    return xml.replace(_SPTREE_CLOSE, f"{''.join(shapes)}{_SPTREE_CLOSE}", 1)
+    return patched
 
 
 def _placeholder_key(sp: str) -> str | None:
@@ -289,19 +297,17 @@ def placeholder_box(sp: str, layout_xml: str, master_xml: str) -> tuple[int, int
     key = _placeholder_key(sp)
     candidates = [sp]
     for xml in (layout_xml, master_xml):
-        candidates += [c for c in _SP_RE.findall(xml) if _placeholder_key(c) == key]
+        candidates += [c for c in SP_RE.findall(xml) if _placeholder_key(c) == key]
     for candidate in candidates:
-        found = _XFRM_RE.search(candidate)
-        if found:
-            x, y, cx, cy = (int(v) for v in found.groups())
-            return x, y, cx, cy
+        geometry = geometry_of(candidate)
+        if geometry is not None:
+            return geometry
     return None
 
 
 def body_text_size(master_xml: str) -> int:
     """The master's level-1 body size, which prose in the placeholder keeps."""
-    match = _BODY_SIZE_RE.search(master_xml)
-    return int(match.group(1)) if match else 2400
+    return master_style_size(master_xml, "bodyStyle", BODY_SIZE_DEFAULT)
 
 
 def style_slide(
@@ -311,8 +317,8 @@ def style_slide(
     result = xml
     shape_id = _SHAPE_ID_BASE
     body_size = body_text_size(master_xml)
-    for sp in _SP_RE.findall(xml):
-        body = _TXBODY_RE.search(sp)
+    for sp in SP_RE.findall(xml):
+        body = TXBODY_RE.search(sp)
         if body is None or _CODE_BOX_NAME in sp:
             continue
         code: list[str] = []
@@ -360,41 +366,23 @@ def style_code_blocks(deck: Path) -> int:
     """Box every code block in *deck*; return how many slides changed."""
     mono = mono_run_re(mono_font())
     fill = code_box_fill()
-    with zipfile.ZipFile(deck) as z:
-        masters = sorted(n for n in z.namelist() if _MASTER_RE.fullmatch(n))
-        master_xml = z.read(masters[0]).decode() if masters else ""
-        updates: dict[str, bytes] = {}
-        for name in z.namelist():
-            if not _SLIDE_RE.fullmatch(name):
-                continue
-            xml = z.read(name).decode()
-            if not mono.search(xml):
-                continue
-            if not master_xml:
-                raise CodeStyleError(f"{deck} has code slides but no slide master.")
-            styled = style_slide(xml, layout_for(z, name), master_xml, mono, fill)
-            if styled is not None:
-                updates[name] = styled.encode()
-        if not updates:
-            return 0
-    rewrite_zip(deck, updates)
-    return len(updates)
+
+    def transform(parts: DeckParts, name: str, xml: str) -> str | None:
+        if not mono.search(xml):
+            return None
+        master_xml = parts.master()
+        if not master_xml:
+            raise CodeStyleError(f"{deck} has code slides but no slide master.")
+        return style_slide(xml, parts.layout(name), master_xml, mono, fill)
+
+    return edit_slides(deck, transform)
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
-        sys.exit(2)
-    deck = Path(sys.argv[1])
-    if not deck.is_file():
-        print(f"Error: no such deck: {deck}", file=sys.stderr)
-        sys.exit(1)
-    try:
-        styled = style_code_blocks(deck)
-    except CodeStyleError as exc:
-        print(f"Error: {exc}", file=sys.stderr)
-        sys.exit(1)
-    print(f"{deck.name}: code blocks boxed on {styled} slides.")
+    run_cli(
+        lambda deck: f"{deck.name}: code blocks boxed on {style_code_blocks(deck)} slides.",
+        errors=(CodeStyleError,),
+    )
 
 
 if __name__ == "__main__":

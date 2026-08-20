@@ -89,12 +89,34 @@ lualatex "${LATEX_ARGS[@]}" "${OUTPUT_DIR}/${OUTPUT_TEX}"
 echo "=== Step 7: Third lualatex pass ==="
 lualatex "${LATEX_ARGS[@]}" "${OUTPUT_DIR}/${OUTPUT_TEX}"
 
+# Diagnostics that cost typographic quality but lose nothing, so they are
+# reported and do not fail the build:
+#
+#   Underfull \hbox  a line TeX had to set loose. Nothing leaves the page --
+#                    unlike an Overfull \hbox, which puts text past the margin,
+#                    or an Underfull \vbox, which is a page-content problem.
+#                    Both of those still fail. Whether a given line comes out
+#                    loose depends on where the surrounding prose happens to
+#                    wrap, so gating on it makes any wording edit anywhere able
+#                    to turn the build red without a defect existing.
+#   tcolorbox nobreak  tcolorbox reporting that it could not honour its
+#                    page-break preference for a code box. A pagination hint.
+#
+# Anything else -- LaTeX/Package/Class warnings, overfull boxes, missing glyphs,
+# pandoc's own warnings -- is still fatal.
+LATEX_ADVISORIES=(
+    --advisory-regex '^\s*Underfull \\hbox'
+    --advisory-regex 'Package tcolorbox Warning: Using nobreak failed'
+)
+
 if [ "${STRICT_WARNINGS}" -eq 1 ]; then
     echo "=== Step 8: Check final logs for warnings ==="
     # Both stages can warn independently: pandoc about the conversion (missing
-    # resources, duplicate identifiers), LaTeX about the typesetting.
+    # resources, duplicate identifiers), LaTeX about the typesetting. The pandoc
+    # log gets no advisories -- it carries no box diagnostics of its own.
     uv run python md2pdfLib/check_build_log.py "${OUTPUT_DIR}/${LOG_NAME}" --format latex
-    uv run python md2pdfLib/check_build_log.py "${OUTPUT_DIR}/${OUTPUT_NAME}.log" --format latex
+    uv run python md2pdfLib/check_build_log.py "${OUTPUT_DIR}/${OUTPUT_NAME}.log" \
+        --format latex "${LATEX_ADVISORIES[@]}"
 fi
 
 echo "=== Done: ${OUTPUT_DIR}/${OUTPUT_PDF} ==="

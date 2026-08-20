@@ -30,70 +30,43 @@ import sys
 import zipfile
 from pathlib import Path
 
-try:  # imported as a package module (tests)
-    from md2pdfLib.presentation.pptx.fit_titles import fit_titles
-    from md2pdfLib.presentation.pptx.make_reference import (
-        FOOTLINE_ACCENT_CX,
-        FOOTLINE_HEIGHT_EMU,
-        SEPARATOR_LAYOUTS,
-        SLIDE_CX,
-        SLIDE_CY,
-        TITLE_BG_IMAGE,
-        TITLE_BG_MEDIA,
-    )
-    from md2pdfLib.presentation.pptx.pptx_common import rewrite_zip
-    from md2pdfLib.presentation.pptx.style_code import style_code_blocks
-except ImportError:  # run as a script from its own directory (the build)
-    from fit_titles import fit_titles
-    from make_reference import (
-        FOOTLINE_ACCENT_CX,
-        FOOTLINE_HEIGHT_EMU,
-        SEPARATOR_LAYOUTS,
-        SLIDE_CX,
-        SLIDE_CY,
-        TITLE_BG_IMAGE,
-        TITLE_BG_MEDIA,
-    )
-    from pptx_common import rewrite_zip
-    from style_code import style_code_blocks
+# Import as a package module even when run as a script by path -- see the note
+# in fit_titles.py.
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from md2pdfLib.presentation.pptx.fit_titles import fit_titles  # noqa: E402
+from md2pdfLib.presentation.pptx.make_reference import (  # noqa: E402
+    FOOTLINE_ACCENT_CX,
+    FOOTLINE_HEIGHT_EMU,
+    SEPARATOR_LAYOUTS,
+    SLIDE_CX,
+    SLIDE_CY,
+    TITLE_BG_IMAGE,
+    TITLE_BG_MEDIA,
+)
+from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
+    FLUSH_CENTERED_BODY,
+    DeckParts,
+    dangling_layout_media,
+    edit_slides,
+    run_cli,
+    shape,
+)
+from md2pdfLib.presentation.pptx.style_code import style_code_blocks  # noqa: E402
 
 # A fixed field GUID: any stable value is valid; viewers re-evaluate the field.
 _SLDNUM_FLD_ID = "{93BE9E90-0A5C-4E0B-BA7A-1EDB98A1C7DE}"
 
 
 def missing_layout_media(deck: Path) -> set[str]:
-    """Media targets referenced from layout rels but absent from the archive."""
-    missing: set[str] = set()
-    with zipfile.ZipFile(deck) as z:
-        names = set(z.namelist())
-        for name in names:
-            if not re.fullmatch(r"ppt/slideLayouts/_rels/slideLayout\d+\.xml\.rels", name):
-                continue
-            for target in re.findall(r'Target="\.\./media/([^"]+)"', z.read(name).decode()):
-                if f"ppt/media/{target}" not in names:
-                    missing.add(f"ppt/media/{target}")
-    return missing
-
-
-def _content_slides(z: zipfile.ZipFile) -> dict[str, str]:
-    """{slide part: its layout part} for slides on footline-bearing layouts."""
-    layout_names: dict[str, str] = {}  # layout basename -> cSld name
-    for name in z.namelist():
-        if re.fullmatch(r"ppt/slideLayouts/slideLayout\d+\.xml", name):
-            m = re.search(r'<p:cSld name="([^"]+)"', z.read(name).decode())
-            if m:
-                layout_names[name.rsplit("/", 1)[-1]] = m.group(1)
-    result: dict[str, str] = {}
-    for name in z.namelist():
-        m = re.fullmatch(r"ppt/slides/_rels/(slide\d+)\.xml\.rels", name)
-        if not m:
-            continue
-        target = re.search(
-            r'Target="\.\./slideLayouts/(slideLayout\d+\.xml)"', z.read(name).decode()
-        )
-        if target and layout_names.get(target.group(1)) in SEPARATOR_LAYOUTS:
-            result[f"ppt/slides/{m.group(1)}.xml"] = f"ppt/slideLayouts/{target.group(1)}"
-    return result
+    """Media parts referenced from layout rels but absent from the archive."""
+    return {
+        f"ppt/media/{target}"
+        for targets in dangling_layout_media(deck).values()
+        for target in targets
+    }
 
 
 def _sldnum_shape(total: int) -> str:
@@ -108,40 +81,38 @@ def _sldnum_shape(total: int) -> str:
     is final when this runs, so the count cannot go stale.
     """
     white = '<a:solidFill><a:schemeClr val="lt1"/></a:solidFill>'
-    return (
-        '<p:sp><p:nvSpPr><p:cNvPr id="9500" name="Brand Slide Number"/>'
-        "<p:cNvSpPr/><p:nvPr/></p:nvSpPr>"
-        f'<p:spPr><a:xfrm><a:off x="{SLIDE_CX - FOOTLINE_ACCENT_CX}" '
-        f'y="{SLIDE_CY - FOOTLINE_HEIGHT_EMU}"/>'
-        f'<a:ext cx="{FOOTLINE_ACCENT_CX}" cy="{FOOTLINE_HEIGHT_EMU}"/></a:xfrm>'
-        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln><a:noFill/></a:ln>'
-        "</p:spPr><p:txBody>"
-        '<a:bodyPr anchor="ctr" lIns="0" rIns="0" tIns="0" bIns="0"/><a:lstStyle/>'
+    paragraph = (
         '<a:p><a:pPr algn="ctr"/>'
         f'<a:fld id="{_SLDNUM_FLD_ID}" type="slidenum">'
         f'<a:rPr lang="en-US" sz="1000" b="1">{white}</a:rPr><a:t>0</a:t></a:fld>'
         f'<a:r><a:rPr lang="en-US" sz="1000" b="1">{white}</a:rPr>'
-        f"<a:t> / {total}</a:t></a:r></a:p></p:txBody></p:sp>"
+        f"<a:t> / {total}</a:t></a:r></a:p>"
+    )
+    return shape(
+        shape_id=9500,
+        name="Brand Slide Number",
+        x=SLIDE_CX - FOOTLINE_ACCENT_CX,
+        y=SLIDE_CY - FOOTLINE_HEIGHT_EMU,
+        cx=FOOTLINE_ACCENT_CX,
+        cy=FOOTLINE_HEIGHT_EMU,
+        body_pr=FLUSH_CENTERED_BODY,
+        body=paragraph,
     )
 
 
 def inject_slide_numbers(deck: Path) -> int:
     """Add slide-number shapes to content slides; return how many were added."""
-    with zipfile.ZipFile(deck) as z:
-        total = len([n for n in z.namelist() if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)])
-        targets = _content_slides(z)
-        updates: dict[str, bytes] = {}
-        for slide in targets:
-            xml = z.read(slide).decode()
-            if 'type="slidenum"' in xml:
-                continue  # pandoc grew the feature; nothing to do
-            new, count = re.subn(r"</p:spTree>", f"{_sldnum_shape(total)}</p:spTree>", xml, count=1)
-            if count == 1:
-                updates[slide] = new.encode()
-        if not updates:
-            return 0
-    rewrite_zip(deck, updates)
-    return len(updates)
+
+    def transform(parts: DeckParts, name: str, xml: str) -> str | None:
+        if parts.layout_name(name) not in SEPARATOR_LAYOUTS:
+            return None  # no footline on this layout, so nothing to number
+        if 'type="slidenum"' in xml:
+            return None  # pandoc grew the feature; nothing to do
+        shape = _sldnum_shape(len(parts.slides))
+        new, count = re.subn(r"</p:spTree>", f"{shape}</p:spTree>", xml, count=1)
+        return new if count == 1 else None
+
+    return edit_slides(deck, transform)
 
 
 _CNVPR_ID_RE = re.compile(r'(<p:cNvPr\b[^>]*?\bid=")(\d+)(")')
@@ -187,19 +158,7 @@ def dedupe_shape_ids(deck: Path) -> int:
     mc:Choice/mc:Fallback branches left -- inside those, two shapes sharing an
     id is legitimate, since only one branch ever renders.
     """
-    with zipfile.ZipFile(deck) as z:
-        updates: dict[str, bytes] = {}
-        for name in z.namelist():
-            if not re.fullmatch(r"ppt/slides/slide\d+\.xml", name):
-                continue
-            xml = z.read(name).decode()
-            new = _renumber_duplicate_ids(xml)
-            if new is not None:
-                updates[name] = new.encode()
-        if not updates:
-            return 0
-    rewrite_zip(deck, updates)
-    return len(updates)
+    return edit_slides(deck, lambda parts, name, xml: _renumber_duplicate_ids(xml))
 
 
 _ALTERNATE_RE = re.compile(r"<mc:AlternateContent([^>]*)>(.*?)</mc:AlternateContent>", re.S)
@@ -231,6 +190,24 @@ def _rebind_namespaces(xml: str, carried: dict[str, str]) -> str:
     return xml[: root.start(3)] + added + xml[root.start(3) :]
 
 
+def _promote_alternate_content(xml: str) -> str | None:
+    """Promote every mc:Choice out of its wrapper; None when there is none."""
+    if "<mc:AlternateContent" not in xml:
+        return None
+    carried: dict[str, str] = {}
+
+    def _promote(match: re.Match[str]) -> str:
+        carried.update(_XMLNS_RE.findall(match.group(1)))
+        promoted: list[str] = []
+        for attrs, body in _CHOICE_RE.findall(match.group(2)):
+            carried.update(_XMLNS_RE.findall(attrs))
+            promoted.append(body)
+        return "".join(promoted)
+
+    new = _ALTERNATE_RE.sub(_promote, xml)
+    return _rebind_namespaces(new, carried) if new != xml else None
+
+
 def unwrap_alternate_content(deck: Path) -> int:
     """Unwrap mc:AlternateContent on slides; return how many slides changed.
 
@@ -247,33 +224,7 @@ def unwrap_alternate_content(deck: Path) -> int:
     part not well-formed -- PowerPoint then refuses to open the deck without a
     repair prompt. Re-declare anything the Choice bound on the <p:sld> root.
     """
-    with zipfile.ZipFile(deck) as z:
-        updates: dict[str, bytes] = {}
-        for name in z.namelist():
-            if not re.fullmatch(r"ppt/slides/slide\d+\.xml", name):
-                continue
-            xml = z.read(name).decode()
-            if "<mc:AlternateContent" not in xml:
-                continue
-
-            carried: dict[str, str] = {}
-
-            def _promote(m: re.Match[str], carried: dict[str, str] = carried) -> str:
-                carried.update(_XMLNS_RE.findall(m.group(1)))
-                promoted: list[str] = []
-                for attrs, body in _CHOICE_RE.findall(m.group(2)):
-                    carried.update(_XMLNS_RE.findall(attrs))
-                    promoted.append(body)
-                return "".join(promoted)
-
-            new = _ALTERNATE_RE.sub(_promote, xml)
-            if new != xml:
-                new = _rebind_namespaces(new, carried)
-                updates[name] = new.encode()
-        if not updates:
-            return 0
-    rewrite_zip(deck, updates)
-    return len(updates)
+    return edit_slides(deck, lambda parts, name, xml: _promote_alternate_content(xml))
 
 
 def finalize(deck: Path) -> list[str]:
@@ -305,18 +256,13 @@ def finalize(deck: Path) -> list[str]:
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
-        sys.exit(2)
-    deck = Path(sys.argv[1])
-    if not deck.is_file():
-        print(f"Error: no such deck: {deck}", file=sys.stderr)
-        sys.exit(1)
-    done = finalize(deck)
-    if done:
-        print(f"{deck.name}: finalized: {', '.join(done)}")
-    else:
-        print(f"{deck.name}: nothing to finalize.")
+    def summary(deck: Path) -> str:
+        done = finalize(deck)
+        if not done:
+            return f"{deck.name}: nothing to finalize."
+        return f"{deck.name}: finalized: {', '.join(done)}"
+
+    run_cli(summary)
 
 
 if __name__ == "__main__":

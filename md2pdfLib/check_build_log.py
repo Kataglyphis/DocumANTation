@@ -39,7 +39,16 @@ def _parse_args() -> argparse.Namespace:
         "--ignore-regex",
         action="append",
         default=[],
-        help="Regex for warning lines that should be ignored",
+        help="Regex for warning lines that should be dropped entirely",
+    )
+    parser.add_argument(
+        "--advisory-regex",
+        action="append",
+        default=[],
+        help=(
+            "Regex for warning lines to report without failing. For diagnostics "
+            "that cost quality but lose nothing, unlike an overfull box."
+        ),
     )
     return parser.parse_args()
 
@@ -105,6 +114,23 @@ def _find_warning_lines(text: str, ignore_patterns: list[re.Pattern[str]]) -> li
     return warning_lines
 
 
+def _split_advisories(
+    warning_lines: list[str], advisory_patterns: list[re.Pattern[str]]
+) -> tuple[list[str], list[str]]:
+    """Split *warning_lines* into (fatal, advisory).
+
+    Advisories are still printed -- the point is to stop a diagnostic that costs
+    only quality from failing the build, not to stop anyone seeing it. An
+    ``--ignore-regex`` line is dropped before it ever gets here.
+    """
+    fatal: list[str] = []
+    advisory: list[str] = []
+    for line in warning_lines:
+        target = advisory if any(p.search(line) for p in advisory_patterns) else fatal
+        target.append(line)
+    return fatal, advisory
+
+
 def run_from_cli() -> None:
     """Validate the selected log file and exit non-zero on warnings."""
     args = _parse_args()
@@ -113,16 +139,24 @@ def run_from_cli() -> None:
         sys.exit(1)
 
     ignore_patterns = [re.compile(pattern) for pattern in args.ignore_regex]
+    advisory_patterns = [re.compile(pattern) for pattern in args.advisory_regex]
     log_text = _load_log_text(args.log_path, args.format)
     warning_lines = _find_warning_lines(log_text, ignore_patterns)
+    fatal, advisory = _split_advisories(warning_lines, advisory_patterns)
 
-    if warning_lines:
+    if advisory:
+        print(f"Advisories in {args.log_path} (not failing the build):", file=sys.stderr)
+        for line in advisory:
+            print(f"  {line}", file=sys.stderr)
+
+    if fatal:
         print(f"Warnings found in {args.log_path}:", file=sys.stderr)
-        for line in warning_lines:
+        for line in fatal:
             print(line, file=sys.stderr)
         sys.exit(1)
 
-    print(f"No warnings found in {args.log_path}")
+    counted = f" ({len(advisory)} advisory)" if advisory else ""
+    print(f"No warnings found in {args.log_path}{counted}")
 
 
 if __name__ == "__main__":

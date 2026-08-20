@@ -1,3 +1,11 @@
+---
+# The starter example's own metadata. It cannot share md2pdfLib/pandoc/base.yml
+# the way a second book chapter set would: that file carries the book's title,
+# subtitle and bibliography, so the example would come out titled "Computer
+# graphics" and demand biber for a document with no citations.
+#
+# The brand block below is generated -- this file is in generate_style.py's
+# YAML_TARGETS, so its fonts and link colours cannot drift from brand.json.
 # generated:brand:start
 # GENERATED from style/brand.json by style/generate_style.py -- do not edit by hand.
 author: Jonas Heinle
@@ -14,10 +22,10 @@ linkcolor: brandLink
 urlcolor: brandLink
 citecolor: brandLink
 # generated:brand:end
-title: Computer graphics
-subtitle: A practical approach
+title: A Minimal Example
+subtitle: Markdown in, branded PDF out
 titlepage: true
 date: \today
 documentclass: md2pdfLib/book/template/latex/bookclass
 toc-title: Table of contents
-bibliography: data/book/latex/graphics_literature.bib
+---

@@ -432,10 +432,11 @@ def test_content_layout_puts_slide_number_on_the_accent_block():
 
 
 def test_content_layout_footline_carries_author_and_title():
+    author = BRAND["identity"]["name"]
     out = patch_content_layout(
-        CONTENT_LAYOUT_XML, MASTER_XML, 9000, author="Jonas Heinle", deck_title="My & Talk"
+        CONTENT_LAYOUT_XML, MASTER_XML, 9000, author=author, deck_title="My & Talk"
     )
-    assert "Brand Footline Author" in out and ">Jonas Heinle<" in out
+    assert "Brand Footline Author" in out and f">{author}<" in out
     # XML-escaped, centred, in the link colour -- like the beamer footline
     assert "My &amp; Talk" in out
     assert '<a:schemeClr val="hlink"/>' in out
@@ -451,8 +452,9 @@ def test_deck_metadata_reads_author_and_title():
     from md2pdfLib.presentation.pptx.make_reference import deck_metadata
 
     meta = deck_metadata()
-    # this repo's presentation metadata carries both keys
-    assert meta.get("author") == "Jonas Heinle"
+    # this repo's presentation metadata carries both keys, and its author is
+    # generated from the identity -- so read it from there, not from a literal
+    assert meta.get("author") == BRAND["identity"]["name"]
     assert meta.get("title")
 
 

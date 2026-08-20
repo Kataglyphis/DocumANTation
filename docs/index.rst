@@ -18,7 +18,7 @@ Containerized Markdown-to-PDF builds for books, presentations, and CVs with Pand
 
       See the output: book pages, beamer slides, and CV rendered from the same sources.
 
-    .. grid-item-card:: Overview
+   .. grid-item-card:: Overview
       :link: overview
       :link-type: doc
 
