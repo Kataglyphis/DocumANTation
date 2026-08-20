@@ -57,7 +57,13 @@ EXEMPT = {
 # name appears in them as the provider of a course and as a referee's employer --
 # the same string as the author's affiliation, meaning something different. A
 # reworded sentence there is content, not brand drift.
-EXEMPT_PROSE = ("data/cv/section_",)
+#
+# Scoped to the keys that genuinely appear as prose. It used to exempt those
+# files from *every* check, which is why `\github{Kataglyphis/Repo}` -- markup,
+# not prose -- sat unnoticed in section_projects.tex ten times over, and why
+# the guard written to catch exactly that passed on its own fault injection.
+EXEMPT_PROSE_PREFIX = ("data/cv/section_",)
+EXEMPT_PROSE_KEYS = frozenset({"institute"})
 
 # Values distinctive enough that finding one in a config file means it was typed
 # there. "Jonas"/"Heinle" alone are too short to scan for safely, and the full
@@ -65,14 +71,24 @@ EXEMPT_PROSE = ("data/cv/section_",)
 SCANNED = ("name", "email", "contact_email", "url", "url_display", "github_url", "institute")
 
 
-def _tracked_config_files() -> list[str]:
+def _tracked_config_files(prose_exempt_key: str | None = None) -> list[str]:
+    """Tracked files a build reads.
+
+    Args:
+        prose_exempt_key: When this identity key is one that legitimately
+            appears in CV prose, those section files are skipped. Any other
+            check sees them, because markup in them is still markup.
+    """
     out = subprocess.run(
         ["git", "ls-files"], cwd=REPO_ROOT, capture_output=True, text=True, check=True
     ).stdout.split()
+    skip_prose = prose_exempt_key in EXEMPT_PROSE_KEYS
     return [
         p
         for p in out
-        if p.endswith(CONFIG_SUFFIXES) and p not in EXEMPT and not p.startswith(EXEMPT_PROSE)
+        if p.endswith(CONFIG_SUFFIXES)
+        and p not in EXEMPT
+        and not (skip_prose and p.startswith(EXEMPT_PROSE_PREFIX))
     ]
 
 
@@ -80,7 +96,7 @@ def _tracked_config_files() -> list[str]:
 def test_no_config_file_hardcodes_an_identity_value(key: str):
     value = IDENTITY[key]
     offenders: list[str] = []
-    for rel in _tracked_config_files():
+    for rel in _tracked_config_files(prose_exempt_key=key):
         path = REPO_ROOT / rel
         if not path.is_file():
             continue
@@ -169,3 +185,111 @@ def test_the_identity_reaches_every_output_kind():
     ):
         payload = json.loads((REPO_ROOT / tokens).read_text("utf-8"))
         assert payload["identity"] == IDENTITY, tokens
+
+
+# ── assembled URLs, which a literal scan cannot see ──────────────────────────
+#
+# The scan above looks for whole identity values. It missed three real defects
+# because each built a URL from a prefix plus an argument:
+#
+#   \github{#1}       -> https://www.github.com/#1     (a host the brand does not use)
+#   \personalLink{#1} -> http://www.#1                 (HTTP, plus a www.)
+#   \github{Kataglyphis/Repo}                          (the handle, typed ten times)
+#
+# None of those contains an identity value verbatim, so none tripped the scan.
+
+
+def test_no_template_builds_a_github_url_by_hand():
+    r"""Only brand-identity.tex may name *this* brand's GitHub URL.
+
+    Scoped to the handle on purpose: a third-party GitHub URL is ordinary
+    content -- the workflow downloads pandoc from jgm/pandoc, and the scaffold
+    writes "org/repo" as a placeholder. Neither is a copy of the identity.
+    A www.github.com host is always wrong, though: the brand never uses it,
+    and the CV class did.
+    """
+    own = r"https?://(?:www\.)?github\.com/" + re.escape(IDENTITY["github"])
+    offenders = []
+    for rel in _tracked_config_files():
+        path = REPO_ROOT / rel
+        if not path.is_file():
+            continue
+        code = "\n".join(
+            line
+            for line in path.read_text(encoding="utf-8", errors="replace").splitlines()
+            if not line.lstrip().startswith(("%", "#", "//"))
+        )
+        if re.search(own, code) or re.search(r"https?://www\.github\.com", code):
+            offenders.append(rel)
+    assert not offenders, (
+        f"these build this brand's GitHub URL by hand: {offenders}. "
+        r"Use \brandGithubUrl, \github{<repo>} or \githubProfile instead."
+    )
+
+
+def test_no_template_writes_the_handle_as_a_path_prefix():
+    r"""`\github{Kataglyphis/Thing}` spelled the handle out ten times in the CV."""
+    handle = IDENTITY["github"]
+    offenders = []
+    for rel in _tracked_config_files():
+        path = REPO_ROOT / rel
+        if not path.is_file():
+            continue
+        code = "\n".join(
+            line
+            for line in path.read_text(encoding="utf-8", errors="replace").splitlines()
+            if not line.lstrip().startswith(("%", "#", "//"))
+        )
+        if f"{{{handle}/" in code:
+            offenders.append(rel)
+    assert not offenders, (
+        f"these pass the handle as part of an argument: {offenders}. "
+        r"\github{<repo>} prefixes the owner from the brand."
+    )
+
+
+def test_the_personal_site_is_never_linked_over_http():
+    """The CV linked http://www.<host> -- insecure, and a host spelling of its own."""
+    host = IDENTITY["url_display"]
+    offenders = []
+    for rel in _tracked_config_files():
+        path = REPO_ROOT / rel
+        if not path.is_file():
+            continue
+        code = "\n".join(
+            line
+            for line in path.read_text(encoding="utf-8", errors="replace").splitlines()
+            if not line.lstrip().startswith(("%", "#", "//"))
+        )
+        if re.search(r"http://(?:www\.)?" + re.escape(host), code):
+            offenders.append(rel)
+    assert not offenders, (
+        f"these link this brand's site over plain HTTP: {offenders}; " + r"use \brandUrl"
+    )
+
+
+def test_the_social_layer_is_defined_exactly_once():
+    r"""bookclass and myCV each carried a copy, and \github had drifted apart.
+
+    Same name, different meaning: the book prefixed the profile URL to a repo,
+    the CV hardcoded https://www.github.com and took a full path.
+    """
+    classes = [
+        REPO_ROOT / "md2pdfLib" / "book" / "template" / "latex" / "bookclass.cls",
+        REPO_ROOT / "md2pdfLib" / "cv" / "template" / "latex" / "myCV_METADATA.cls",
+    ]
+    definition = re.compile(r"\\(?:new|renew|provide)command\*?\s*\{?\\([a-zA-Z@]+)\}?")
+    defined = []
+    for path in classes:
+        code = "\n".join(
+            line
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if not line.lstrip().startswith("%")
+        )
+        defined.append(set(definition.findall(code)))
+
+    shared = defined[0] & defined[1]
+    assert not shared, (
+        f"these commands are defined in both document classes: {sorted(shared)}. "
+        "Shared macros belong in md2pdfLib/common/latex/, which both classes input."
+    )

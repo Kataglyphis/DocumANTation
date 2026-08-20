@@ -218,6 +218,7 @@ def render_latex_identity(brand: dict) -> str:
         ("brandUrlDisplay", "url_display"),
         ("brandGithub", "github"),
         ("brandGithubUrl", "github_url"),
+        ("brandGithubHost", "github_host"),
         ("brandInstitute", "institute"),
     )
     # The names bookclass.cls and the beamer header already used, kept as

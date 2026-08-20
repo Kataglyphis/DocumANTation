@@ -1,0 +1,34 @@
+% Profile: all -- every section, in the natural order.
+%
+% NOT a published CV. It exists so the sections the published profiles leave
+% out stay compilable: five of the eleven section files are commented out in
+% both `default` and `mistral-rse` (to fit one page, deliberately), which means
+% no build ever reads them and nothing notices when one stops compiling -- the
+% same way data/presentation/demo/ silently rotted while no preset collected it.
+%
+%   make cv CV_PROFILE=all CV_JOB=CV_all
+%
+% Run it after editing any dormant section, and before re-enabling one in a
+% published profile. Run it WITHOUT STRICT_WARNINGS: it overflows one page by
+% design, and the first build of it reported an overfull hbox inside the
+% dormant sections -- a real layout defect that had simply never been
+% rendered before. Fix that before re-enabling the section it belongs to;
+% the point of this profile is that such things stop being invisible.
+%
+% The tagline says so rather than repeating the published one -- a second copy
+% of that sentence is exactly the kind of thing that drifts.
+\newcommand{\cvTagline}{All sections -- compile check, not a published CV}
+
+\newcommand{\cvBody}{%
+    \input{section_headline}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_skills}%
+    \input{section_projects}%
+    \input{section_teaching_mentoring}%
+    \input{section_private}%
+    \input{section_international_experiences_volunteering}%
+    \input{section_extracurricular_courses_certificates}%
+    \input{section_references}%
+}

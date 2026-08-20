@@ -138,17 +138,10 @@
 	\clearpage{\pagestyle{empty}\cleardoublepage}
 }
 
-\newcommand\link[2]{\color{linkcolor}\href{#1}{#2}\color{black} }
+% \link, \sociallink, \github and friends come from brand-social.tex.
+\input{brand-social.tex}
 
-% Render a link with its symbol
-% Usage; \sociallink{<icon>}{<label>}
-\newcommand{\sociallink}[3]{\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}\link{#2}{#3}\hspace{1em}}}
 
-% Render author's github (optional)
-% Usage: \github{<github-nick>}
-\providecommand{\githubSymbol}{\faGithub}
-% \githubBase comes from brand-identity.tex.
-\providecommand*{\github}[1]{\sociallink{\githubSymbol}{\githubBase/#1}{\githubBase/#1}}
 
 %% --- End of New Commands ---
 
@@ -243,7 +236,11 @@
 
 		\begin{textblock}{10}[0,0](12,16.8)
 			\large{
-				\textbf{\url{\myurl}}
+				% \url{\myurl} made the target the display form, which has no
+				% scheme -- the link in the built PDF pointed at the relative
+				% "jonasheinle.de" and did not resolve. \href separates the two:
+				% the brand's https URL is the target, the short form is the text.
+				\textbf{\href{\brandUrl}{\brandUrlDisplay}}
 			}
 		\end{textblock}
 	\end{titlepage}
