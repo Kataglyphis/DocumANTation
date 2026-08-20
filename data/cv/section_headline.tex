@@ -11,21 +11,32 @@
 % the page below it is the first thing a reader learns to skip.
 %
 % What is left is deliberately NOT "passionate about open source" -- that
-% sentence is on every CV and costs nothing to write. It is a habit with a
-% consequence ("upstream, not a local patch"), and the Experiences section
-% names the two PRs that prove it. Claim in the prose, evidence in the
-% timeline.
+% sentence is on every CV and costs nothing to write. What is claimed here is
+% a body of public work a reader can open (the header carries the GitHub link,
+% and the footer names the pipeline that typeset this page), plus a habit with
+% a consequence: upstream, not a local patch. Naming *what* is public is what
+% keeps it from being the costless version.
+%
+% The "fix it upstream" half deliberately overlaps the Experiences bullet on
+% upstreamed fixes rather than duplicating its detail: the claim is here, the
+% work is in the timeline.
 %
 % Two lines. A third pushes the Languages/Hobbies/Publications row onto page
 % two -- rebuild and check the page count, in both languages, after any edit.
 \IfLanguageName{english}{
-    \par{I learned this field from other people's source code, and I like
-    giving it back: what I build is public, and when a tool I depend on turns
-    out to be broken I fix it upstream instead of quietly carrying a local
-    patch.}
+    \par{I learned this field from other people's source code and give it back
+    the same way: my renderers, my ML implementations and the pipeline that
+    typeset this page are all public, and tools I depend on get fixed upstream
+    rather than locally patched.}
 }{
-    \par{Ich habe dieses Fach aus dem Quellcode anderer Leute gelernt und gebe
-    gerne zurück: Was ich baue, ist öffentlich, und wenn ein Werkzeug, auf das
-    ich mich verlasse, defekt ist, repariere ich es upstream, statt still einen
-    lokalen Patch zu pflegen.}
+    % Nicht die Übersetzung des englischen Satzes, sondern sein Gegenstück:
+    % "gebe es genauso zurück" hatte ein "es" ohne Bezugswort, und "die
+    % Pipeline, die diese Seite gesetzt hat" löst als Relativsatz auf, was das
+    % Englische als Attribut sagt. Beides kostete Länge und Tempo. Der
+    % Schlusskontrast ("upstream statt lokal") trägt hier dieselbe Last wie
+    % "rather than locally patched" drüben und darf nicht wegfallen.
+    \par{Ich habe dieses Fach aus dem Quellcode anderer gelernt und gebe
+    zurück, was ich bekommen habe: Meine Renderer, meine ML-Implementierungen
+    und die Pipeline hinter dieser Seite sind öffentlich, und defekte Werkzeuge
+    repariere ich upstream statt lokal.}
 }

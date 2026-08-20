@@ -67,7 +67,7 @@
 \providecommand{\cvprofile}{default}
 \input{profiles/\cvprofile.tex}
 
-\name{Jonas}{Heinle}
+\name{\brandFirstName}{\brandLastName}
 \tagline{\cvTagline}%|
 % No \photo: dropping it makes \makecvheader give the header block the full
 % \linewidth, which is what lets the three columns below span the page. The
@@ -86,8 +86,24 @@
 % edge of every column -- and it was exactly what pushed the longest entries
 % past their column. Dropped locally rather than in the class, which other
 % documents share.
-\renewcommand{\socialtext}[2]{\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}#2}}
-\renewcommand{\sociallink}[3]{\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}\link{#2}{#3}}}
+%
+% The icon sits in a fixed-width box rather than being followed by a fixed
+% space, so every entry's text starts at the same x no matter how wide its
+% symbol is. With a plain \hspace the text began wherever the glyph happened
+% to end: the FontAwesome symbols here differ by up to 1.9pt (map marker vs.
+% info), so the middle column stepped in and out by that much down its five
+% lines. It had been patched per line with hand-tuned \hspace values in the
+% entries below -- 0.3em here, 0.5em there, 0.4em on the phone -- which is
+% both unmaintainable and was simply missing on the citizenship line, leaving
+% it 4.5pt left of its neighbours. Those kerns are gone; do not add new ones.
+%
+% 1.45em is the widest symbol in this header (the link glyph, 8.33pt at this
+% size) plus the 0.5em gap the class used. It costs the widest entry 0.64pt of
+% extra width -- the columns are sized to their longest line, so check the
+% German build for an overfull box after changing it.
+\newcommand{\socialiconwidth}{1.45em}
+\renewcommand{\socialtext}[2]{\mbox{\makebox[\socialiconwidth][l]{\textcolor{symbolcolor}{#1}}#2}}
+\renewcommand{\sociallink}[3]{\mbox{\makebox[\socialiconwidth][l]{\textcolor{symbolcolor}{#1}}\link{#2}{#3}}}
 
 % Handle instead of full URL for these two: their "linkedin.com/in/" and
 % "youtube.com/@" prefixes are already said by the icon beside them, and they
@@ -106,10 +122,10 @@
 	% Sized to the e-mail address, now the longest entry in this column.
 	\begin{minipage}[t]{0.26\linewidth}
 		\raggedright
-		\github{Kataglyphis}\newline
+		\github{\brandGithub}\newline
 		\linkedin{jonas-heinle-0b2a301a0}\newline
-		\personalLink{jonasheinle.de}\newline
-		\email{jonasheinle@googlemail.com}\newline
+		\personalLink{\brandUrlDisplay}\newline
+		\email{\brandEmail}\newline
 		\youtube{jotrockenmitlocken}
 	\end{minipage}%
 	\hspace{1.5em}%
@@ -117,13 +133,26 @@
 	% which is longer than its English counterpart. Sized for the German build.
 	\begin{minipage}[t]{0.395\linewidth}
 		\raggedright
-		\address{\hspace{0.3em}Stuttgart}\newline
+		\address{Stuttgart}\newline
 		\infos{\IfLanguageName{english}{German Citizen}{Deutscher Staatsbürger}}\newline
 		% ", Germany" dropped: the citizenship line above already says it, and
 		% this is the longest entry in the column.
-		\infos{\hspace{0.5em}\IfLanguageName{english}{Birthday: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall}{Geburtstag: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall}}\newline
-		\infos{\hspace{0.5em}\IfLanguageName{english}{Driving License: Class B}{Führerschein: Klasse B}}\newline
-		\smartphone{\hspace{0.4em}+49 15678111689}
+		% Geburtsort commented out per request -- the date stays, the place is
+		% gone. Restore by putting ", Schwäbisch Hall" back inside both branches:
+		%   {Birthday: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall}
+		%   {Geburtstag: \DTMdisplaydate{1995}{12}{25}, Schwäbisch Hall}
+		% This was the widest entry in the column and the one the column width
+		% was sized for (see the note above the minipage); with it gone the
+		% column has slack, so nothing needs re-measuring until it comes back.
+		% The empty fourth argument is required, not decoration: \DTMdisplaydate
+		% takes {year}{month}{day}{dow}. The old line got away with three brace
+		% groups because the ", Schwäbisch Hall" that followed handed it a comma
+		% as the day-of-week, which the date style then printed as nothing. Take
+		% the place away and the macro swallows the closing brace instead --
+		% "Argument of \DTMdisplaydate has an extra }", and no PDF at all.
+		\infos{\IfLanguageName{english}{Birthday: \DTMdisplaydate{1995}{12}{25}{}}{Geburtstag: \DTMdisplaydate{1995}{12}{25}{}}}\newline
+		\infos{\IfLanguageName{english}{Driving License: Class B}{Führerschein: Klasse B}}\newline
+		\smartphone{+49 15253799950}
 	\end{minipage}%
 	\hspace{1.5em}%
 	\begin{minipage}[t]{0.24\linewidth}
@@ -146,8 +175,8 @@
 % The left footer field was empty. The most credible line for "I work in the
 % open" is the one showing this PDF is itself the artifact of a public
 % pipeline -- and in the footer it costs the one-page layout nothing.
-{\footnotesize\textsc{Typeset with}\ \link{https://github.com/Kataglyphis/Kataglyphis-DocumANTation}{Kataglyphis-DocumANTation}}
-{\textsc{Jonas Heinle - CV}}
+{\footnotesize\textsc{Typeset with}\ \link{\brandGithubUrl/Kataglyphis-DocumANTation}{Kataglyphis-DocumANTation}}
+{\textsc{\brandName{} - CV}}
 {\thepage}
 
 % The section list moved into profiles/: which sections fit is a per-target
