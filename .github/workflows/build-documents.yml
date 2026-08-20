@@ -36,6 +36,20 @@ jobs:
       - name: Type check
         run: uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
 
+      # tests/test_brand_divs_filter.py drives the Lua filter through real
+      # pandoc and skips without it. Skipping in CI is how make_reference's
+      # largest function went untested for months, so install it -- at the very
+      # version the image pins, read from the Dockerfile so there is no second
+      # copy of the number to drift.
+      - name: Install pandoc (the version the image pins)
+        run: |
+          version="$(sed -n 's/^ARG PANDOC_VERSION=//p' Dockerfile)"
+          test -n "$version"
+          url="https://github.com/jgm/pandoc/releases/download/${version}/pandoc-${version}-1-amd64.deb"
+          curl -fsSL -o /tmp/pandoc.deb "$url"
+          sudo dpkg -i /tmp/pandoc.deb
+          pandoc --version | head -1
+
       - name: Test suite
         run: uv run --extra dev pytest tests/ -q
 
@@ -48,8 +62,24 @@ jobs:
         with:
           submodules: recursive
 
+      # texlive-full makes this an ~8.5 GB image, and a bare `docker build .`
+      # rebuilds every layer of it on every push and pull request. The layer
+      # cache lives in the Actions cache instead, so only the layers whose
+      # inputs actually changed are rebuilt -- in practice the Dockerfile is
+      # untouched by most commits, so this is close to a no-op after the first
+      # run. `load: true` puts the image in the local daemon, which is what
+      # build_in_container.sh then runs against.
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3.11.1
+
       - name: Build Docker image
-        run: docker build . -t pandoc_all
+        uses: docker/build-push-action@v6.18.0
+        with:
+          context: .
+          load: true
+          tags: pandoc_all
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build book
         run: STRICT_WARNINGS=1 ./scripts/build_in_container.sh book

@@ -145,6 +145,15 @@ package `tests/test_theme.py` imports all live in that extra, so a fresh
 checkout without it resolves `pygments` alone and every command above fails with
 "program not found" rather than on a real defect.
 
+`tests/test_brand_divs_filter.py` drives `md2pdfLib/common/filters/brand-divs.lua`
+through **real pandoc** and skips when pandoc is absent, so on a host without it
+those 23 tests do not run. CI installs pandoc (at the version the Dockerfile
+pins) before the suite so they always do; to run them locally, use the image:
+
+```bash
+nerdctl run --rm --entrypoint "" -v "$(pwd):/repo" -w /repo pandoc_all   sh -c '. /md2pdf/bin/activate && uv pip install -q pytest          && python -m pytest tests/test_brand_divs_filter.py -o addopts=""'
+```
+
 ### Entry Point
 
 Use the `build.py` CLI rather than adding document-specific wrapper scripts:
@@ -270,12 +279,12 @@ so such a subdirectory needs its own preset (that is what `demo` is).
 - **Do not** use `docker` for **local** commands — use **nerdctl** locally
   (BuildKit / rootless). Scripts accept `CONTAINER_RUNTIME=docker` for
   environments without nerdctl; both run the same image.
-- **Do not** add a *fourth* workflow that builds the `Dockerfile`. Three
-  workflows exist and two of them build it on purpose:
+- **Do not** add a workflow that publishes the image. Two workflows exist:
   `build-documents.yml` (brand drift, lint, types, tests, then every document
-  built in the image), `publish-image.yml` (pushes the image to GHCR), and
-  `docs-pages.yml` (publishes the Sphinx docs to GitHub Pages). Local builds
-  still use `nerdctl build . -t pandoc_all`.
+  built in the image) and `docs-pages.yml` (publishes the Sphinx docs to GitHub
+  Pages). A `publish-image.yml` that pushed to GHCR was removed -- nothing
+  consumed the published image, and the image is built locally with
+  `nerdctl build . -t pandoc_all` and in CI from the same Dockerfile.
 - **Do not** commit `data/out/` (it is in `.gitignore`)
 - **Do not** run `nerdctl build` without ensuring buildkitd is running
   (`systemctl --user status buildkit.service`)
