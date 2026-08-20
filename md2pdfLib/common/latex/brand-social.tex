@@ -1,0 +1,45 @@
+% Shared social-link commands -- ONE definition of how this brand renders a
+% link, a social entry, a GitHub repository and the personal site.
+%
+% bookclass.cls and myCV_METADATA.cls each carried their own copy, and the
+% copies had drifted in ways nothing could catch:
+%
+%   \sociallink   byte-identical in both -- pure duplication
+%   \link         identical but for \color{black} vs \color{Black}
+%   \githubSymbol \providecommand in one, \newcommand in the other
+%   \github       SAME NAME, DIFFERENT MEANING: the book took a repository and
+%                 prefixed the profile URL; the CV took a full path and
+%                 hardcoded https://www.github.com/ -- so the two documents
+%                 linked to different hosts for the same project
+%   personal site the CV built http://www.<host>, downgrading to HTTP and
+%                 adding a www. the brand does not use
+%
+% Every URL here now comes from brand-identity.tex, so none of it can drift
+% again -- and none of it is a literal a drift check would have to guess at.
+%
+% Requires, in this order: brand-colors.tex (linkcolor), a \colorlet for
+% symbolcolor, fontawesome (\faGithub), hyperref (\href), brand-identity.tex.
+% \providecommand throughout, so a document may still define its own first.
+
+\providecommand{\link}[2]{\color{linkcolor}\href{#1}{#2}\color{black} }
+
+% <icon> <linked text>, with the icon in the document's symbol colour.
+\providecommand{\sociallink}[3]{%
+	\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}\link{#2}{#3}\hspace{1em}}}
+
+\providecommand{\githubSymbol}{\faGithub}
+
+% One of my repositories: \github{GraphicsEngineVulkan}
+% The owner comes from the brand, so a repository is never written as
+% "Kataglyphis/Thing" -- that spelled the handle out ten times in the CV alone.
+\providecommand*{\github}[1]{%
+	\sociallink{\githubSymbol}{\brandGithubUrl/#1}{\brandGithubHost/\brandGithub/#1}}
+
+% My profile, rather than a repository.
+\providecommand{\githubProfile}{%
+	\sociallink{\githubSymbol}{\brandGithubUrl}{\brandGithubHost/\brandGithub}}
+
+% My website. https, and the host spelled the one way the brand spells it.
+\providecommand{\linkSymbol}{\faLink}
+\providecommand{\brandWebsite}{%
+	\sociallink{\linkSymbol}{\brandUrl}{\brandUrlDisplay}}

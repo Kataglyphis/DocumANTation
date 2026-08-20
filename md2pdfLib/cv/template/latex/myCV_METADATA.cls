@@ -162,11 +162,11 @@
 \newcommand{\infoSymbol}{\faInfo}
 \newcommand{\linkedinSymbol}{\faLinkedin}
 \newcommand{\mobileSymbol}{\faMobilePhone}
-\newcommand{\githubSymbol}{\faGithub}
 \newcommand{\youtubeSymbol}{\faYoutube}
-\newcommand{\linkSymbol}{\faLink}
 
-\newcommand\link[2]{\color{linkcolor}\href{#1}{#2}\color{Black} }
+% \link, \sociallink, \github, \githubProfile and \brandWebsite come
+% from the shared social layer; only the CV-specific entries stay below.
+\input{brand-social.tex}
 
 % Create a tag
 % Usage: \cvtag{<tag label>}
@@ -182,9 +182,6 @@
 % Usage; \socialtext{<icon>}{<label>}
 \newcommand{\socialtext}[2]{\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}#2\hspace{1em}}}
 
-% Render a link with its symbol
-% Usage; \sociallink{<icon>}{<label>}
-\newcommand{\sociallink}[3]{\mbox{\textcolor{symbolcolor}{#1}\hspace{0.5em}\link{#2}{#3}\hspace{1em}}}
 
 % Define author's name
 % Usage: \name{<firstname>}{<lastname>}
@@ -218,13 +215,13 @@
 \newcommand*{\linkedin}[1]{\sociallink{\linkedinSymbol}{https://www.linkedin.com/in/#1/}{linkedin.com/in/#1}}
 
 % Render author's personal website (optional)
-% Usage: \personalLink{<website-without-http://www.>}
-\newcommand*{\personalLink}[1]{\sociallink{\linkSymbol}{http://www.#1}{#1}}
+% \personalLink was removed: it built http://www.<host>, downgrading to HTTP
+% and adding a www. the brand does not use. Its only caller now uses
+% \brandWebsite from brand-social.tex, which links \brandUrl over https.
 
 
 % Render author's github (optional)
 % Usage: \github{<github-nick>}
-\newcommand*{\github}[1]{\sociallink{\githubSymbol}{https://www.github.com/#1}{github.com/#1}}           % Github icon + URL
 
 % Render author's youtube (optional)
 % Usage: \youtube{<github-nick>}
