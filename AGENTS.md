@@ -133,7 +133,7 @@ Code must stay 3.10-compatible (`requires-python = ">=3.10"`) — e.g.
 ### Running Tools
 
 ```bash
-# On the host -- all four are CI gates in build-documents.yml, in this order:
+# On the host -- all four are CI gates in checks.yml, in this order:
 uv run --extra dev ruff check .
 uv run --extra dev ruff format --check .
 uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
@@ -279,12 +279,24 @@ so such a subdirectory needs its own preset (that is what `demo` is).
 - **Do not** use `docker` for **local** commands — use **nerdctl** locally
   (BuildKit / rootless). Scripts accept `CONTAINER_RUNTIME=docker` for
   environments without nerdctl; both run the same image.
-- **Do not** add a workflow that publishes the image. Two workflows exist:
-  `build-documents.yml` (brand drift, lint, types, tests, then every document
-  built in the image) and `docs-pages.yml` (publishes the Sphinx docs to GitHub
-  Pages). A `publish-image.yml` that pushed to GHCR was removed -- nothing
-  consumed the published image, and the image is built locally with
-  `nerdctl build . -t pandoc_all` and in CI from the same Dockerfile.
+- **Do not** add a workflow that builds the `Dockerfile` or the documents.
+  Two workflows exist and neither needs a TeX distribution: `checks.yml`
+  (brand drift, lint, types, tests) and `docs-pages.yml` (publishes the Sphinx
+  docs to GitHub Pages). Two workflows were deliberately removed --
+  `publish-image.yml`, because nothing consumed the GHCR image it pushed, and
+  the document-building job, because the ~8.5 GB `texlive-full` image cost more
+  to build on every push than it caught.
+
+  **Consequence, worth stating plainly:** nothing in CI compiles LaTeX, so
+  nothing in CI catches a broken template, a missing TeX package or an overfull
+  box. Building the documents -- with the strict gates -- is a local step:
+
+  ```bash
+  STRICT_WARNINGS=1 ./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv}
+  ```
+
+  Run it before releasing anything that touches a template, a preset or the
+  brand.
 - **Do not** commit `data/out/` (it is in `.gitignore`)
 - **Do not** run `nerdctl build` without ensuring buildkitd is running
   (`systemctl --user status buildkit.service`)

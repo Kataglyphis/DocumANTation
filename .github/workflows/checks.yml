@@ -1,0 +1,67 @@
+name: Checks
+
+# Brand drift, lint, types and the test suite. Deliberately does NOT build the
+# documents: that needs the ~8.5 GB texlive-full image, and building it on every
+# push cost more than it caught. Document builds are a local step:
+#
+#     STRICT_WARNINGS=1 ./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv}
+#
+# What that means for this workflow: nothing here compiles LaTeX, so nothing
+# here catches a broken template, a missing package or an overfull box. The
+# suite covers the parts that do not need a TeX distribution -- preset wiring,
+# the Lua filter through real pandoc, the pptx post-processing, brand and
+# identity drift -- and the strict warning gates run when you build locally.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: Brand, Lint & Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v9.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Brand drift check
+        run: uv run python style/generate_style.py --check
+
+      # --extra dev on every step: ruff, ty, pytest and pytest-cov all live in
+      # that extra, and so does the theme package tests/test_theme.py imports.
+      # Without it a fresh checkout resolves pygments alone and the step dies at
+      # "program not found" rather than on a real failure.
+      - name: Lint
+        run: uv run --extra dev ruff check .
+
+      - name: Format check
+        run: uv run --extra dev ruff format --check .
+
+      - name: Type check
+        run: uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
+
+      # tests/test_brand_divs_filter.py drives the Lua filter through real
+      # pandoc and skips without it. Skipping in CI is how make_reference's
+      # largest function went untested for months, so install it -- at the very
+      # version the image pins, read from the Dockerfile so there is no second
+      # copy of the number to drift. Pandoc alone is a ~30 MB download; it is
+      # the TeX distribution that made the document builds expensive, not this.
+      - name: Install pandoc (the version the image pins)
+        run: |
+          version="$(sed -n 's/^ARG PANDOC_VERSION=//p' Dockerfile)"
+          test -n "$version"
+          url="https://github.com/jgm/pandoc/releases/download/${version}/pandoc-${version}-1-amd64.deb"
+          curl -fsSL -o /tmp/pandoc.deb "$url"
+          sudo dpkg -i /tmp/pandoc.deb
+          pandoc --version | head -1
+
+      - name: Test suite
+        run: uv run --extra dev pytest tests/ -q
