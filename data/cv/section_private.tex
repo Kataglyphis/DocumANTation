@@ -31,13 +31,19 @@
     {\sectionTitle{Hobbies}{\faBicycle}
     \vspace{0.8em}
     \begin{itemize}
-        \item Powerlifting
+        % Open source leads this list on purpose: it is the one hobby the
+        % rest of the page is evidence for. Costs nothing -- same item,
+        % same column height, first line instead of second.
         \item Open source
+        % Powerlifting out, Cycling in. The two branches disagreed here anyway
+        % -- English said Powerlifting, German said Powerbuilding -- so that
+        % mismatch goes with it. One in, one out: the column keeps its five
+        % lines, and this row's height stays where it was.
+        \item Cycling
         % Commented out per request -- restore by uncommenting.
         % \item Bouldering
         \item Guitar
         \item Philosophy
-        \item Politics
     \end{itemize}
     }
     {\sectionTitle{Publications}{\faFileTextO}
@@ -47,9 +53,19 @@
     \vspace{0.8em}
     \begin{itemize}
         \item \textquote{Semantic Robustness Probing via Inpainting} -- ECML PKDD 2026 Demo Track (with N.\ Steckhan)
-        % \footnotesize: the annotation has to live inside the height the
-        % Languages column already sets, or it grows the whole row.
-        \item[] {\footnotesize \textsc{SemProbe}: diffusion-based inpainting probes object detectors against ODD-derived factors; demo on saw hand detection.}
+        % The SemProbe one-liner is commented out, not deleted: it cost two
+        % \footnotesize lines, and with a second publication in the column
+        % Publications is now the tallest of the three and sets the row height
+        % on its own. An abstract is worth less on a CV than a second named,
+        % lookup-able deliverable. Restore it by uncommenting -- and then check
+        % the German mistral-rse build, which is the one it pushes over.
+        % \item[] {\footnotesize \textsc{SemProbe}: diffusion-based inpainting probes object detectors against ODD-derived factors.}
+        % The named study is the concrete deliverable a reader can look up, and
+        % it is Fraunhofer work rather than a side project -- it benchmarks
+        % accelerator hardware for computer vision, which is the evidence behind
+        % the "GPU acceleration" and edge-device claims above. German title kept
+        % as published; the gloss after the dash is what an English reader needs.
+        \item \textquote{KI-Beschleunigung durch spezialisierte Hardware und Software} -- study on AI accelerator hardware, Fraunhofer IPA/IAO (2026)
     \end{itemize}
     }
 }{
@@ -69,11 +85,11 @@
     {\sectionTitle{Hobbies}{\faBicycle}
     \vspace{0.8em}
     \begin{itemize}
-        \item Powerbuilding
+        % Siehe die Anmerkung im englischen Zweig.
         \item Open Source
+        \item Radfahren
         \item Gitarre
         \item Philosophie
-        \item Politik
     \end{itemize}
     }
     {\sectionTitle{Publikationen}{\faFileTextO}
@@ -83,9 +99,10 @@
     \vspace{0.8em}
     \begin{itemize}
         \item \textquote{Semantic Robustness Probing via Inpainting} -- ECML PKDD 2026 Demo Track (mit N.\ Steckhan)
-        % \footnotesize: the annotation has to live inside the height the
-        % Sprachen column already sets, or it grows the whole row.
-        \item[] {\footnotesize \textsc{SemProbe}: Diffusions-Inpainting prüft Objektdetektoren gegen ODD-Faktoren; demonstriert an der Handerkennung an Sägen.}
+        % Siehe die Anmerkung im englischen Zweig.
+        % \item[] {\footnotesize \textsc{SemProbe}: Diffusions-Inpainting prüft Objektdetektoren gegen ODD-Faktoren.}
+        % Siehe die Anmerkung im englischen Zweig.
+        \item \textquote{KI-Beschleunigung durch spezialisierte Hardware und Software} -- Studie, Fraunhofer IPA/IAO (2026)
     \end{itemize}
     }
 }

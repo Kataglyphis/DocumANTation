@@ -2,9 +2,14 @@
 % both languages. This is the section set cv.tex carried inline before profiles
 % existed; the five sections left out are left out to fit one page, not because
 % they are stale. Keep this profile's output stable: the two PDFs it builds are
-% linked from data/book/chapters/23-about-me.md.
+% the pair linked from jonasheinle.de.
 
-\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA}}
+% The tagline used to name the job and stop there. The second half costs
+% nothing -- the line was half empty -- and it is the only place above the fold
+% that says how I work rather than where. "Maintainer" is meant literally: the
+% repositories behind the GitHub link in the header, this document pipeline
+% among them, are mine to keep working.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Open source maintainer \& contributor}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Open-Source-Maintainer \& -Contributor}}
 
 % The summary above the timeline is new, and one page is a hard constraint,
 % so it has to be paid for. The Gymnasium entry is what buys it: with two KIT

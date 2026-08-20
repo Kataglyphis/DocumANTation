@@ -14,7 +14,9 @@
 %   "GPU cluster or CUDA expertise" (nice-to-have)
 %        -> CUDA kernels + DGX A100/H200 administration
 %   "open-source contributions" (nice-to-have)
-%        -> github.com/Kataglyphis, linked from the summary and the header
+%        -> the summary's second sentence, which names what is public; the
+%           upstreamed-fixes bullet in section_experience; and the header's
+%           github.com/Kataglyphis, which is the only link a reader needs
 %   Master's in Computer Science
 %        -> section_education, which is why it stays in over Projects/Skills
 %
@@ -24,7 +26,35 @@
 % Paris: section_private carries French at B1, which is the reason that section
 % earns its place here rather than Projects. Do not drop it from this profile.
 
-\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | GPU acceleration, CI/CD \& research tooling}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | GPU-Beschleunigung, CI/CD \& Forschungstooling}}
+% The tagline has room for three things and CI/CD is not one of them: it is
+% already a bullet under Fraunhofer IPA, and the header should not spend a
+% third of its width restating the timeline. The slot goes to the AI/ML side
+% of the job instead, which is both the part this employer cares about and the
+% part the old tagline said nothing about. Do not put CI/CD back; the posting's
+% CI requirement is answered by the bullet, not here.
+%
+% "LLM/VLM serving", not just "LLM serving": the vision-language half is its
+% own claim and its own bullet (vLLM-served VLMs for auto-labeling, plus LoRA
+% fine-tuning), and it is the half that matters most to an employer shipping
+% open-weight vision models. The abbreviation earns its place -- spelled out,
+% "Vision-Language-Modelle" pushes the German tagline past the header width.
+%
+% "GPU acceleration" and not "CUDA kernels": the broader term covers the whole
+% span the bullets show -- custom kernels, C++ bindings, edge accelerators, the
+% DGX nodes -- where "CUDA kernels" names only the narrowest of them. It briefly
+% was "CUDA kernels", purely because the German would not fit otherwise; that is
+% a typesetting reason, and typesetting reasons do not get to pick the wording.
+%
+% The German pays for "GPU-Beschleunigung" at the other end instead, with
+% "Tooling" where the English says "research tooling". It has to pay somewhere:
+% "Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | " eats twelve characters
+% more of the header than its English counterpart, leaving about 42 for the
+% three items. Past roughly 92 characters the line breaks mid-word
+% ("Forschungstoo-") and STRICT_WARNINGS fails on the underfull hbox that
+% follows -- which the old "GPU-Beschleunigung, CI/CD & Forschungstooling" was
+% already doing, unnoticed, because nobody had rendered the German variant.
+% Measure the whole line, not the part being edited, before growing either.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | GPU acceleration, LLM/VLM serving \& research tooling}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | GPU-Beschleunigung, LLM/VLM \& Tooling}}
 
 % The Gymnasium entry goes: this role requires a Master's, and those three
 % lines buy the summary at the top of the page. See cv.tex.

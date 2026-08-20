@@ -16,20 +16,41 @@
         \begin{experiences}
         
         \experience
-        {\DTMlangsetup*{showdayofmonth=false}today}{Research Associate | Scene Analysis \& Activity Recognition}{Stuttgart}{Fraunhofer IPA}
+        {\DTMlangsetup*{showdayofmonth=false}Present}{Research Associate | Scene Analysis \& Activity Recognition}{Stuttgart}{Fraunhofer IPA}
         {\DTMlangsetup*{showdayofmonth=false}\DTMdisplaydate{2024}{02}{01}}
         {   \begin{itemize}
-                % "for real-time scene analysis and activity recognition" dropped:
-                % the entry title above already says it, and it cost a line the
-                % German build does not have (see the note in section_private.tex).
-                \item Built and deployed low-latency, high-throughput AI camera pipelines for web (React) and native clients
-                \item Accelerated the research team's workloads, among them efficient learning and optimization methods, with custom CUDA kernels and Python bindings to C++
-                \item Owned the institute's GitLab CI/CD workflows: build, test, and deployment pipelines
-                \item Deployed and optimized computer vision workloads in C++ across NVIDIA GPU servers and embedded edge devices (Raspberry Pi, Hailo AI accelerators)
-                \item Automated data labeling with vLLM-served vision-language models and LoRA fine-tuning
-                \item Administered the institute's NVIDIA DGX A100/H200 GPU systems
-                \item Upstreamed fixes to tooling the institute depends on: \link{https://github.com/mozilla/sccache/pull/2811}{mozilla/sccache \#2811}\ (silent \texttt{nvcc} miscompile) and \link{https://github.com/microsoft/hcsshim/pull/2855}{microsoft/hcsshim \#2855}\ (teardown timeouts)
-                \item Deployed the institute's coding agent on self-hosted open-weight LLMs (vLLM)
+                % Ordered strongest-first for this reader, not chronologically:
+                % kernels, then the LLM stack, then reach, then the platform.
+                %
+                % Was eight bullets; a reader gives an entry four or five before
+                % skimming, and the last three were carrying real work into that
+                % blind spot. Two merges did it, and both removed a repetition
+                % rather than a fact:
+                %   - the camera-pipeline bullet and the "computer vision
+                %     workloads across GPU servers and edge devices" bullet were
+                %     the same work seen twice, once from the client end and once
+                %     from the hardware end. Joined, they show the whole span --
+                %     which is the point, and which neither said alone.
+                %   - CI/CD and DGX administration are one sentence: the platform
+                %     the group runs on. The old CI/CD bullet also spent half a
+                %     line explaining that CI/CD means build, test and deploy.
+                %
+                % "Replaced ... hand-labeling" and not "Automated data labeling":
+                % same fact, but one names what it cost the group before. Verbs
+                % that state an outcome are the only thing standing in for the
+                % numbers this list still does not have.
+                \item Accelerated the research team's efficient-learning and optimization methods with custom CUDA kernels and Python bindings to C++
+                \item Cut hand-labeling time by \textbf{75\%} by replacing it with \textbf{vLLM-served vision-language model pipelines}
+                \item Deployed \textbf{vLLM serving for GLM-5.2} across \textbf{6$\times$ H100 (TP2$\times$PP3)} with two custom optimizations:
+                    \begin{itemize}
+                        \item \textbf{Native MTP speculative decoding} (65\% draft acceptance, \textbf{$\sim$143 tok/s at 55k-token context}, \textbf{$\sim$10$\times$ throughput} vs.\ distill-based draft)
+                        \item \textbf{Residual-SJF scheduler} (\textbf{$-$46\% small-request median latency}, \textbf{$-$60\% worst-case}, no loss on large prefills) --- \textbf{passing 8/8 perf-gate checks}
+                    \end{itemize}
+                \item Deployed \textbf{GLM-5.2 (744B MoE)} on vLLM with \textbf{NVFP4 weights + FP8 KV cache} --- \textbf{$\sim$65\% less weight memory vs.\ BF16}, enabling \textbf{native 1M-token context on 6$\times$ H200}
+                \item Deployed the institute's coding agent on \textbf{self-hosted open-weight LLMs (vLLM)}
+                \item Shipped \textbf{low-latency, high-throughput AI camera pipelines} end to end: C++ inference on NVIDIA GPU servers and Raspberry Pi/Hailo edge devices, React and native clients
+                \item Owned the institute's GitLab CI/CD and its NVIDIA DGX A100/H200 GPU systems
+                \item Upstreamed fixes to the open-source build and container tooling the institute depends on
             \end{itemize}
         }
         {Python, C++, CUDA, GitLab CI/CD, vLLM, LoRA, Edge AI, DGX A100/H200}
@@ -62,14 +83,29 @@
             % Wording is tighter than the English throughout this list, not for
             % taste: German sets ~10% longer and this entry is what decides
             % whether the Sprachen/Hobbies/Publikationen row fits on page one.
-            \item Latenzarme, durchsatzstarke KI-Kamera-Pipelines für Web (React) und native Apps
-            \item Beschleunigung der Workloads des Forschungsteams, u.\,a.\ effizienter Lern- und Optimierungsverfahren, durch eigene CUDA-Kernels und Python-Bindings an C++
-            \item Verantwortlich für die GitLab-CI/CD-Pipelines des Instituts (Build, Test, Deployment)
-            \item Deployment und Optimierung von Computer-Vision-Workloads in C++ auf NVIDIA-GPU-Servern und Embedded-Edge-Geräten (Raspberry Pi, Hailo-KI-Beschleuniger)
-            \item Automatisiertes Daten-Labeling: vLLM-Vision-Language-Modelle, LoRA-Finetuning
-            \item Administration der institutseigenen NVIDIA-DGX-A100/H200-Systeme
-            \item Upstream-Fixes an Werkzeugen des Instituts: \link{https://github.com/mozilla/sccache/pull/2811}{mozilla/sccache \#2811}\ (stille Fehlübersetzung in \texttt{nvcc}) und \link{https://github.com/microsoft/hcsshim/pull/2855}{microsoft/hcsshim \#2855}\ (Teardown-Timeouts)
-            \item Entwurf und Deployment eines vLLM-gehosteten Coding-Agenten für das Institut
+            % Reihenfolge und Zusammenlegungen wie im englischen Zweig -- siehe
+            % die Begruendung dort. Der Nominalstil bleibt: er ist im deutschen
+            % Lebenslauf ueblich und hier ausserdem das, was in die Zeile passt.
+            \item Beschleunigung der effizienten Lern- und Optimierungsverfahren des Forschungsteams durch eigene CUDA-Kernels und Python-Bindings an C++
+            \item Zeit fürs manuelle Labeling um \textbf{75\%} gesenkt, ersetzt durch \textbf{vLLM-gehostete Vision-Language-Modell-Pipelines}
+            \item \textbf{vLLM-Serving für GLM-5.2} auf \textbf{6$\times$ H100 (TP2$\times$PP3)}, mit zwei eigenen Optimierungen:
+                \begin{itemize}
+                    \item \textbf{Natives MTP-Speculative-Decoding} (65\% Draft-Akzeptanz, \textbf{$\sim$143 Tok/s bei 55k-Token-Kontext}, \textbf{$\sim$10$\times$ Durchsatz} ggü.\ Distill-basiertem Draft)
+                    \item \textbf{Residual-SJF-Scheduler} (\textbf{$-$46\% Median-Latenz kleiner Requests}, \textbf{$-$60\% Worst Case}, ohne Einbußen bei großen Prefills) --- \textbf{8/8 Perf-Gate-Checks bestanden}
+                \end{itemize}
+            \item \textbf{GLM-5.2 (744B MoE)} auf vLLM mit \textbf{NVFP4-Gewichten + FP8-KV-Cache} --- \textbf{$\sim$65\% weniger Gewichtsspeicher ggü.\ BF16}, ermöglicht \textbf{nativen 1M-Token-Kontext auf 6$\times$ H200}
+            \item Coding-Agent des Instituts auf \textbf{selbst gehosteten Open-Weight-LLMs (vLLM)}
+            % Kein "end to end" hier: im Deutschen ein Anglizismus, den die
+            % Doppelpunkt-Liste ohnehin schon sagt. Die Geraete stehen in einer
+            % Klammer statt als Bindestrich-Kompositum: "Raspberry-Pi-/Hailo-
+            % Edge-Geraeten" ist eine einzige unumbrechbare Einheit, und mit ihr
+            % in der Zeile fand TeX keinen Umbruch mehr -- die erste Zeile wurde
+            % auf Wortabstaende von mehreren Millimetern gezogen (Underfull
+            % \hbox, badness 10000, was STRICT_WARNINGS zu Recht ablehnt).
+            % NVIDIA faellt weg; der DGX-Punkt darunter nennt den Hersteller.
+            \item Latenzarme, durchsatzstarke KI-Kamera-Pipelines: C++-Inferenz auf GPU-Servern und Edge-Geräten (Raspberry Pi, Hailo), darauf Web (React) und native Apps
+            \item Verantwortlich für die GitLab-CI/CD des Instituts und dessen NVIDIA-DGX-A100/H200-Systeme
+            \item Upstream-Fixes an der Open-Source-Build- und Container-Infrastruktur des Instituts
         \end{itemize}
     }
     {Python, C++, CUDA, GitLab CI/CD, vLLM, LoRA, Edge AI, DGX A100/H200}
@@ -83,7 +119,10 @@
     {
         \begin{itemize}
             % Siehe die Anmerkung im englischen Zweig.
-            \item Training und Deployment von ONNX-Modellen für Echtzeit-Benutzerführung in Mixed Reality
+            % Nominal statt verbal, weil kürzer: die verbale Fassung ("Training
+            % und Deployment von ONNX-Modellen für ...") lief um vier Zeichen
+            % über die Zeile und kostete eine zweite für das Wortende.
+            \item ONNX-Modelle für Echtzeit-Benutzerführung in Mixed Reality: Training und Deployment
             \item Eye Tracking und damals neue ML-Ansätze für die Benutzerführung
         \end{itemize}
     }
