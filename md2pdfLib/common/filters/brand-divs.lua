@@ -17,19 +17,21 @@
 --   [GPU]{.gls}                           → \gls{gpu}
 --   [BRDF]{.nomen def="..."}              → \nomenclature{BRDF}{...}
 --
--- Document level:
---   Injects \listoflistings after TOC when any titled code block exists.
+-- Deliberately no document-level handler. One existed to inject a List of
+-- Listings, registered as `Doc` -- a key pandoc never calls (the document
+-- element is `Pandoc`), so it never ran and \tcblistof{lol} was never emitted
+-- despite the book carrying titled listings. Making it work needs `list entry=`
+-- on every titled box plus a declared list type, and front matter belongs to
+-- the document template rather than a block filter, so the feature was removed
+-- rather than half-built.
 
 local FORMAT_LATEX = false
 local FORMAT_BEAMER = false
 local FORMAT_HTML = false
 
-local HAS_TITLED_CODE = false
-
 -- ── Helpers ──────────────────────────────────────────────────────────────
 
 local function is_latex() return FORMAT_LATEX or FORMAT_BEAMER end
-local function is_html() return FORMAT_HTML end
 
 local function escape_latex(s)
   return s:gsub("([_#&%%{}~^\\])", "\\%1")
@@ -145,29 +147,30 @@ local function handle_tabset(div)
   end
   if #tabs == 0 then return nil end
 
-  -- Build a tcolorbox with a tab-like header row
+  -- Every tab, each under its own heading. Paper has no tabs to click, so the
+  -- only honest rendering is all of them in sequence.
+  --
+  -- This used to print a header row naming every tab and then only the FIRST
+  -- tab's body: the book's three-language example advertised C++ and GLSL
+  -- sections it did not contain, which reads as a broken document rather than
+  -- a deliberate abridgement. Sphinx still renders real tabs from the same
+  -- Markdown -- the div passes through untouched for HTML.
   local blocks = {
     raw_before("\\begin{tcolorbox}[enhanced, breakable, "
       .. "colback=shadecolor, colframe=greenAccent, arc=2mm, "
       .. "boxrule=0.4pt, top=0mm, bottom=0mm]"),
   }
 
-  -- Tab header row
-  local header_parts = {}
   for i, tab in ipairs(tabs) do
-    if i == 1 then
-      header_parts[#header_parts + 1] = "\\textbf{\\textcolor{brandAccentStrong}{" .. tab.title .. "}}"
-    else
-      header_parts[#header_parts + 1] = "\\textcolor{gray}{" .. tab.title .. "}"
+    if i > 1 then
+      blocks[#blocks + 1] = raw_before("\\vspace{2mm}\\hrule\\vspace{2mm}")
     end
-  end
-  blocks[#blocks + 1] = raw_before(
-    "\\noindent " .. table.concat(header_parts, " \\hfill ")
-    .. "\\par\\vspace{2mm}\\hrule\\vspace{2mm}")
-
-  -- Show first tab content (rest available via Sphinx HTML tabs)
-  for _, b in ipairs(tabs[1].content) do
-    blocks[#blocks + 1] = b
+    blocks[#blocks + 1] = raw_before(
+      "\\noindent\\textbf{\\textcolor{brandAccentStrong}{"
+      .. escape_latex(tab.title) .. "}}\\par\\vspace{1mm}")
+    for _, b in ipairs(tab.content) do
+      blocks[#blocks + 1] = b
+    end
   end
 
   blocks[#blocks + 1] = raw_before("\\end{tcolorbox}")
@@ -197,7 +200,6 @@ local function handle_codeblock(cb)
   if not title and not linenos and not highlight then return nil end
 
   if title then
-    HAS_TITLED_CODE = true
     local safe_title = escape_latex(title)
     local listing_opts = "style=tcblatex"
     if linenos then
@@ -264,23 +266,6 @@ end
 
 -- ── Document-level: inject list of listings ──────────────────────────────
 
-local function handle_doc(doc)
-  if not (is_latex() and HAS_TITLED_CODE) then return nil end
-  -- Inject \listoflistings command as a raw block after the TOC
-  -- (Pandoc places the TOC from metadata; we add our list after it)
-  local new_blocks = {}
-  for _, b in ipairs(doc.blocks) do
-    new_blocks[#new_blocks + 1] = b
-    -- Insert after the first chapter/section heading (which follows the TOC)
-    if b.t == "Header" and b.level == 1 and #new_blocks <= 3 then
-      new_blocks[#new_blocks + 1] = raw_before(
-        "\\clearpage\\tcblistof{lol}{List of Listings}")
-    end
-  end
-  doc.blocks = new_blocks
-  return doc
-end
-
 -- ── Dispatch ─────────────────────────────────────────────────────────────
 
 local function dispatch_div(div)
@@ -309,8 +294,14 @@ end
 
 -- Format detection runs first
 local function detect_format(_, meta)
-  FORMAT_LATEX = FORMAT:match("latex") and not FORMAT:match("beamer") ~= nil
+  -- Parenthesised deliberately. This was written as
+  --   FORMAT:match("latex") and not FORMAT:match("beamer") ~= nil
+  -- which Lua parses as `... and ((not X) ~= nil)`; `not X` is a boolean and a
+  -- boolean is never nil, so that half was always true and the beamer
+  -- exclusion did nothing. It only behaved because pandoc reports "beamer"
+  -- (not "latex") for that writer, so the first clause carried it alone.
   FORMAT_BEAMER = FORMAT:match("beamer") ~= nil
+  FORMAT_LATEX = (FORMAT:match("latex") ~= nil) and not FORMAT_BEAMER
   FORMAT_HTML = not FORMAT_LATEX and not FORMAT_BEAMER
   -- Workaround: Pandoc sets FORMAT to "latex" for both book and beamer
   -- unless the output format is explicitly "beamer". Check metadata.
@@ -326,5 +317,4 @@ return {
   { Div = dispatch_div },
   { CodeBlock = dispatch_codeblock },
   { Span = dispatch_span },
-  { Doc = handle_doc },
 }
