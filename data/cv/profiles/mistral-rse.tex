@@ -66,6 +66,11 @@
 % section of its own: it is a paid research-assistant post, it reads correctly
 % there, and the heading it no longer prints is most of what it cost to fit.
 \cvshowteachingtitlefalse
+% The role is in Paris and this CV is in Stuttgart's letterhead; saying so in
+% the header removes a question the reader would otherwise have to hold open.
+% Deliberately not in the summary: that paragraph is about the work, and ending
+% it on logistics would trade its last line for an administrative note.
+\cvrelocatetrue
 
 % Layout, not content: this profile carries one section body more than the
 % page nominally fits, and the Languages/Hobbies/Publications row missed by
@@ -81,10 +86,13 @@
     \input{section_headline_mistral_rse}%
     \vspace{0.25cm}%
     \input{section_experience}%
-    % Four years of KIT tutoring (2018-2022). Two reasons it is worth its ~4
-    % lines here: it is the only thing on the page covering 2018-2022, which is
-    % what makes the "4+ years" requirement legible, and the posting asks for a
-    % "collaborative, low-ego" engineer -- teaching is the evidence for that.
+    % Four years of KIT tutoring (2018-2022). Back in after the two GLM-5.2
+    % bullets were merged: the duplication they carried paid for part of the
+    % ~5 lines this costs. Worth it for two reasons -- it is the only entry
+    % covering 2018-2022, which is what makes a "4+ years" requirement legible,
+    % and the posting asks for a "collaborative, low-ego" engineer, which
+    % teaching is the evidence for. The heading stays off (see cv.tex), so it
+    % reads as one more job under Experiences, which is what it is.
     \input{section_teaching_mentoring}%
     \input{section_education}%
     % Languages (French B1 -- the role is Paris-based) and the ECML PKDD
@@ -95,5 +103,4 @@
     % link in the header and in the summary carries the project evidence:
     % \input{section_projects}%
     % \input{section_skills}%
-    % \input{section_teaching_mentoring}%
 }

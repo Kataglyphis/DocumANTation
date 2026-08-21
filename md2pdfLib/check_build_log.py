@@ -73,28 +73,37 @@ def _load_pandoc_json_text(log_path: Path) -> str:
     # were previously only inspected as a fallback when no LaTeX output existed
     # -- so for any build that reached LaTeX, pandoc-level warnings passed the
     # strict gate unseen. Collect them unconditionally.
-    pandoc_warnings: list[str] = []
+    #
+    # The `[WARNING]` prefix is added here because pandoc's own `pretty` string
+    # carries no marker of its own, and that prefix is what WARNING_LINE_PATTERNS
+    # matches. It used to be added on the LaTeX path only, so a target that never
+    # reaches LaTeX read its pandoc warnings back as ordinary prose and no pattern
+    # matched them -- pptx is such a target, and it is strict-gated, so
+    # `STRICT_WARNINGS=1 ./scripts/build_in_container.sh pptx` could not fail on a
+    # missing resource or a duplicate identifier. Both paths mark them now.
+    warnings: list[str] = []
+    other: list[str] = []
     for entry in payload:
         if not isinstance(entry, dict):
             continue
-        if entry.get("verbosity") == "WARNING" and isinstance(entry.get("pretty"), str):
-            pandoc_warnings.append(f"[WARNING] {entry['pretty']}")
-        if entry.get("description") != "LaTeX output":
-            continue
+        pretty = entry.get("pretty")
+        if isinstance(pretty, str):
+            if entry.get("verbosity") == "WARNING":
+                warnings.append(f"[WARNING] {pretty}")
+            else:
+                other.append(pretty)
         contents = entry.get("contents")
-        if isinstance(contents, str):
+        if entry.get("description") == "LaTeX output" and isinstance(contents, str):
             latex_outputs.append(contents)
 
     if latex_outputs:
         # Only the last LaTeX log matters -- earlier passes legitimately warn
-        # about undefined references that the final pass resolves.
-        return "\n".join([*pandoc_warnings, latex_outputs[-1]])
+        # about undefined references that the final pass resolves. The remaining
+        # entries are pandoc's INFO chatter, which holds no diagnostic the LaTeX
+        # log does not.
+        return "\n".join([*warnings, latex_outputs[-1]])
 
-    return "\n".join(
-        entry.get("pretty", "")
-        for entry in payload
-        if isinstance(entry, dict) and isinstance(entry.get("pretty"), str)
-    )
+    return "\n".join([*warnings, *other])
 
 
 def _load_log_text(log_path: Path, log_format: str) -> str:

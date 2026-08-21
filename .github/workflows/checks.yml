@@ -48,6 +48,14 @@ jobs:
       - name: Type check
         run: uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
 
+      # AGENTS.md has a Shell Scripting Conventions section that nothing used to
+      # enforce -- the container wrapper, the glossary pipeline and the theme
+      # refresh are all shell, and none of them was linted. `git ls-files` rather
+      # than a fixed list, so a script added later cannot slip past the gate; it
+      # does not descend into the beamer/smile submodules, which are not ours.
+      - name: Shell lint
+        run: uv run --extra dev shellcheck $(git ls-files '*.sh')
+
       # tests/test_brand_divs_filter.py drives the Lua filter through real
       # pandoc and skips without it. Skipping in CI is how make_reference's
       # largest function went untested for months, so install it -- at the very

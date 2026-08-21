@@ -32,8 +32,11 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
     FLUSH_CENTERED_BODY,
+    LAYOUT_RE,
+    MASTER_RE,
     MD2PDF_ROOT,
     SP_RE,
+    THEME_RE,
     USER_DRAWN,
     append_shapes,
     brand_tokens,
@@ -530,7 +533,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
 
     # -- theme colours + fonts (every theme part: the notes master has its own)
     for name in parts:
-        if re.fullmatch(r"ppt/theme/theme\d+\.xml", name):
+        if THEME_RE.fullmatch(name):
             parts[name] = patch_theme_xml(parts[name].decode("utf-8"), colors, font).encode("utf-8")
             themes_patched += 1
     if not themes_patched:
@@ -548,7 +551,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
 
     # -- layout branding: the beamer look, one layout at a time, found by the
     #    names pandoc selects layouts with -- never by file number.
-    masters = [n for n in parts if re.fullmatch(r"ppt/slideMasters/slideMaster\d+\.xml", n)]
+    masters = sorted(n for n in parts if MASTER_RE.fullmatch(n))
     if not masters:
         raise ReferenceBuildError("No slide master found in pandoc's reference.pptx.")
     master_xml = parts[masters[0]].decode("utf-8")
@@ -556,7 +559,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
     meta = deck_metadata()
     seen: set[str] = set()
     for name in sorted(parts):
-        if not re.fullmatch(r"ppt/slideLayouts/slideLayout\d+\.xml", name):
+        if not LAYOUT_RE.fullmatch(name):
             continue
         xml = parts[name].decode("utf-8")
         layout = layout_name(xml)
