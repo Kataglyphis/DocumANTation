@@ -46,6 +46,14 @@
 % for a profile that inputs section_teaching_mentoring directly after
 % section_experience.
 \newif\ifcvshowteachingtitle \cvshowteachingtitletrue
+% Off by default, on for a profile aimed at a job in another city. The header
+% is where a reader checks whether the geography works, and it answers the
+% question "Stuttgart, but the job is in Paris?" in the same place it is asked.
+% Costs nothing: with the birthday and the YouTube handle gone both contact
+% columns run four lines, and the citation column beside them is five (English)
+% or seven (German), so it is the citation that sets the header height. Only
+% grow this past five lines with the German build in front of you.
+\newif\ifcvrelocate \cvrelocatefalse
 % \cvshowthesislinesfalse hid the thesis text but not the row holding it:
 % \education always emits its description row, so switching the flag off
 % left an empty minipage -- a blank line under every degree, which is exactly
@@ -125,8 +133,15 @@
 		\githubProfile\newline
 		\linkedin{jonas-heinle-0b2a301a0}\newline
 		\brandWebsite\newline
-		\email{\brandEmail}\newline
-		\youtube{jotrockenmitlocken}
+		% YouTube commented out -- no videos published yet, and a channel handle
+		% that leads to an empty channel costs more than it pays. Note the
+		% \newline moved up to the e-mail line: this entry was last in the
+		% minipage and carried no \newline of its own, so commenting it out
+		% alone would have left the e-mail's \newline dangling and set an empty
+		% final line. Restore both together.
+		\email{\brandEmail}
+		%\newline
+		%\youtube{jotrockenmitlocken}
 	\end{minipage}%
 	\hspace{1.5em}%
 	% Widest column: it carries the German "Geburtstag: ..., Schwäbisch Hall",
@@ -134,6 +149,9 @@
 	\begin{minipage}[t]{0.395\linewidth}
 		\raggedright
 		\address{Stuttgart}\newline
+		\ifcvrelocate
+		\infos{\IfLanguageName{english}{Open to relocating to Paris}{Umzug nach Paris möglich}}\newline
+		\fi
 		\infos{\IfLanguageName{english}{German Citizen}{Deutscher Staatsbürger}}\newline
 		% ", Germany" dropped: the citizenship line above already says it, and
 		% this is the longest entry in the column.
@@ -150,7 +168,12 @@
 		% as the day-of-week, which the date style then printed as nothing. Take
 		% the place away and the macro swallows the closing brace instead --
 		% "Argument of \DTMdisplaydate has an extra }", and no PDF at all.
-		\infos{\IfLanguageName{english}{Birthday: \DTMdisplaydate{1995}{12}{25}{}}{Geburtstag: \DTMdisplaydate{1995}{12}{25}{}}}\newline
+		% Date of birth commented out on request -- the birthplace went earlier,
+		% now the date follows. Costs the layout nothing: this column drops from
+		% five entries to four, and the contact column on the left still sets the
+		% header height at five. Restore by uncommenting; note the empty fourth
+		% argument to \DTMdisplaydate is required (see the note above).
+		%\infos{\IfLanguageName{english}{Birthday: \DTMdisplaydate{1995}{12}{25}{}}{Geburtstag: \DTMdisplaydate{1995}{12}{25}{}}}\newline
 		\infos{\IfLanguageName{english}{Driving License: Class B}{Führerschein: Klasse B}}\newline
 		\smartphone{+49 15253799950}
 	\end{minipage}%

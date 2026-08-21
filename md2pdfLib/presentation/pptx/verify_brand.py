@@ -37,7 +37,13 @@ from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
     THEME_RE,
     brand_tokens,
     dangling_layout_media,
+    run_cli,
 )
+
+
+class BrandCheckError(Exception):
+    """Raised when the emitted deck is off-brand, malformed, or has nothing to check."""
+
 
 _SRGB_RE = re.compile(r'srgbClr val="([0-9A-Fa-f]{6})"')
 # The two theme font slots make_reference.py patches: major is headings, minor
@@ -60,7 +66,7 @@ def off_brand_colors(deck: Path, allowed: set[str]) -> dict[str, set[str]]:
     with zipfile.ZipFile(deck) as z:
         parts = [n for n in z.namelist() if THEME_RE.fullmatch(n) or SLIDE_RE.fullmatch(n)]
         if not parts:
-            raise SystemExit(f"Error: {deck} contains no theme or slide parts.")
+            raise BrandCheckError(f"{deck} contains no theme or slide parts.")
         for name in parts:
             used = {c.upper() for c in _SRGB_RE.findall(z.read(name).decode("utf-8", "ignore"))}
             if stray := used - allowed:
@@ -78,7 +84,7 @@ def off_brand_fonts(deck: Path, expected: str) -> dict[str, set[str]]:
     with zipfile.ZipFile(deck) as z:
         themes = [n for n in z.namelist() if THEME_RE.fullmatch(n)]
         if not themes:
-            raise SystemExit(f"Error: {deck} contains no theme part.")
+            raise BrandCheckError(f"{deck} contains no theme part.")
         for name in themes:
             found = _FONT_RE.findall(z.read(name).decode("utf-8", "ignore"))
             if not found:
@@ -120,22 +126,18 @@ def _report(header: str, offenders: dict[str, set[str]], remedy: str) -> None:
     print(remedy, file=sys.stderr)
 
 
-def main() -> None:
-    if len(sys.argv) != 2:
-        print(f"Usage: {Path(sys.argv[0]).name} <deck.pptx>", file=sys.stderr)
-        sys.exit(2)
-    deck = Path(sys.argv[1])
-    if not deck.is_file():
-        print(f"Error: no such deck: {deck}", file=sys.stderr)
-        sys.exit(1)
+def check_deck(deck: Path) -> str:
+    """Run every brand check on *deck*, returning the line that says it passed.
 
+    Raises:
+        BrandCheckError: when any check found something. Every check runs first,
+            so one build reports every way the deck is off-brand rather than
+            only the first; each reports ``{part: details}``, so one printer
+            serves all of them.
+    """
     brand = brand_tokens()
     expected_font = brand["fonts"]["main"]
 
-    # Every check runs before exiting, so one build reports every way the deck
-    # is off-brand rather than only the first. Each reports {part: details}, so
-    # one printer serves all of them.
-    #
     checks: list[tuple[Callable[[], dict[str, set[str]]], str, str]] = [
         (
             lambda: {part: {err} for part, err in malformed_parts(deck).items()},
@@ -162,15 +164,21 @@ def main() -> None:
         ),
     ]
 
-    failed = False
+    failed = 0
     for check, header, remedy in checks:
         if offenders := check():
             _report(header, offenders, remedy)
-            failed = True
-
+            failed += 1
     if failed:
-        sys.exit(1)
-    print(f"{deck.name}: well-formed; every colour is a brand value; fonts are {expected_font}.")
+        raise BrandCheckError(
+            f"{deck.name} failed {failed} of {len(checks)} brand checks (reported above)."
+        )
+
+    return f"{deck.name}: well-formed; every colour is a brand value; fonts are {expected_font}."
+
+
+def main() -> None:
+    run_cli(check_deck, errors=(BrandCheckError,))
 
 
 if __name__ == "__main__":

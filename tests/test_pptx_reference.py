@@ -31,7 +31,11 @@ from md2pdfLib.presentation.pptx.make_reference import (
     patch_theme_xml,
     patch_title_slide_layout,
 )
-from md2pdfLib.presentation.pptx.verify_brand import brand_hexes, off_brand_colors
+from md2pdfLib.presentation.pptx.verify_brand import (
+    BrandCheckError,
+    brand_hexes,
+    off_brand_colors,
+)
 from md2pdfLib.presets import pptx
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -222,7 +226,7 @@ def test_gate_refuses_a_deck_with_nothing_to_check(tmp_path):
     empty = tmp_path / "empty.pptx"
     with zipfile.ZipFile(empty, "w") as z:
         z.writestr("docProps/app.xml", "<x/>")
-    with pytest.raises(SystemExit):
+    with pytest.raises(BrandCheckError):
         off_brand_colors(empty, brand_hexes(BRAND))
 
 

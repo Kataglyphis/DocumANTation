@@ -105,6 +105,25 @@ def test_pandoc_json_surfaces_warning_entries_alongside_latex_output(tmp_path: P
     assert _find_warning_lines(text, []) == ["[WARNING] Duplicate identifier 'intro'"]
 
 
+def test_pandoc_json_surfaces_warnings_when_the_target_never_reaches_latex(tmp_path: Path):
+    """A pptx build emits no "LaTeX output" entries, and is still strict-gated.
+
+    Its log therefore always took the no-LaTeX return, where the [WARNING]
+    marker the detector matches was never added -- so pandoc could report a
+    missing resource and the deck still built clean under STRICT_WARNINGS=1.
+    """
+    payload = [
+        {"verbosity": "WARNING", "pretty": "Could not fetch resource images/missing.png"},
+        {"verbosity": "INFO", "pretty": "Loaded reference.pptx"},
+    ]
+    log = tmp_path / "pptx.json"
+    log.write_text(json.dumps(payload), encoding="utf-8")
+    text = _load_pandoc_json_text(log)
+    assert _find_warning_lines(text, []) == [
+        "[WARNING] Could not fetch resource images/missing.png"
+    ]
+
+
 # ── advisories: reported, never fatal ────────────────────────────────────────
 #
 # The book's strict build treats two diagnostics as advisory (see

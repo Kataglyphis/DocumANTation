@@ -25,6 +25,16 @@ if [ $# -ne 1 ]; then
     usage
 fi
 
+# Appends a step that only runs under STRICT_WARNINGS=1, so the gate's condition
+# is written once instead of once per target. The book target is the exception:
+# it passes --strict-warnings into compile_with_glossaries.sh, which runs the
+# checks itself, rather than chaining a step of its own.
+strict_step() {
+    if [ "$STRICT_WARNINGS" = "1" ]; then
+        CMD+=" && $1"
+    fi
+}
+
 TARGET="$1"
 
 case "$TARGET" in
@@ -41,16 +51,12 @@ case "$TARGET" in
         # Both need the beamer themes installed into the container's texmf.
         CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/presentation/scripts/update_own_sty.sh && /md2pdfLib/presentation/scripts/update_own_sty.sh'
         CMD+=" && uv run python /md2pdfLib/build.py ${TARGET}"
-        if [ "$STRICT_WARNINGS" = "1" ]; then
-            CMD+=" && uv run python /md2pdfLib/check_build_log.py /data/out/${TARGET}.json --format pandoc-json"
-        fi
+        strict_step "uv run python /md2pdfLib/check_build_log.py /data/out/${TARGET}.json --format pandoc-json"
         ;;
     example)
         # The starter document: one pandoc call, no glossary/bibliography pass.
         CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/build.py example'
-        if [ "$STRICT_WARNINGS" = "1" ]; then
-            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/example.json --format pandoc-json'
-        fi
+        strict_step "uv run python /md2pdfLib/check_build_log.py /data/out/example.json --format pandoc-json"
         ;;
     pptx)
         # The reference deck carries the brand for pptx and is generated from
@@ -59,13 +65,11 @@ case "$TARGET" in
         # slide layouts reference, so the title background must be re-attached
         # to every emitted deck, not just strict-checked ones.
         CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/presentation/pptx/make_reference.py /data/out/reference.pptx && uv run python /md2pdfLib/build.py pptx && uv run python /md2pdfLib/presentation/pptx/finalize_deck.py /data/out/presentation.pptx'
-        if [ "$STRICT_WARNINGS" = "1" ]; then
-            CMD+=' && uv run python /md2pdfLib/check_build_log.py /data/out/pptx.json --format pandoc-json'
-            # The log gate only sees what pandoc complains about. A deck that
-            # builds cleanly and comes out stock Office blue would pass it, so
-            # check the artifact itself.
-            CMD+=' && uv run python /md2pdfLib/presentation/pptx/verify_brand.py /data/out/presentation.pptx'
-        fi
+        strict_step "uv run python /md2pdfLib/check_build_log.py /data/out/pptx.json --format pandoc-json"
+        # The log gate only sees what pandoc complains about. A deck that builds
+        # cleanly and comes out stock Office blue would pass it, so check the
+        # artifact itself.
+        strict_step "uv run python /md2pdfLib/presentation/pptx/verify_brand.py /data/out/presentation.pptx"
         ;;
     cv)
         case "$CV_LANG" in
@@ -99,9 +103,7 @@ case "$TARGET" in
         # Twice: the second pass resolves the hyperref bookmarks written by the first.
         CMD=". md2pdf/bin/activate && mkdir -p /data/out && cd /data/cv"
         CMD+=" && ${CV_RUN} && ${CV_RUN}"
-        if [ "$STRICT_WARNINGS" = "1" ]; then
-            CMD+=" && uv run python /md2pdfLib/check_build_log.py /data/out/${CV_JOB}.log --format latex"
-        fi
+        strict_step "uv run python /md2pdfLib/check_build_log.py /data/out/${CV_JOB}.log --format latex"
         ;;
     *)
         usage

@@ -19,7 +19,14 @@
     \DTMdisplaydate{2023}{09}{30}}   {Master of Science Computer Science}{Karlsruhe}{Karlsruhe Institute of Technology}
     {\DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2020}{04}{01}}
-    {Overall grade: 1.9/ US-GPA: 3.1}
+    % "1.9/ US-GPA: 3.1" had the slash glued to the number, which reads as an
+    % unfinished fraction. More importantly the scale was missing: German grades
+    % run 1.0 (best) to 4.0 (pass), so a reader used to higher-is-better -- an
+    % American, or a French one on the 0-20 scale -- reads 1.9 as a poor result.
+    % The US-GPA beside it only half fixes that; naming the scale fixes it.
+    % The German branch keeps the bare "Gesamtnote: 1,9" on purpose: for a German
+    % reader the scale is not in question, and the US-GPA would be noise.
+    {Overall grade: 1.9 (German scale, 1.0 = best), US-GPA: 3.1}
     {
         % Thesis lines are the first education detail a profile can afford to
         % lose: the degree, its dates, its grade and its subject tags all stay,
@@ -40,7 +47,7 @@
     {Karlsruhe Institute of Technology}
     { \DTMlangsetup*{showdayofmonth=false}
     \DTMdisplaydate{2015}{10}{01}}
-    {Overall grade: 2.5/ US-GPA: 2.5}
+    {Overall grade: 2.5 (German scale, 1.0 = best), US-GPA: 2.5}
     {
     \ifcvshowthesislines
     \begin{itemize}
@@ -56,7 +63,7 @@
     {Schwäbisch Hall}
     {Gymnasium bei St. Michael}
     {2006}
-    {Overall grade: 2.2/ US-GPA: 2.8}
+    {Overall grade: 2.2 (German scale, 1.0 = best), US-GPA: 2.8}
     {
         % Commented out to fit the CV on one page -- restore by uncommenting.
         %\begin{itemize}

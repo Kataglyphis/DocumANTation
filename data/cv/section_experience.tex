@@ -39,21 +39,89 @@
                 % same fact, but one names what it cost the group before. Verbs
                 % that state an outcome are the only thing standing in for the
                 % numbers this list still does not have.
-                \item Accelerated the research team's efficient-learning and optimization methods with custom CUDA kernels and Python bindings to C++
-                \item Cut hand-labeling time by \textbf{75\%} by replacing it with \textbf{vLLM-served vision-language model pipelines}
-                \item Deployed \textbf{vLLM serving for GLM-5.2} across \textbf{6$\times$ H100 (TP2$\times$PP3)} with two custom optimizations:
-                    \begin{itemize}
-                        \item \textbf{Native MTP speculative decoding} (65\% draft acceptance, \textbf{$\sim$143 tok/s at 55k-token context}, \textbf{$\sim$10$\times$ throughput} vs.\ distill-based draft)
-                        \item \textbf{Residual-SJF scheduler} (\textbf{$-$46\% small-request median latency}, \textbf{$-$60\% worst-case}, no loss on large prefills) --- \textbf{passing 8/8 perf-gate checks}
-                    \end{itemize}
-                \item Deployed \textbf{GLM-5.2 (744B MoE)} on vLLM with \textbf{NVFP4 weights + FP8 KV cache} --- \textbf{$\sim$65\% less weight memory vs.\ BF16}, enabling \textbf{native 1M-token context on 6$\times$ H200}
-                \item Deployed the institute's coding agent on \textbf{self-hosted open-weight LLMs (vLLM)}
-                \item Shipped \textbf{low-latency, high-throughput AI camera pipelines} end to end: C++ inference on NVIDIA GPU servers and Raspberry Pi/Hailo edge devices, React and native clients
+                % The GLM-5.2 optimisations were a parent bullet plus two
+                % sub-bullets: six lines for what fits in three as one sentence.
+                % A nested itemize also indents twice, so each child line is
+                % narrower and wraps sooner -- it costs lines twice over. Same
+                % numbers, same order, no sub-list.
+                \item Accelerated the team's efficient-learning and optimization methods with custom CUDA kernels and Python bindings to C++
+                \item Cut hand-labeling time by \textbf{75\%} with \textbf{vLLM-served vision-language model pipelines}
+                % Both GLM-5.2 bullets are the same box: 6 GPUs of one H200
+                % system. It said "6x H100" here until now, which read as a
+                % second, different deployment. The hardware is named once, in
+                % this bullet; the one below says "there" rather than repeating
+                % it. Keep it that way -- naming it twice invites the reader to
+                % assume two clusters, which is what the mismatch already did.
+                % One deployment, three optimisations -- not two bullets. It was
+                % split as "Deployed vLLM serving for GLM-5.2 on 6 GPUs..." and
+                % "Ran GLM-5.2 (744B MoE) there at NVFP4...", which named the
+                % model twice, the machine twice, and used two verbs for one
+                % deploy. Six lines for what fits in four, and the split invited
+                % the reader to count two systems. Every number is still here.
+                % One headline number per optimisation. The supporting figures
+                % were dropped to fit one page, not because they are weak:
+                % ~143 tok/s at 55k context, 65% draft acceptance, -60% worst-
+                % case latency, "no loss on large prefills", 8/8 perf gates, and
+                % "than BF16" on the memory figure. Eight numbers in one bullet
+                % is a spec sheet; three is a claim a reader carries away, and
+                % the rest is what an interview is for. All of it is one edit
+                % away if the page ever grows.
+                % The coding agent IS this deployment -- it runs on the GLM-5.2
+                % instance described here, so listing it separately claimed two
+                % pieces of work where there is one, and the reader had no way
+                % to tell. Purpose first, engineering after: what the cluster is
+                % for, then what was done to make it fast enough to be usable.
+                % "Started ... on our own initiative ... and grew it into
+                % production" carries three things a claim never could: the work
+                % was not assigned, it was done with someone, and it was carried
+                % all the way. The posting asks for "collaborative, low-ego" --
+                % this is the evidence, and evidence is the only way to answer
+                % that ask without contradicting it by asserting it.
+                % The opening stays -- unassigned, with someone, carried to
+                % production is what this bullet is really evidence for. The
+                % technical tail was a spec sheet: three techniques, each with
+                % its own parenthesised metrics, five numbers in all. Kept the
+                % two custom pieces of vLLM work and the memory result; dropped
+                % TP2xPP3, "median", and the throughput/latency split per
+                % technique. All of it is in the git history if it should return.
+                \item Started the institute's coding agent with a colleague on our own initiative and grew it into production: self-hosted \textbf{GLM-5.2 (744B MoE)} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}, \textbf{$-$46\% latency}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                % RemaNet = Remanufacturing Network, Horizon Europe grant
+                % 101138627, 25 partners, Jan 2024 - Dec 2026, Fraunhofer IPA a
+                % partner -- which is why it lines up with the February 2024
+                % start date. Named because it is checkable: a reader can look
+                % the project up, which "AI camera pipelines" alone does not
+                % allow. The grant number stays out; the programme is the signal.
+                % "Raspberry Pi/Hailo edge devices" undersold this: the Hailo
+                % went into a Berghof PLC, i.e. an industrial controller was
+                % retrofitted with an AI accelerator. That is a fact a reader can
+                % picture and few CVs can claim; "edge devices" is a category.
+                % Paid for by dropping "low-latency, high-throughput" and "end to
+                % end" -- self-assessed adjectives, and the list from GPU server
+                % down to PLC and up to the clients already says "end to end".
+                % The mistral-rse builds have ~0pt spare, so this had to come out
+                % no longer than it went in; check both before growing it.
+                % The frontend is RemaNet's, not the PLC's. It used to trail the
+                % sentence -- "...a Berghof PLC I fitted with a Hailo
+                % accelerator, with a React web frontend" -- where it attaches
+                % to the nearest noun, which is the PLC, and the second "with"
+                % made that reading worse. Naming it first and hanging the
+                % inference under it reads as one stack, top down, and everything
+                % in the list belongs to RemaNet because RemaNet precedes the colon.
+                \item Shipped \textbf{AI camera pipelines} for \textbf{RemaNet} (Horizon Europe): a \textbf{React} web frontend over C++ inference on NVIDIA GPU servers and a \textbf{Berghof PLC I fitted with a Hailo accelerator}
                 \item Owned the institute's GitLab CI/CD and its NVIDIA DGX A100/H200 GPU systems
                 \item Upstreamed fixes to the open-source build and container tooling the institute depends on
             \end{itemize}
         }
-        {Python, C++, CUDA, GitLab CI/CD, vLLM, LoRA, Edge AI, DGX A100/H200}
+        % Tags follow the bullets above, strongest first for this reader.
+        % Dropped: "Edge AI", a category where the bullet now names the actual
+        % accelerator, and "DGX A100/H200", which the CI/CD bullet and the GLM
+        % one already spell out -- a tag that restates the prose above it only
+        % costs width. Added NVFP4/FP8 (the quantisation work had no tag at all),
+        % React and Hailo. LoRA stays although the prose no longer says it: the
+        % fine-tuning is real, and a tag is the cheapest place to keep a keyword.
+        % One line is the budget -- this row wrapping costs the mistral-rse
+        % builds their last few points of slack.
+        {Python, C++, CUDA, vLLM, LoRA, NVFP4/FP8, React, Hailo, GitLab CI/CD}
         
         \emptySeparator
         
@@ -64,8 +132,12 @@
                 % Was three lowercase sentence fragments, one of which
                 % ("providing user guidance in mixed reality applications")
                 % only restated the entry it sits in.
-                \item Trained and deployed ONNX models for real-time user guidance in mixed reality
-                \item Applied eye tracking and then-new machine learning approaches to the guidance problem
+                % Was two bullets that both ended on "guidance": the ONNX one
+                % and "Applied eye tracking and then-new ML approaches to the
+                % guidance problem". Eye tracking was the only fact the second
+                % one added, so it moved into the first. One line back in German,
+                % where the pair wrapped; in English it reads tighter either way.
+                \item Trained and deployed ONNX models with eye tracking for real-time user guidance in mixed reality
             \end{itemize}
         }
         {Machine learning, ONNX, Mixed reality, HoloLens2, C\#, Python}
@@ -86,15 +158,16 @@
             % Reihenfolge und Zusammenlegungen wie im englischen Zweig -- siehe
             % die Begruendung dort. Der Nominalstil bleibt: er ist im deutschen
             % Lebenslauf ueblich und hier ausserdem das, was in die Zeile passt.
-            \item Beschleunigung der effizienten Lern- und Optimierungsverfahren des Forschungsteams durch eigene CUDA-Kernels und Python-Bindings an C++
-            \item Zeit fürs manuelle Labeling um \textbf{75\%} gesenkt, ersetzt durch \textbf{vLLM-gehostete Vision-Language-Modell-Pipelines}
-            \item \textbf{vLLM-Serving für GLM-5.2} auf \textbf{6$\times$ H100 (TP2$\times$PP3)}, mit zwei eigenen Optimierungen:
-                \begin{itemize}
-                    \item \textbf{Natives MTP-Speculative-Decoding} (65\% Draft-Akzeptanz, \textbf{$\sim$143 Tok/s bei 55k-Token-Kontext}, \textbf{$\sim$10$\times$ Durchsatz} ggü.\ Distill-basiertem Draft)
-                    \item \textbf{Residual-SJF-Scheduler} (\textbf{$-$46\% Median-Latenz kleiner Requests}, \textbf{$-$60\% Worst Case}, ohne Einbußen bei großen Prefills) --- \textbf{8/8 Perf-Gate-Checks bestanden}
-                \end{itemize}
-            \item \textbf{GLM-5.2 (744B MoE)} auf vLLM mit \textbf{NVFP4-Gewichten + FP8-KV-Cache} --- \textbf{$\sim$65\% weniger Gewichtsspeicher ggü.\ BF16}, ermöglicht \textbf{nativen 1M-Token-Kontext auf 6$\times$ H200}
-            \item Coding-Agent des Instituts auf \textbf{selbst gehosteten Open-Weight-LLMs (vLLM)}
+            % Siehe die Anmerkung im englischen Zweig: keine Unterliste.
+            \item Beschleunigung der Lern- und Optimierungsverfahren des Teams durch eigene CUDA-Kernels und Python-Bindings an C++
+            \item Manuelles Labeling um \textbf{75\%} reduziert: \textbf{vLLM-gehostete Vision-Language-Pipelines}
+            % Siehe die Anmerkung im englischen Zweig: eine Maschine, einmal benannt.
+            % Siehe die Anmerkung im englischen Zweig: ein Deployment, drei Optimierungen.
+            % Siehe die Anmerkung im englischen Zweig: eine Kennzahl je Optimierung.
+            % Siehe die Anmerkung im englischen Zweig: ein Deployment, nicht zwei.
+            % Siehe die Anmerkung im englischen Zweig.
+            % Siehe die Anmerkung im englischen Zweig.
+            \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen aufgebaut und in Produktion gebracht: selbst gehostetes \textbf{GLM-5.2 (744B MoE)} auf \textbf{6 H200-GPUs}, mit eigenem \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}, \textbf{$-$46\% Latenz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
             % Kein "end to end" hier: im Deutschen ein Anglizismus, den die
             % Doppelpunkt-Liste ohnehin schon sagt. Die Geraete stehen in einer
             % Klammer statt als Bindestrich-Kompositum: "Raspberry-Pi-/Hailo-
@@ -103,12 +176,18 @@
             % auf Wortabstaende von mehreren Millimetern gezogen (Underfull
             % \hbox, badness 10000, was STRICT_WARNINGS zu Recht ablehnt).
             % NVIDIA faellt weg; der DGX-Punkt darunter nennt den Hersteller.
-            \item Latenzarme, durchsatzstarke KI-Kamera-Pipelines: C++-Inferenz auf GPU-Servern und Edge-Geräten (Raspberry Pi, Hailo), darauf Web (React) und native Apps
-            \item Verantwortlich für die GitLab-CI/CD des Instituts und dessen NVIDIA-DGX-A100/H200-Systeme
+            % Siehe die Anmerkung im englischen Zweig.
+            % "darauf" gestrichen: der Punkt lief um sechs Zeichen über zwei
+            % Zeilen und kostete eine dritte fuer "native Apps" allein.
+            % Siehe die Anmerkung im englischen Zweig.
+            % Siehe die Anmerkung im englischen Zweig: das Frontend gehört zu RemaNet, nicht zur SPS.
+            \item \textbf{KI-Kamera-Pipelines} für \textbf{RemaNet} (Horizon Europe): \textbf{React}-Web-Frontend über C++-Inferenz auf GPU-Servern und einer \textbf{Berghof-SPS, die ich mit Hailo bestückt habe}
+            \item Verantwortlich für GitLab-CI/CD und die NVIDIA-DGX-A100/H200-Systeme des Instituts
             \item Upstream-Fixes an der Open-Source-Build- und Container-Infrastruktur des Instituts
         \end{itemize}
     }
-    {Python, C++, CUDA, GitLab CI/CD, vLLM, LoRA, Edge AI, DGX A100/H200}
+    % Siehe die Anmerkung im englischen Zweig.
+    {Python, C++, CUDA, vLLM, LoRA, NVFP4/FP8, React, Hailo, GitLab CI/CD}
         
     \emptySeparator
     
@@ -122,8 +201,8 @@
             % Nominal statt verbal, weil kürzer: die verbale Fassung ("Training
             % und Deployment von ONNX-Modellen für ...") lief um vier Zeichen
             % über die Zeile und kostete eine zweite für das Wortende.
-            \item ONNX-Modelle für Echtzeit-Benutzerführung in Mixed Reality: Training und Deployment
-            \item Eye Tracking und damals neue ML-Ansätze für die Benutzerführung
+            % Siehe die Anmerkung im englischen Zweig.
+            \item ONNX-Modelle und Eye Tracking für Echtzeit-Benutzerführung in Mixed Reality
         \end{itemize}
     }
     {Machine learning, ONNX, Mixed reality, HoloLens2, C\#, Python}

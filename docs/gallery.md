@@ -1,8 +1,9 @@
 # Gallery
 
-All four output formats are built from the same Markdown sources. The brand
-(colours, fonts, code-block styling) flows from a single `brand.json` into every
-output — change one value and rebuild, and all four update simultaneously.
+Every output below is built from the same toolchain, and the slide deck and the
+PowerPoint deck from the very same Markdown. The brand (colours, fonts,
+code-block styling) flows from a single `brand.json` into all of them — change
+one value and rebuild, and they update simultaneously.
 
 ## Book (A4, KOMA-Script scrbook)
 

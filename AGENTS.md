@@ -30,8 +30,9 @@ Every module there rewrites a .pptx archive, and the shared mechanics live in
 | --- | --- |
 | Change some slides and write the deck back | `edit_slides(deck, transform)` |
 | A slide's layout / master / layout name | the `DeckParts` passed to the transform |
-| Name the archive parts | `SLIDE_RE`, `MASTER_RE`, `THEME_RE`, `LAYOUT_RELS_RE` |
+| Name the archive parts | `SLIDE_RE`, `MASTER_RE`, `THEME_RE`, `LAYOUT_RE`, `LAYOUT_RELS_RE` |
 | Pin unsized runs to a font size | `sized_runs(fragment, size)` |
+| Add shapes to a slide or layout | `append_shapes(xml, shapes)` -- literal, never `re.sub` |
 | Read the brand | `brand_tokens()` (md2pdfLib/style/, the only copy the container mounts) |
 | A `<deck.pptx>` entry point | `run_cli(action, errors=(...))` |
 
@@ -125,7 +126,8 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
 copy here, which is one edit away from being wrong. What it sets today: ruff at
 `line-length = 100`, `target-version = "py310"`, lint rules
 `["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]`, double quotes, spaces, LF
-endings; `ty` for type checks; `pytest` + `pytest-cov` under the `dev` extra.
+endings; `ty` for type checks; `pytest` + `pytest-cov` + `shellcheck-py` under
+the `dev` extra.
 
 Code must stay 3.10-compatible (`requires-python = ">=3.10"`) — e.g.
 `int.from_bytes(...)` needs an explicit `byteorder` before 3.11.
@@ -133,10 +135,11 @@ Code must stay 3.10-compatible (`requires-python = ">=3.10"`) — e.g.
 ### Running Tools
 
 ```bash
-# On the host -- all four are CI gates in checks.yml, in this order:
+# On the host -- all five are CI gates in checks.yml, in this order:
 uv run --extra dev ruff check .
 uv run --extra dev ruff format --check .
 uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
+uv run --extra dev shellcheck $(git ls-files '*.sh')
 uv run --extra dev pytest tests/ -q
 ```
 
@@ -172,6 +175,10 @@ where only `/md2pdfLib` is mounted.
   `makeindex` inside `data/out/` (use a subshell: `(cd data/out && ...)`)
 - **No `rm -rf` without `${VAR:?}` guard** to prevent accidental root deletion
 - Use `"$(dirname "$0")"` for relative references to sibling scripts
+
+These are enforced: `checks.yml` runs `shellcheck` over `git ls-files '*.sh'`,
+so every tracked script is linted and a new one cannot be added outside the
+gate. Run it locally with `uv run --extra dev shellcheck $(git ls-files '*.sh')`.
 
 ### Shared Compile Script
 

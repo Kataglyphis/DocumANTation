@@ -49,6 +49,7 @@ from md2pdfLib.presentation.pptx.make_reference import (  # noqa: E402
 from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
     FLUSH_CENTERED_BODY,
     DeckParts,
+    append_shapes,
     dangling_layout_media,
     edit_slides,
     run_cli,
@@ -108,9 +109,11 @@ def inject_slide_numbers(deck: Path) -> int:
             return None  # no footline on this layout, so nothing to number
         if 'type="slidenum"' in xml:
             return None  # pandoc grew the feature; nothing to do
-        shape = _sldnum_shape(len(parts.slides))
-        new, count = re.subn(r"</p:spTree>", f"{shape}</p:spTree>", xml, count=1)
-        return new if count == 1 else None
+        # append_shapes rather than a regex substitution: it puts the shape in
+        # literally, and returns None for a slide with no shape tree -- which is
+        # the same "leave this slide alone" the transform already means by it.
+        # The local name it replaces also shadowed the imported shape() builder.
+        return append_shapes(xml, [_sldnum_shape(len(parts.slides))])
 
     return edit_slides(deck, transform)
 

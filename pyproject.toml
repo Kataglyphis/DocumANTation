@@ -22,7 +22,17 @@ dependencies = ["pygments>=2.17"]
 # shipped inside the wheel against style/brand.tokens.json, so the theme is a
 # test dependency, not only a docs one. Without it here `uv run --extra dev
 # pytest` -- what CI runs -- dies at collection and takes the whole suite with it.
-dev = ["ruff>=0.15.21", "ty>=0.0.38", "pytest>=8", "pytest-cov>=5", "sphinx-kataglyphis-theme"]
+# shellcheck-py ships the shellcheck binary as a wheel, so the shell gate runs
+# the same way every other gate does -- `uv run --extra dev`, no host install,
+# pinned in uv.lock, and runnable on Windows where there is no apt shellcheck.
+dev = [
+    "ruff>=0.15.21",
+    "ty>=0.0.38",
+    "pytest>=8",
+    "pytest-cov>=5",
+    "shellcheck-py>=0.11",
+    "sphinx-kataglyphis-theme",
+]
 # The theme brings sphinx/myst/sphinx-design/book-theme with it, and is what
 # makes this repo's own docs use the Kataglyphis brand rather than a second
 # copy of the baseline.
