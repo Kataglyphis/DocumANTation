@@ -293,6 +293,78 @@ def test_the_path_loaded_baseline_claims_no_repository_of_its_own():
     assert "repository_url" not in _load_conf_base().HTML_THEME_OPTIONS
 
 
+# The shim's docstring says it "tracks setup_theme()'s options", and for a long
+# time nothing checked that it did. It drifted at least twice on record -- once
+# blanking `secondary_sidebar_items`, so the one site on this route was the only
+# Kataglyphis site with no page TOC, and once pointing the repository button at
+# ContainerHub. Both were found by looking, and fixed by hand.
+#
+# Everything the two sides deliberately disagree on, and why:
+CONF_BASE_MAY_DIFFER = {
+    # setup_theme names the theme package's own style; the shim cannot, because
+    # neither consumer installs the package. Pinned instead by
+    # test_the_path_loaded_baseline_needs_only_pygments_own_styles above.
+    "pygments_light_style",
+    "pygments_dark_style",
+    # setup_theme derives it from the repository_url it was handed; the shim has
+    # no argument to derive it from and leaves the button on for its consumers,
+    # which set repository_url on their own copy afterwards.
+    "use_repository_button",
+}
+
+
+def _setup_theme_options() -> dict:
+    conf: dict = {"__file__": "conf.py"}
+    setup_theme(conf)
+    return conf["html_theme_options"]
+
+
+def test_the_path_loaded_baseline_tracks_setup_themes_theme_options():
+    """Same keys, same values, except the ones listed as deliberate.
+
+    Without this, a navbar depth or TOC level changed in setup_theme() leaves
+    the path-loaded consumers on the old value and every test still passes --
+    which is how the missing page TOC survived.
+    """
+    shim = _load_conf_base().HTML_THEME_OPTIONS
+    canonical = _setup_theme_options()
+
+    assert set(shim) == set(canonical) - {"repository_url"}, (
+        "the shim and setup_theme() offer different theme-option keys; add the "
+        "new one to both, or to CONF_BASE_MAY_DIFFER with the reason"
+    )
+    drifted = {
+        key: (shim[key], canonical[key])
+        for key in set(shim) - CONF_BASE_MAY_DIFFER
+        if shim[key] != canonical[key]
+    }
+    assert not drifted, (
+        f"the shim has drifted from setup_theme(): {drifted}. Both render the "
+        "same brand on different sites, so they cannot disagree silently."
+    )
+
+
+def test_the_path_loaded_baseline_tracks_setup_themes_theme_and_stylesheets():
+    """The theme and its stylesheet are the same on either route."""
+    base = _load_conf_base()
+    conf: dict = {"__file__": "conf.py"}
+    setup_theme(conf)
+
+    assert conf["html_theme"] == base.HTML_THEME
+    assert conf["html_css_files"] == base.HTML_CSS_FILES
+    assert base.HTML_STATIC_PATH == ["_static"], (
+        "the shim's consumers have no packaged _static to add, so this stays "
+        "the consumer's own directory"
+    )
+
+
+def test_the_path_loaded_baseline_tracks_setup_themes_extensions():
+    """A site missing sphinx_design renders its cards as raw directives."""
+    conf: dict = {"__file__": "conf.py"}
+    setup_theme(conf)
+    assert conf["extensions"] == _load_conf_base().SPHINX_EXTENSIONS
+
+
 # ── auto_discover ────────────────────────────────────────────────────────────
 #
 # setup_theme(auto_discover=True) writes an index.md with a toctree over the

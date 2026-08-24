@@ -219,6 +219,11 @@ def render_latex_identity(brand: dict) -> str:
         ("brandGithub", "github"),
         ("brandGithubUrl", "github_url"),
         ("brandGithubHost", "github_host"),
+        # Social handles the CV links. They were typed into data/cv/cv.tex, and
+        # the LinkedIn one is the author's name in hyphenated form -- an
+        # identity value in the one spelling a whole-string scan cannot see.
+        ("brandLinkedin", "linkedin"),
+        ("brandYoutube", "youtube"),
         ("brandInstitute", "institute"),
     )
     # The names bookclass.cls and the beamer header already used, kept as

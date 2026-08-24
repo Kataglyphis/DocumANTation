@@ -3,6 +3,13 @@ name = "sphinx-kataglyphis-theme"
 version = "0.1.0"
 description = "Reusable Sphinx theme config + CSS for Kataglyphis documentation sites"
 requires-python = ">=3.10"
+# This is the package that ships the brand to every downstream repo, and it was
+# published with no author, licence or project URL at all. Kept in step with
+# style/brand.json by tests/test_identity_is_single_source.py, which checks both
+# manifests -- a packaging manifest cannot read JSON at parse time, so it is
+# pinned rather than generated.
+license = { text = "MIT" }
+authors = [{ name = "Jonas Heinle", email = "jonasheinle@googlemail.com" }]
 dependencies = [
     "sphinx>=7",
     "sphinx-book-theme>=1",
@@ -17,6 +24,10 @@ dependencies = [
 [project.entry-points."pygments.styles"]
 kataglyphis-light = "sphinx_kataglyphis.highlight:KataglyphisLightStyle"
 kataglyphis-dark = "sphinx_kataglyphis.highlight:KataglyphisDarkStyle"
+
+[project.urls]
+Homepage = "https://jonasheinle.de"
+Repository = "https://github.com/Kataglyphis/Kataglyphis-DocumANTation"
 
 [build-system]
 requires = ["setuptools>=83.0.0"]

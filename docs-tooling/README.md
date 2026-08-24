@@ -11,7 +11,14 @@ consume it as a git submodule.
 | Path | Purpose |
 | --- | --- |
 | `source_templates/sphinx-book/` | Landing-page template for a docs site, plus a frozen path-loaded shim for one legacy consumer — see its [README](source_templates/sphinx-book/README.md) before touching either |
-| `source_templates/sphinx-python/` | Baseline Sphinx config for Python API docs (autodoc/napoleon). Offered but **currently unused** — see the status note in its `conf_base.py` |
+
+`source_templates/sphinx-python/` used to sit alongside it — a baseline for
+Python API docs (autodoc/napoleon). It was removed: an org-wide audit found no
+`conf.py` anywhere that read it, and unlike the `sphinx-book` shim it imports
+`sphinx_kataglyphis`, so any consumer able to load it could call `setup_theme()`
+instead and get the brand CSS and shared code palette the baseline could not.
+`git log -- docs-tooling/source_templates/sphinx-python/` has it if a Python
+project ever wants the autodoc defaults back.
 
 Only genuinely shared things live here. `sync_versions.py` and
 `generate-website-licenses.py` used to, and moved back to ContainerHub: they
