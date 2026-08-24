@@ -11,13 +11,28 @@ CV_LANG="${CV_LANG:-english}"
 # data/cv/profiles/. Orthogonal to CV_LANG: every profile builds in both
 # languages. See data/cv/profiles/README.md.
 CV_PROFILE="${CV_PROFILE:-default}"
+# Appended to the generated CV basename instead of CV_LANG, for a CV tailored to
+# one application. Keeps the author's name out of the caller (see the Makefile).
+CV_JOB_SUFFIX="${CV_JOB_SUFFIX:-}"
+
+# The published CV filename carries the author's name, so it is read from the
+# brand rather than typed here -- the same rule the templates follow. The
+# generated tokens have every alias resolved and put `identity` last, so
+# scoping to that block distinguishes identity.name from the brand's own name.
+BRAND_TOKENS="${PROJECT_ROOT}/style/brand.tokens.json"
+identity_value() {
+    sed -n '/"identity"/,$p' "$BRAND_TOKENS" \
+        | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\([^\"]*\)\".*/\1/p" \
+        | head -1
+}
 
 usage() {
     printf 'Usage: %s <book|beamer|demo|example|pptx|cv>\n' "$0" >&2
     printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
     printf '             CV_LANG=<english|german>          (cv target only)\n' >&2
     printf '             CV_PROFILE=<data/cv/profiles/*>   (cv target only, default: default)\n' >&2
-    printf '             CV_JOB=<output basename>          (cv target only, default: CV_Jonas_Heinle_<lang>)\n' >&2
+    printf '             CV_JOB_SUFFIX=<tag>               (cv target only, default: the language)\n' >&2
+    printf '             CV_JOB=<output basename>          (cv target only, overrides both)\n' >&2
     exit 2
 }
 
@@ -90,10 +105,17 @@ case "$TARGET" in
             exit 2
         fi
         # Tailored profiles are named per application, and the filename is the
-        # first thing the person receiving it sees -- so it is set explicitly by
-        # whoever adds the profile (see the Makefile) rather than mangled out of
-        # the profile slug here. The default keeps the published names.
-        CV_JOB="${CV_JOB:-CV_Jonas_Heinle_${CV_LANG}}"
+        # first thing the person receiving it sees -- so the distinguishing tag
+        # is set by whoever adds the profile (see the Makefile) rather than
+        # mangled out of the profile slug here. Only the tag: the name half
+        # comes from the brand, so no caller has to spell it.
+        CV_NAME="$(identity_value first_name)_$(identity_value last_name)"
+        if [ "$CV_NAME" = "_" ]; then
+            printf 'Could not read the author name from %s\n' "$BRAND_TOKENS" >&2
+            printf 'Run: python style/generate_style.py --write\n' >&2
+            exit 1
+        fi
+        CV_JOB="${CV_JOB:-CV_${CV_NAME}_${CV_JOB_SUFFIX:-$CV_LANG}}"
         # Selects the language without editing cv.tex; see the class options.
         # The profile goes in the same way, as a \def cv.tex falls back on.
         CV_ARG="\\def\\cvprofile{${CV_PROFILE}}"

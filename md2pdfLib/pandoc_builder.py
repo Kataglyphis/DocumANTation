@@ -1,4 +1,4 @@
-"""Shared pandoc build utilities for all document types (book, diss, presentation)."""
+"""Shared pandoc build utilities for every document type in md2pdfLib.presets."""
 
 from __future__ import annotations
 

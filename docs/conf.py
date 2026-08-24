@@ -34,8 +34,15 @@ setup_theme(
     project_name=project,
     author=author,
     copyright_=f"{datetime.now():%Y}, {author}",
+    # The same file html_logo points at, named as html_static_path exposes it.
+    # A second copy under docs/_static/logo.png used to serve this slot; it was
+    # byte-identical to the one in images/ and nothing regenerated it.
     theme_options_extra={
-        "logo": {"text": project, "image_light": "logo.png", "image_dark": "logo.png"},
+        "logo": {
+            "text": project,
+            "image_light": DOCS_LOGO.name,
+            "image_dark": DOCS_LOGO.name,
+        },
     },
     # Project-specific config, applied on top of the shared defaults.
     exclude_patterns=["_build", "Thumbs.db", ".DS_Store"],

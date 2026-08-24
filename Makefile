@@ -10,13 +10,17 @@ CV_LANG ?= english
 # cv only: which section set and summary to build, one file per target in
 # data/cv/profiles/. Orthogonal to CV_LANG.
 CV_PROFILE ?= default
-# cv only: output basename. Empty means the script's default, which is the
-# published CV_Jonas_Heinle_<language>. Tailored profiles set it explicitly --
-# the filename is the first thing a recruiter sees.
+# cv only: the tag appended to the generated CV basename, which the build script
+# builds as CV_<First>_<Last>_<suffix> from the brand identity. Empty means the
+# language, i.e. the published names. Tailored profiles set it -- the filename
+# is the first thing a recruiter sees. The name half is never written here:
+# it lives in style/brand.json like every other identity value.
+CV_JOB_SUFFIX ?=
+# cv only: full output basename, overriding the generated one entirely.
 CV_JOB ?=
 
 $(DOC_TARGETS):
-	IMAGE="$(IMAGE)" STRICT_WARNINGS="$(STRICT_WARNINGS)" CV_LANG="$(CV_LANG)" CV_PROFILE="$(CV_PROFILE)" CV_JOB="$(CV_JOB)" ./scripts/build_in_container.sh $@
+	IMAGE="$(IMAGE)" STRICT_WARNINGS="$(STRICT_WARNINGS)" CV_LANG="$(CV_LANG)" CV_PROFILE="$(CV_PROFILE)" CV_JOB_SUFFIX="$(CV_JOB_SUFFIX)" CV_JOB="$(CV_JOB)" ./scripts/build_in_container.sh $@
 
 # Both published CV variants, the pair linked from jonasheinle.de.
 cv-all:
@@ -25,7 +29,7 @@ cv-all:
 
 # Application: Research Software Engineer, Mistral AI (Paris).
 cv-mistral-rse:
-	$(MAKE) cv CV_PROFILE=mistral-rse CV_JOB=CV_Jonas_Heinle_Mistral_RSE
+	$(MAKE) cv CV_PROFILE=mistral-rse CV_JOB_SUFFIX=Mistral_RSE
 
 # Live-demo mode: rebuild on every source change. Requires `entr`
 # (apt install entr / brew install entr). Pair with a PDF viewer that

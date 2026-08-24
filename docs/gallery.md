@@ -11,7 +11,7 @@ A print-ready textbook with dark code blocks, syntax highlighting, glossary,
 nomenclature, and bibliography. Built with Pandoc + LuaLaTeX through the full
 TeX pipeline (biber, makeglossaries, makeindex).
 
-```{image} _static/gallery/book-page.png
+```{image} ../images/book-page.png
 :alt: Book page showing dark code block with syntax highlighting
 :width: 600px
 :align: center
@@ -22,7 +22,7 @@ TeX pipeline (biber, makeglossaries, makeindex).
 A 16:9 presentation deck with the same dark code-block look, tcolorbox
 environments for definitions and examples, and sidebar navigation.
 
-```{image} _static/gallery/beamer-slide.png
+```{image} ../images/beamer-slide.png
 :alt: Beamer title slide with brand styling
 :width: 600px
 :align: center
@@ -40,7 +40,7 @@ A professional curriculum vitae built directly with LuaLaTeX (not Pandoc). The
 same source files produce both English and German variants via a class option —
 `CV_LANG=english` or `CV_LANG=german` — without editing any `.tex` file.
 
-```{image} _static/gallery/cv-page.png
+```{image} ../images/cv-page.png
 :alt: CV page with brand accent color
 :width: 600px
 :align: center
@@ -58,6 +58,8 @@ style/brand.json
     │
     ├─► brand-colors.tex     → book, beamer, CV
     ├─► brand-fonts.tex      → book, beamer, CV
+    ├─► brand-identity.tex   → author, URLs, handles (book, beamer, CV)
+    ├─► pandoc metadata      → author/institute + fonts and link colours
     ├─► pygments.theme       → Pandoc code highlighting (all PDFs)
     ├─► highlight.py         → Sphinx website Pygments styles
     ├─► custom.css           → Sphinx website theme

@@ -32,6 +32,10 @@ IDENTITY = json.loads((REPO_ROOT / "style" / "brand.tokens.json").read_text("utf
 
 # Where a literal is a bug rather than content: things a build reads.
 CONFIG_SUFFIXES = (".tex", ".cls", ".yml", ".yaml", ".py", ".sh", ".toml", ".json")
+# Build inputs with no suffix at all. A suffix-only filter never saw these, and
+# the Makefile was carrying `CV_Jonas_Heinle_Mistral_RSE` while every check
+# passed -- the file was not being read, not passing a read.
+CONFIG_BASENAMES = ("Makefile", "Dockerfile")
 
 # Files that legitimately carry a literal, each for a stated reason.
 EXEMPT = {
@@ -86,10 +90,26 @@ def _tracked_config_files(prose_exempt_key: str | None = None) -> list[str]:
     return [
         p
         for p in out
-        if p.endswith(CONFIG_SUFFIXES)
+        if (p.endswith(CONFIG_SUFFIXES) or p.rsplit("/", 1)[-1] in CONFIG_BASENAMES)
         and p not in EXEMPT
         and not (skip_prose and p.startswith(EXEMPT_PROSE_PREFIX))
+        # git ls-files still lists a file deleted but not yet staged, and every
+        # caller reads what it returns.
+        and (REPO_ROOT / p).is_file()
     ]
+
+
+def _code_of(rel: str) -> str:
+    """*rel*'s content with whole-line comments dropped.
+
+    A comment explaining where a value comes from is documentation, not a second
+    copy the build reads. ``#`` covers shell, YAML, TOML and make; ``%`` LaTeX;
+    ``//`` the odd JS-flavoured config.
+    """
+    text = (REPO_ROOT / rel).read_text(encoding="utf-8", errors="replace")
+    return "\n".join(
+        line for line in text.splitlines() if not line.lstrip().startswith(("%", "#", "//"))
+    )
 
 
 @pytest.mark.parametrize("key", SCANNED)
@@ -115,6 +135,36 @@ def test_no_config_file_hardcodes_an_identity_value(key: str):
     )
 
 
+def test_no_config_file_writes_the_name_with_a_separator():
+    r"""A filename-safe spelling of the name is still the name.
+
+    The scan above looks for ``"Jonas Heinle"`` verbatim. A build output named
+    after the author cannot contain a space, so both the container script and
+    the Makefile wrote ``CV_Jonas_Heinle_...`` -- the identity, in the one form
+    the guard could not see, in the two files it was not reading either.
+
+    Both now build the basename from ``identity.first_name`` /
+    ``identity.last_name``, so the name reaches the filename without any caller
+    spelling it.
+
+    Separators only, no space: the space spelling is the plain name and belongs
+    to the scan above, so each test owns one spelling and a single defect is
+    reported once.
+
+    No ``\b`` anchors either. ``_`` is a word character, so ``\bJonas`` never
+    matches inside ``CV_Jonas_Heinle_`` -- a first draft of this test anchored
+    that way and passed against both real defects it was written for.
+    """
+    first, last = IDENTITY["first_name"], IDENTITY["last_name"]
+    joined = re.compile(re.escape(first) + r"[_.\-]" + re.escape(last), re.IGNORECASE)
+    offenders = [rel for rel in _tracked_config_files() if joined.search(_code_of(rel))]
+    assert not offenders, (
+        f"these spell the author's name into a value: {offenders}. Build it "
+        "from identity.first_name / identity.last_name instead -- see the "
+        "CV basename in scripts/build_in_container.sh."
+    )
+
+
 def test_the_url_has_exactly_one_spelling():
     """It had three: https://jonasheinle.de, jonasheinle.de and www.jonasheinle.de."""
     spellings: set[str] = set()
@@ -130,15 +180,41 @@ def test_the_url_has_exactly_one_spelling():
     )
 
 
-def test_the_package_manifest_agrees_with_the_identity():
-    """pyproject.toml cannot be generated, so it is checked instead."""
-    text = (REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+# Every manifest EXEMPT excuses for being unable to read JSON at parse time.
+# Both are checked below, so the exemption buys a pin, not a blind spot -- the
+# theme's entry used to be listed here as "pinned instead by
+# test_the_package_manifest_agrees_with_the_identity", while that test read only
+# the root manifest and the theme's carried no author at all.
+PINNED_MANIFESTS = ("pyproject.toml", "sphinx-kataglyphis-theme/pyproject.toml")
+
+
+@pytest.mark.parametrize("manifest", PINNED_MANIFESTS)
+def test_the_package_manifest_agrees_with_the_identity(manifest: str):
+    """A pyproject.toml cannot be generated, so it is checked instead."""
+    text = (REPO_ROOT / manifest).read_text(encoding="utf-8")
     authors = re.search(r"authors\s*=\s*\[\s*\{([^}]*)\}", text)
-    assert authors, "pyproject.toml has no authors entry"
-    assert IDENTITY["name"] in authors.group(1)
-    assert IDENTITY["email"] in authors.group(1)
+    assert authors, f"{manifest} has no authors entry"
+    assert IDENTITY["name"] in authors.group(1), manifest
+    assert IDENTITY["email"] in authors.group(1), manifest
     assert f'Homepage = "{IDENTITY["url"]}"' in text, (
-        f"pyproject Homepage must be {IDENTITY['url']}, the identity's URL"
+        f"{manifest} Homepage must be {IDENTITY['url']}, the identity's URL"
+    )
+    assert f'Repository = "{IDENTITY["github_url"]}/' in text, (
+        f"{manifest} Repository must sit under {IDENTITY['github_url']}"
+    )
+
+
+def test_every_exempt_manifest_is_actually_pinned():
+    """An EXEMPT entry has to be paid for by a check somewhere.
+
+    EXEMPT is the list of files allowed to carry an identity literal. For the
+    generated ones the generator is the check; for a manifest it is the test
+    above, and nothing previously connected the two lists.
+    """
+    manifests = {p for p in EXEMPT if p.endswith((".toml", ".cfg"))}
+    assert manifests <= set(PINNED_MANIFESTS), (
+        f"exempt but unpinned: {sorted(manifests - set(PINNED_MANIFESTS))}; "
+        "add them to PINNED_MANIFESTS or stop exempting them"
     )
 
 
