@@ -1,4 +1,4 @@
-"""Sphinx configuration for Kataglyphis-DocumANTation.
+"""Sphinx configuration for DocumANTation.
 
 Uses the same setup_theme() entry point as every downstream repo, so this
 repo's own docs get the Kataglyphis brand -- colours, fonts and the shared code
@@ -20,7 +20,7 @@ DOCS_LOGO_RELATIVE = "../images/logo-t3-wireframe.png"
 if not DOCS_LOGO.exists():
     raise FileNotFoundError(f"Missing docs logo at {DOCS_LOGO}")
 
-project = "Kataglyphis-DocumANTation"
+project = "DocumANTation"
 # The author and the repository URL come from style/brand.json, the same place
 # the colours and fonts do -- see the `identity` section there. Retyping them
 # here is how "Jonas Heinle" ended up in sixteen files and the URL in three

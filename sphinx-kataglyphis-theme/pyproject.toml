@@ -27,7 +27,7 @@ kataglyphis-dark = "sphinx_kataglyphis.highlight:KataglyphisDarkStyle"
 
 [project.urls]
 Homepage = "https://jonasheinle.de"
-Repository = "https://github.com/Kataglyphis/Kataglyphis-DocumANTation"
+Repository = "https://github.com/Kataglyphis/DocumANTation"
 
 [build-system]
 requires = ["setuptools>=83.0.0"]

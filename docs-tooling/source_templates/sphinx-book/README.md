@@ -1,7 +1,7 @@
 # Sphinx Book Theme Template Kit
 
 Files to bootstrap a documentation website across repositories. This lives in
-**Kataglyphis-DocumANTation**, the single source of truth for shared Kataglyphis
+**DocumANTation**, the single source of truth for shared Kataglyphis
 docs tooling, and is consumed by downstream repos as a git submodule.
 
 ## Included files
@@ -56,7 +56,7 @@ supported way, on purpose — every copy this folder ever handed out drifted.
 `requirements.txt`:
 
 ```text
--e ./external/Kataglyphis-DocumANTation/sphinx-kataglyphis-theme
+-e ./third_party/DocumANTation/sphinx-kataglyphis-theme
 ```
 
 `docs/conf.py`:
