@@ -72,7 +72,7 @@ CSS_TARGETS = [
 ]
 # Verbatim copies of that stylesheet, for the consumers that cannot install the
 # package. Two repos load source_templates/sphinx-book/conf_base.py by path --
-# Kataglyphis-Cpp-Inference and Kataglyphis-BeschleunigerBallett -- and the first
+# AccelerANTgine and BeschleunigerBallett -- and the first
 # symlinks its _static/css/custom.css into that directory, so the file has to
 # exist there. Deleting it broke that repo's docs site until it was restored.
 #
