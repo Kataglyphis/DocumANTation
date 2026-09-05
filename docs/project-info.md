@@ -14,9 +14,9 @@ Everything the builds need ships in the `pandoc_all` container image, chiefly
 the `awesome-beamer` and `smile` presentation-theme submodules.
 
 The full list, with the version, upstream and license of each component, is
-maintained in **Kataglyphis-ContainerHub**, which builds this image and is the
+maintained in **ContainerHub**, which builds this image and is the
 single source of truth for every version pin in the toolchain — see
-[Third-Party Software & Licenses](https://github.com/Kataglyphis/Kataglyphis-ContainerHub/blob/main/docs/third-party-licenses.md),
+[Third-Party Software & Licenses](https://github.com/Kataglyphis/ContainerHub/blob/main/docs/third-party-licenses.md),
 under *Documentation Image (`pandoc_all`)*.
 
 This repository is also the single source of truth for the shared Kataglyphis
@@ -38,4 +38,4 @@ This project is released under the MIT License.
 ## Contact
 
 - Jonas Heinle - [@Cataglyphis_](https://twitter.com/Cataglyphis_) - jonasheinle@googlemail.com
-- Project repository: <https://github.com/Kataglyphis/Kataglyphis-DocumANTation>
+- Project repository: <https://github.com/Kataglyphis/DocumANTation>

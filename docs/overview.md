@@ -1,6 +1,6 @@
 # Overview
 
-Kataglyphis-DocumANTation converts Markdown content into PDF outputs for books, presentations, and CVs.
+DocumANTation converts Markdown content into PDF outputs for books, presentations, and CVs.
 It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow can be reused across document types.
 
 ## Repository Structure

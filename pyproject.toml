@@ -40,7 +40,7 @@ docs = ["sphinx>=8,<9", "sphinx-kataglyphis-theme"]
 
 [project.urls]
 Homepage = "https://jonasheinle.de"
-Repository = "https://github.com/Kataglyphis/Kataglyphis-DocumANTation"
+Repository = "https://github.com/Kataglyphis/DocumANTation"
 
 # The project runs from a mounted volume (/md2pdfLib) and resolves its templates
 # by path relative to the repo root, so it is intentionally NOT installed as a

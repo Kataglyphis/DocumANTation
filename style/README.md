@@ -60,7 +60,7 @@ colour/font file.
 ### Python
 
 ```bash
-pip install -e ./external/Kataglyphis-DocumANTation/sphinx-kataglyphis-theme
+pip install -e ./third_party/DocumANTation/sphinx-kataglyphis-theme
 ```
 
 ```python
@@ -104,7 +104,7 @@ Put the style directory on the LaTeX search path, then `\input` by bare name —
 documents never hardcode a path to this repo:
 
 ```bash
-TEXINPUTS="/path/to/Kataglyphis-DocumANTation/md2pdfLib/style:" lualatex mydoc.tex
+TEXINPUTS="/path/to/DocumANTation/md2pdfLib/style:" lualatex mydoc.tex
 ```
 
 ```latex

@@ -2,7 +2,7 @@
 
 Shared documentation tooling for Kataglyphis repositories. This directory, together
 with the sibling [`sphinx-kataglyphis-theme/`](../sphinx-kataglyphis-theme) package,
-makes **Kataglyphis-DocumANTation** the single source of truth for how the
+makes **DocumANTation** the single source of truth for how the
 Kataglyphis docs sites are themed, templated, and generated. Downstream repos
 consume it as a git submodule.
 
@@ -40,7 +40,7 @@ how to read the brand from Python, Sphinx, LaTeX, or any other language.
 Add this repo as a submodule (e.g. under `external/`):
 
 ```bash
-git submodule add https://github.com/Kataglyphis/Kataglyphis-DocumANTation external/Kataglyphis-DocumANTation
+git submodule add https://github.com/Kataglyphis/DocumANTation third_party/DocumANTation
 ```
 
 Then install the theme package and call `setup_theme()` — see

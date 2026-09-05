@@ -3,12 +3,12 @@
     <img src="images/logo-t3-wireframe.png" alt="Kataglyphis — wireframe desert ant" width="200" />
   </a>
 
-  <h1>Kataglyphis-DocumANTation</h1>
+  <h1>DocumANTation</h1>
 
   <h4>One brand, one toolchain → book, slides, PowerPoint, CV and a docs site. Containerized, reproducible, pixel-perfect.</h4>
 
   <p>
-    <a href="https://kataglyphis.github.io/Kataglyphis-DocumANTation/"><strong>Documentation</strong></a>
+    <a href="https://kataglyphis.github.io/DocumANTation/"><strong>Documentation</strong></a>
     ·
     <a href="#getting-started"><strong>Quick Start</strong></a>
     ·
@@ -59,7 +59,7 @@ reproducibility.
 
 ## Why not just Pandoc?
 
-| | Pandoc + template | Eisvogel | Typst | Kataglyphis-DocumANTation |
+| | Pandoc + template | Eisvogel | Typst | DocumANTation |
 |---|---|---|---|---|
 | Six targets, one brand + toolchain | Manual | No | No | Book + Beamer + PPTX + CV + showcase + starter |
 | Author/URL/handle as generated tokens | No | No | No | `identity` in `brand.json` → LaTeX, Pandoc, Sphinx |
@@ -76,7 +76,7 @@ reproducibility.
 - **buildkitd** running (`systemctl --user status buildkit.service`)
 
 ```bash
-git clone --recurse-submodules git@github.com:Kataglyphis/Kataglyphis-DocumANTation.git
+git clone --recurse-submodules git@github.com:Kataglyphis/DocumANTation.git
 nerdctl build . -t pandoc_all
 ```
 
@@ -118,7 +118,7 @@ uv run --extra docs sphinx-build -W -b html docs docs/_build/html
 
 The generated HTML lands in `docs/_build/html/`.
 The published site is at
-[kataglyphis.github.io/Kataglyphis-DocumANTation](https://kataglyphis.github.io/Kataglyphis-DocumANTation/).
+[kataglyphis.github.io/DocumANTation](https://kataglyphis.github.io/DocumANTation/).
 
 > The full guide — what the image contains, driving the container by hand, and
 > the per-target compilation stages — is in
@@ -133,10 +133,10 @@ the two vendored LaTeX theme submodules. Nothing has to be installed on the host
 but a container runtime.
 
 The full component list, with the version, upstream and license of each, is
-maintained in **Kataglyphis-ContainerHub**, which builds this image and is the
+maintained in **ContainerHub**, which builds this image and is the
 single source of truth for every version pin in the toolchain:
 
-- [Third-Party Software & Licenses](https://github.com/Kataglyphis/Kataglyphis-ContainerHub/blob/main/docs/third-party-licenses.md)
+- [Third-Party Software & Licenses](https://github.com/Kataglyphis/ContainerHub/blob/main/docs/third-party-licenses.md)
   — see the *Documentation Image (`pandoc_all`)* section.
 
 `PANDOC_VERSION` and `UV_VERSION` in this Dockerfile are ARG defaults synced
@@ -160,4 +160,4 @@ components listed under [Dependencies](#dependencies) keep their own licenses.
 ## Contact
 Jonas Heinle - [@Cataglyphis_](https://twitter.com/Cataglyphis_) - jonasheinle@googlemail.com
 
-Project Link: [https://github.com/Kataglyphis/Kataglyphis-DocumANTation](https://github.com/Kataglyphis/Kataglyphis-DocumANTation)
+Project Link: [https://github.com/Kataglyphis/DocumANTation](https://github.com/Kataglyphis/DocumANTation)

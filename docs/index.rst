@@ -1,4 +1,4 @@
-Kataglyphis-DocumANTation Documentation
+DocumANTation Documentation
 =======================================
 
 .. rst-class:: hero-section

@@ -167,7 +167,7 @@ int main() {
 
 ```json
 {
-  "name": "Kataglyphis-DocumANTation",
+  "name": "DocumANTation",
   "theme": "github-dark",
   "features": ["wrap", "syntax-highlighting", "beamer"]
 }

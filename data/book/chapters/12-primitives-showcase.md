@@ -1,7 +1,7 @@
 # Primitives Showcase
 
 This chapter exercises every custom environment available in the
-Kataglyphis-DocumANTation pipeline. Each block below is written in pure
+DocumANTation pipeline. Each block below is written in pure
 Markdown fenced-div syntax — no raw LaTeX — and renders identically in the
 book, the beamer slides, and (where applicable) the Sphinx website.
 

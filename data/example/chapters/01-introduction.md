@@ -1,6 +1,6 @@
 # Introduction
 
-This is a minimal example document built with **Kataglyphis-DocumANTation**.
+This is a minimal example document built with **DocumANTation**.
 It demonstrates the pipeline: write Markdown, get a branded PDF.
 
 ## What you are looking at

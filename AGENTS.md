@@ -1,4 +1,4 @@
-# AGENTS.md — Kataglyphis-DocumANTation
+# AGENTS.md — DocumANTation
 
 Guidance for AI agents and contributors working on this project.
 Follow these rules unless the user explicitly overrides them.
