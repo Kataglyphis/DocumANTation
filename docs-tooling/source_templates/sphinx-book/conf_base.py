@@ -8,9 +8,9 @@ repo's own ``docs/conf.py`` uses.
 It exists because **two** repositories load this file **by filesystem path**
 (``importlib.util.spec_from_file_location``) rather than importing the package:
 
-- ``Kataglyphis-Cpp-Inference`` — ``docs/source/conf.py``, which also symlinks
+- ``AccelerANTgine`` — ``docs/source/conf.py``, which also symlinks
   its ``_static/css/custom.css`` into this directory.
-- ``Kataglyphis-BeschleunigerBallett`` — ``docs/source/conf.py`` (branch
+- ``BeschleunigerBallett`` — ``docs/source/conf.py`` (branch
   ``develop``), which repoints at this path and falls back to an inline copy of
   these values when it is missing.
 

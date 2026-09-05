@@ -334,7 +334,7 @@ def test_only_one_stylesheet_is_maintained_in_place():
 
 
 def test_the_path_loaded_copy_is_generated_not_forked():
-    # Kataglyphis-Cpp-Inference loads source_templates/sphinx-book/ by path, so
+    # AccelerANTgine loads source_templates/sphinx-book/ by path, so
     # the stylesheet has to exist there -- but as a copy the generator owns, not
     # a fork. The hand-written one fell ~490 lines behind and still painted
     # links the pre-cyan green, so that site rendered a different brand while

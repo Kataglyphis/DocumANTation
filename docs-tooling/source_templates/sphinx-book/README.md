@@ -23,8 +23,8 @@ generated from [`style/brand.json`](../../../style/README.md).
 
 | Repo | Notes |
 | --- | --- |
-| `Kataglyphis-Cpp-Inference` | also symlinks its `_static/css/custom.css` into this directory |
-| `Kataglyphis-BeschleunigerBallett` | branch `develop`; falls back to an inline copy of these values if the path is missing |
+| `AccelerANTgine` | also symlinks its `_static/css/custom.css` into this directory |
+| `BeschleunigerBallett` | branch `develop`; falls back to an inline copy of these values if the path is missing |
 
 Both read `SPHINX_EXTENSIONS`, `HTML_THEME`, `HTML_THEME_OPTIONS`,
 `HTML_STATIC_PATH` and `HTML_CSS_FILES`, and both set their own

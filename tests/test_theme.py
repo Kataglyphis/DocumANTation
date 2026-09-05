@@ -160,8 +160,8 @@ def test_extra_conf_wins_over_the_baseline(conf):
 # ── the frozen path-loaded baseline ──────────────────────────────────────────
 #
 # docs-tooling/source_templates/sphinx-book/conf_base.py is loaded by
-# *filesystem path* from two repos' docs/source/conf.py -- Kataglyphis-Cpp-Inference
-# and Kataglyphis-BeschleunigerBallett -- each reading the same five constants off
+# *filesystem path* from two repos' docs/source/conf.py -- AccelerANTgine
+# and BeschleunigerBallett -- each reading the same five constants off
 # it. Nothing in this repo imports it, so nothing here would otherwise notice a
 # rename, a brand literal creeping back in, or a Pygments style that only exists
 # once sphinx-kataglyphis-theme is installed -- neither consumer installs it.
@@ -193,8 +193,8 @@ def test_the_path_loaded_baseline_keeps_every_constant_its_consumer_reads():
     base = _load_conf_base()
     for name in CONF_BASE_CONTRACT:
         assert hasattr(base, name), (
-            f"{name} is read by the conf.py of Kataglyphis-Cpp-Inference and "
-            "Kataglyphis-BeschleunigerBallett; renaming it breaks both builds "
+            f"{name} is read by the conf.py of AccelerANTgine and "
+            "BeschleunigerBallett; renaming it breaks both builds "
             "with no failure here"
         )
 
