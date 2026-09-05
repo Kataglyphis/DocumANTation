@@ -57,8 +57,8 @@ RUN set -eu; \
     rm /tmp/pandoc.deb
 
 RUN mkdir -p /root/texmf/tex/latex/commonstuff/
-ADD md2pdfLib/presentation/template/latex/awesome-beamer /root/texmf/tex/latex/commonstuff/
-ADD md2pdfLib/presentation/template/latex/smile /root/texmf/tex/latex/commonstuff/
+ADD md2pdfLib/third_party/awesome-beamer /root/texmf/tex/latex/commonstuff/
+ADD md2pdfLib/third_party/smile /root/texmf/tex/latex/commonstuff/
 RUN texhash
 
 VOLUME ["/md2pdfLib"]

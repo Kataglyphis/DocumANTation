@@ -1,7 +1,6 @@
-
-[submodule "md2pdfLib/presentation/template/latex/awesome-beamer"]
-	path = md2pdfLib/presentation/template/latex/awesome-beamer
+[submodule "md2pdfLib/third_party/awesome-beamer"]
+	path = md2pdfLib/third_party/awesome-beamer
 	url = https://github.com/Kataglyphis/awesome-beamer
-[submodule "md2pdfLib/presentation/template/latex/smile"]
-	path = md2pdfLib/presentation/template/latex/smile
+[submodule "md2pdfLib/third_party/smile"]
+	path = md2pdfLib/third_party/smile
 	url = https://github.com/Kataglyphis/smile

@@ -208,7 +208,7 @@ md2pdfLib/
 │   ├── glossary_entries.tex
 │   ├── nomenclature.tex
 │   └── logos/
-├── presentation/template/latex/
+├── third_party/
 │   ├── awesome-beamer/      ← git submodule
 │   └── smile/               ← git submodule
 ```

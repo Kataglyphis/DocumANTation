@@ -174,7 +174,7 @@ These are per-document values that live with the document, not in `brand.json`:
 - Neutral greys and blacks used for CV body text and headings.
 - `fonts.mono` names a TeX font (Latin Modern Mono) and is **not** emitted to
   CSS, because no browser has it; the web keeps the generic monospace stack.
-- `md2pdfLib/presentation/template/latex/smile/` is a vendored upstream theme
+- `md2pdfLib/third_party/smile/` is a vendored upstream theme
   (its own submodule) and is left alone. Its semantic palette (red/blue/…) is
   not brand; only its generic `green` is remapped to `brandAccentDeep` by the
   beamer template, because the `examples` blocks use it in a brand-identity
