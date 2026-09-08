@@ -46,6 +46,28 @@
 % for a profile that inputs section_teaching_mentoring directly after
 % section_experience.
 \newif\ifcvshowteachingtitle \cvshowteachingtitletrue
+% Drops the CUDA-kernels bullet. The one bullet a platform or infrastructure
+% posting does not buy, and the cheapest two lines in the Fraunhofer entry for
+% a profile that needs room. On for every research-facing profile.
+\newif\ifcvshowcudakernels \cvshowcudakernelstrue
+% The AI-gateway bullet, and the only flag here that defaults OFF: it is the
+% one place the CV claims Go, so a profile opts in rather than every existing
+% profile paying two lines it did not budget for. \ifcvrelocate is the same
+% shape. `all` turns it on, which is what `all` means.
+\newif\ifcvshowgateway \cvshowgatewayfalse
+% Drops the RemaNet bullet -- three lines, the longest in the entry. Edge-AI
+% product work: central to a research profile, the first thing a platform
+% posting trades away.
+\newif\ifcvshowremanet \cvshowremanettrue
+% The documentation bullet. Default off for the same reason as the gateway:
+% new content added for one application, and every other profile is at zero
+% slack. `all` turns it on.
+\newif\ifcvshowdocs \cvshowdocsfalse
+% Drops the CAS description, keeping the entry: its dates, title, employer and
+% tags all stay, so the timeline is untouched. The ONNX/mixed-reality bullet is
+% the one description on the page a platform posting has no use for. Guards the
+% whole itemize, not the \item -- an itemize with no \item is a LaTeX error.
+\newif\ifcvshowcasdetail \cvshowcasdetailtrue
 % Off by default, on for a profile aimed at a job in another city. The header
 % is where a reader checks whether the geography works, and it answers the
 % question "Stuttgart, but the job is in Paris?" in the same place it is asked.

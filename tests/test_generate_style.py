@@ -13,6 +13,11 @@ from style.generate_style import (
     CSS_END,
     CSS_START,
     CSS_TARGETS,
+    DARTDOC_CSS_END,
+    DARTDOC_CSS_START,
+    DARTDOC_DARK_VARS,
+    DARTDOC_LAYOUT_CSS,
+    DARTDOC_LIGHT_VARS,
     PYGMENTS_TOKENS,
     SYNTAX_TOKENS,
     _resolve_group,
@@ -21,6 +26,7 @@ from style.generate_style import (
     desired_outputs,
     load_brand,
     render_css_block,
+    render_dartdoc_css,
     render_latex,
     render_latex_fonts,
     render_pygments_module,
@@ -477,3 +483,52 @@ def test_the_style_readme_quotes_only_real_brand_values():
         f"style/README.md quotes hexes the brand does not define: "
         f"{sorted(quoted - documented_wrong - real)}"
     )
+
+
+def test_dartdoc_sheet_is_one_of_the_generated_targets():
+    assert "dartdoc.css" in {p.name for p in desired_outputs()}
+
+
+def test_dartdoc_sheet_carries_no_colour_the_brand_does_not_define():
+    """The defect this emitter replaces: the hand-written sheet opened with a
+    "Sphinx press theme overrides" header and painted a Tailwind slate/sky
+    palette (#0284c7 links, #22c55e hover) over a brand whose link is #0e7490.
+    """
+    brand = load_brand()
+    real = {
+        value.lstrip("#").lower()
+        for group in ("colors", "colors_dark", "syntax", "syntax_dark")
+        for value in brand[group].values()
+    }
+    quoted = {h.lower() for h in re.findall(r"#([0-9a-fA-F]{6})\b", render_dartdoc_css(brand))}
+    assert quoted <= real, f"off-brand hexes in dartdoc.css: {sorted(quoted - real)}"
+
+
+def test_dartdoc_sheet_opens_and_closes_on_its_markers():
+    """dartdoc-build.sh truncates a previous append at the START line and appends
+    this file, so the marker has to be the first line or a rebuild stacks copies.
+    """
+    lines = render_dartdoc_css(load_brand()).splitlines()
+    assert lines[0] == DARTDOC_CSS_START
+    assert lines[-1] == DARTDOC_CSS_END
+
+
+def test_dartdoc_themes_define_the_same_variables():
+    """A variable set in one theme and not the other leaks the other theme's
+    value through, which is how a dark page ends up with a light border.
+    """
+    assert [name for name, _, _ in DARTDOC_LIGHT_VARS] == [name for name, _, _ in DARTDOC_DARK_VARS]
+
+
+def test_dartdoc_layout_holds_no_colour_of_its_own():
+    """Colours live in the two generated theme blocks; the layout may only
+    reference them, so a hex cannot be hand-typed back into the sheet.
+    """
+    assert not re.findall(r"#[0-9a-fA-F]{3,8}\b", DARTDOC_LAYOUT_CSS)
+
+
+def test_dartdoc_variables_name_real_brand_tokens():
+    brand = load_brand()
+    for variables in (DARTDOC_LIGHT_VARS, DARTDOC_DARK_VARS):
+        for name, section, token in variables:
+            assert token in brand[section], f"{name} reads missing {section}.{token}"

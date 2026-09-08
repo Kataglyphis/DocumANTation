@@ -10,7 +10,8 @@ presentation templates, and reaches this directory through `TEXINPUTS`.
 ./scripts/build_in_container.sh cv                  # English
 CV_LANG=german ./scripts/build_in_container.sh cv   # German
 make cv-all                                         # both
-make cv-mistral-rse                                 # a tailored profile
+make cv-mistral-rse                                 # Research Software Engineer, Mistral
+make cv-mistral-platform                            # Platform Engineer, Mistral Research Platform
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf` — the filenames the
