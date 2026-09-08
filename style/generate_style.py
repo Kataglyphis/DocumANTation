@@ -64,6 +64,9 @@ PYGMENTS_MODULE = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/highl
 # Standalone token stylesheet for web projects that are not Sphinx (the
 # Flutter site): a plain <link> away from the same brand, no build step.
 BRAND_CSS = REPO_ROOT / "style" / "brand.css"
+# Dartdoc theme sheet, appended to `dart doc`'s own static-assets/styles.css
+# by ContainerHub linux/scripts/lib/dartdoc-build.sh.
+DARTDOC_CSS = REPO_ROOT / "style" / "dartdoc.css"
 # The web style lives in exactly one file: the theme package ships it and
 # setup_theme() puts it on html_static_path, so every consuming repo gets the
 # same CSS without copying it. Do not add a second target here.
@@ -452,6 +455,497 @@ def render_brand_css(brand: dict) -> str:
     )
 
 
+# Dartdoc ships its own palette in static-assets/styles.css and exposes it as
+# `--main-*` custom properties on `.light-theme` / `.dark-theme`.
+DARTDOC_CSS_START = "/* Kataglyphis brand overrides for Dartdoc START */"
+DARTDOC_CSS_END = "/* Kataglyphis brand overrides for Dartdoc END */"
+
+# (css variable, brand section, token). The section is named per row so a dark
+# block can still reach a light token -- the mint `accent` is the hover colour
+# in both themes, and writing it twice is what brand.json exists to prevent.
+DartdocVars = tuple[tuple[str, str, str], ...]
+
+DARTDOC_LIGHT_VARS: DartdocVars = (
+    ("--main-bg-color", "colors", "surface_gradient_from"),
+    ("--main-header-color", "colors", "white"),
+    ("--main-sidebar-color", "colors", "text_main"),
+    ("--main-text-color", "colors", "text_main"),
+    ("--main-search-bar", "colors", "white"),
+    ("--main-footer-background", "colors", "accent_deep"),
+    ("--main-hyperlinks-color", "colors", "link"),
+    ("--main-inset-bgColor", "colors", "white"),
+    ("--main-inset-borderColor", "colors", "surface_border"),
+    ("--main-code-bg", "syntax", "bg"),
+    ("--main-keyword-color", "syntax", "keyword"),
+    ("--main-tag-color", "syntax", "type"),
+    ("--main-section-color", "colors", "link_active"),
+    ("--main-comment-color", "syntax", "comment"),
+    ("--main-var-color", "syntax", "fg"),
+    ("--main-string-color", "syntax", "string"),
+    ("--main-icon-color", "colors", "text_main"),
+    ("--kg-surface", "colors", "white"),
+    ("--kg-muted-surface", "colors", "surface_soft"),
+    ("--kg-border", "colors", "surface_border"),
+    ("--kg-table-stripe", "colors", "surface_gradient_to"),
+    ("--kg-code-border", "colors", "surface_border"),
+    ("--kg-chip-bg", "colors", "accent_soft"),
+    ("--kg-chip-fg", "colors", "accent_deep"),
+    ("--kg-hover", "colors", "accent_strong"),
+    ("--kg-scrollbar", "colors", "surface_border"),
+    ("--kg-scrollbar-hover", "colors", "accent_strong"),
+    ("--kg-shadow-tint", "colors", "text_main"),
+)
+
+DARTDOC_DARK_VARS: DartdocVars = (
+    ("--main-bg-color", "colors_dark", "surface_gradient_from"),
+    ("--main-header-color", "colors_dark", "surface_gradient_to"),
+    ("--main-sidebar-color", "colors_dark", "sidebar_link"),
+    ("--main-text-color", "colors_dark", "text_base"),
+    ("--main-search-bar", "colors_dark", "code_bg"),
+    ("--main-footer-background", "colors_dark", "surface_gradient_to"),
+    ("--main-hyperlinks-color", "colors_dark", "link"),
+    ("--main-inset-bgColor", "colors_dark", "code_bg"),
+    ("--main-inset-borderColor", "colors_dark", "surface_border"),
+    ("--main-code-bg", "syntax_dark", "bg"),
+    ("--main-keyword-color", "syntax_dark", "keyword"),
+    ("--main-tag-color", "syntax_dark", "type"),
+    ("--main-section-color", "colors_dark", "link_hover"),
+    ("--main-comment-color", "syntax_dark", "comment"),
+    ("--main-var-color", "syntax_dark", "fg"),
+    ("--main-string-color", "syntax_dark", "string"),
+    ("--main-icon-color", "colors_dark", "text_base"),
+    ("--kg-surface", "colors_dark", "surface_gradient_from"),
+    ("--kg-muted-surface", "colors_dark", "quote_bg"),
+    ("--kg-border", "colors_dark", "surface_border"),
+    ("--kg-table-stripe", "colors_dark", "table_stripe_bg"),
+    ("--kg-code-border", "colors_dark", "code_border"),
+    ("--kg-chip-bg", "colors_dark", "sidebar_link_active_bg"),
+    ("--kg-chip-fg", "colors_dark", "sidebar_link_active"),
+    ("--kg-hover", "colors", "accent"),
+    ("--kg-scrollbar", "colors_dark", "text_muted"),
+    ("--kg-scrollbar-hover", "colors_dark", "sidebar_link_hover"),
+    ("--kg-shadow-tint", "colors", "black"),
+)
+
+# Geometry only. Every colour below is a var() resolved from the two generated
+# theme blocks, so no hex can be introduced here without the generator noticing.
+DARTDOC_LAYOUT_CSS = """:root {
+  --kg-radius-sm: 8px;
+  --kg-radius-md: 12px;
+  --kg-radius-lg: 16px;
+  --kg-transition: 160ms ease;
+  --kg-reading-width: 96ch;
+  /* Custom properties substitute lazily, so these pick up the theme's tint. */
+  --kg-shadow-soft: 0 8px 28px color-mix(in srgb, var(--kg-shadow-tint) 12%, transparent);
+  --kg-shadow-strong: 0 16px 42px color-mix(in srgb, var(--kg-shadow-tint) 26%, transparent);
+}
+
+.light-theme a,
+.light-theme .breadcrumbs li a,
+.light-theme .signature a,
+.light-theme .feature,
+.dark-theme a,
+.dark-theme .breadcrumbs li a,
+.dark-theme .signature a,
+.dark-theme .feature {
+  color: var(--main-hyperlinks-color);
+}
+
+.light-theme a:hover,
+.light-theme .feature:hover,
+.light-theme #theme-button:hover,
+.light-theme #sidenav-left-toggle:hover,
+.dark-theme a:hover,
+.dark-theme .feature:hover,
+.dark-theme #theme-button:hover,
+.dark-theme #sidenav-left-toggle:hover {
+  color: var(--kg-hover);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(180deg, var(--main-bg-color) 0%, var(--kg-muted-surface) 100%);
+  font-family: var(--kg-font-main);
+}
+
+header {
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--kg-border);
+  box-shadow: var(--kg-shadow-soft);
+}
+
+.main-content {
+  padding: 24px 32px 20px 32px;
+  overflow-x: auto;
+}
+
+.container,
+#dartdoc-main-content {
+  max-width: min(100%, 1540px);
+  margin: 0 auto;
+}
+
+.sidebar-offcanvas-left {
+  border-right: 1px solid var(--kg-border);
+  background-color: var(--kg-surface);
+  flex: 0 0 clamp(280px, 22vw, 360px);
+  padding: 22px 18px 18px 24px;
+  margin-right: 8px;
+}
+
+.sidebar-offcanvas-right {
+  border-left: 1px solid var(--kg-border);
+  flex: 0 0 clamp(210px, 16vw, 280px);
+  padding: 22px 18px 18px 16px;
+}
+
+.sidebar h5 {
+  letter-spacing: 0.03em;
+  margin-bottom: 12px;
+}
+
+.sidebar ol li.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.sidebar ol li a {
+  border-radius: var(--kg-radius-sm);
+  display: block;
+  padding: 4px 10px;
+  transition:
+    background-color var(--kg-transition),
+    color var(--kg-transition),
+    transform var(--kg-transition);
+}
+
+.sidebar ol li a:hover {
+  background: var(--kg-muted-surface);
+  transform: translateX(2px);
+}
+
+#sidebar-nav {
+  border-bottom: 1px solid var(--kg-border);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+}
+
+#sidebar-nav .self-crumb {
+  background: var(--kg-muted-surface);
+  border-left: 3px solid var(--main-hyperlinks-color);
+  border-radius: var(--kg-radius-sm);
+  font-weight: 600;
+  line-height: 1.35;
+  padding: 6px 10px;
+}
+
+.sidebar ol li.section-subitem {
+  margin-left: 8px;
+}
+
+.sidebar ol li.kg-md-nav-section {
+  margin-top: 12px;
+}
+
+.sidebar ol li.kg-md-nav-item a {
+  font-size: 13px;
+}
+
+.kg-guide-content {
+  max-width: min(980px, 100%);
+}
+
+.kg-guide-content blockquote {
+  border-left: 3px solid var(--main-hyperlinks-color);
+  margin: 10px 0;
+  padding: 6px 12px;
+  background: var(--kg-muted-surface);
+}
+
+.kg-guide-content pre {
+  margin: 10px 0;
+}
+
+.kg-guide-toc {
+  margin-top: 10px;
+}
+
+.kg-guide-toc li a {
+  display: block;
+}
+
+.markdown.desc {
+  max-width: min(var(--kg-reading-width), 100%);
+}
+
+.summary,
+section.desc,
+.main-content > .breadcrumbs {
+  margin-bottom: 22px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.25;
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-weight: 650;
+  margin-top: 1.6em;
+  margin-bottom: 0.55em;
+}
+
+h3 {
+  font-weight: 600;
+  margin-top: 1.35em;
+  margin-bottom: 0.45em;
+}
+
+p,
+li,
+dd,
+td,
+th {
+  line-height: 1.6;
+}
+
+section,
+div.summary,
+dl,
+table {
+  background: var(--kg-surface);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-md);
+}
+
+section,
+div.summary,
+dl {
+  padding: 14px 16px;
+  box-shadow: var(--kg-shadow-soft);
+}
+
+section#setter,
+div#setter {
+  border-top: 1px solid var(--kg-border);
+  padding-top: 14px;
+}
+
+.feature {
+  border: 1px solid transparent;
+  background: var(--kg-chip-bg);
+  color: var(--kg-chip-fg);
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 2px 10px;
+}
+
+.tt-wrapper .typeahead {
+  border: 1px solid var(--kg-border);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--main-text-color) 12%, transparent);
+  transition:
+    border-color var(--kg-transition),
+    box-shadow var(--kg-transition);
+}
+
+.tt-wrapper .typeahead:focus {
+  border-color: var(--main-hyperlinks-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--main-hyperlinks-color) 20%, transparent);
+}
+
+.tt-wrapper .tt-menu {
+  border-radius: var(--kg-radius-md);
+  border: 1px solid var(--kg-border);
+  background: var(--kg-surface);
+  box-shadow: var(--kg-shadow-strong);
+}
+
+#dartdoc-sidebar-right {
+  background: color-mix(in srgb, var(--kg-surface) 86%, var(--kg-muted-surface));
+}
+
+#dartdoc-sidebar-right .section-title {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+pre,
+.hljs {
+  border: 1px solid var(--kg-code-border);
+  background: var(--main-code-bg);
+  border-radius: var(--kg-radius-md);
+}
+
+pre {
+  padding: 12px;
+  overflow-x: auto;
+}
+
+code {
+  border-radius: 6px;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+table,
+th,
+td {
+  border-color: var(--kg-border);
+}
+
+th {
+  background: var(--kg-muted-surface);
+}
+
+tr:nth-child(2n) {
+  background-color: var(--kg-table-stripe);
+}
+
+footer {
+  border-top: 1px solid var(--kg-border);
+}
+
+.kg-doc-footer-links {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.kg-doc-footer-links strong {
+  color: var(--main-text-color);
+  margin-right: 6px;
+}
+
+.kg-doc-footer-links a {
+  text-decoration: none;
+  border: 1px solid var(--kg-border);
+  background: var(--kg-muted-surface);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.kg-doc-footer-links a:hover {
+  background: var(--kg-chip-bg);
+  color: var(--kg-chip-fg);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--kg-scrollbar);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--kg-scrollbar-hover);
+}
+
+@media (max-width: 992px) {
+  .main-content {
+    padding: 18px;
+  }
+
+  .sidebar-offcanvas-left,
+  .sidebar-offcanvas-right {
+    padding: 16px 12px;
+  }
+
+  section,
+  div.summary,
+  dl {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 840px) {
+  .sidebar-offcanvas-left {
+    border: 1px solid var(--kg-border);
+    border-radius: var(--kg-radius-lg);
+    box-shadow: var(--kg-shadow-strong);
+    width: min(360px, calc(100% - 20px));
+    max-width: min(360px, calc(100% - 20px));
+  }
+
+  .tt-wrapper .typeahead {
+    border-radius: var(--kg-radius-md);
+  }
+}
+"""
+
+
+def _dartdoc_theme_block(brand: dict, selector: str, variables: DartdocVars) -> str:
+    """Render one ``.light-theme``/``.dark-theme`` block from the brand tokens."""
+    lines = [f"{selector} {{"]
+    for name, section, token in variables:
+        group = brand[section]
+        if token not in group:
+            raise SystemExit(f"brand.json: '{section}' has no '{token}' for {name}")
+        lines.append(f"  {name}: {group[token]};")
+    lines.append("}")
+    return "\n".join(lines)
+
+
+def render_dartdoc_css(brand: dict) -> str:
+    """Render the Dartdoc theme sheet -- the brand, for `dart doc` output.
+
+    `dart doc` has no theme mechanism; the only hook is appending to the
+    generated ``static-assets/styles.css``, which ContainerHub's
+    ``linux/scripts/lib/dartdoc-build.sh`` does with this file. Both marker
+    lines are load-bearing: that script truncates a previous append at the START
+    line, so re-running a docs build cannot stack copies.
+    """
+    fonts = brand["fonts"]
+    root_block = f":root {{\n  --kg-font-main: '{fonts['main']}', sans-serif;\n}}"
+    return (
+        "\n".join(
+            [
+                DARTDOC_CSS_START,
+                f"/* {NOTE} */",
+                f"@import url('https://fonts.googleapis.com/css2?family={fonts['main']}"
+                f":wght@{fonts['main_weights']}&display=swap');",
+                "",
+                root_block,
+                "",
+                _dartdoc_theme_block(brand, ".light-theme", DARTDOC_LIGHT_VARS),
+                "",
+                _dartdoc_theme_block(brand, ".dark-theme", DARTDOC_DARK_VARS),
+                "",
+                DARTDOC_LAYOUT_CSS.rstrip("\n"),
+                DARTDOC_CSS_END,
+            ]
+        )
+        + "\n"
+    )
+
+
 def render_tokens_json(brand: dict) -> str:
     """brand.json with aliases resolved -- the read-me-from-anywhere artifact.
 
@@ -554,6 +1048,7 @@ def desired_outputs() -> dict[Path, str]:
         SYNTAX_THEME_DARK: render_syntax_theme(brand["syntax_dark"]),
         PYGMENTS_MODULE: render_pygments_module(brand),
         BRAND_CSS: render_brand_css(brand),
+        DARTDOC_CSS: render_dartdoc_css(brand),
     }
     tokens = render_tokens_json(brand)
     for target in TOKENS_TARGETS:

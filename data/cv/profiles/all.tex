@@ -19,6 +19,11 @@
 % of that sentence is exactly the kind of thing that drifts.
 \newcommand{\cvTagline}{All sections -- compile check, not a published CV}
 
+% Same reason as the sections: a bullet behind a default-off flag is only
+% rendered by the profiles that opt in, so `all` opts in to everything.
+\cvshowgatewaytrue
+\cvshowdocstrue
+
 \newcommand{\cvBody}{%
     \input{section_headline}%
     \vspace{0.25cm}%

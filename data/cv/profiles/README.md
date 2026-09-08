@@ -8,7 +8,8 @@ every application.
 ```bash
 make cv                                  # default profile, English
 make cv-all                              # default profile, both languages
-make cv-mistral-rse                      # tailored, English
+make cv-mistral-rse                      # Research Software Engineer, Mistral, English
+make cv-mistral-platform                 # Platform Engineer, Mistral Research Platform, English
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -68,6 +69,7 @@ fits proves nothing about the German one.
 | --- | --- | --- |
 | `default` | General purpose; the pair published on jonasheinle.de | `CV_Jonas_Heinle_<language>.pdf` |
 | `mistral-rse` | Research Software Engineer, Mistral AI (Paris) | `CV_Jonas_Heinle_Mistral_RSE.pdf` |
+| `mistral-platform` | Platform Engineer, Research Platform team, Mistral AI (Paris/Warsaw/London) | `CV_Jonas_Heinle_Mistral_Platform.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
 answers each one. Keep that up: a year from now it is the only record of why a
@@ -78,4 +80,10 @@ profile drops the sections it drops.
 A tailored CV reorders and re-selects true facts. It does not acquire skills
 the posting asks for. `mistral-rse` deliberately claims neither Kubernetes nor
 SLURM although the posting names both — see the note at the top of
-`../section_headline_mistral_rse.tex` before "fixing" that.
+`../section_headline_mistral_rse.tex` before "fixing" that. The same holds for
+`mistral-platform`: its posting names Bazel, Go and an orchestrator; Bazel
+(LiteRT-LM) and Go (the AI-gateway WebAssembly plugins) are claimed, Kubernetes
+is not — see the note in `../section_headline_mistral_platform.tex`.
+
+A fact arriving late does not relax this. Go moved off the not-claimed list on
+2026-09-04 because the work turned up, not because the posting wanted it.
