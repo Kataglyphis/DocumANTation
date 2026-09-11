@@ -329,8 +329,8 @@ Pandoc and uv pins are synced from ContainerHub's
 | Component | Version | Source |
 |-----------|---------|--------|
 | Ubuntu | 26.04 | `FROM ubuntu:26.04` in Dockerfile |
-| Pandoc | 3.10.2 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ContainerHub) |
+| Pandoc | 3.11 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ContainerHub) |
 | TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
-| uv | 0.12.6 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ContainerHub) |
+| uv | 0.12.13 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ContainerHub) |
 | Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
 | Python | 3.14 | `python3-full` from Ubuntu 26.04 repos |
