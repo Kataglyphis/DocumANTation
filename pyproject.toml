@@ -3,7 +3,7 @@ name = "kataglyphis-md2pdf"
 version = "0.1.0"
 description = "Convert Markdown into modern LaTeX books, beamer slides, pptx decks and CVs via Pandoc + LuaLaTeX."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 license = { text = "MIT" }
 authors = [{ name = "Jonas Heinle", email = "jonasheinle@googlemail.com" }]
 keywords = ["pandoc", "latex", "markdown", "pdf", "beamer", "documentation"]
@@ -62,11 +62,11 @@ addopts = "-ra --cov=md2pdfLib --cov=style --cov=sphinx_kataglyphis --cov-report
 
 [tool.ty]
 # Type-checking environment for `ty check`.
-environment = { python-version = "3.10" }
+environment = { python-version = "3.14" }
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]

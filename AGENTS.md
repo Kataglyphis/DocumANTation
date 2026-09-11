@@ -110,7 +110,7 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
 
 ### Code Style
 
-- **Type annotations required** on all functions (Python 3.10+ syntax: `str | None`)
+- **Type annotations required** on all functions (`str | None` unions)
 - **No comments** unless the logic is genuinely non-obvious
 - Use `pathlib.Path` for all path operations (not `os.path` or string concatenation)
 - All `subprocess.run()` calls **must** use `check=True`
@@ -124,13 +124,12 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
 
 [`pyproject.toml`](pyproject.toml) is authoritative — read it rather than a
 copy here, which is one edit away from being wrong. What it sets today: ruff at
-`line-length = 100`, `target-version = "py310"`, lint rules
+`line-length = 100`, `target-version = "py314"`, lint rules
 `["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]`, double quotes, spaces, LF
 endings; `ty` for type checks; `pytest` + `pytest-cov` + `shellcheck-py` under
 the `dev` extra.
 
-Code must stay 3.10-compatible (`requires-python = ">=3.10"`) — e.g.
-`int.from_bytes(...)` needs an explicit `byteorder` before 3.11.
+Code must stay 3.14-compatible (`requires-python = ">=3.14"`).
 
 ### Running Tools
 

@@ -2,7 +2,7 @@
 name = "sphinx-kataglyphis-theme"
 version = "0.1.0"
 description = "Reusable Sphinx theme config + CSS for Kataglyphis documentation sites"
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 # This is the package that ships the brand to every downstream repo, and it was
 # published with no author, licence or project URL at all. Kept in step with
 # style/brand.json by tests/test_identity_is_single_source.py, which checks both
