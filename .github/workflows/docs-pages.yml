@@ -33,7 +33,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v9.0.0
         with:
-          python-version: "3.10"
+          python-version: "3.14"
 
       # checks.yml runs this too, but it does not gate the deploy: on a push
       # both workflows start together, so without it here a drifted custom.css
