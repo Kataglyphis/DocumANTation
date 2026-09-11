@@ -24,7 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     rm -rf /var/lib/apt/lists/*
 
 # Pinned uv installer (reproducible; avoids "curl | sh" pulling a moving target).
-ARG UV_VERSION=0.12.6
+ARG UV_VERSION=0.12.13
 RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
 
 # Install the pinned runtime dependencies from the lockfile into the md2pdf venv.
@@ -40,10 +40,10 @@ RUN uv venv md2pdf && \
     uv pip install -r /tmp/requirements.txt && \
     rm -rf /tmp/deps /tmp/requirements.txt
 
-ARG PANDOC_VERSION=3.10.2
+ARG PANDOC_VERSION=3.11
 # SHA256 of the official pandoc .deb releases (verify tamper-free downloads).
-ARG PANDOC_SHA256_AMD64=6c06b69b49ae95087573631a6fcafb233ab7ab51e5cfa73f7539d6c964a2640d
-ARG PANDOC_SHA256_ARM64=868c7675806237dd21711e3890e82f2844e011c8f542a1ddc6245df4324dd6b5
+ARG PANDOC_SHA256_AMD64=89d4c9d97818c62a97157f0072844e4602c6cee795bf84abd1aee7273abcda99
+ARG PANDOC_SHA256_ARM64=d03e1be90fa510aaddc9b1e17f3e4615de0ab8a0aa7e7553502a3c9701887730
 ARG TARGETARCH
 RUN set -eu; \
     case "$TARGETARCH" in \
