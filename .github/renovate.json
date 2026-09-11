@@ -1,0 +1,8 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "DocumANTation's Renovate config. Everything shared lives in the preset at ContainerHub's repository root (default.json), so this one line is the whole adoption - the same shape every consumer uses.",
+    "The Renovate GitHub App is NOT installed on this repository (family owner decision, 2026-09-09). ContainerHub's linux/scripts/renovate-local.sh reads exactly this file."
+  ],
+  "extends": ["github>Kataglyphis/ContainerHub"]
+}
