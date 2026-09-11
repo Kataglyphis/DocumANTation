@@ -36,7 +36,7 @@ dev = [
 # The theme brings sphinx/myst/sphinx-design/book-theme with it, and is what
 # makes this repo's own docs use the Kataglyphis brand rather than a second
 # copy of the baseline.
-docs = ["sphinx>=8,<9", "sphinx-kataglyphis-theme"]
+docs = ["sphinx>=9,<10", "sphinx-kataglyphis-theme"]
 
 [project.urls]
 Homepage = "https://jonasheinle.de"
