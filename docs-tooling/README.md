@@ -21,10 +21,10 @@ instead and get the brand CSS and shared code palette the baseline could not.
 project ever wants the autodoc defaults back.
 
 Only genuinely shared things live here. `sync_versions.py` and
-`generate-website-licenses.py` used to, and moved back to ContainerHub: they
+`generate-website-licenses.py` used to, and moved back to ANTfrastructure: they
 read that repo's `linux/Dockerfile.*`, `windows/Dockerfile*` and `versions.env`,
 so no other consumer could run them, and keeping them here meant every
-ContainerHub version bump needed a submodule commit and a pin bump.
+ANTfrastructure version bump needed a submodule commit and a pin bump.
 
 The Sphinx **theme** itself (the `setup_theme()` helper, scaffold CLI, and base
 CSS) is packaged separately in [`../sphinx-kataglyphis-theme`](../sphinx-kataglyphis-theme)

@@ -322,15 +322,15 @@ so such a subdirectory needs its own preset (that is what `demo` is).
 ## Version Pins
 
 The `Dockerfile` and `uv.lock` are authoritative; this table is a snapshot.
-Pandoc and uv pins are synced from ContainerHub's
+Pandoc and uv pins are synced from ANTfrastructure's
 `linux/scripts/01-core/versions.env` via its `docs/scripts/sync_versions.py`
 — bump them there, never by editing the Dockerfile directly.
 
 | Component | Version | Source |
 |-----------|---------|--------|
 | Ubuntu | 26.04 | `FROM ubuntu:26.04` in Dockerfile |
-| Pandoc | 3.11 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ContainerHub) |
+| Pandoc | 3.11 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ANTfrastructure) |
 | TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
-| uv | 0.12.13 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ContainerHub) |
+| uv | 0.12.13 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ANTfrastructure) |
 | Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
 | Python | 3.14 | `python3-full` from Ubuntu 26.04 repos |

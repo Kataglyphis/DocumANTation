@@ -287,7 +287,7 @@ def test_the_path_loaded_baseline_writes_no_brand_value_of_its_own():
 def test_the_path_loaded_baseline_claims_no_repository_of_its_own():
     """It is shared, so it cannot know whose repo it is.
 
-    It used to hardcode ContainerHub's URL, pointing every consumer's
+    It used to hardcode ANTfrastructure's URL, pointing every consumer's
     repository button at the wrong project.
     """
     assert "repository_url" not in _load_conf_base().HTML_THEME_OPTIONS
@@ -297,7 +297,7 @@ def test_the_path_loaded_baseline_claims_no_repository_of_its_own():
 # time nothing checked that it did. It drifted at least twice on record -- once
 # blanking `secondary_sidebar_items`, so the one site on this route was the only
 # Kataglyphis site with no page TOC, and once pointing the repository button at
-# ContainerHub. Both were found by looking, and fixed by hand.
+# ANTfrastructure. Both were found by looking, and fixed by hand.
 #
 # Everything the two sides deliberately disagree on, and why:
 CONF_BASE_MAY_DIFFER = {

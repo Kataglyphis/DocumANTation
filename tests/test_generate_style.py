@@ -329,7 +329,7 @@ def test_only_one_stylesheet_is_maintained_in_place():
     # CSS_TARGETS are hand-written stylesheets with a generated token block. A
     # second one would mean the style is forked, which is how the old
     # source_templates/sphinx-book/custom.css silently drifted ~270 lines (and
-    # how ContainerHub's docs/_static copy ended up silently discarded).
+    # how ANTfrastructure's docs/_static copy ended up silently discarded).
     assert len(CSS_TARGETS) == 1
 
     # brand.css is different: fully generated, tokens only, for consumers that

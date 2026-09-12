@@ -133,15 +133,15 @@ the two vendored LaTeX theme submodules. Nothing has to be installed on the host
 but a container runtime.
 
 The full component list, with the version, upstream and license of each, is
-maintained in **ContainerHub**, which builds this image and is the
+maintained in **ANTfrastructure**, which builds this image and is the
 single source of truth for every version pin in the toolchain:
 
-- [Third-Party Software & Licenses](https://github.com/Kataglyphis/ContainerHub/blob/main/docs/third-party-licenses.md)
+- [Third-Party Software & Licenses](https://github.com/Kataglyphis/ANTfrastructure/blob/main/docs/third-party-licenses.md)
   — see the *Documentation Image (`pandoc_all`)* section.
 
 `PANDOC_VERSION` and `UV_VERSION` in this Dockerfile are ARG defaults synced
-from ContainerHub's `linux/scripts/01-core/versions.env`; bump them there and
-run `python3 docs/scripts/sync_versions.py --write` **in the ContainerHub
+from ANTfrastructure's `linux/scripts/01-core/versions.env`; bump them there and
+run `python3 docs/scripts/sync_versions.py --write` **in the ANTfrastructure
 checkout** (the script lives there, not in this repo), not by editing this
 file.
 
