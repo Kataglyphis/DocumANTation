@@ -65,7 +65,7 @@ PYGMENTS_MODULE = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/highl
 # Flutter site): a plain <link> away from the same brand, no build step.
 BRAND_CSS = REPO_ROOT / "style" / "brand.css"
 # Dartdoc theme sheet, appended to `dart doc`'s own static-assets/styles.css
-# by ContainerHub linux/scripts/lib/dartdoc-build.sh.
+# by ANTfrastructure linux/scripts/lib/dartdoc-build.sh.
 DARTDOC_CSS = REPO_ROOT / "style" / "dartdoc.css"
 # The web style lives in exactly one file: the theme package ships it and
 # setup_theme() puts it on html_static_path, so every consuming repo gets the
@@ -917,7 +917,7 @@ def render_dartdoc_css(brand: dict) -> str:
     """Render the Dartdoc theme sheet -- the brand, for `dart doc` output.
 
     `dart doc` has no theme mechanism; the only hook is appending to the
-    generated ``static-assets/styles.css``, which ContainerHub's
+    generated ``static-assets/styles.css``, which ANTfrastructure's
     ``linux/scripts/lib/dartdoc-build.sh`` does with this file. Both marker
     lines are load-bearing: that script truncates a previous append at the START
     line, so re-running a docs build cannot stack copies.

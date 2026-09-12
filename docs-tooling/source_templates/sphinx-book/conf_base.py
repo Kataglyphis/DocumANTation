@@ -58,7 +58,7 @@ PYGMENTS_STYLE = "github-dark"
 
 HTML_THEME_OPTIONS = {
     # repository_url is deliberately absent: this baseline is shared, so it
-    # cannot know whose repo it is. It used to hardcode ContainerHub's URL,
+    # cannot know whose repo it is. It used to hardcode ANTfrastructure's URL,
     # which sent every consumer's repository button to the wrong project. Set it
     # in your own conf.py:
     #     html_theme_options = dict(conf_base.HTML_THEME_OPTIONS)

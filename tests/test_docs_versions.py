@@ -3,7 +3,7 @@
 The table calls itself a snapshot, and a snapshot nobody checks goes stale: the
 Pandoc and uv rows were both wrong against the Dockerfile they name as the
 authority, and they went stale twice in one afternoon because the pins are
-synced in from ContainerHub without touching the prose. A doc that confidently
+synced in from ANTfrastructure without touching the prose. A doc that confidently
 states the wrong version is worse than one that says nothing, so the numbers get
 the same treatment as every other derived value in this repo -- checked.
 """
