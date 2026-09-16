@@ -52,6 +52,15 @@
                 \ifcvshowcudakernels
                 \item Accelerated the team's efficient-learning and optimization methods with custom CUDA kernels and Python bindings to C++
                 \fi
+                % Fraunhofer IPA's quantum-computing group. Added for the amd-hpc
+                % profile (see the flag in cv.tex); ~700x is the owner's measured
+                % figure. The link is the public project page, which is what makes
+                % the claim checkable -- keep it. Replaces the RemaNet bullet on
+                % that profile: edge-AI product work is the one item here an HPC
+                % posting does not buy.
+                \ifcvshowquantum
+                \item Ported a \textbf{quantum-physics simulation} from CPU to GPU for the \link{https://www.kqcbw.de}{KQCBW} with \textbf{CUDA} and \textbf{PyTorch}, profiling with \textbf{Nsight} and \textbf{VTune} to a \textbf{$\sim$700$\times$} speedup
+                \fi
                 % Opens the platform cluster -- and on a platform profile, where
                 % the kernels bullet above is hidden, opens the entry. It was the
                 % only bullet here carrying no number, which for a platform
@@ -227,6 +236,12 @@
             % Siehe die Anmerkung im englischen Zweig: keine Unterliste.
             \ifcvshowcudakernels
             \item \textbf{CUDA-Kernels} und \textbf{Python-Bindings} an C++, die die Lern- und Optimierungsverfahren des Teams beschleunigen
+            \fi
+            % Siehe die Anmerkung im englischen Zweig: Quantencomputing-Gruppe
+            % des Fraunhofer IPA, gemessener ~700x-Speedup, der Link ist die
+            % öffentliche Projektseite. Ersetzt dort den RemaNet-Punkt.
+            \ifcvshowquantum
+            \item \textbf{Quantenphysikalische Simulation} des \link{https://www.kqcbw.de}{KQCBW} von CPU auf GPU portiert (\textbf{CUDA}, \textbf{PyTorch}) und mit \textbf{Nsight} und \textbf{VTune} auf \textbf{$\sim$700$\times$} Speedup profiliert
             \fi
             % OFFEN: eine Zeile bleibt gedehnt (badness 5667), STRICT_WARNINGS
             % schlägt fehl. \allowbreak am Schrägstrich ändert den Umbruch nicht;

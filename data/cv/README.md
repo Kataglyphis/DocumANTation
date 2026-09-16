@@ -12,6 +12,7 @@ CV_LANG=german ./scripts/build_in_container.sh cv   # German
 make cv-all                                         # both
 make cv-mistral-rse                                 # Research Software Engineer, Mistral
 make cv-mistral-platform                            # Platform Engineer, Mistral Research Platform
+make cv-amd-hpc                                     # Lead HPC/AI Computational Scientist, AMD GENCI CoE
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf` — the filenames the
