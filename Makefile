@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
@@ -34,6 +34,11 @@ cv-mistral-rse:
 # Application: Platform Engineer, Research Platform team, Mistral AI (Paris/Warsaw/London).
 cv-mistral-platform:
 	$(MAKE) cv CV_PROFILE=mistral-platform CV_JOB_SUFFIX=Mistral_Platform
+
+# Application: Lead HPC/AI Computational Scientist / Engineer, AMD GENCI
+# Center of Excellence (Paris).
+cv-amd-hpc:
+	$(MAKE) cv CV_PROFILE=amd-hpc CV_JOB_SUFFIX=AMD_HPC
 
 # Live-demo mode: rebuild on every source change. Requires `entr`
 # (apt install entr / brew install entr). Pair with a PDF viewer that

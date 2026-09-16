@@ -1,0 +1,77 @@
+% Profile: amd-hpc -- Lead HPC/AI Computational Scientist / Engineer, AMD
+% (GENCI Center of Excellence, Paris).
+%
+% What the posting asks for, and where this profile answers it:
+%
+%   "develop, port, and optimize high-performance computing software and
+%    applications for use on AMD hardware"
+%        -> the summary, the CUDA-kernels bullet and the quantum-port bullet
+%   "HPC application performance, GPU programming, and scientific simulation
+%    domains" / "testing, tuning, performance engineering"
+%        -> the profilers named in the quantum-port bullet (Nsight, VTune),
+%           plus the custom CUDA kernels
+%   "implement MPI, HIP, CUDA, and OpenMP parallel programming models"
+%        -> CUDA only. MPI, HIP and OpenMP are not claimed -- see the note in
+%           section_headline_amd_hpc.tex before adding one.
+%   "proficient in Fortran or C/C++"
+%        -> C/C++ in the tags and the CUDA/CMake bullets. Fortran is not
+%           claimed either.
+%   "HPC build systems, both CPU & GPU, revision control practices"
+%        -> the CMake/GStreamer/LiteRT-LM bullet and the GitLab CI/CD bullet
+%   "converged HPC/AI workflows and major AI frameworks such as PyTorch"
+%        -> PyTorch in the quantum bullet; the vLLM/GLM serving bullets
+%   "develop and present training materials" / "collaborative, low-ego"
+%        -> the four years of KIT tutoring, which is why the teaching entry is
+%           in this profile with its heading off
+%   "Must be proficient in French and English communications" -> French B1 and
+%        English C1 in section_private
+%   Paris, on-site -> \cvrelocatetrue: the header says Stuttgart, and the
+%        geography question a Paris reader has is answered where it is asked.
+%
+% The RemaNet bullet is swapped for the quantum one: the React/PLC/Hailo
+% product work is the one Fraunhofer item an HPC application posting does not
+% buy, and the port is the closest thing on the page to the posting's own work.
+%
+% Layout. \emptySeparator is the mistral-rse trade -- half a line back per
+% entry, no fact cut. It was not quite enough here: with the quantum bullet in
+% and RemaNet out, the English build measured 2pt over the page and the
+% Languages/Hobbies/Publications row moved to page two, so the summary's gap
+% drops from 0.25cm to 0.15cm. Both levers are layout, not content. If an edit
+% makes this profile spill again, take it back here first, before touching a
+% bullet. (German spills by a few points at this setting, as mistral-rse
+% already does at 0.25cm; the English build is the one this application ships.)
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | HPC performance engineering \& GPU acceleration}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | HPC-Performance \& GPU-Beschleunigung}}
+
+% The posting wants a PhD or equivalent plus 7+ years; nothing here creates the
+% years, but the Gymnasium entry is the least informative row once two KIT
+% degrees are on the page, and dropping it buys the summary.
+\cvshowschoolfalse
+% ... and both thesis lines. Degrees, dates, grades and subject tags all stay.
+\cvshowthesislinesfalse
+% The tutor entry follows the other jobs under Experiences instead of opening a
+% section of its own: it is a paid research-assistant post.
+\cvshowteachingtitlefalse
+% The role is in Paris and this CV is in Stuttgart's letterhead.
+\cvrelocatetrue
+% This profile's one content addition and its one content trade.
+\cvshowquantumtrue
+\cvshowremanetfalse
+
+\renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_amd_hpc}%
+    % 0.15cm, not the 0.25cm the sibling profiles use: see the layout note above.
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    % 2018-2022, the only entry covering that stretch, and the posting's
+    % training-materials ask is answered by teaching rather than by a claim.
+    \input{section_teaching_mentoring}%
+    \input{section_education}%
+    % Languages (French B1 -- the role is Paris-based) and the publications row.
+    \input{section_private}%
+    % Left out on purpose, not for lack of relevance -- one page. Skills and
+    % Projects would only restate the experience bullets for this reader.
+    % \input{section_skills}%
+    % \input{section_projects}%
+}

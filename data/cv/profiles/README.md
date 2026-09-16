@@ -10,6 +10,7 @@ make cv                                  # default profile, English
 make cv-all                              # default profile, both languages
 make cv-mistral-rse                      # Research Software Engineer, Mistral, English
 make cv-mistral-platform                 # Platform Engineer, Mistral Research Platform, English
+make cv-amd-hpc                          # Lead HPC/AI Computational Scientist, AMD GENCI CoE, English
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -70,6 +71,7 @@ fits proves nothing about the German one.
 | `default` | General purpose; the pair published on jonasheinle.de | `CV_Jonas_Heinle_<language>.pdf` |
 | `mistral-rse` | Research Software Engineer, Mistral AI (Paris) | `CV_Jonas_Heinle_Mistral_RSE.pdf` |
 | `mistral-platform` | Platform Engineer, Research Platform team, Mistral AI (Paris/Warsaw/London) | `CV_Jonas_Heinle_Mistral_Platform.pdf` |
+| `amd-hpc` | Lead HPC/AI Computational Scientist / Engineer, AMD GENCI Center of Excellence (Paris) | `CV_Jonas_Heinle_AMD_HPC.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
 answers each one. Keep that up: a year from now it is the only record of why a
@@ -84,6 +86,10 @@ SLURM although the posting names both — see the note at the top of
 `mistral-platform`: its posting names Bazel, Go and an orchestrator; Bazel
 (LiteRT-LM) and Go (the AI-gateway WebAssembly plugins) are claimed, Kubernetes
 is not — see the note in `../section_headline_mistral_platform.tex`.
+`amd-hpc` is the same rule once more: its posting names MPI, HIP, OpenMP and
+Fortran, and the profile claims none of them. CUDA and the quantum-physics
+port are the GPU-programming and application-modernisation evidence instead —
+see the note at the top of `../section_headline_amd_hpc.tex`.
 
 A fact arriving late does not relax this. Go moved off the not-claimed list on
 2026-09-04 because the work turned up, not because the posting wanted it.

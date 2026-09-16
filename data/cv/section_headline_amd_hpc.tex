@@ -1,0 +1,45 @@
+% Summary for the amd-hpc profile: Lead HPC/AI Computational Scientist /
+% Engineer, AMD GENCI Center of Excellence (Paris).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "optimize scientific computing applications for AMD GPU platforms" and
+%   "modernize, port, and tune applications"
+%        -> the first sentence, and the quantum-port bullet -- the one item on
+%           this page that IS an application port
+%   "HPC application performance, GPU programming, and scientific simulation
+%    domains"
+%        -> the CUDA-kernels bullet and the profilers named in the quantum one
+%   "HPC build systems, both CPU & GPU" and "revision control practices"
+%        -> the CMake bullet, the CI/CD bullet and the tags
+%   "converged HPC/AI workflows and major AI frameworks such as PyTorch"
+%        -> PyTorch in the quantum bullet, plus the vLLM/GLM serving bullets
+%   "customer-facing ... develop and present training materials"
+%        -> the teaching entry and the coding-agent-as-a-service bullet. The
+%           RemaNet bullet (React/PLC/Hailo) is off in this profile -- it is the
+%           one Fraunhofer item an HPC posting does not buy, and it pays for the
+%           quantum bullet.
+%   French and English communications -> section_private, which is why it is in
+%        this profile rather than Skills/Projects.
+%   Paris, on-site -> \cvrelocatetrue in the profile, French B1 in private.
+%
+% Deliberately absent: MPI, HIP, OpenMP, Fortran and SLURM. The posting names
+% all five; none has been used, and tailoring a CV does not acquire skills. CUDA
+% is the GPU-programming claim, and it is a real one. Do not "fix" this by
+% adding a keyword.
+%
+% The opening is mistral-rse's "research run faster" moved to the posting's own
+% subject, scientific computing on GPUs. The arc is program / operate / port:
+% kernels and bindings, the DGX nodes, the port. The DGX clause stays because
+% operating accelerators is the part of HPC work the bullets alone would not
+% show a reader skimming the summary.
+%
+% Three lines fit. A fourth pushes the Languages/Hobbies/Publications row onto
+% page two, which this layout has already done twice on the sibling profile --
+% the ceiling is about 345 rendered characters, and German reaches it sooner.
+% Rebuild BOTH languages after any edit.
+\IfLanguageName{english}{
+    \par{I make scientific computing fast on GPUs: at Fraunhofer IPA I write the CUDA kernels and Python bindings behind the team's methods and run its DGX A100/H200 nodes; I ported a quantum-physics simulation from CPU to GPU for a $\sim$700$\times$ speedup. Where the tooling we depend on is open source, my fixes go upstream, not into a local patch.}
+}{
+    \par{Ich mache wissenschaftliches Rechnen auf GPUs schnell: Am Fraunhofer IPA schreibe ich die CUDA-Kernels und Python-Bindings hinter den Verfahren des Teams und betreibe die DGX-A100/H200-Knoten; eine quantenphysikalische Simulation habe ich von CPU auf GPU portiert ($\sim$700$\times$ Speedup). Wo unsere Werkzeuge Open Source sind, gehen meine Fixes upstream statt in lokale Patches.}
+}
