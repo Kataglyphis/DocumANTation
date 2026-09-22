@@ -19,6 +19,15 @@
         {\DTMlangsetup*{showdayofmonth=false}Present}{Research Associate | Scene Analysis \& Activity Recognition}{Stuttgart}{Fraunhofer IPA}
         {\DTMlangsetup*{showdayofmonth=false}\DTMdisplaydate{2024}{02}{01}}
         {   \begin{itemize}
+                % ORDER IS PER PROFILE (since 2026-09-22). Each bullet below is
+                % defined once, in place, as \cvFhg<Name>, with its notes beside
+                % it, and nothing prints until \cvFraunhoferOrder at the end of
+                % this list. cv.tex sets the default order, which is the order
+                % written here. A profile may \renewcommand it to lead with what
+                % its posting asks for first, and terabase-cv does. Reordering
+                % selects and orders; it does not fork the prose. Keep the
+                % German branch's \def names identical.
+                %
                 % Ordered for this reader, not chronologically: the platform
                 % cluster first -- CI/CD, builds, gateway, docs -- then the
                 % research work. Re-ordered when \ifcvshowcudakernels went in:
@@ -49,18 +58,18 @@
                 % A nested itemize also indents twice, so each child line is
                 % narrower and wraps sooner -- it costs lines twice over. Same
                 % numbers, same order, no sub-list.
-                \ifcvshowcudakernels
+                \def\cvFhgKernels{\ifcvshowcudakernels
                 \item Accelerated the team's efficient-learning and optimization methods with custom CUDA kernels and Python bindings to C++
-                \fi
+                \fi}
                 % Fraunhofer IPA's quantum-computing group. Added for the amd-hpc
                 % profile (see the flag in cv.tex); ~700x is the owner's measured
                 % figure. The link is the public project page, which is what makes
                 % the claim checkable -- keep it. Replaces the RemaNet bullet on
                 % that profile: edge-AI product work is the one item here an HPC
                 % posting does not buy.
-                \ifcvshowquantum
+                \def\cvFhgQuantum{\ifcvshowquantum
                 \item Ported a \textbf{quantum-physics simulation} from CPU to GPU for the \link{https://www.kqcbw.de}{KQCBW} with \textbf{CUDA} and \textbf{PyTorch}, profiling with \textbf{Nsight} and \textbf{VTune} to a \textbf{$\sim$700$\times$} speedup
-                \fi
+                \fi}
                 % Opens the platform cluster -- and on a platform profile, where
                 % the kernels bullet above is hidden, opens the entry. It was the
                 % only bullet here carrying no number, which for a platform
@@ -68,7 +77,13 @@
                 % unpinned: AGENTS.md forbids quoting a wall-clock digit that no
                 % gate re-measures. Cache hit rate is measurable per run and is
                 % the figure to swap in if one is ever wanted.
-                \item Owned the institute's GitLab CI/CD, DGX A100/H200 GPUs and \textbf{Grafana/Prometheus} monitoring; \textbf{BuildKit} and \textbf{sccache} caching cut builds from hours to minutes
+                % \ifcvshowmldetail clause (owner, 2026-09-22): the group
+                % tracked experiments in MLflow and ClearML -- the posting's
+                % "experiment tracking". Passive on purpose: these were the
+                % team's tools, used, not owned like the CI/CD before them.
+                \def\cvFhgCicd{%
+                \item Owned the institute's GitLab CI/CD, DGX A100/H200 GPUs and \textbf{Grafana/Prometheus} monitoring; \textbf{BuildKit} and \textbf{sccache} caching cut builds from hours to minutes\ifcvshowmldetail; experiments tracked in \textbf{MLflow} and \textbf{ClearML}\fi
+                }
                 % Naming the projects is the point: "fixes go upstream" is a
                 % posture, named projects are checkable evidence of root-cause
                 % work in somebody else's codebase -- the posting's "root cause
@@ -87,28 +102,44 @@
                 % be merged if a reviewer opens the PR list. And do not "restore"
                 % hcsshim or a PR count here from the register: both were
                 % deliberately removed.
+                % Behind \ifcvshowbuilds (default on; see cv.tex).
+                \def\cvFhgBuilds{\ifcvshowbuilds
                 \item Advanced \textbf{CMake} build systems for C++ codebases, \textbf{GStreamer} (\textbf{Meson}) and \textbf{LiteRT-LM} (\textbf{Bazel}) built from source; fixes upstreamed to \textbf{LLVM} and \textbf{sccache}, not kept as local patches
+                \fi}
                 % Third in the platform cluster, and the only place the CV claims
                 % Go -- see the flag in cv.tex. "45 researchers" is the scale
                 % figure: the plugins are infrastructure a whole department runs
                 % through, which a bare "token metering" does not convey.
-                \ifcvshowgateway
+                \def\cvFhgGateway{\ifcvshowgateway
                 \item Extended the institute's \textbf{AI gateway} with custom \textbf{WebAssembly} plugins in \textbf{Go}: token metering and rate limiting for its \textbf{45 researchers}
-                \fi
+                \fi}
                 % Closes the platform cluster, deliberately after the systems it
                 % documents: the posting asks for documentation "that will help
                 % them make the most out of the tools and systems you'll build",
                 % which is this order exactly. It names those systems rather than
                 % saying "docs" -- an abstract documentation claim is the easiest
                 % thing on a CV for a reader to discount.
-                \ifcvshowdocs
+                \def\cvFhgDocs{\ifcvshowdocs
                 \item Wrote the runbooks and onboarding docs for the CI/CD and GPU cluster the group works from
-                \fi
+                \fi}
                 % "Replaced ... hand-labeling" and not "Automated data labeling":
                 % same fact, but one names what it cost the group before. Verbs
                 % that state an outcome are the only thing standing in for the
                 % numbers this list still does not have.
-                \item Cut hand-labeling time by \textbf{75\%} with \textbf{vLLM-served vision-language model pipelines}
+                % \ifcvshowmldetail clause (owner, 2026-09-22): the pipelines
+                % run in the owner's own research tool for self-labeling, and
+                % its labels partly became the training data of the owner's
+                % projects -- "data annotation tooling" and dataset curation.
+                % Not claimed: bounding boxes or a human review step (not
+                % asked, not answered).
+                % Reworded 2026-09-23 by the owner: the point is that some of
+                % the owner's projects used the generated labels, not that
+                % "its labels partly trained my models". The first clause,
+                % kept:
+                % \ifcvshowmldetail{} in my own research tool for self-labeling; its labels partly trained my models\fi
+                \def\cvFhgVlm{%
+                \item Cut hand-labeling time by \textbf{75\%} with \textbf{vLLM-served vision-language model pipelines}\ifcvshowmldetail{} in my own research tool for self-labeling; some of my projects used its generated labels\fi
+                }
                 % Both GLM-5.2 bullets are the same box: 6 GPUs of one H200
                 % system. It said "6x H100" here until now, which read as a
                 % second, different deployment. The hardware is named once, in
@@ -157,7 +188,21 @@
                 % name its users. Says nothing new -- an institute coding agent
                 % in production has exactly those users. An adoption figure
                 % would be stronger still; there is no measured one to cite.
-                \item Started the institute's coding agent with a colleague on our own initiative and grew it into a production service its researchers use: self-hosted \textbf{GLM-5.2 and GLM-5.3} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                % Before "privacy-first" (2026-09-22), kept for reference:
+                % \item Started the institute's coding agent with a colleague on our own initiative and grew it into a production service its researchers use: self-hosted \textbf{GLM-5.2 and GLM-5.3} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                % "privacy-first": the owner's word (2026-09-22) for why it is
+                % self-hosted -- AI-first engineering without sending code to a
+                % third party. It fits in the last line's slack.
+                % "GLM-5.3 with vision capabilities" instead of "GLM-5.2 and
+                % GLM-5.3": the owner's wording, 2026-09-23. It names the model
+                % the service runs now and says it sees as well as writes,
+                % which ties the agent to the vision work above it. GLM-5.2
+                % stays true history (see the notes above). The version with
+                % both models, kept:
+                % \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.2 and GLM-5.3} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                \def\cvFhgAgent{%
+                \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                }
                 % RemaNet = Remanufacturing Network, Horizon Europe grant
                 % 101138627, 25 partners, Jan 2024 - Dec 2026, Fraunhofer IPA a
                 % partner -- which is why it lines up with the February 2024
@@ -180,9 +225,107 @@
                 % made that reading worse. Naming it first and hanging the
                 % inference under it reads as one stack, top down, and everything
                 % in the list belongs to RemaNet because RemaNet precedes the colon.
-                \ifcvshowremanet
-                \item Shipped \textbf{AI camera pipelines} for \textbf{RemaNet} (Horizon Europe): a \textbf{React} web frontend over C++ inference on NVIDIA GPU servers and a \textbf{Berghof PLC I fitted with a Hailo accelerator}
-                \fi
+                % Linked like KQCBW in the quantum bullet: both are research
+                % consortia a reader can look up, so both get the link colour
+                % rather than bold. remanet-project.eu is the official site; it
+                % names grant 101138627 and lists Fraunhofer IPA as a partner
+                % (checked 2026-09-22). Not bold: the colour already marks the
+                % name, and bold plus colour would outweigh KQCBW.
+                % The bold, unlinked version, kept for reference:
+                % \item Shipped \textbf{AI camera pipelines} for \textbf{RemaNet} (Horizon Europe): a \textbf{React} web frontend over C++ inference on NVIDIA GPU servers and a \textbf{Berghof PLC I fitted with a Hailo accelerator}
+                %
+                % CORRECTED 2026-09-22, by the owner. The Berghof PLC was NOT part
+                % of RemaNet; it was a separate project. So was a third one, an
+                % industry contract. The owner ran the whole ML lifecycle (design,
+                % training, evaluation, deployment) in all three:
+                %   RemaNet  -- activity detection; React frontend over C++
+                %               inference on NVIDIA GPU servers (owner, later
+                %               the same day: ONNX inference, PyTorch training,
+                %               NVIDIA GPUs)
+                %   Berghof  -- object detection on an embedded PLC fitted with a
+                %               Hailo AI accelerator; the embedded target with a
+                %               special AI chip was the challenge
+                %   industry -- person detection for safety: 4 cameras at once,
+                %               their 4 inferences batched
+                % The notes above ("everything in the list belongs to RemaNet
+                % because RemaNet precedes the colon") describe the superseded
+                % bullet below. Its wording was right; the attribution was wrong.
+                % Each project now has its own bullet and its own flag:
+                % \ifcvshowremanet, \ifcvshowberghof and \ifcvshowsafety (see
+                % cv.tex).
+                % Superseded 2026-09-22 (it attributes the Berghof PLC to RemaNet):
+                % \item Shipped \textbf{AI camera pipelines} for \link{https://remanet-project.eu}{RemaNet} (Horizon Europe): a \textbf{React} web frontend over C++ inference on NVIDIA GPU servers and a \textbf{Berghof PLC I fitted with a Hailo accelerator}
+                % Before "25 partners" (2026-09-22), kept for reference:
+                % \item Shipped \textbf{activity detection} for \link{https://remanet-project.eu}{RemaNet} (Horizon Europe): camera pipelines with a \textbf{React} web frontend over C++ inference on NVIDIA GPU servers
+                % "25 partners": CORDIS and remanet-project.eu both list 25
+                % organisations from 8 countries (checked 2026-09-22). It is the
+                % cheapest evidence on the page of delivering inside a
+                % multi-organisation consortium, i.e. working with external
+                % partners. It stays inside the second line's slack, so it adds
+                % no line to any profile.
+                % With "25 partners" but before the owner's reformulation
+                % (2026-09-22), kept for reference:
+                % \item Shipped \textbf{activity detection} for \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 partners): camera pipelines with a \textbf{React} web frontend over C++ inference on NVIDIA GPU servers
+                % Reformulated by the owner, 2026-09-22: inference runs on ONNX
+                % and training in PyTorch, both on NVIDIA GPUs. "C++ inference"
+                % is not wrong, but it named the language where the owner names
+                % the runtime and the training framework. C++ stays in the tag
+                % row. \slash, not "/": a bare slash glues "inference/PyTorch"
+                % into one unbreakable word, which TeX can only fix with a bad
+                % line. The owner's text ended in ";", which is dropped: no
+                % other bullet ends in punctuation.
+                \def\cvFhgRemanet{\ifcvshowremanet
+                \item Shipped \textbf{activity detection} for \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 partners): camera pipelines with a \textbf{React} web frontend and \textbf{ONNX} inference\slash\textbf{PyTorch} training on NVIDIA GPUs
+                \fi}
+                % Before the frame rate and the framework (2026-09-22), kept:
+                % \item Ran \textbf{object detection} on an embedded \textbf{Berghof PLC I fitted with a Hailo AI accelerator}
+                % "~14 fps" and "PyTorch-trained": both from the owner,
+                % 2026-09-22. The frame rate is measured on the Hailo chip. The
+                % models were trained in PyTorch and deployed to the embedded
+                % target -- the embedded chip was the challenge of this
+                % project, and the pair says so in two words. Two lines now,
+                % not one; the profiles that show this bullet have the room
+                % (mistral-rse and amd-hpc hide it).
+                % \ifcvshowmldetail clause (owner, 2026-09-22): the models ran
+                % INT8-quantized on the Hailo chip, and the owner iterated with
+                % the industry customers on field feedback -- the posting's
+                % "gathering field feedback ... closing the loop between model
+                % performance and real-world outcomes", answered with the
+                % project where it happened most.
+                % The clause's first wording, kept: it set "feedback" alone on a
+                % third line, one line for one word.
+                % \ifcvshowmldetail; \textbf{INT8}-quantized and iterated with industry customers on field feedback\fi
+                \def\cvFhgBerghof{\ifcvshowberghof
+                \item Ran PyTorch-trained \textbf{object detection} at \textbf{$\sim$14 fps} on an embedded \textbf{Berghof PLC I fitted with a Hailo AI accelerator}\ifcvshowmldetail; \textbf{INT8}-quantized, iterated on customer field feedback\fi
+                \fi}
+                % Earlier wordings, 2026-09-22, kept for reference:
+                % \item Built \textbf{person detection} for industrial safety: \textbf{4 cameras} in parallel, their inferences \textbf{batched}
+                % \item Built \textbf{person detection} for industrial safety: \textbf{4 cameras} in parallel, inferences \textbf{batched}
+                % "Delivered ... for an industrial customer": it was a custom
+                % industry project, so the model went to a paying customer and
+                % had to hold up there. That is the "building, shipping and
+                % supporting production B2B applications" a posting may ask for,
+                % and "Built" did not say it.
+                \def\cvFhgSafety{\ifcvshowsafety
+                \item Delivered \textbf{person detection} for an industrial customer's safety application: \textbf{4 cameras} in parallel, inferences \textbf{batched}
+                \fi}
+                % KI-PrOT (owner, 2026-09-22; ki-prot.de checked the same day):
+                % "Optimierte Produktionsplanung für die Oberflächentechnik",
+                % funded by the BMFTR, coordinated by Softec, with Fraunhofer
+                % IPA developing the AI methods. The owner built the visual
+                % classification of parts into drag-out classes
+                % (Verschleppungsklassen), created and annotated its dataset,
+                % and versioned it with DVC. The site's stated aim is to reduce
+                % chemical consumption; that is a goal, not a measured result,
+                % so the bullet says "to reduce". It is the CV's only
+                % classification work and its only DVC. Behind \ifcvshowkiprot,
+                % default off.
+                \def\cvFhgKiprot{\ifcvshowkiprot
+                \item Built \textbf{visual classification} of parts into drag-out classes for \link{https://ki-prot.de}{KI-PrOT} to reduce chemical use in surface treatment: dataset created, annotated and versioned with \textbf{DVC}
+                \fi}
+                % Everything above is only defined. This line prints it, in the
+                % order cv.tex or the profile sets.
+                \cvFraunhoferOrder
             \end{itemize}
         }
         % Tags follow the bullets above, strongest first for this reader.
@@ -194,7 +337,19 @@
         % fine-tuning is real, and a tag is the cheapest place to keep a keyword.
         % One line is the budget -- this row wrapping costs the mistral-rse
         % builds their last few points of slack.
-        {Python, Go, C++, CUDA, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+        % PyTorch added 2026-09-22: it is on this entry's page (the quantum
+        % port) and several postings list it as a must-have, and the row
+        % still fits on one line. The list before, kept for reference:
+        % {Python, Go, C++, CUDA, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+        % uv added the same day (owner): Python package and environment
+        % management with Astral's uv, used at Fraunhofer. It sits next to
+        % Python on purpose -- it is Python tooling. The tag is the tool's
+        % own name, "uv". "Astral uv" was tried first and wrapped
+        % "GitLab CI/CD" onto a second tag line, which would have cost every
+        % profile a line, mistral-rse its page. The lists before, kept:
+        % {Python, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+        % {Python, Astral uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+        {Python, uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
         
         \emptySeparator
         
@@ -211,7 +366,12 @@
                 % guidance problem". Eye tracking was the only fact the second
                 % one added, so it moved into the first. One line back in German,
                 % where the pair wrapped; in English it reads tighter either way.
-                \item Trained and deployed ONNX models with eye tracking for real-time user guidance in mixed reality
+                % One line since 2026-09-22 (the terabase-cv owner wanted this
+                % entry described again, and the page had room for one line,
+                % not two). Same facts; "with eye tracking" also stops reading
+                % as if the models had it. The two-line version, kept:
+                % \item Trained and deployed ONNX models with eye tracking for real-time user guidance in mixed reality
+                \item Trained and deployed ONNX models for real-time eye-tracking guidance in mixed reality
             \end{itemize}
             \fi
         }
@@ -234,31 +394,44 @@
             % die Begruendung dort. Der Nominalstil bleibt: er ist im deutschen
             % Lebenslauf ueblich und hier ausserdem das, was in die Zeile passt.
             % Siehe die Anmerkung im englischen Zweig: keine Unterliste.
-            \ifcvshowcudakernels
+            % REIHENFOLGE JE PROFIL (seit 2026-09-22), siehe die Anmerkung im
+            % englischen Zweig: jeder Punkt wird hier nur als \cvFhg<Name>
+            % definiert, ausgegeben wird er erst von \cvFraunhoferOrder am Ende
+            % der Liste. Die Namen müssen denen im englischen Zweig gleichen.
+            \def\cvFhgKernels{\ifcvshowcudakernels
             \item \textbf{CUDA-Kernels} und \textbf{Python-Bindings} an C++, die die Lern- und Optimierungsverfahren des Teams beschleunigen
-            \fi
+            \fi}
             % Siehe die Anmerkung im englischen Zweig: Quantencomputing-Gruppe
             % des Fraunhofer IPA, gemessener ~700x-Speedup, der Link ist die
             % öffentliche Projektseite. Ersetzt dort den RemaNet-Punkt.
-            \ifcvshowquantum
+            \def\cvFhgQuantum{\ifcvshowquantum
             \item \textbf{Quantenphysikalische Simulation} des \link{https://www.kqcbw.de}{KQCBW} von CPU auf GPU portiert (\textbf{CUDA}, \textbf{PyTorch}) und mit \textbf{Nsight} und \textbf{VTune} auf \textbf{$\sim$700$\times$} Speedup profiliert
-            \fi
+            \fi}
             % OFFEN: eine Zeile bleibt gedehnt (badness 5667), STRICT_WARNINGS
             % schlägt fehl. \allowbreak am Schrägstrich ändert den Umbruch nicht;
             % "Monitoring mit Grafana/Prometheus" löst es, kostet aber die Seite.
-            \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten Builds von Stunden auf Minuten
+            \def\cvFhgCicd{%
+            \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten Builds von Stunden auf Minuten\ifcvshowmldetail; Experiment-Tracking mit \textbf{MLflow} und \textbf{ClearML}\fi
+            }
             % Siehe die Anmerkung im englischen Zweig.
+            % Hinter \ifcvshowbuilds (standardmäßig an; siehe cv.tex).
+            \def\cvFhgBuilds{\ifcvshowbuilds
             \item Fortgeschrittene \textbf{CMake}-Builds für C++-Codebasen, \textbf{GStreamer} (\textbf{Meson}) und \textbf{LiteRT-LM} (\textbf{Bazel}) aus dem Quellcode gebaut; Fixes an \textbf{LLVM} und \textbf{sccache} upstream eingebracht, statt sie lokal zu patchen
+            \fi}
             % Siehe die Anmerkung im englischen Zweig.
-            \ifcvshowgateway
+            \def\cvFhgGateway{\ifcvshowgateway
             \item \textbf{KI-Gateway} des Instituts um eigene \textbf{WebAssembly}-Plugins in \textbf{Go} erweitert: Token-Metering und Rate-Limiting für \textbf{45 Forschende}
-            \fi
+            \fi}
             % Siehe die Anmerkung im englischen Zweig: nennt die Systeme.
-            \ifcvshowdocs
+            \def\cvFhgDocs{\ifcvshowdocs
             \item Runbooks und Onboarding-Dokumentation für die CI/CD und den GPU-Cluster geschrieben, mit denen die Gruppe arbeitet
-            \fi
-            % Siehe die Anmerkung im englischen Zweig.
-            \item Manuelles Labeling um \textbf{75\%} reduziert: \textbf{vLLM-gehostete Vision-Language-Pipelines}
+            \fi}
+            % Siehe die Anmerkung im englischen Zweig. Umformuliert 2026-09-23;
+            % die erste Fassung des Zusatzes, zum Nachschlagen erhalten:
+            % \ifcvshowmldetail{} in meinem eigenen Forschungstool für Self-Labeling; seine Labels flossen teils ins Training meiner Modelle\fi
+            \def\cvFhgVlm{%
+            \item Manuelles Labeling um \textbf{75\%} reduziert: \textbf{vLLM-gehostete Vision-Language-Pipelines}\ifcvshowmldetail{} in meinem eigenen Forschungstool für Self-Labeling; einige meiner Projekte nutzten die generierten Labels\fi
+            }
             % Siehe die Anmerkung im englischen Zweig: eine Maschine, einmal benannt.
             % Siehe die Anmerkung im englischen Zweig: ein Deployment, drei Optimierungen.
             % Siehe die Anmerkung im englischen Zweig: eine Kennzahl je Optimierung.
@@ -266,7 +439,15 @@
             % Siehe die Anmerkung im englischen Zweig.
             % Siehe die Anmerkung im englischen Zweig.
             % Siehe die Anmerkung im englischen Zweig.
-            \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.2 und GLM-5.3} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            % Vor "datenschutzkonform" (2026-09-22), zum Nachschlagen erhalten:
+            % \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.2 und GLM-5.3} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            % "GLM-5.3 mit Vision-Fähigkeiten" statt "GLM-5.2 und GLM-5.3"
+            % (2026-09-23), siehe die Anmerkung im englischen Zweig. Die
+            % Fassung mit beiden Modellen, zum Nachschlagen erhalten:
+            % \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.2 und GLM-5.3} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            \def\cvFhgAgent{%
+            \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.3 mit Vision-Fähigkeiten} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            }
             % Kein "end to end" hier: im Deutschen ein Anglizismus, den die
             % Doppelpunkt-Liste ohnehin schon sagt. Die Geraete stehen in einer
             % Klammer statt als Bindestrich-Kompositum: "Raspberry-Pi-/Hailo-
@@ -280,13 +461,49 @@
             % Zeilen und kostete eine dritte fuer "native Apps" allein.
             % Siehe die Anmerkung im englischen Zweig.
             % Siehe die Anmerkung im englischen Zweig: das Frontend gehört zu RemaNet, nicht zur SPS.
-            \ifcvshowremanet
-            \item \textbf{KI-Kamera-Pipelines} für \textbf{RemaNet} (Horizon Europe): \textbf{React}-Web-Frontend über C++-Inferenz auf GPU-Servern und einer \textbf{Berghof-SPS mit Hailo}
-            \fi
+            % Siehe die Anmerkung im englischen Zweig: verlinkt wie KQCBW.
+            % Die fette, unverlinkte Fassung, zum Nachschlagen erhalten:
+            % \item \textbf{KI-Kamera-Pipelines} für \textbf{RemaNet} (Horizon Europe): \textbf{React}-Web-Frontend über C++-Inferenz auf GPU-Servern und einer \textbf{Berghof-SPS mit Hailo}
+            % KORRIGIERT 2026-09-22 (siehe die Anmerkung im englischen Zweig): die
+            % Berghof-SPS war ein eigenes Projekt, nicht Teil von RemaNet.
+            % Ersetzt 2026-09-22 (ordnet die Berghof-SPS RemaNet zu):
+            % \item \textbf{KI-Kamera-Pipelines} für \link{https://remanet-project.eu}{RemaNet} (Horizon Europe): \textbf{React}-Web-Frontend über C++-Inferenz auf GPU-Servern und einer \textbf{Berghof-SPS mit Hailo}
+            % Vor "25 Partner" (2026-09-22), zum Nachschlagen erhalten:
+            % \item \textbf{Aktivitätserkennung} für \link{https://remanet-project.eu}{RemaNet} (Horizon Europe): Kamera-Pipelines mit \textbf{React}-Web-Frontend über C++-Inferenz auf GPU-Servern
+            % Mit "25 Partner", vor der Umformulierung des Inhabers (2026-09-22),
+            % zum Nachschlagen erhalten:
+            % \item \textbf{Aktivitätserkennung} für \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 Partner): Kamera-Pipelines mit \textbf{React}-Web-Frontend über C++-Inferenz auf GPU-Servern
+            % Siehe die Anmerkung im englischen Zweig: ONNX-Inferenz und
+            % PyTorch-Training auf NVIDIA-GPUs.
+            \def\cvFhgRemanet{\ifcvshowremanet
+            \item \textbf{Aktivitätserkennung} für \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 Partner): Kamera-Pipelines mit \textbf{React}-Web-Frontend, \textbf{ONNX}-Inferenz\slash\textbf{PyTorch}-Training auf NVIDIA-GPUs
+            \fi}
+            % Vor Bildrate und Framework (2026-09-22), zum Nachschlagen erhalten:
+            % \item \textbf{Objekterkennung} auf einer eingebetteten \textbf{Berghof-SPS}, die ich mit einem \textbf{Hailo}-KI-Beschleuniger nachgerüstet habe
+            \def\cvFhgBerghof{\ifcvshowberghof
+            \item In PyTorch trainierte \textbf{Objekterkennung} mit \textbf{$\sim$14 fps} auf einer eingebetteten \textbf{Berghof-SPS}, die ich mit einem \textbf{Hailo}-KI-Beschleuniger nachgerüstet habe\ifcvshowmldetail; \textbf{INT8}-quantisiert und mit Industriekunden anhand von Feldfeedback iteriert\fi
+            \fi}
+            % Frühere Fassung, 2026-09-22, zum Nachschlagen erhalten:
+            % \item \textbf{Personenerkennung} für industrielle Sicherheit: \textbf{4 Kameras} parallel, Inferenzen \textbf{gebatcht}
+            \def\cvFhgSafety{\ifcvshowsafety
+            \item \textbf{Personenerkennung} für die Sicherheitsanwendung eines Industriekunden geliefert: \textbf{4 Kameras} parallel, Inferenzen \textbf{gebatcht}
+            \fi}
+            % Siehe die Anmerkung im englischen Zweig: KI-PrOT, Ziel und nicht
+            % Messergebnis, daher "um ... zu sparen".
+            \def\cvFhgKiprot{\ifcvshowkiprot
+            \item \textbf{Visuelle Klassifikation} von Bauteilen in Verschleppungsklassen für \link{https://ki-prot.de}{KI-PrOT}, um Chemikalien in der Oberflächentechnik zu sparen: Datensatz erstellt, annotiert und mit \textbf{DVC} versioniert
+            \fi}
+            % Bis hier ist alles nur definiert; diese Zeile gibt es aus, in der
+            % Reihenfolge aus cv.tex oder dem Profil.
+            \cvFraunhoferOrder
         \end{itemize}
     }
-    % Siehe die Anmerkung im englischen Zweig.
-    {Python, Go, C++, CUDA, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+    % Siehe die Anmerkung im englischen Zweig (PyTorch und uv seit
+    % 2026-09-22). Frühere Listen, zum Nachschlagen erhalten:
+    % {Python, Go, C++, CUDA, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+    % {Python, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+    % {Python, Astral uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+    {Python, uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
         
     \emptySeparator
     

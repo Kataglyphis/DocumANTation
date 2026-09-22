@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
@@ -39,6 +39,11 @@ cv-mistral-platform:
 # Center of Excellence (Paris).
 cv-amd-hpc:
 	$(MAKE) cv CV_PROFILE=amd-hpc CV_JOB_SUFFIX=AMD_HPC
+
+# Application: Computer Vision Engineer, Bamboo, Terabase Energy (Paris).
+# Suffix "Terabase", not "Terabase_CV": CV_..._CV.pdf reads as a typo.
+cv-terabase-cv:
+	$(MAKE) cv CV_PROFILE=terabase-cv CV_JOB_SUFFIX=Terabase
 
 # Live-demo mode: rebuild on every source change. Requires `entr`
 # (apt install entr / brew install entr). Pair with a PDF viewer that
