@@ -1,0 +1,209 @@
+% Profile: terabase-cv -- Computer Vision Engineer, Bamboo, Terabase Energy
+% (Paris R&D hub; the posting lists the role as remote, reporting to the Head
+% of AI).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "Proven, hands-on experience building, testing, shipping, and supporting
+%    production B2B applications using AI-first or AI-native engineering
+%    workflows -- proficiency with AI coding agents and AI-assisted
+%    development tools is expected, not a nice-to-have"
+%        -> the tagline's last item, the summary's last sentence (coding
+%           agents, AI-assisted review, AI-driven testing and debugging,
+%           privacy-first on self-hosted LLMs -- owner-confirmed 2026-09-22),
+%           and the coding-agent bullet in section_experience, which backs
+%           the self-hosted half. B2B is not claimed.
+%   "Solid Computer Vision fundamentals and applied experience across
+%    detection, segmentation, classification, or related tasks"
+%        -> the entry title (Scene Analysis & Activity Recognition), the
+%           RemaNet camera-pipeline bullet, and the ECML PKDD demo together
+%           with its SemProbe line. This profile switches that line on because
+%           it is the only section line that says "object detectors". It shows
+%           robustness probing of detectors, not detector training.
+%   "Deep learning framework experience: PyTorch and/or TensorFlow"
+%        -> the summary's first sentence ("Python, PyTorch and CUDA"), the
+%           Berghof bullet ("PyTorch-trained ... ~14 fps" on the Hailo chip),
+%           the Fraunhofer tag row, and the quantum-port bullet. The owner
+%           confirmed on 2026-09-22 that every detection model was trained
+%           in PyTorch. Before that, the quantum port (GPU simulation, not
+%           deep-learning training) was the only source, and the summary
+%           left PyTorch out. TensorFlow is not claimed.
+%   "Experience with data annotation tooling and labeling validation"
+%        -> the VLM auto-labeling bullet (hand-labeling time cut by 75%)
+%   "MLOps ... deployment pipelines (e.g. MLflow, DVC, Docker, CI/CD)"
+%        -> the GitLab CI/CD, DGX and Grafana/Prometheus bullet, plus the vLLM
+%           serving in the coding-agent bullet
+%   "Own the end-to-end ML lifecycle: design, train, evaluate, and deploy
+%    models"
+%        -> the summary's second sentence (three industrial vision projects,
+%           full lifecycle, owner-confirmed 2026-09-22) and the three
+%           project bullets under Fraunhofer IPA: RemaNet activity
+%           detection, Berghof object detection on an embedded PLC with a
+%           Hailo chip, industrial-safety person detection on 4 cameras
+%           with batched inference
+%   "Solid Computer Vision fundamentals and applied experience across
+%    detection, segmentation, classification" (again)
+%        -> those same three bullets: object, person and activity detection.
+%           Segmentation and classification are still not claimed.
+%   "2+ years developing and deploying AI/ML models and pipelines"
+%        -> Fraunhofer IPA since 02/2024 (including the lifecycle work
+%           above), and the CAS "trained and deployed ONNX models" bullet,
+%           which is why \cvshowcasdetail stays on
+%   "LLMs, Vision-Language Models, or Foundation Models" (nice-to-have)
+%        -> the VLM labeling and the self-hosted GLM serving
+%   "championing new AI-assisted engineering tools within a team"
+%   (nice-to-have)
+%        -> the coding agent: started on our own initiative, now in production
+%   Master's in Computer Science -> section_education
+%   "Strong written and verbal communication in English (French is a plus)"
+%        -> section_private: English C1, French B1
+%   Paris R&D hub -> \cvrelocatetrue
+%
+% Not claimed: MLflow, DVC, experiment tracking, model versioning, TensorFlow,
+% segmentation, classification, named annotation tools, labeling-validation
+% workflows, B2B/SaaS, GIS (PostGIS, GDAL, coordinate systems), digital twins,
+% startup experience, and remote/async collaboration. See the note in section_headline_terabase_cv.tex
+% before adding any of them. Remote work, OmniAccelerANT (GStreamer camera
+% streaming, Rust/C++ inference) and OrchestrANT (Python LLM benchmark lab)
+% go in the cover letter, not here.
+
+% Three items, like the siblings. "AI coding agents" is the posting's own
+% phrase for its most repeated ask. It is backed on the page by the
+% coding-agent bullet and the summary's last sentence. "VLM auto-labeling" is
+% the annotation requirement answered by an outcome rather than a tool name.
+% English 91 characters, German 87 -- the same widths as mistral-rse, whose
+% note on the header's German ceiling applies here unchanged.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Computer vision, VLM auto-labeling \& AI coding agents}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Computer Vision, VLM \& Coding-Agenten}}
+
+% The Master's is a requirement, so the Gymnasium entry goes, as in the
+% siblings.
+\cvshowschoolfalse
+% ... and both thesis lines. Degrees, dates, grades and subject tags all stay.
+\cvshowthesislinesfalse
+% Paris R&D hub, and this CV carries Stuttgart's letterhead.
+\cvrelocatetrue
+
+% The content trade. The CUDA-kernels bullet goes out and the quantum port
+% comes in. The port is the only line that shows PyTorch, a must-have, and
+% with the kernels bullet off it is the first Fraunhofer bullet, directly
+% under the summary. The Fraunhofer entry keeps six bullets either way.
+\cvshowcudakernelsfalse
+\cvshowquantumtrue
+% "object detectors": the SemProbe line under the ECML PKDD entry. It was
+% switched on while the summary's detector sentence was the only detection
+% evidence on the page. Since 2026-09-22 the Fraunhofer entry shows object,
+% person and activity detection and classification directly, and the owner
+% asked for more air above the tag boxes (\cvtagsep below). Those 3pt per
+% entry had to come from somewhere, so the line is no longer rendered here.
+% It is not deleted: it stays in section_private.tex behind the flag. The
+% summary sentence stays because it is true -- the owner co-authored the
+% demo, and the Publications entry names it.
+% REVERSED the same day by the owner: "dont drop SemProbe detail line! Dont
+% put SemProbe into intro". So the detail line renders again, and the
+% summary no longer mentions SemProbe (see section_headline_terabase_cv.tex).
+% The switch that was briefly in force, kept:
+% \cvshowsemprobefalse
+\cvshowsemprobetrue
+% The three vision projects with a full ML lifecycle (owner, 2026-09-22):
+% RemaNet (activity detection) and Berghof (object detection on an embedded
+% PLC with a Hailo chip) are on by default; the industrial safety project
+% (person detection, 4 cameras, batched inference) is switched on here.
+% Together they are the detection evidence the posting asks for first.
+\cvshowsafetytrue
+% ... paid for by the build-systems bullet (CMake, GStreamer, LiteRT-LM,
+% LLVM/sccache fixes): three lines this reader has the least use for. It is
+% not deleted, only hidden; every other profile still shows it.
+\cvshowbuildsfalse
+% KI-PrOT: visual classification into drag-out classes, the dataset created,
+% annotated and versioned with DVC -- the posting's "classification",
+% "dataset curation" and "DVC" in one bullet (owner, 2026-09-22).
+\cvshowkiprottrue
+% The ML-lifecycle detail clauses: INT8 and the customer field-feedback loop
+% (Berghof), the own self-labeling tool whose generated labels some of the
+% owner's projects used (worded "partly trained the models" until 2026-09-23)
+% (VLM bullet), MLflow and ClearML experiment tracking (CI/CD bullet).
+\cvshowmldetailtrue
+% The quantum port is hidden here, not deleted (2026-09-22). It was on only
+% for PyTorch, which the projects now show directly (all models trained in
+% PyTorch, owner-confirmed). Its two lines pay for the KI-PrOT bullet and the
+% detail clauses. CUDA in the summary is still backed by the tag row.
+\cvshowquantumfalse
+% The CAS description ("Trained and deployed ONNX models with eye tracking
+% ...") is hidden here, not deleted (2026-09-22). The entry keeps its dates,
+% title, employer and tags (Machine learning, ONNX, ...), so the timeline is
+% whole. With the KI-PrOT bullet and the detail clauses in, the page was about
+% a line over even at the smaller summary gap. For this reader the Fraunhofer
+% entry already shows training and ONNX deployment several times over, so
+% this line is the cheapest one to give back.
+% REVERSED the same day by the owner: the CAS entry "misses at least one
+% descriptive sentence". It renders again. The switch that was briefly in
+% force, kept:
+% \cvshowcasdetailfalse
+\cvshowcasdetailtrue
+% Air between each experience's description and its tag boxes (owner,
+% 2026-09-22: "much too less space" under the CI/CD bullet). A layout knob in
+% cv.tex; 0pt everywhere else.
+\setlength{\cvtagsep}{3pt}
+
+% Bullet order for this reader (2026-09-22). The default leads with the
+% platform and HPC work, which put the quantum port first and the three
+% detection projects last -- in the blind spot of a reader who gives an entry
+% four or five bullets. This posting asks first for detection and the
+% end-to-end ML lifecycle, so:
+%   1-3  RemaNet, Berghof, industrial safety -- activity, object and person
+%        detection, each taken from design to deployment ("Own the
+%        end-to-end ML lifecycle"; "detection, segmentation, classification")
+%   4    VLM auto-labeling -- "data annotation tooling and labeling
+%        validation"; "Vision-Language Models" (nice-to-have)
+%   5    the coding agent -- "AI-first ... AI coding agents"; "championing
+%        new AI-assisted engineering tools" (nice-to-have)
+%   6    GitLab CI/CD, DGX GPUs, monitoring -- "MLOps ... deployment
+%        pipelines ... CI/CD"
+%   7    the quantum port -- the PyTorch must-have and profiling
+%   then every hidden bullet, so flipping one of their flags on here still
+%   prints it. A bullet missing from this list would never print.
+% Revised the same day, once the Berghof bullet carried INT8 and the
+% customer field-feedback loop. It now answers more of the posting than any
+% other bullet (PyTorch, detection, efficient inference on an embedded chip,
+% industry customers, closing the loop), so it opens the entry. KI-PrOT
+% (classification, dataset, DVC) follows the three detection projects.
+% The first order, kept for reference:
+%   \cvFhgRemanet\cvFhgBerghof\cvFhgSafety\cvFhgVlm\cvFhgAgent\cvFhgCicd%
+%   \cvFhgQuantum\cvFhgKernels\cvFhgBuilds\cvFhgGateway\cvFhgDocs
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgBerghof\cvFhgRemanet\cvFhgSafety\cvFhgKiprot\cvFhgVlm\cvFhgAgent%
+	\cvFhgCicd\cvFhgQuantum\cvFhgKernels\cvFhgBuilds\cvFhgGateway\cvFhgDocs}
+
+% No \emptySeparator override, unlike the siblings. Measured 2026-09-22: the
+% page rendered pixel-identical with and without the mistral-rse override,
+% with the same positions and \pagetotal, so here it would be a line that
+% does nothing. Slack without the teaching entry: 30.0pt in English and
+% 25.9pt in German, about two lines. The override, kept for reference:
+% \renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_terabase_cv}%
+    % Back to 0.25cm (2026-09-22). It went down to 0.05cm while the KI-PrOT
+    % bullet and the detail clauses went in, and came back up once the
+    % SemProbe line stopped rendering here and freed its two lines. The
+    % intermediate values, kept:
+    % \vspace{0.15cm}%
+    % \vspace{0.05cm}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    % Languages (English C1, and French B1, which the posting calls a plus)
+    % and the Publications row, which carries the ECML PKDD detector work.
+    \input{section_private}%
+    % Out, and this is what pays for the SemProbe line. Nothing leaves a hole
+    % in the timeline: Education covers 2015-2023, which overlaps the tutor
+    % years. Tested 2026-09-22 with \cvshowteachingtitlefalse, as mistral-rse
+    % does it: the Languages/Hobbies/Publications row moved to page two, and
+    % STRICT_WARNINGS did not notice. It needs about two more lines than
+    % this page has.
+    % \input{section_teaching_mentoring}%
+    % Left out on purpose -- one page. The GitHub link in the header carries
+    % the project evidence:
+    % \input{section_projects}%
+    % \input{section_skills}%
+}

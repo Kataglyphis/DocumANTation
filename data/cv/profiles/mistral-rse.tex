@@ -71,6 +71,16 @@
 % Deliberately not in the summary: that paragraph is about the work, and ending
 % it on logistics would trade its last line for an administrative note.
 \cvrelocatetrue
+% The Berghof PLC (object detection on an embedded PLC with a Hailo chip) is
+% hidden here, not deleted. Until 2026-09-22 it sat inside the RemaNet bullet,
+% which wrongly made it part of RemaNet. As its own accurate bullet it costs
+% one line, and this page has none: with it on, the build ran to two pages,
+% even with the gap under the summary at 0cm. Hiding the CAS description
+% instead (\cvshowcasdetailfalse) was also tried and still gave two pages. So
+% this page keeps exactly the height it had before the correction. For an
+% RSE posting, the embedded PLC is the least relevant of the three
+% computer-vision projects; terabase-cv shows it.
+\cvshowberghoffalse
 
 % Layout, not content: this profile carries one section body more than the
 % page nominally fits, and the Languages/Hobbies/Publications row missed by
@@ -84,7 +94,13 @@
 
 \newcommand{\cvBody}{%
     \input{section_headline_mistral_rse}%
-    \vspace{0.25cm}%
+    % 0.15cm, was 0.25cm until 2026-09-22 (the amd-hpc lever). The RemaNet
+    % bullet's reformulation ("ONNX inference\slash PyTorch training") kept its
+    % two lines, but the page was at zero slack, and the Languages/Hobbies/
+    % Publications row moved to page two by a point or two. Layout, not
+    % content. The old line, kept:
+    % \vspace{0.25cm}%
+    \vspace{0.15cm}%
     \input{section_experience}%
     % Four years of KIT tutoring (2018-2022). Back in after the two GLM-5.2
     % bullets were merged: the duplication they carried paid for part of the

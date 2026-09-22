@@ -68,6 +68,46 @@
 % -- the AMD HPC one -- and the published profiles are at zero slack. `all`
 % turns it on. The amd-hpc profile trades the RemaNet bullet for this one.
 \newif\ifcvshowquantum \cvshowquantumfalse
+% The SemProbe one-liner under the ECML PKDD entry in section_private.tex. It
+% used to be commented out and is now behind this flag. Default off because it
+% costs two \footnotesize lines in Publications, the column that sets the
+% height of the bottom row, and the published profiles have zero slack (the
+% German mistral-rse build is the one it pushes over). terabase-cv opts in
+% because it is the only section line that says "object detectors", and that
+% profile's summary sentence on detectors rests on it. `all` turns it on.
+\newif\ifcvshowsemprobe \cvshowsemprobefalse
+% The Berghof bullet: object detection on an embedded Berghof PLC fitted with
+% a Hailo accelerator. Until 2026-09-22 it sat inside the RemaNet bullet, which
+% made it read as part of RemaNet. The owner corrected that: it was a separate
+% project, with its own full ML lifecycle. Default ON, so every profile that
+% showed the PLC still shows it. amd-hpc turns it off: that profile hides
+% RemaNet, so it never showed the PLC.
+\newif\ifcvshowberghof \cvshowberghoftrue
+% The industrial safety project: person detection, 4 cameras at once, their
+% inferences batched, full ML lifecycle (owner, 2026-09-22). New content, so
+% it is default OFF like gateway/docs/quantum: the published profiles have
+% zero slack. `all` and terabase-cv turn it on.
+\newif\ifcvshowsafety \cvshowsafetyfalse
+% The build-systems bullet: CMake, GStreamer (Meson), LiteRT-LM (Bazel), and
+% fixes upstreamed to LLVM and sccache. On everywhere except terabase-cv,
+% where its three lines pay for the Berghof and safety bullets. It is the
+% bullet a computer-vision posting has the least use for.
+\newif\ifcvshowbuilds \cvshowbuildstrue
+% The KI-PrOT bullet: visual classification of parts into drag-out classes
+% (surface treatment; ki-prot.de, Fraunhofer IPA develops the AI methods).
+% The owner built and annotated the dataset and versioned it with DVC
+% (owner, 2026-09-22). New content, so default OFF; terabase-cv and `all`
+% turn it on.
+\newif\ifcvshowkiprot \cvshowkiprotfalse
+% ML-lifecycle detail clauses, appended to existing bullets when on: INT8 and
+% the customer field-feedback loop on the Berghof PLC, the owner's own
+% self-labeling research tool (some of the owner's projects used its generated
+% labels -- reworded 2026-09-23; first put as "its labels partly trained the
+% models"), and
+% MLflow/ClearML experiment tracking. All owner-confirmed on 2026-09-22. Default
+% OFF: the base sentences stay exactly as they were, so zero-slack profiles
+% are untouched. terabase-cv and `all` turn it on.
+\newif\ifcvshowmldetail \cvshowmldetailfalse
 % Drops the CAS description, keeping the entry: its dates, title, employer and
 % tags all stay, so the timeline is untouched. The ONNX/mixed-reality bullet is
 % the one description on the page a platform posting has no use for. Guards the
@@ -81,6 +121,16 @@
 % or seven (German), so it is the citation that sets the header height. Only
 % grow this past five lines with the German build in front of you.
 \newif\ifcvrelocate \cvrelocatefalse
+% The order of the Fraunhofer IPA bullets. section_experience.tex defines each
+% one as \cvFhg<Name> (each still behind its own \ifcvshow... flag) and prints
+% them through this macro, so a profile can lead with what its posting asks
+% for first without forking any prose: \renewcommand it in the profile.
+% This default is the order the section file has always had. List every
+% bullet in a profile's order too, even hidden ones: a bullet left out of the
+% list never prints, whatever its flag says, and that failure is silent.
+\newcommand{\cvFraunhoferOrder}{%
+	\cvFhgKernels\cvFhgQuantum\cvFhgCicd\cvFhgBuilds\cvFhgGateway\cvFhgDocs%
+	\cvFhgVlm\cvFhgAgent\cvFhgRemanet\cvFhgBerghof\cvFhgSafety\cvFhgKiprot}
 % \cvshowthesislinesfalse hid the thesis text but not the row holding it:
 % \education always emits its description row, so switching the flag off
 % left an empty minipage -- a blank line under every degree, which is exactly
@@ -98,6 +148,53 @@
 	\fi
 	& \footnotesize{\foreach \n in {#8}{\cvtag{\n}}} \\
 }
+% Extra space between an experience's description and its tag row. The class
+% sets the tag boxes directly under the last description line, and when that
+% line has descenders the boxes nearly touch it ("much too less space", owner,
+% 2026-09-22, on the Fraunhofer entry). \cvtagsep is 0pt by default, and at
+% zero the row ends in the class's plain \\* -- token for token the class's own
+% definition, so no profile changes unless it sets the length. terabase-cv
+% does. \expandafter drops the \else/\fi before \\ runs, so no conditional is
+% left open across the row end.
+% The class's \experience, copied verbatim below except for the one row end.
+% Overridden here, not in myCV_METADATA.cls, for the same reason as
+% \education above.
+\newlength{\cvtagsep}
+\setlength{\cvtagsep}{0pt}
+\makeatletter
+% How it works (third attempt, 2026-09-22): a zero-width rule of height
+% \cvtagsep closes the description minipage. It deepens that cell by exactly
+% \cvtagsep, the timeline's vertical line stays unbroken (same row), and an
+% empty description (a hidden CAS detail) gains nothing: there the rule is
+% the minipage's first item and only sets its height, which the row strut
+% already exceeds. At 0pt it expands to nothing, so the class layout is
+% unchanged token for token.
+\newcommand\cv@descpad{\ifdim\cvtagsep>\z@
+		\par\nointerlineskip\hrule\@height\cvtagsep\@width\z@
+	\fi}
+% The two earlier attempts, kept for reference. Both ended the description row
+% through a hook, \cv@descrowend, which chose between them:
+%   (1) \\*[\cvtagsep] -- it only deepens the row's strut, and a description
+%       minipage is far deeper than any strut, so under a bullet list it
+%       added nothing. It showed only under an empty description.
+%   (2) \\*\noalign{\nobreak\vskip\cvtagsep} -- the space appeared, but a
+%       \noalign skip sits between rows, so the timeline's vertical line
+%       broke at every tag row (seen in the render).
+% \newcommand\cv@descrowend{\ifdim\cvtagsep>\z@
+% 		\expandafter\cv@descrowend@sep
+% 	\else
+% 		\expandafter\cv@descrowend@plain
+% 	\fi}
+% \newcommand\cv@descrowend@sep{\\*\noalign{\nobreak\vskip\cvtagsep}}
+% \newcommand\cv@descrowend@plain{\\*}
+\renewcommand\experience[7]{
+	\textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   			   \\*
+	\textbf{#5}    & \begin{minipage}[t]{\rightcolumnlength}
+		#6 \cv@descpad
+	\end{minipage}								   \\*
+	& \footnotesize{\foreach \n in {#7}{\cvtag{\n}}} \\
+}
+\makeatother
 
 \providecommand{\cvprofile}{default}
 \input{profiles/\cvprofile.tex}

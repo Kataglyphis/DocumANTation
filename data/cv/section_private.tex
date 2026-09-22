@@ -53,13 +53,24 @@
     \vspace{0.55em}
     \begin{itemize}
         \item \textquote{Semantic Robustness Probing via Inpainting} -- ECML PKDD 2026 Demo Track (with N.\ Steckhan)
-        % The SemProbe one-liner is commented out, not deleted: it cost two
-        % \footnotesize lines, and with a second publication in the column
-        % Publications is now the tallest of the three and sets the row height
-        % on its own. An abstract is worth less on a CV than a second named,
-        % lookup-able deliverable. Restore it by uncommenting -- and then check
-        % the German mistral-rse build, which is the one it pushes over.
-        % \item[] {\footnotesize \textsc{SemProbe}: diffusion-based inpainting probes object detectors against ODD-derived factors.}
+        % The original note, verbatim, from before the flag (2026-09-22):
+        % | The SemProbe one-liner is commented out, not deleted: it cost two
+        % | \footnotesize lines, and with a second publication in the column
+        % | Publications is now the tallest of the three and sets the row height
+        % | on its own. An abstract is worth less on a CV than a second named,
+        % | lookup-able deliverable. Restore it by uncommenting -- and then check
+        % | the German mistral-rse build, which is the one it pushes over.
+        % The SemProbe one-liner is behind \ifcvshowsemprobe, default off (see
+        % cv.tex): it costs two \footnotesize lines, and with a second
+        % publication in the column Publications is now the tallest of the three
+        % and sets the row height on its own. An abstract is worth less on a CV
+        % than a second named, lookup-able deliverable -- except to a
+        % computer-vision reader, for whom it is the one section line that says
+        % "object detectors". A profile that opts in must check its German
+        % build, which is the one it pushes over.
+        \ifcvshowsemprobe
+        \item[] {\footnotesize \textsc{SemProbe}: diffusion-based inpainting probes object detectors against ODD-derived factors.}
+        \fi
         % The named study is the concrete deliverable a reader can look up, and
         % it is Fraunhofer work rather than a side project -- it benchmarks
         % accelerator hardware for computer vision, which is the evidence behind
@@ -103,7 +114,9 @@
     \begin{itemize}
         \item \textquote{Semantic Robustness Probing via Inpainting} -- ECML PKDD 2026 Demo Track (mit N.\ Steckhan)
         % Siehe die Anmerkung im englischen Zweig.
-        % \item[] {\footnotesize \textsc{SemProbe}: Diffusions-Inpainting prüft Objektdetektoren gegen ODD-Faktoren.}
+        \ifcvshowsemprobe
+        \item[] {\footnotesize \textsc{SemProbe}: Diffusions-Inpainting prüft Objektdetektoren gegen ODD-Faktoren.}
+        \fi
         % Siehe die Anmerkung im englischen Zweig.
         % Siehe die Anmerkung im englischen Zweig.
         \item \textquote{KI-Beschleunigung durch spezialisierte Hardware und Software} -- Studie, Fraunhofer IPA/IAO (2026)

@@ -13,6 +13,7 @@ make cv-all                                         # both
 make cv-mistral-rse                                 # Research Software Engineer, Mistral
 make cv-mistral-platform                            # Platform Engineer, Mistral Research Platform
 make cv-amd-hpc                                     # Lead HPC/AI Computational Scientist, AMD GENCI CoE
+make cv-terabase-cv                                 # Computer Vision Engineer, Bamboo, Terabase Energy
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf` — the filenames the
