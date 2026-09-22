@@ -21,7 +21,15 @@
 % symbolcolor, fontawesome (\faGithub), hyperref (\href), brand-identity.tex.
 % \providecommand throughout, so a document may still define its own first.
 
-\providecommand{\link}[2]{\color{linkcolor}\href{#1}{#2}\color{black} }
+% \textcolor, not "\color{linkcolor}...\color{black} ": \color ends in
+% \ignorespaces, so the trailing \color{black} swallowed the space in this
+% definition AND the one after the link in the source. Every use inside a box
+% or group hid that. The first link in running text set "KQCBWwith" (the
+% quantum-port bullet). \textcolor scopes the colour to the link, so the text
+% after it keeps the surrounding colour instead of being forced to black.
+% The previous definition, kept for reference:
+% \providecommand{\link}[2]{\color{linkcolor}\href{#1}{#2}\color{black} }
+\providecommand{\link}[2]{\textcolor{linkcolor}{\href{#1}{#2}}}
 
 % <icon> <linked text>, with the icon in the document's symbol colour.
 \providecommand{\sociallink}[3]{%
