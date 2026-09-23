@@ -27,7 +27,8 @@ identity_value() {
 }
 
 usage() {
-    printf 'Usage: %s <book|beamer|demo|example|pptx|cv>\n' "$0" >&2
+    printf 'Usage: %s <book|beamer|demo|example|pptx|cv|letter>\n' "$0" >&2
+    printf '       letter: the cover letter data/cv/letters/<CV_PROFILE>.tex, typeset with that CV profile\n' >&2
     printf 'Environment: CONTAINER_RUNTIME=<nerdctl|docker> IMAGE=<container-image> STRICT_WARNINGS=0|1\n' >&2
     printf '             CV_LANG=<english|german>          (cv target only)\n' >&2
     printf '             CV_PROFILE=<data/cv/profiles/*>   (cv target only, default: default)\n' >&2
@@ -86,7 +87,10 @@ case "$TARGET" in
         # artifact itself.
         strict_step "uv run python /md2pdfLib/presentation/pptx/verify_brand.py /data/out/presentation.pptx"
         ;;
-    cv)
+    cv|letter)
+        # `letter` is the CV document with a cover letter as its body: same
+        # class, header and profile, so it shares this whole branch. It adds a
+        # \def\cvletter and a different filename prefix, nothing else.
         case "$CV_LANG" in
             english|german) ;;
             *)
@@ -104,6 +108,15 @@ case "$TARGET" in
                 "$CV_PROFILE" "$CV_PROFILE" >&2
             exit 2
         fi
+        CV_PREFIX="CV"
+        if [ "$TARGET" = "letter" ]; then
+            if [ ! -f "${PROJECT_ROOT}/data/cv/letters/${CV_PROFILE}.tex" ]; then
+                printf 'No cover letter for CV_PROFILE "%s": data/cv/letters/%s.tex does not exist\n' \
+                    "$CV_PROFILE" "$CV_PROFILE" >&2
+                exit 2
+            fi
+            CV_PREFIX="Cover_Letter"
+        fi
         # Tailored profiles are named per application, and the filename is the
         # first thing the person receiving it sees -- so the distinguishing tag
         # is set by whoever adds the profile (see the Makefile) rather than
@@ -115,10 +128,13 @@ case "$TARGET" in
             printf 'Run: python style/generate_style.py --write\n' >&2
             exit 1
         fi
-        CV_JOB="${CV_JOB:-CV_${CV_NAME}_${CV_JOB_SUFFIX:-$CV_LANG}}"
+        CV_JOB="${CV_JOB:-${CV_PREFIX}_${CV_NAME}_${CV_JOB_SUFFIX:-$CV_LANG}}"
         # Selects the language without editing cv.tex; see the class options.
         # The profile goes in the same way, as a \def cv.tex falls back on.
         CV_ARG="\\def\\cvprofile{${CV_PROFILE}}"
+        if [ "$TARGET" = "letter" ]; then
+            CV_ARG="${CV_ARG}\\def\\cvletter{${CV_PROFILE}}"
+        fi
         CV_ARG="${CV_ARG}\\PassOptionsToClass{${CV_LANG}}{myCV_METADATA}\\input{cv.tex}"
         CV_RUN="lualatex -interaction=nonstopmode -halt-on-error"
         CV_RUN+=" -output-directory=/data/out -jobname=${CV_JOB} '${CV_ARG}'"

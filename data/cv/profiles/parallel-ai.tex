@@ -1,0 +1,100 @@
+% Profile: parallel-ai -- AI Engineer, Parallel (Paris, on-site; LLM agents
+% that automate medical coding in hospitals; posting read 2026-09-23).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "Production LLM systems ... Agentic workflows"
+%        -> the coding-agent bullet, first: an agent the owner started with
+%           a colleague and grew into a production service on self-hosted
+%           GLM-5.3 (speculative decoding, scheduling, NVFP4/FP8 KV cache)
+%   "own the full lifecycle of each AI feature -- research, prototyping,
+%    evaluation, deployment, and monitoring"
+%        -> the summary's lifecycle sentence, the project bullets, and the
+%           CI/CD bullet with its Grafana/Prometheus monitoring and the
+%           MLflow/ClearML clause (\cvshowmldetailtrue)
+%   "strong experience with LLMs and NLP, including prompt engineering
+%    and/or fine-tuning"
+%        -> the LLM serving work, the VLM labeling pipelines, and the LoRA
+%           tag (fine-tuning). Prompt engineering is not named on its own:
+%           it is part of those pipelines, not a separate claim.
+%   "Python ... ML libraries (Hugging Face, LangChain, PyTorch, etc.)"
+%        -> Python and PyTorch in the summary and tags. Hugging Face and
+%           LangChain are NOT claimed.
+%   "Secure data pipelines ... health-data security standards" / "Bonus:
+%    sensitive or regulated data"
+%        -> only what is true: the coding agent is privacy-first and
+%           self-hosted, so code never leaves the institute. Healthcare
+%           data and regulatory certification are NOT claimed.
+%   "integrate AI outputs into the apps used by doctors and hospital staff"
+%   / "close to the product and its users"
+%        -> RemaNet's React frontend, the Berghof customers' field feedback
+%           loop, and the coding agent's researcher users
+%   "Bonus: backend services (Node.js/TypeScript) and data infrastructure"
+%        -> the AI-gateway bullet (Go WebAssembly plugins, token metering
+%           and rate limiting for 45 researchers), switched on here, and the
+%           GPU/CI platform. Node.js/TypeScript are NOT claimed.
+%   "3+ years ... applied ML/AI in production"
+%        -> Fraunhofer IPA since 02/2024 plus CAS Software (ONNX models
+%           trained and deployed, 2022-2023)
+%   On-site in Paris -> \cvrelocatetrue; French B1 in section_private.
+%
+% Not claimed: healthcare or medical coding, regulated-data compliance,
+% LangChain, startup experience. Hugging Face (the coding agent's model
+% source) and TypeScript/Node.js (RemaNet's web part) came off this list on
+% 2026-09-23, when the owner confirmed them. They are rendered through
+% \cvshowstackdetailtrue below.
+%
+% The posting opens on "up to 25% of healthcare spending is lost in manual,
+% repetitive administrative work". The owner's own work has the same shape
+% -- automating repetitive expert work (the self-labeling tool, the coding
+% agent) -- so the summary opens there (owner's suggestion, 2026-09-23).
+%
+% Nothing is deleted for this profile: every bullet it does not show is only
+% switched off here and stays in section_experience.tex for other profiles.
+
+% English 89 characters, within the ~95 the header allows.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | LLM agents, self-hosted LLM serving \& production ML}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | LLM-Agenten, LLM-Serving \& ML in Produktion}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+% Paris, 100% on-site.
+\cvrelocatetrue
+% LLM infrastructure a department runs through: the one place the CV claims
+% Go, and the closest thing on the page to the posting's backend bonus.
+\cvshowgatewaytrue
+% INT8/field feedback (Berghof), the own self-labeling tool, MLflow/ClearML.
+\cvshowmldetailtrue
+% Hugging Face as the coding agent's model source; TypeScript and Node.js in
+% RemaNet's web part -- the posting's library list and backend bonus (owner,
+% 2026-09-23).
+\cvshowstackdetailtrue
+% Delivered to an industrial customer: production ML with a paying user.
+% Not rendered since 2026-09-23 (kept in the source): once the Hugging Face and
+% TypeScript/Node.js clauses were in, the page ran about three lines over.
+% Of the project bullets, person detection is the one an LLM-agent posting
+% needs least. The switch that was in force, kept:
+% \cvshowsafetytrue
+\cvshowsafetyfalse
+% Not rendered here, kept in the source: the computer-vision and HPC depth
+% this reader needs least.
+\cvshowcudakernelsfalse
+\cvshowquantumfalse
+\cvshowbuildsfalse
+\cvshowkiprotfalse
+% Air above the tag boxes, as on terabase-cv.
+\setlength{\cvtagsep}{3pt}
+
+% LLM and agent work first, then the platform it runs on, then the ML
+% products with real users. Every bullet is listed, hidden ones too, so
+% flipping a flag above is enough to show one.
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgAgent\cvFhgGateway\cvFhgVlm\cvFhgCicd\cvFhgBerghof\cvFhgRemanet%
+	\cvFhgSafety\cvFhgKiprot\cvFhgQuantum\cvFhgKernels\cvFhgBuilds\cvFhgDocs}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_parallel_ai}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

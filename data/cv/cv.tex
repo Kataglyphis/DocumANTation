@@ -108,6 +108,14 @@
 % OFF: the base sentences stay exactly as they were, so zero-slack profiles
 % are untouched. terabase-cv and `all` turn it on.
 \newif\ifcvshowmldetail \cvshowmldetailfalse
+% Stack-detail clauses, appended when on (owner, 2026-09-23): the coding
+% agent's open-weight models come from Hugging Face, and RemaNet's web part
+% used TypeScript and Node.js. Since the same day it also names Docker in the
+% CI/CD bullet ("cut Docker builds"): Docker daily at Fraunhofer, advanced
+% builds (owner). Default OFF, and when off the base sentences
+% typeset exactly as before, so no other profile's lines move. parallel-ai
+% and `all` turn it on.
+\newif\ifcvshowstackdetail \cvshowstackdetailfalse
 % Drops the CAS description, keeping the entry: its dates, title, employer and
 % tags all stay, so the timeline is untouched. The ONNX/mixed-reality bullet is
 % the one description on the page a platform posting has no use for. Guards the
@@ -131,6 +139,15 @@
 \newcommand{\cvFraunhoferOrder}{%
 	\cvFhgKernels\cvFhgQuantum\cvFhgCicd\cvFhgBuilds\cvFhgGateway\cvFhgDocs%
 	\cvFhgVlm\cvFhgAgent\cvFhgRemanet\cvFhgBerghof\cvFhgSafety\cvFhgKiprot}
+% The Fraunhofer IPA tag row, set per profile the same way (2026-09-23). The
+% row is one line wide and every tag in it competes for that line, so a
+% profile whose posting has no use for CMake, Bazel and Meson -- the build
+% systems of a bullet it hides -- can spend the room on what it does ask for:
+% \renewcommand it in the profile. This default is the list the section file
+% had before, so no other profile changes. The \experience override below
+% expands the tag argument once, which is what lets a macro stand in for a
+% literal list there.
+\newcommand{\cvFhgTags}{Python, uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
 % \cvshowthesislinesfalse hid the thesis text but not the row holding it:
 % \education always emits its description row, so switching the flag off
 % left an empty minipage -- a blank line under every degree, which is exactly
@@ -187,17 +204,42 @@
 % 	\fi}
 % \newcommand\cv@descrowend@sep{\\*\noalign{\nobreak\vskip\cvtagsep}}
 % \newcommand\cv@descrowend@plain{\\*}
+% The tag row expands its argument once before \foreach sees it (2026-09-23).
+% \foreach takes a braced list literally, so {\cvFhgTags} would come out as a
+% single tag holding the whole list. A literal list starts with a character,
+% which \expandafter leaves alone, so every existing call typesets exactly as
+% before -- and no tag list in data/cv starts with a macro. The row before,
+% kept:
+% 	& \footnotesize{\foreach \n in {#7}{\cvtag{\n}}} \\
+\newcommand\cv@tagrow[1]{\foreach \n in {#1}{\cvtag{\n}}}
 \renewcommand\experience[7]{
 	\textbf{#1}    & \textbf{#2, \textsc{#3}, #4}   			   \\*
 	\textbf{#5}    & \begin{minipage}[t]{\rightcolumnlength}
 		#6 \cv@descpad
 	\end{minipage}								   \\*
-	& \footnotesize{\foreach \n in {#7}{\cvtag{\n}}} \\
+	& \footnotesize{\expandafter\cv@tagrow\expandafter{#7}} \\
 }
 \makeatother
 
 \providecommand{\cvprofile}{default}
 \input{profiles/\cvprofile.tex}
+
+% The word after the name in the footer: "CV" here, redefined by a cover
+% letter. The CV's own output is unchanged.
+\providecommand{\cvfootertitle}{CV}
+
+% Cover letters (2026-09-23). A letter build passes \def\cvletter{<name>} the
+% way \cvprofile is passed (scripts/build_in_container.sh, target `letter`),
+% and <name> is the application's CV profile, which has already been read
+% above. So the letter gets this document's class, fonts, colours, header --
+% with that profile's tagline and relocation line -- and footer, and cannot
+% drift from its CV. letters/<name>.tex redefines \cvBody as the letter and
+% \cvfootertitle. brand-letter.tex, next to the class, holds the letter
+% layout. A CV build never defines \cvletter, so nothing here runs for it.
+\ifdefined\cvletter
+	\input{brand-letter.tex}
+	\input{letters/\cvletter.tex}
+\fi
 
 \name{\brandFirstName}{\brandLastName}
 \tagline{\cvTagline}%|
@@ -323,7 +365,10 @@
 % open" is the one showing this PDF is itself the artifact of a public
 % pipeline -- and in the footer it costs the one-page layout nothing.
 {\footnotesize\textsc{Typeset with}\ \link{\brandGithubUrl/DocumANTation}{DocumANTation}}
-{\textsc{\brandName{} - CV}}
+% "CV" became \cvfootertitle (2026-09-23), so a cover letter can say what it
+% is. The line before, kept:
+% {\textsc{\brandName{} - CV}}
+{\textsc{\brandName{} - \cvfootertitle}}
 {\thepage}
 
 % The section list moved into profiles/: which sections fit is a per-target

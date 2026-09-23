@@ -1,0 +1,36 @@
+% Cover-letter layout for the CV class (myCV_METADATA), added 2026-09-23.
+%
+% data/cv/cv.tex reads this file only when a letter is built -- \cvletter is
+% defined, see scripts/build_in_container.sh, target `letter` -- and then
+% reads data/cv/letters/<name>.tex, which calls the macros below. A letter is
+% the CV document with a different \cvBody: same class, same brand colours
+% and fonts, same header (name, the application's tagline, contact columns),
+% same footer. Layout lives here and content lives in data/cv/letters/, the
+% same split as the CV itself.
+%
+% \providecommand throughout, so a letter file may define its own first.
+%
+% \cvletterhead{<place, date>}{<recipient, lines split by \\>}{<subject>}
+%     Recipient on the left, place and date on the right, then the subject
+%     in the heading colour.
+% \cvletterclosing{<closing phrase>}
+%     The closing phrase, room for a handwritten signature, then the name --
+%     \brandName, never typed (tests/test_identity_is_single_source.py).
+
+\providecommand{\cvletterhead}[3]{%
+	\par\vspace{0.4cm}%
+	\noindent
+	\begin{minipage}[t]{0.58\linewidth}\raggedright #2\end{minipage}%
+	\hfill
+	\begin{minipage}[t]{0.38\linewidth}\raggedleft #1\end{minipage}%
+	\par\vspace{0.7cm}%
+	{\large\color{headingcolor}\textbf{#3}}%
+	\par\vspace{0.35cm}%
+}
+
+\providecommand{\cvletterclosing}[1]{%
+	\par\vspace{0.2cm}%
+	#1,\par
+	\vspace{0.7cm}%
+	{\color{headingcolor}\textbf{\brandName}}\par
+}

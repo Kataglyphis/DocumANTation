@@ -1,0 +1,134 @@
+% Profile: c12-automation -- AI Automation Engineer, C12 Quantum Electronics
+% (Paris, on-site; the first person in the role; posting read 2026-09-23).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "Self-Hosted LLM Infrastructure: Deploy, maintain and optimize local LLM
+%    infrastructure (Ollama, vLLM, or similar) ... data security and
+%    compliance with research confidentiality requirements"
+%        -> the coding-agent bullet, first: self-hosted GLM-5.3 (from Hugging
+%           Face) served with custom speculative decoding and scheduling on
+%           6 H200 GPUs, privacy-first. vLLM is in the tags. Ollama: the
+%           owner's public ANTfrastructure linux/llm-stack (Ollama + Open
+%           WebUI, built for Nextcloud Assistant) -- named in the summary
+%   "Hybrid Automation & Agentic Systems ... agentic frameworks powered by
+%    self-hosted models"
+%        -> the coding agent (an agent on the self-hosted model) and the
+%           self-labeling tool
+%   "Extending AI Capabilities ... secure access to internal systems"
+%        -> the AI-gateway bullet: token metering and rate limiting for 45
+%           researchers. MCP servers are NOT claimed
+%   "AI Observability & Iteration: feedback loops ... from 'vague prompts'
+%    to deterministic, high-quality outputs"
+%        -> Grafana/Prometheus monitoring, MLflow/ClearML, the gateway's
+%           metering; in the summary and the letter, OrchestrANT's benchmark
+%           lab (tool-calling and agent-loop evals against local models)
+%   "Full-Stack Prototyping ... automated documentation systems ..."
+%        -> RemaNet (React, TypeScript, Node.js; \cvshowstackdetailtrue), the
+%           docs bullet (runbooks and onboarding docs; hidden since
+%           2026-09-23, see \cvshowdocsfalse below -- the runbooks stay in the
+%           letter), and in the letter the owner's DocumANTation pipeline,
+%           which typesets this CV
+%   "Infrastructure & DevOps: ... containerization (Docker), GPU management"
+%        -> the CI/CD and DGX A100/H200 bullet, which names Docker through
+%           \cvshowstackdetailtrue ("cut Docker builds from hours to minutes";
+%           Docker daily at Fraunhofer, advanced builds, owner-confirmed
+%           2026-09-23); the llm-stack is a container compose stack. OVH,
+%           Tailscale and Ansible are NOT claimed
+%   "Transversal Communication ... explain your architectural choices ...
+%    including quantum researchers"
+%        -> the KQCBW quantum-physics port (\cvshowquantumtrue): work for
+%           Baden-Wuerttemberg's quantum-computing competence centre
+%   "Security-First Approach: data sovereignty ... on-premises"
+%        -> "privacy-first" and "self-hosted" in the summary and the agent
+%           bullet
+%   Python -> tags, summary. Paris on-site -> \cvrelocatetrue; French B1.
+%
+% The owner's answers of 2026-09-23 added, each where it is shown:
+%   - agent skills for the owner's quantum computing team, built now
+%     (summary): "Extending AI Capabilities ... quantum computing
+%     platforms" and the agentic-systems line, in one clause
+%   - the planner/executor loop in ANTfrastructure, built and run by the
+%     owner with opencode and Claude Code (summary; letter): "stateful AI
+%     workflows ... autonomous agents that handle complex, multi-step logic"
+%   - teams in quantum computing, biotech, mechanical engineering and
+%     electroplating (summary; letter): "Transversal Communication"
+%   - Python in every project (summary)
+%   - the DGX systems are on site (summary: "on-premises", the posting's word)
+%   - the AI gateway authenticates its users (gateway bullet:
+%     "access-controlled"): "Experience with ... access control is a plus"
+%   - RAG, used for fast information retrieval (tag row; letter). Use, not a
+%     RAG system built
+%   - plain WireGuard instead of Tailscale (letter only: where it runs was
+%     not said, and the tag row belongs to the Fraunhofer entry)
+%
+% Not claimed: MCP servers, Prefect/LangGraph/n8n, OVH, Tailscale, Ansible,
+% Google Workspace/Nextcloud integrations built at work. Until 2026-09-23 this
+% list also named RAG in production and Tailscale without the WireGuard note.
+% The llm-stack is DESIGNED for Nextcloud Assistant (its README says so);
+% no deployment is claimed.
+%
+% Nothing is deleted for this profile: every bullet it does not show is only
+% switched off here and stays in section_experience.tex.
+
+% English 80 characters; German 91, under the ~92 its header allows.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Self-hosted LLMs, AI agents \& automation}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | LLM-Hosting, KI-Agenten \& Automatisierung}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+% Paris, on-site.
+\cvrelocatetrue
+% LLM infrastructure a department runs through: governance of a self-hosted
+% service.
+\cvshowgatewaytrue
+% Runbooks and onboarding docs for the CI/CD and GPU cluster: the posting's
+% documentation and transversal asks. Shown until 2026-09-23, kept:
+% \cvshowdocstrue
+% Hidden since: its one line pays for the summary's fifth, which now carries
+% the owner's stronger evidence for the same asks -- the teams the owner
+% works with, and agent skills for the quantum computing team. The runbooks
+% are still in the letter, next to the documentation pipeline.
+\cvshowdocsfalse
+% A quantum-computing company: the one bullet that has already served
+% quantum researchers.
+\cvshowquantumtrue
+% MLflow/ClearML, the own self-labeling tool, INT8/field feedback.
+\cvshowmldetailtrue
+% Hugging Face as the model source; TypeScript/Node.js in RemaNet.
+\cvshowstackdetailtrue
+% Not rendered here, kept in the source: the vision and HPC depth this reader
+% needs least.
+\cvshowcudakernelsfalse
+\cvshowbuildsfalse
+\cvshowberghoffalse
+\cvshowsafetyfalse
+\cvshowkiprotfalse
+% Air above the tag boxes, as on the other 2026 profiles.
+\setlength{\cvtagsep}{3pt}
+% The Fraunhofer tag row (2026-09-23): CMake, Bazel and Meson are the build
+% systems of the builds bullet, which this profile hides, and the posting asks
+% for none of them. Their slot goes to what it does ask for, grouped: LLM work
+% (vLLM, RAG, LoRA), then infrastructure (Docker -- "containerization
+% (Docker)"; Grafana -- "monitoring tools"). RAG is the owner's: RAG systems
+% for fast information retrieval. Same tag count, one character wider; the row
+% stays one line.
+\renewcommand{\cvFhgTags}{Python, uv, Go, C++, CUDA, PyTorch, vLLM, RAG, LoRA, Docker, Grafana, GitLab CI/CD}
+
+% Self-hosted LLM service first, then the quantum work -- moved up to second
+% by the owner on 2026-09-23: at a quantum-computing company it is the domain
+% link, and it sat sixth -- then what governs and runs the LLM service, what
+% documents it, automation for researchers, and the full-stack project.
+% Every bullet is listed, hidden ones too. The first order, kept:
+%   \cvFhgAgent\cvFhgGateway\cvFhgCicd\cvFhgDocs\cvFhgVlm\cvFhgQuantum%
+%   \cvFhgRemanet\cvFhgBuilds\cvFhgBerghof\cvFhgSafety\cvFhgKiprot\cvFhgKernels
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgAgent\cvFhgQuantum\cvFhgGateway\cvFhgCicd\cvFhgDocs\cvFhgVlm%
+	\cvFhgRemanet\cvFhgBuilds\cvFhgBerghof\cvFhgSafety\cvFhgKiprot\cvFhgKernels}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_c12_automation}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

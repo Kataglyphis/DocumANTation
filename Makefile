@@ -1,7 +1,7 @@
-DOC_TARGETS = book beamer demo example pptx cv
+DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
@@ -44,6 +44,23 @@ cv-amd-hpc:
 # Suffix "Terabase", not "Terabase_CV": CV_..._CV.pdf reads as a typo.
 cv-terabase-cv:
 	$(MAKE) cv CV_PROFILE=terabase-cv CV_JOB_SUFFIX=Terabase
+
+# Application: AI Engineer, Parallel (Paris).
+cv-parallel-ai:
+	$(MAKE) cv CV_PROFILE=parallel-ai CV_JOB_SUFFIX=Parallel_AI
+
+# Cover letters: the `letter` target typesets data/cv/letters/<CV_PROFILE>.tex
+# with the CV profile of the same name (its tagline, its header). One target
+# per application, next to the application's CV target.
+letter-parallel-ai:
+	$(MAKE) letter CV_PROFILE=parallel-ai CV_JOB_SUFFIX=Parallel_AI
+
+# Application: AI Automation Engineer, C12 Quantum Electronics (Paris).
+cv-c12-automation:
+	$(MAKE) cv CV_PROFILE=c12-automation CV_JOB_SUFFIX=C12_AI_Automation
+
+letter-c12-automation:
+	$(MAKE) letter CV_PROFILE=c12-automation CV_JOB_SUFFIX=C12_AI_Automation
 
 # Live-demo mode: rebuild on every source change. Requires `entr`
 # (apt install entr / brew install entr). Pair with a PDF viewer that

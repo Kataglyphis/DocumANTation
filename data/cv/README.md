@@ -14,6 +14,10 @@ make cv-mistral-rse                                 # Research Software Engineer
 make cv-mistral-platform                            # Platform Engineer, Mistral Research Platform
 make cv-amd-hpc                                     # Lead HPC/AI Computational Scientist, AMD GENCI CoE
 make cv-terabase-cv                                 # Computer Vision Engineer, Bamboo, Terabase Energy
+make cv-parallel-ai                                 # AI Engineer, Parallel
+make letter-parallel-ai                             # its cover letter
+make cv-c12-automation                              # AI Automation Engineer, C12 Quantum Electronics
+make letter-c12-automation                          # its cover letter
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf` — the filenames the
@@ -27,6 +31,27 @@ them; one file per target in `profiles/`, and `default` is the CV published on
 jonasheinle.de. It is orthogonal to `CV_LANG` — every profile builds in both
 languages. Tailoring an application means adding a profile, never editing
 `cv.tex` or copying a section file. See `profiles/README.md`.
+
+## Cover letters
+
+A cover letter is this CV document with a letter as its body, not a second
+template. `./scripts/build_in_container.sh letter` (or `make letter-<name>`)
+builds `letters/<CV_PROFILE>.tex` with the CV profile of the same name, so the
+letter gets the CV's class, fonts, colours, footer and header, down to that
+application's tagline and relocation line. It cannot drift from its CV.
+Output: `data/out/Cover_Letter_<First>_<Last>_<CV_JOB_SUFFIX>.pdf`.
+
+| File | Contents |
+| --- | --- |
+| `letters/<name>.tex` | One letter per application: redefines `\cvBody` as the letter and `\cvfootertitle` as "Cover Letter" |
+| `md2pdfLib/cv/template/latex/brand-letter.tex` | The layout: `\cvletterhead{<place, date>}{<recipient>}{<subject>}` and `\cvletterclosing{<closing>}`, which signs with `\brandName` |
+
+A new application's letter is a copy of an existing `letters/*.tex`,
+renamed after its CV profile, plus a `letter-<name>` target in the Makefile.
+Adjust the text to the posting. As everywhere in these sources, a replaced
+sentence goes into a `%` comment beside its replacement and is never
+deleted: another application may want it back. The identity rule holds here
+too: sign with `\brandName`, never the literal name.
 
 Add `STRICT_WARNINGS=1` to fail the build on LaTeX warnings and bad boxes. CI
 runs both languages that way.
