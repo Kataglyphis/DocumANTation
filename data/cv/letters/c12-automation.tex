@@ -1,0 +1,127 @@
+% Cover letter: AI Automation Engineer, C12 Quantum Electronics (Paris,
+% on-site), 2026-09-23. Built with its CV profile of the same name:
+%   make letter-c12-automation -> Cover_Letter_<First>_<Last>_C12_AI_Automation.pdf
+%
+% Written in the parallel-ai letter's shape: not the CV again, but three
+% lessons, each answering a line of the posting.
+%   hook      -> "our first AI Automation Engineer ... technical force
+%                multiplier": the coding agent, started unasked with a
+%                colleague, now a production service
+%   lesson 1  -> "Self-Hosted LLM Infrastructure (Ollama, vLLM)", "complete
+%                data sovereignty", "Nextcloud": the self-hosted GLM-5.3 on
+%                vLLM, the gateway, and the owner's public ANTfrastructure
+%                llm-stack (Ollama + Open WebUI, built for Nextcloud Assistant)
+%   lesson 2  -> "AI Observability & Iteration ... from 'vague prompts' to
+%                deterministic outputs": the owner's public OrchestrANT
+%                benchmark lab. The quoted finding is from its
+%                benchmarks/bench_agent.py: "the coding winner was the
+%                tool-calling loser until a system prompt fixed it"
+%   lesson 3  -> "Transversal Communication ... including quantum
+%                researchers" and "automated documentation systems": four
+%                years of tutoring, the runbooks, DocumANTation (which typesets
+%                this letter), the KQCBW quantum-physics port
+%   gap       -> Prefect/LangGraph/n8n, MCP servers, OVH/Tailscale/Ansible:
+%                none is on record, so the letter names them as the layer to
+%                ramp up on. If the owner has used any of them, move it out
+%                of this sentence.
+%
+% Version 3 (2026-09-23) adds the owner's answers to "how can I make my CV
+% and/or my cover letter better", each where it answers the posting:
+%   hook      -> + agent skills for the owner's quantum computing team ("I am
+%                building AGENT skills for my quantum computing team")
+%   lesson 1  -> + the DGX systems are on site ("on-premises", the posting's
+%                word); the gateway is access-controlled (owner: yes); plain
+%                WireGuard ("i directly use wireguard plain"), the protocol
+%                Tailscale is built on -- for "VPN solutions (Tailscale)" and
+%                "private networking and access control"
+%   lesson 2  -> retitled from "An agent is only as good as its
+%                measurements": the planner/executor loop in ANTfrastructure
+%                (owner: "yes exactly. i do this with opencode/claude code";
+%                docs/windows-agentic-loop.md) is the posting's "stateful AI
+%                workflows ... autonomous agents ... multi-step logic", and
+%                it sits next to OrchestrANT. The Grafana/Prometheus and
+%                MLflow/ClearML sentence left: both are on the CV
+%   lesson 3  -> the four fields the owner works with -- quantum computing,
+%                biotech, mechanical engineering, electroplating (Galvanik)
+%                -- which the owner named as the proof of "Transversal
+%                Communication"; what the KQCBW team taught the owner ("I
+%                learned much with my KQCBW team about quantum computing
+%                which is very cool"); carbon nanotubes from the posting's
+%                own first paragraph
+%   gap       -> reframed as new tools, familiar ideas. Tailscale left it
+%                (WireGuard); MCP servers stay a gap; OVH is not named
+%   close     -> a first project, RAG over Nextcloud documents on C12's own
+%                models (the owner uses RAG systems for fast information
+%                retrieval), after the posting's "map their workflows"
+%
+% Sentences that say what the owner learned or would like to do are drafted
+% from the owner's facts. The owner should read them as a proposal and put
+% them in their own voice -- in version 3 above all "so explaining a system
+% is part of building it", "I would like to keep learning it where quantum
+% processors are built from carbon nanotubes" and the first-project
+% paragraph.
+%
+% Nothing in this file is ever deleted: a replaced sentence goes into a
+% comment beside its replacement.
+
+\renewcommand{\cvfootertitle}{\IfLanguageName{english}{Cover Letter}{Anschreiben}}
+
+% ---------------------------------------------------------------------------
+% Version 2 (2026-09-23), rendered until version 3 below. Kept, not rendered:
+%
+% \renewcommand{\cvBody}{%
+% 	\cvletterhead
+% 		{Stuttgart, 23 September 2026}
+% 		{C12 Quantum Electronics\\AI Automation Engineer hiring team\\Paris, France}
+% 		{Application: AI Automation Engineer (Paris, on-site)}
+%
+% 	Dear C12 team,
+%
+% 	You are hiring your first AI Automation Engineer, a ``technical force multiplier''. At Fraunhofer IPA I have been doing a version of that job without the title: nobody asked a colleague and me to build the institute's coding agent, and today it is a production service its researchers use. Three things that work taught me match your posting almost line by line.
+%
+% 	% The opening before the owner's vLLM note (2026-09-23), kept:
+% 	% \textbf{Data sovereignty is an architecture decision.} We serve GLM-5.3 ourselves on six H200 GPUs, privacy-first, with custom speculative decoding and scheduling in vLLM for $\sim$10$\times$ throughput,
+% 	\textbf{Data sovereignty is an architecture decision.} We serve a vision-capable GLM-5.3 ourselves with vLLM on six H200 GPUs, privacy-first, with custom speculative decoding and scheduling for $\sim$10$\times$ throughput, and an AI gateway I extended meters and rate-limits the tokens of all 45 researchers. In my public repositories the same pattern runs smaller: an Ollama and Open WebUI stack built for Nextcloud. Your ``self-hosted LLM infrastructure'' and your Nextcloud, in one.
+%
+% 	\textbf{An agent is only as good as its measurements.} Your ``from vague prompts to deterministic outputs'' is the problem my public benchmark lab, OrchestrANT, exists for: it tests tool-calling and complete agent runs against local models, and afterwards checks the repository, not the transcript. It has already paid off: the model that won at coding lost at tool-calling until a system prompt fixed it. At Fraunhofer the same instinct means Grafana and Prometheus on the GPU cluster and experiments tracked in MLflow and ClearML.
+%
+% 	\textbf{Automation only sticks when people understand it.} I taught computer organization to undergraduates for four years, I write the runbooks for the systems I run, and I built my own documentation pipeline -- it typeset this letter. Quantum researchers are not new to me either: for Baden-W\"urttemberg's quantum computing competence center (KQCBW) I ported a quantum-physics simulation from CPU to GPU, $\sim$700$\times$ faster.
+%
+% 	% Before Docker was confirmed (2026-09-23), kept:
+% 	% Your orchestration layer -- Prefect, LangGraph or n8n -- and MCP servers are where I would ramp up first, together with your OVH, Tailscale and Ansible setup; the model serving, GPUs, security and monitoring underneath them I already run.
+% 	Your orchestration layer -- Prefect, LangGraph or n8n -- and MCP servers are where I would ramp up first, together with your OVH, Tailscale and Ansible setup; the model serving, GPUs, Docker builds, security and monitoring underneath them I already run every day. I would be glad to move to Paris for this role, and I speak French at B1 and English at C1.
+%
+% 	I would like to help C12 become the AI-native organization your posting describes, one research bottleneck at a time.
+%
+% 	\cvletterclosing{Best regards}
+% }
+% ---------------------------------------------------------------------------
+
+\renewcommand{\cvBody}{%
+	\cvletterhead
+		{Stuttgart, 23 September 2026}
+		{C12 Quantum Electronics\\AI Automation Engineer hiring team\\Paris, France}
+		{Application: AI Automation Engineer (Paris, on-site)}
+
+	Dear C12 team,
+
+	You are hiring your first AI Automation Engineer, a ``technical force multiplier''. At Fraunhofer IPA I have been doing a version of that job without the title: nobody asked a colleague and me to build the institute's coding agent, and today it is a production service its researchers use. Now I am building agent skills for our quantum computing team. Three things this work taught me match your posting almost line by line.
+
+	% First wording of lesson 1's last two sentences, kept: it set
+	% "Nextcloud." alone on the paragraph's last line.
+	% In front of our models sits an access-controlled AI gateway, which I extended with token metering and rate limiting for all 45 researchers. For private networking I use plain WireGuard, the protocol underneath your Tailscale, and in my public repositories the same pattern runs smaller: an Ollama and Open WebUI stack built for Nextcloud.
+	\textbf{Data sovereignty is an architecture decision.} We serve a vision-capable GLM-5.3 ourselves, with vLLM on six H200 GPUs in our on-premises DGX systems, so what researchers send it stays on site; custom speculative decoding and scheduling give it $\sim$10$\times$ throughput. In front of our models sits an access-controlled AI gateway that I extended with token metering and rate limiting for all 45 researchers. For private networking I use plain WireGuard, the protocol under your Tailscale, and my public repositories run the same pattern smaller: an Ollama and Open WebUI stack built for Nextcloud.
+
+	% First wording of lesson 2's OrchestrANT sentences, kept: it set
+	% "fixed it." alone on the paragraph's last line.
+	% To get from ``vague prompts'' to deterministic outputs, my public benchmark lab, OrchestrANT, tests tool-calling and complete agent runs against local models and afterwards checks the repository, not the transcript. It has already paid off: the model that won at coding lost at tool-calling until a system prompt fixed it.
+	\textbf{An autonomous agent is only as good as its harness.} Your posting asks for stateful workflows and agents that handle multi-step logic. My open-source planner/executor loop is one: a planner model writes tasks to a backlog, an executor model works through them one at a time on opencode or Claude Code, and periodic builds, tests and quality gates check the result; when a build breaks, a fixer agent gets the log. To get from ``vague prompts'' to deterministic outputs, my public benchmark lab, OrchestrANT, tests tool-calling and complete agent runs against local models and checks the repository, not the transcript. It has paid off: the model that won at coding lost at tool-calling until a system prompt fixed it.
+
+	\textbf{Automation only sticks when people understand it.} I work with quantum computing and biotech researchers, mechanical engineers and electroplaters, so explaining a system is part of building it. For Baden-W\"urttemberg's quantum computing competence center (KQCBW) I ported a quantum-physics simulation from CPU to GPU, $\sim$700$\times$ faster, and my KQCBW team taught me a lot about quantum computing in return; I would like to keep learning it where quantum processors are built from carbon nanotubes. I also taught computer organization to undergraduates for four years, write the runbooks for the systems I run, and built my own documentation pipeline -- it typeset this letter.
+
+	New to me would be your tools, not their ideas: my loop orchestrates agents without Prefect, LangGraph or n8n; I extend agents with skills today, and MCP servers are the next step; and versioned scripts provision my build images the way Ansible configures your hosts. I would be glad to move to Paris for this role, and I speak French at B1 and English at C1.
+
+	In my first weeks I would sit with your R\&D, IT and software teams and map where their time goes. A likely first project: an assistant on your own models that answers questions from your Nextcloud documents with RAG, which I already rely on for fast information retrieval. I would like to help C12 become the AI-native organization your posting describes, one research bottleneck at a time.
+
+	\cvletterclosing{Best regards}
+}

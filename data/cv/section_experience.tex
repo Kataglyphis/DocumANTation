@@ -82,7 +82,12 @@
                 % "experiment tracking". Passive on purpose: these were the
                 % team's tools, used, not owned like the CI/CD before them.
                 \def\cvFhgCicd{%
-                \item Owned the institute's GitLab CI/CD, DGX A100/H200 GPUs and \textbf{Grafana/Prometheus} monitoring; \textbf{BuildKit} and \textbf{sccache} caching cut builds from hours to minutes\ifcvshowmldetail; experiments tracked in \textbf{MLflow} and \textbf{ClearML}\fi
+                % "Docker" behind \ifcvshowstackdetail (owner, 2026-09-23: Docker
+                % daily at Fraunhofer, advanced builds; BuildKit is its build
+                % engine). Off, the sentence is exactly the line below. That
+                % line, kept:
+                % \item Owned the institute's GitLab CI/CD, DGX A100/H200 GPUs and \textbf{Grafana/Prometheus} monitoring; \textbf{BuildKit} and \textbf{sccache} caching cut builds from hours to minutes\ifcvshowmldetail; experiments tracked in \textbf{MLflow} and \textbf{ClearML}\fi
+                \item Owned the institute's GitLab CI/CD, DGX A100/H200 GPUs and \textbf{Grafana/Prometheus} monitoring; \textbf{BuildKit} and \textbf{sccache} caching cut \ifcvshowstackdetail\textbf{Docker} \fi builds from hours to minutes\ifcvshowmldetail; experiments tracked in \textbf{MLflow} and \textbf{ClearML}\fi
                 }
                 % Naming the projects is the point: "fixes go upstream" is a
                 % posture, named projects are checkable evidence of root-cause
@@ -110,8 +115,14 @@
                 % Go -- see the flag in cv.tex. "45 researchers" is the scale
                 % figure: the plugins are infrastructure a whole department runs
                 % through, which a bare "token metering" does not convey.
+                % "access-controlled" (owner, 2026-09-23): the gateway
+                % authenticates its users, so it is access control, not only
+                % metering -- the c12-automation posting's "private networking
+                % and access control". It describes the gateway; the owner's
+                % part stays the plugins. The line before, kept:
+                % \item Extended the institute's \textbf{AI gateway} with custom \textbf{WebAssembly} plugins in \textbf{Go}: token metering and rate limiting for its \textbf{45 researchers}
                 \def\cvFhgGateway{\ifcvshowgateway
-                \item Extended the institute's \textbf{AI gateway} with custom \textbf{WebAssembly} plugins in \textbf{Go}: token metering and rate limiting for its \textbf{45 researchers}
+                \item Extended the institute's access-controlled \textbf{AI gateway} with custom \textbf{WebAssembly} plugins in \textbf{Go}: token metering and rate limiting for its \textbf{45 researchers}
                 \fi}
                 % Closes the platform cluster, deliberately after the systems it
                 % documents: the posting asks for documentation "that will help
@@ -119,8 +130,12 @@
                 % which is this order exactly. It names those systems rather than
                 % saying "docs" -- an abstract documentation claim is the easiest
                 % thing on a CV for a reader to discount.
+                % One line since 2026-09-23 (c12-automation, the first
+                % profile to render it next to the others, set "from" alone on
+                % a second line). Same facts. The first wording, kept:
+                % \item Wrote the runbooks and onboarding docs for the CI/CD and GPU cluster the group works from
                 \def\cvFhgDocs{\ifcvshowdocs
-                \item Wrote the runbooks and onboarding docs for the CI/CD and GPU cluster the group works from
+                \item Wrote the runbooks and onboarding docs for the group's CI/CD and GPU cluster
                 \fi}
                 % "Replaced ... hand-labeling" and not "Automated data labeling":
                 % same fact, but one names what it cost the group before. Verbs
@@ -201,7 +216,14 @@
                 % both models, kept:
                 % \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.2 and GLM-5.3} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
                 \def\cvFhgAgent{%
-                \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                % The stack-detail clause first read "(open weights from
+                % Hugging Face)" and set "context)" alone on a fifth line.
+                % Kept: \ifcvshowstackdetail{} (open weights from \textbf{Hugging Face})\fi{}
+                % "served with vLLM" added 2026-09-23 (owner: vLLM serves GLM-5.3
+                % with vision). The bullet named the model but never the
+                % engine; vLLM sat only in the tags. The line before, kept:
+                % \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} served with \textbf{vLLM} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
                 }
                 % RemaNet = Remanufacturing Network, Horizon Europe grant
                 % 101138627, 25 partners, Jan 2024 - Dec 2026, Fraunhofer IPA a
@@ -275,7 +297,9 @@
                 % line. The owner's text ended in ";", which is dropped: no
                 % other bullet ends in punctuation.
                 \def\cvFhgRemanet{\ifcvshowremanet
-                \item Shipped \textbf{activity detection} for \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 partners): camera pipelines with a \textbf{React} web frontend and \textbf{ONNX} inference\slash\textbf{PyTorch} training on NVIDIA GPUs
+                % \ifcvshowstackdetail clause (owner, 2026-09-23): TypeScript and
+                % Node.js were and are used in RemaNet's web part.
+                \item Shipped \textbf{activity detection} for \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 partners): camera pipelines with a \textbf{React} web frontend\ifcvshowstackdetail{} (\textbf{TypeScript}, \textbf{Node.js})\fi{} and \textbf{ONNX} inference\slash\textbf{PyTorch} training on NVIDIA GPUs
                 \fi}
                 % Before the frame rate and the framework (2026-09-22), kept:
                 % \item Ran \textbf{object detection} on an embedded \textbf{Berghof PLC I fitted with a Hailo AI accelerator}
@@ -349,7 +373,11 @@
         % profile a line, mistral-rse its page. The lists before, kept:
         % {Python, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
         % {Python, Astral uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
-        {Python, uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+        % Per profile since 2026-09-23: \cvFhgTags in cv.tex holds the list
+        % below as its default, and a profile may \renewcommand it. The
+        % literal list it replaced here, kept:
+        % {Python, uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+        {\cvFhgTags}
         
         \emptySeparator
         
@@ -411,7 +439,7 @@
             % schlägt fehl. \allowbreak am Schrägstrich ändert den Umbruch nicht;
             % "Monitoring mit Grafana/Prometheus" löst es, kostet aber die Seite.
             \def\cvFhgCicd{%
-            \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten Builds von Stunden auf Minuten\ifcvshowmldetail; Experiment-Tracking mit \textbf{MLflow} und \textbf{ClearML}\fi
+            \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten \ifcvshowstackdetail\textbf{Docker}-\fi Builds von Stunden auf Minuten\ifcvshowmldetail; Experiment-Tracking mit \textbf{MLflow} und \textbf{ClearML}\fi
             }
             % Siehe die Anmerkung im englischen Zweig.
             % Hinter \ifcvshowbuilds (standardmäßig an; siehe cv.tex).
@@ -419,8 +447,11 @@
             \item Fortgeschrittene \textbf{CMake}-Builds für C++-Codebasen, \textbf{GStreamer} (\textbf{Meson}) und \textbf{LiteRT-LM} (\textbf{Bazel}) aus dem Quellcode gebaut; Fixes an \textbf{LLVM} und \textbf{sccache} upstream eingebracht, statt sie lokal zu patchen
             \fi}
             % Siehe die Anmerkung im englischen Zweig.
+            % "zugriffsgeschützt" seit 2026-09-23, siehe die Anmerkung im
+            % englischen Zweig. Die Zeile davor, zum Nachschlagen erhalten:
+            % \item \textbf{KI-Gateway} des Instituts um eigene \textbf{WebAssembly}-Plugins in \textbf{Go} erweitert: Token-Metering und Rate-Limiting für \textbf{45 Forschende}
             \def\cvFhgGateway{\ifcvshowgateway
-            \item \textbf{KI-Gateway} des Instituts um eigene \textbf{WebAssembly}-Plugins in \textbf{Go} erweitert: Token-Metering und Rate-Limiting für \textbf{45 Forschende}
+            \item Zugriffsgeschütztes \textbf{KI-Gateway} des Instituts um eigene \textbf{WebAssembly}-Plugins in \textbf{Go} erweitert: Token-Metering und Rate-Limiting für \textbf{45 Forschende}
             \fi}
             % Siehe die Anmerkung im englischen Zweig: nennt die Systeme.
             \def\cvFhgDocs{\ifcvshowdocs
@@ -446,7 +477,7 @@
             % Fassung mit beiden Modellen, zum Nachschlagen erhalten:
             % \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.2 und GLM-5.3} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
             \def\cvFhgAgent{%
-            \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.3 mit Vision-Fähigkeiten} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.3 mit Vision-Fähigkeiten}\ifcvshowstackdetail{} (offene Gewichte von \textbf{Hugging Face})\fi{} mit \textbf{vLLM} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
             }
             % Kein "end to end" hier: im Deutschen ein Anglizismus, den die
             % Doppelpunkt-Liste ohnehin schon sagt. Die Geraete stehen in einer
@@ -476,7 +507,7 @@
             % Siehe die Anmerkung im englischen Zweig: ONNX-Inferenz und
             % PyTorch-Training auf NVIDIA-GPUs.
             \def\cvFhgRemanet{\ifcvshowremanet
-            \item \textbf{Aktivitätserkennung} für \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 Partner): Kamera-Pipelines mit \textbf{React}-Web-Frontend, \textbf{ONNX}-Inferenz\slash\textbf{PyTorch}-Training auf NVIDIA-GPUs
+            \item \textbf{Aktivitätserkennung} für \link{https://remanet-project.eu}{RemaNet} (Horizon Europe, 25 Partner): Kamera-Pipelines mit \textbf{React}-Web-Frontend\ifcvshowstackdetail{} (\textbf{TypeScript}, \textbf{Node.js})\fi, \textbf{ONNX}-Inferenz\slash\textbf{PyTorch}-Training auf NVIDIA-GPUs
             \fi}
             % Vor Bildrate und Framework (2026-09-22), zum Nachschlagen erhalten:
             % \item \textbf{Objekterkennung} auf einer eingebetteten \textbf{Berghof-SPS}, die ich mit einem \textbf{Hailo}-KI-Beschleuniger nachgerüstet habe
@@ -503,7 +534,10 @@
     % {Python, Go, C++, CUDA, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
     % {Python, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
     % {Python, Astral uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
-    {Python, uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+    % Seit 2026-09-23 je Profil (\cvFhgTags in cv.tex), siehe die Anmerkung im
+    % englischen Zweig. Die ersetzte Liste, zum Nachschlagen erhalten:
+    % {Python, uv, Go, C++, CUDA, PyTorch, CMake, Bazel, Meson, vLLM, LoRA, GitLab CI/CD}
+    {\cvFhgTags}
         
     \emptySeparator
     
