@@ -134,7 +134,7 @@ Code must stay 3.14-compatible (`requires-python = ">=3.14"`).
 ### Running Tools
 
 ```bash
-# On the host -- all five are CI gates in checks.yml, in this order:
+# On the host -- all five are CI gates in linux-x64.yml, in this order:
 uv run --extra dev ruff check .
 uv run --extra dev ruff format --check .
 uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
@@ -175,7 +175,7 @@ where only `/md2pdfLib` is mounted.
 - **No `rm -rf` without `${VAR:?}` guard** to prevent accidental root deletion
 - Use `"$(dirname "$0")"` for relative references to sibling scripts
 
-These are enforced: `checks.yml` runs `shellcheck` over `git ls-files '*.sh'`,
+These are enforced: `linux-x64.yml` runs `shellcheck` over `git ls-files '*.sh'`,
 so every tracked script is linted and a new one cannot be added outside the
 gate. Run it locally with `uv run --extra dev shellcheck $(git ls-files '*.sh')`.
 
@@ -286,12 +286,14 @@ so such a subdirectory needs its own preset (that is what `demo` is).
   (BuildKit / rootless). Scripts accept `CONTAINER_RUNTIME=docker` for
   environments without nerdctl; both run the same image.
 - **Do not** add a workflow that builds the `Dockerfile` or the documents.
-  Two workflows exist and neither needs a TeX distribution: `checks.yml`
-  (brand drift, lint, types, tests) and `docs-pages.yml` (publishes the Sphinx
+  Two workflows exist and neither needs a TeX distribution: `linux-x64.yml`
+  (brand drift, lint, types, tests) and `docs.yml` (publishes the Sphinx
   docs to GitHub Pages). Two workflows were deliberately removed --
   `publish-image.yml`, because nothing consumed the GHCR image it pushed, and
   the document-building job, because the ~8.5 GB `texlive-full` image cost more
-  to build on every push than it caught.
+  to build on every push than it caught. File and display names follow the
+  family convention (2026-09-24): `linux-x64.yml` "Linux x64 · build + test"
+  (was `checks.yml`) and `docs.yml` "Docs · publish" (was `docs-pages.yml`).
 
   **Consequence, worth stating plainly:** nothing in CI compiles LaTeX, so
   nothing in CI catches a broken template, a missing TeX package or an overfull
