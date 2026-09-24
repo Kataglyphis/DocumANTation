@@ -1,4 +1,4 @@
-name: Checks
+name: Linux x64 · build + test
 
 # Brand drift, lint, types and the test suite. Deliberately does NOT build the
 # documents: that needs the ~8.5 GB texlive-full image, and building it on every
@@ -11,6 +11,10 @@ name: Checks
 # suite covers the parts that do not need a TeX distribution -- preset wiring,
 # the Lua filter through real pandoc, the pptx post-processing, brand and
 # identity drift -- and the strict warning gates run when you build locally.
+#
+# Named for the family convention (2026-09-24): a lane that runs a test suite
+# is a platform lane, and this one runs pytest against an amd64 pandoc on a
+# Linux x64 runner. "Lint" would report a failing test under the wrong name.
 
 on:
   push:

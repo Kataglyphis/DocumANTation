@@ -1,4 +1,4 @@
-name: Publish Docs
+name: Docs · publish
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: "3.14"
 
-      # checks.yml runs this too, but it does not gate the deploy: on a push
+      # linux-x64.yml runs this too, but it does not gate the deploy: on a push
       # both workflows start together, so without it here a drifted custom.css
       # publishes while the drift check is still going red beside it.
       - name: Brand drift check
