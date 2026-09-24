@@ -49,7 +49,11 @@ jobs:
         with:
           path: docs/_build/html
 
+  # develop and master still BUILD, so a broken docs tree goes red there too; only
+  # main deploys, because the github-pages environment accepts main alone. Without
+  # the gate every develop push ended in a red deploy with no steps.
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
