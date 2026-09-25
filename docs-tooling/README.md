@@ -10,7 +10,7 @@ consume it as a git submodule.
 
 | Path | Purpose |
 | --- | --- |
-| `source_templates/sphinx-book/` | Landing-page template for a docs site, plus a frozen path-loaded shim for one legacy consumer — see its [README](source_templates/sphinx-book/README.md) before touching either |
+| `source_templates/sphinx-book/` | Landing-page template for a docs site, plus a frozen path-loaded shim for two legacy consumers — see its [README](source_templates/sphinx-book/README.md) before touching either |
 
 `source_templates/sphinx-python/` used to sit alongside it — a baseline for
 Python API docs (autodoc/napoleon). It was removed: an org-wide audit found no
@@ -37,7 +37,7 @@ how to read the brand from Python, Sphinx, LaTeX, or any other language.
 
 ## Consuming from another repository
 
-Add this repo as a submodule (e.g. under `external/`):
+Add this repo as a submodule (the family layout puts it under `third_party/`):
 
 ```bash
 git submodule add https://github.com/Kataglyphis/DocumANTation third_party/DocumANTation
@@ -46,6 +46,6 @@ git submodule add https://github.com/Kataglyphis/DocumANTation third_party/Docum
 Then install the theme package and call `setup_theme()` — see
 [`source_templates/sphinx-book/README.md`](source_templates/sphinx-book/README.md).
 There is deliberately no second, copy-the-files route for new consumers: every
-copy this repo ever handed out drifted. The one repo that still loads a template
-by path is documented there, and its stylesheet is generated so it cannot drift
-again.
+copy this repo ever handed out drifted. The two repos that still load a template
+by path are documented there, and the stylesheet one of them links is generated
+so it cannot drift again.

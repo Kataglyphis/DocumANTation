@@ -50,7 +50,12 @@ The `cv` target is a direct LuaLaTeX build:
 
 Both runs write to `data/out/` with `-jobname=CV_Jonas_Heinle_<language>`, which
 is the filename the CV is published under, so the deliverable is a build output
-rather than a committed binary.
+rather than a committed binary. A tailored profile (`CV_PROFILE`, one file per
+application in `data/cv/profiles/`) swaps the language for its `CV_JOB_SUFFIX`.
+
+The `letter` target is the same two-pass build over the same class and profile,
+with the cover letter `data/cv/letters/<CV_PROFILE>.tex` as its body; it writes
+`Cover_Letter_Jonas_Heinle_<suffix>.pdf`.
 
 The CV is bilingual from one set of sources: every section file carries an
 English and a German variant behind `\IfLanguageName`, and `CV_LANG` picks
@@ -65,7 +70,7 @@ make cv-all   # both published variants
 ## Strict Warning Checks
 
 Strict mode can be enabled with `STRICT_WARNINGS=1` for the shared container wrapper, or with `--strict-warnings` for the glossary build script.
-When strict mode is enabled, the final log is inspected and the build fails on warnings or bad-box diagnostics.
+When strict mode is enabled, the final log is inspected and the build fails on warnings or bad-box diagnostics. For the book, an underfull `\hbox` and tcolorbox's "Using nobreak failed" hint are reported and counted but not fatal.
 
 ## Related Commands
 
@@ -76,5 +81,6 @@ When strict mode is enabled, the final log is inspected and the build fails on w
 ./scripts/build_in_container.sh example
 ./scripts/build_in_container.sh pptx
 ./scripts/build_in_container.sh cv
+CV_PROFILE=parallel-ai ./scripts/build_in_container.sh letter
 ./md2pdfLib/scripts/compile_with_glossaries.sh --type book
 ```

@@ -53,8 +53,9 @@ sentence goes into a `%` comment beside its replacement and is never
 deleted: another application may want it back. The identity rule holds here
 too: sign with `\brandName`, never the literal name.
 
-Add `STRICT_WARNINGS=1` to fail the build on LaTeX warnings and bad boxes. CI
-runs both languages that way.
+Add `STRICT_WARNINGS=1` to fail the build on LaTeX warnings and bad boxes, and
+build both languages that way before publishing: CI has compiled no LaTeX since
+2026-08-20, so nothing else will.
 
 ## Bilingual sources
 
@@ -65,9 +66,9 @@ There is one CV, not two. Every section file carries both variants:
 ```
 
 `CV_LANG` passes a class option that sets the babel main language and the
-`datetime2` style. **Edit both branches when you change a section** — CI builds
-both languages strictly, so German text that overruns a column the English text
-fits will fail there.
+`datetime2` style. **Edit both branches when you change a section**, and build
+both languages strictly (`STRICT_WARNINGS=1`): German text that overruns a column
+the English text fits fails only the German build.
 
 French is loaded for `\foreignlanguage` but is not a main-language choice: the
 sections carry no French text. Adding it means a third branch everywhere, so

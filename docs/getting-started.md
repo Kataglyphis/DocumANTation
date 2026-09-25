@@ -90,7 +90,10 @@ nomenclature pass. Replace its Markdown with your own to start a project.
 CV_LANG=german ./scripts/build_in_container.sh cv   # German
 ```
 
-Both land in `data/out/` as `CV_Jonas_Heinle_<language>.pdf`.
+Both land in `data/out/` as `CV_Jonas_Heinle_<language>.pdf`. `CV_PROFILE`
+selects a tailored section set from `data/cv/profiles/`, and the `letter` target
+typesets that profile's cover letter (`data/cv/letters/<CV_PROFILE>.tex`) in the
+same class; `data/cv/README.md` in the repository has both.
 
 Optional host shortcuts if `make` is installed:
 
@@ -125,9 +128,10 @@ nerdctl run --rm --entrypoint "" \
   pandoc_all sh -c '. md2pdf/bin/activate && uv run python /md2pdfLib/build.py beamer'
 ```
 
-> **Always pass `--entrypoint ""`.** The image's default `CMD` drops you into an
-> interactive shell; without overriding the entrypoint your `sh -c '...'` command
-> is ignored. The wrapper scripts already do this for you.
+> **`--entrypoint ""` is optional.** The image's default `CMD` drops you into an
+> interactive shell, but it has no `ENTRYPOINT` (not since 2026-05-22), so a
+> command after the image name replaces that `CMD` with or without the flag
+> (measured 2026-09-25). The wrapper scripts still pass it; it is harmless.
 
 Drop into an interactive shell in the container to poke around:
 

@@ -12,11 +12,11 @@ It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow c
 | `md2pdfLib/` | Shared Python build logic, Pandoc presets, LaTeX templates, and shell scripts |
 | `scripts/` | Top-level wrappers for containerized builds |
 | `sphinx-kataglyphis-theme/` | Reusable Sphinx theme package (`sphinx_kataglyphis`) shared across Kataglyphis docs sites |
-| `docs-tooling/` | Shared Sphinx templates and doc-generation scripts consumed by downstream repos as a submodule |
+| `docs-tooling/` | Shared Sphinx templates consumed by downstream repos as a submodule (its doc-generation scripts moved to ANTfrastructure on 2026-07-15) |
 
 ## Important Entry Points
 
-- `scripts/build_in_container.sh` is the shared host-side wrapper for `book`, `beamer`, `demo`, `example`, `pptx`, and `cv`.
+- `scripts/build_in_container.sh` is the shared host-side wrapper for `book`, `beamer`, `demo`, `example`, `pptx`, `cv` and `letter`.
 - `build.py` and `md2pdfLib/build.py` expose the CLI entry point for Pandoc-based document types.
 - `md2pdfLib/pandoc_builder.py` is the shared command builder and execution layer for Pandoc runs.
 - `md2pdfLib/scripts/compile_with_glossaries.sh` drives the full LuaLaTeX, bibliography, glossary, and nomenclature pipeline for `book`.
@@ -60,7 +60,14 @@ begin a project of your own.
 
 LuaLaTeX builds the curriculum vitae directly from the content in `data/cv/`,
 using the `myCV_METADATA` class from `md2pdfLib/cv/template/latex/`. `CV_LANG`
-selects English (default) or German from the same sources.
+selects English (default) or German from the same sources, and `CV_PROFILE`
+which sections and summary a tailored application CV shows (`data/cv/profiles/`).
+
+### `letter`
+
+A cover letter: the `cv` document with a letter from `data/cv/letters/` as its
+body, typeset with the CV profile of the same name, so it shares the CV's class,
+header and footer.
 
 ## Where to Continue
 

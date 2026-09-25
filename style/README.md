@@ -29,14 +29,15 @@ twice (`"text_on_accent": "@white"`). `colors_dark` may alias into `colors`.
 | `colors` / `colors_dark` | Brand identity: accent, links, surfaces (LaTeX, CSS) |
 | `syntax` / `syntax_dark` | Code highlighting, shared by the PDFs (Pandoc) and the website (Pygments) |
 | `fonts` | Main + mono font, for LaTeX, Pandoc and the web |
+| `identity` | Author name, e-mail addresses, URL, GitHub/LinkedIn/YouTube handles, institute, copyright year — into `brand-identity.tex`, the Pandoc `author`/`institute` keys and `brand()["identity"]` |
 
 `syntax` is the light/print palette and `syntax_dark` the dark one. All PDF
 documents (book, slides, pptx) render with the **dark** palette for a single
 brand code-block look. The website uses **both** — it switches with the site's
 light/dark toggle.
 Which token gets bold or italic is structural and lives in `SYNTAX_TOKENS` /
-`PYGMENTS_TOKENS` in `generate_style.py`, not here; `brand.json` stays a pure
-colour/font file.
+`PYGMENTS_TOKENS` in `generate_style.py`, not here; `brand.json` holds colour,
+font and identity values, never structure.
 
 ## Generated files — do not edit by hand
 
@@ -51,6 +52,7 @@ colour/font file.
 | `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by **all** documents (book, slides, pptx) |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
+| `style/dartdoc.css` | Dart API docs: appended to `dart doc`'s own `styles.css` by ANTfrastructure's `linux/scripts/lib/dartdoc-build.sh` |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json` | Same, shipped inside the pip package |
 | `md2pdfLib/style/brand.tokens.json` | Same, reachable from the build container (it mounts only `md2pdfLib/` and `data/`) |
