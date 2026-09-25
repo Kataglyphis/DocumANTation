@@ -14,8 +14,9 @@ Everything the builds need ships in the `pandoc_all` container image, chiefly
 the `awesome-beamer` and `smile` presentation-theme submodules.
 
 The full list, with the version, upstream and license of each component, is
-maintained in **ANTfrastructure**, which builds this image and is the
-single source of truth for every version pin in the toolchain — see
+maintained in **ANTfrastructure**, which vendors this repository as a submodule
+and holds the image's Pandoc and uv pins (the image itself is built locally with
+`nerdctl build`; no workflow builds it) — see
 [Third-Party Software & Licenses](https://github.com/Kataglyphis/ANTfrastructure/blob/main/docs/third-party-licenses.md),
 under *Documentation Image (`pandoc_all`)*.
 

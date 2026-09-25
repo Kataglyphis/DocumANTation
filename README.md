@@ -48,12 +48,12 @@ reproducibility.
 
 | Feature | Detail |
 |---------|--------|
-| **Six targets, one toolchain** | Book (scrbook), Beamer slides, PowerPoint deck, bilingual CV, showcase deck, starter doc — one container, one command each |
+| **Six targets, one toolchain** | Book (scrbook), Beamer slides, PowerPoint deck, bilingual CV (and cover letters in its class), showcase deck, starter doc — one container, one command each |
 | **Slides and deck from one source** | `data/presentation/` renders to both Beamer and pptx, so the two cannot disagree |
 | **Brand-consistent code blocks** | `brand.json` → Pandoc + Pygments + LaTeX + CSS — same dark palette everywhere |
-| **Containerized builds** | One Dockerfile, SHA-pinned toolchain, zero host dependencies beyond a container runtime |
-| **Strict build gates** | `STRICT_WARNINGS=1` turns Pandoc/LaTeX warnings into CI failures |
-| **Generated style pipeline** | `generate_style.py` fans `brand.json` into 14 consumer files; `--check` prevents drift |
+| **Containerized builds** | One Dockerfile, pinned Pandoc (SHA256-verified) and uv, zero host dependencies beyond a container runtime |
+| **Strict build gates** | `STRICT_WARNINGS=1` turns Pandoc/LaTeX warnings into build failures — locally, since CI compiles no LaTeX |
+| **Generated style pipeline** | `generate_style.py` fans `brand.json` into 15 consumer files; `--check` prevents drift |
 | **Identity is a token too** | Author, URL, GitHub handle and institute are generated into LaTeX, Pandoc metadata and Sphinx — never retyped |
 | **Reusable Sphinx theme** | `sphinx-kataglyphis-theme` — pip-installable package with brand tokens and Pygments styles |
 
@@ -64,7 +64,7 @@ reproducibility.
 | Six targets, one brand + toolchain | Manual | No | No | Book + Beamer + PPTX + CV + showcase + starter |
 | Author/URL/handle as generated tokens | No | No | No | `identity` in `brand.json` → LaTeX, Pandoc, Sphinx |
 | Brand-consistent code highlighting | Manual | No | Partial | `brand.json` → all formats |
-| Containerized reproducible build | Manual | No | No | One Dockerfile, SHA-pinned |
+| Containerized reproducible build | Manual | No | No | One Dockerfile, pinned Pandoc + uv |
 | Strict build-log warning gates | No | No | No | `STRICT_WARNINGS=1` |
 | Bilingual CV from one source | No | No | No | `CV_LANG=english\|german` |
 | Sphinx theme with same brand | No | No | No | `sphinx-kataglyphis-theme` |
@@ -89,11 +89,13 @@ nerdctl build . -t pandoc_all
 ./scripts/build_in_container.sh example  # the minimal starter document
 ./scripts/build_in_container.sh pptx     # PowerPoint deck, same sources
 ./scripts/build_in_container.sh cv       # CV; CV_LANG=german for the German one
+CV_PROFILE=parallel-ai ./scripts/build_in_container.sh letter  # data/cv/letters/<CV_PROFILE>.tex
 ```
 
 Everything lands in `data/out/` — the CV as `CV_Jonas_Heinle_<language>.pdf`,
 both variants from the same sources in `data/cv/`. With `make` installed,
-`make {book|beamer|demo|example|pptx|cv}` and `make cv-all` do the same, and
+`make {book|beamer|demo|example|pptx|cv}` and `make cv-all` do the same (the
+per-application CV and letter targets are listed in `data/cv/README.md`), and
 `STRICT_WARNINGS=1` turns build-log warnings into failures on any target.
 
 ### Live demo mode
@@ -133,8 +135,9 @@ the two vendored LaTeX theme submodules. Nothing has to be installed on the host
 but a container runtime.
 
 The full component list, with the version, upstream and license of each, is
-maintained in **ANTfrastructure**, which builds this image and is the
-single source of truth for every version pin in the toolchain:
+maintained in **ANTfrastructure**, which vendors this repository as a submodule
+and holds its Pandoc and uv pins. It does not build the image: `nerdctl build`
+does, locally, and no workflow here or in ANTfrastructure builds it.
 
 - [Third-Party Software & Licenses](https://github.com/Kataglyphis/ANTfrastructure/blob/main/docs/third-party-licenses.md)
   — see the *Documentation Image (`pandoc_all`)* section.
@@ -143,7 +146,8 @@ single source of truth for every version pin in the toolchain:
 from ANTfrastructure's `linux/scripts/01-core/versions.env`; bump them there and
 run `python3 docs/scripts/sync_versions.py --write` **in the ANTfrastructure
 checkout** (the script lives there, not in this repo), not by editing this
-file.
+file. The script rewrites the copy in that checkout's `third_party/DocumANTation`
+submodule, so the bump is then committed here from there.
 
 ## Contributing
 1. Fork the Project

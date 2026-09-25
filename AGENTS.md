@@ -60,11 +60,13 @@ and `ty` cannot resolve it.
 nerdctl build . -t pandoc_all
 
 # Build a document -- the normal path
-./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv}
+./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv|letter}
 
-# The same targets via Makefile, plus the CV variants
-make {book|beamer|demo|example|pptx|cv}
+# The same targets via Makefile, plus the CV variants. `letter` typesets
+# data/cv/letters/<CV_PROFILE>.tex, so it needs a CV_PROFILE that has one.
+make {book|beamer|demo|example|pptx|cv|letter}
 make cv CV_LANG=german
+make cv CV_PROFILE=<data/cv/profiles/*>
 make cv-all
 
 # Any target, with the strict warning gates
@@ -182,8 +184,9 @@ gate. Run it locally with `uv run --extra dev shellcheck $(git ls-files '*.sh')`
 ### Shared Compile Script
 
 The canonical compilation script is `md2pdfLib/scripts/compile_with_glossaries.sh`.
-It takes a `--type` flag only — a former generic positional mode had no callers
-and was removed, so the valid invocations stay enumerable:
+It takes `--type` (plus an optional `--strict-warnings`) and nothing else — a
+former generic positional mode had no callers and was removed, so the valid
+invocations stay enumerable:
 
 ```bash
 ./md2pdfLib/scripts/compile_with_glossaries.sh --type book
@@ -287,8 +290,9 @@ so such a subdirectory needs its own preset (that is what `demo` is).
   environments without nerdctl; both run the same image.
 - **Do not** add a workflow that builds the `Dockerfile` or the documents.
   Two workflows exist and neither needs a TeX distribution: `linux-x64.yml`
-  (brand drift, lint, types, tests) and `docs.yml` (publishes the Sphinx
-  docs to GitHub Pages). Two workflows were deliberately removed --
+  (brand drift, lint, types, tests) and `docs.yml` (builds the Sphinx docs on
+  every push, publishes them to GitHub Pages from `main` only). Two workflows
+  were deliberately removed --
   `publish-image.yml`, because nothing consumed the GHCR image it pushed, and
   the document-building job, because the ~8.5 GB `texlive-full` image cost more
   to build on every push than it caught. File and display names follow the
@@ -300,7 +304,7 @@ so such a subdirectory needs its own preset (that is what `demo` is).
   box. Building the documents -- with the strict gates -- is a local step:
 
   ```bash
-  STRICT_WARNINGS=1 ./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv}
+  STRICT_WARNINGS=1 ./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv|letter}
   ```
 
   Run it before releasing anything that touches a template, a preset or the
@@ -312,8 +316,10 @@ so such a subdirectory needs its own preset (that is what `demo` is).
 - **Do not** write shell scripts without `set -euo pipefail`
 - **Do not** use `\newcommand` for values that can come from metadata — use
   `\providecommand` to allow override
-- **Do not** forget `--entrypoint ""` when running `nerdctl run` with the
-  `pandoc_all` image
+- `--entrypoint ""` in a `nerdctl run` of the `pandoc_all` image is a leftover,
+  not a requirement: the image has had no `ENTRYPOINT` since 2026-05-22
+  (`ba7dda8`), only a `CMD`, which a command after the image name replaces
+  (measured 2026-09-25). The scripts still pass it; it is harmless.
 - **Do not** replace `texlive-full` in the Dockerfile with individual texlive
   collections — the full scheme is deliberate: documents are free to pull in
   any LaTeX package, and a missing collection fails builds much later and
