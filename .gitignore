@@ -4,14 +4,11 @@ data/out/
 __pycache__/
 *.pyc
 
-# Virtualenv. uv writes a self-ignoring .venv/.gitignore, so this is belt and
-# braces -- but a venv created any other way (python -m venv, virtualenv) does
-# not, and 5000+ site-packages files then show up as untracked.
+# uv self-ignores its .venv; venvs made any other way do not.
 .venv/
 venv/
 
-# Python packaging / editable-install artifacts
-# (`pip install -e sphinx-kataglyphis-theme` generates these)
+# Packaging and editable-install artifacts (pip install -e sphinx-kataglyphis-theme)
 *.egg-info/
 .eggs/
 build/
@@ -44,9 +41,6 @@ htmlcov/
 *.nlo
 *.nls
 *.ilg
-
-# The CV now builds into data/out/ with the other documents, so it needs no
-# rule of its own -- data/out/ at the top of this file already covers it.
 
 # Sphinx build output
 docs/_build/

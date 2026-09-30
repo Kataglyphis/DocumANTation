@@ -75,19 +75,13 @@ def test_demo_is_the_beamer_pipeline_over_its_own_sources():
     # Its own output and log, or it would overwrite the published deck's.
     assert d.default_output_name != b.default_output_name
     assert d.log_file != b.log_file
-    # The demo sources cite nothing; citeproc with no bibliography is a failure
-    # waiting for the first build, not a harmless leftover.
+    # The demo cites nothing, and citeproc without a bibliography fails the first build.
     assert d.bibliography == ""
     assert d.citeproc is False
 
 
 def test_example_is_a_single_pass_pdf():
-    """The starter document must not need biber or makeglossaries to build.
-
-    A newcomer's first build failing inside a TeX tool they have not read about
-    is the worst possible introduction, so the example carries no bibliography,
-    glossary or nomenclature and goes straight to PDF in one pandoc call.
-    """
+    """The starter document must build without biber or makeglossaries."""
     cfg = example()
     assert cfg.output_suffix == ".pdf"
     assert cfg.biblatex is False
@@ -97,11 +91,7 @@ def test_example_is_a_single_pass_pdf():
 
 
 def test_example_does_not_borrow_the_book_metadata():
-    """base.yml carries the book's title and bibliography.
-
-    Sharing it would title the example "Computer graphics" and demand biber for
-    a document with no citations.
-    """
+    """base.yml carries the book's title and bibliography, which the example must not get."""
     assert example().metadata_file != book().metadata_file
     assert example().metadata_file == "md2pdfLib/example/pandoc/metadata.yml"
 

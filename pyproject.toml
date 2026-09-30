@@ -13,18 +13,11 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: LaTeX",
     "Topic :: Documentation",
 ]
-# Runtime Python dependency (used by the LaTeX minted/highlighting pipeline).
-# Pandoc + a TeX distribution are system dependencies provided by the container.
+# Pandoc and a TeX distribution are system dependencies the container provides.
 dependencies = ["pygments>=2.17"]
 
 [project.optional-dependencies]
-# tests/test_theme.py imports sphinx_kataglyphis to check the brand tokens
-# shipped inside the wheel against style/brand.tokens.json, so the theme is a
-# test dependency, not only a docs one. Without it here `uv run --extra dev
-# pytest` -- what CI runs -- dies at collection and takes the whole suite with it.
-# shellcheck-py ships the shellcheck binary as a wheel, so the shell gate runs
-# the same way every other gate does -- `uv run --extra dev`, no host install,
-# pinned in uv.lock, and runnable on Windows where there is no apt shellcheck.
+# The theme is a test dependency (tests/test_theme.py); shellcheck-py runs the shell gate on Windows.
 dev = [
     "ruff>=0.15.21",
     "ty>=0.0.38",
@@ -33,18 +26,14 @@ dev = [
     "shellcheck-py>=0.11",
     "sphinx-kataglyphis-theme",
 ]
-# The theme brings sphinx/myst/sphinx-design/book-theme with it, and is what
-# makes this repo's own docs use the Kataglyphis brand rather than a second
-# copy of the baseline.
-docs = ["sphinx>=9,<10", "sphinx-kataglyphis-theme"]
+# The theme brings the Sphinx stack and the brand, so these docs keep no second baseline.
+docs =["sphinx>=9,<10", "sphinx-kataglyphis-theme"]
 
 [project.urls]
 Homepage = "https://jonasheinle.de"
 Repository = "https://github.com/Kataglyphis/DocumANTation"
 
-# The project runs from a mounted volume (/md2pdfLib) and resolves its templates
-# by path relative to the repo root, so it is intentionally NOT installed as a
-# package. This keeps `uv run` / `uv sync` dependency-only.
+# Not installed: it runs from a mounted volume and resolves templates relative to the repo root.
 [tool.uv]
 package = false
 
@@ -55,9 +44,7 @@ sphinx-kataglyphis-theme = { path = "sphinx-kataglyphis-theme", editable = true 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-# sphinx_kataglyphis is measured too: it is the package that ships the brand to
-# every downstream repo, and leaving it out of --cov hid that its two public
-# features -- auto_discover and the scaffold CLI -- had no tests at all.
+# sphinx_kataglyphis ships the brand to every downstream repo, so it is measured too.
 addopts = "-ra --cov=md2pdfLib --cov=style --cov=sphinx_kataglyphis --cov-report=term-missing"
 
 [tool.ty]

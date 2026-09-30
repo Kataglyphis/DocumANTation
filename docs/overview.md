@@ -69,6 +69,15 @@ A cover letter: the `cv` document with a letter from `data/cv/letters/` as its
 body, typeset with the CV profile of the same name, so it shares the CV's class,
 header and footer.
 
+## Shared Sphinx Baseline
+
+New projects brand their docs with `sphinx_kataglyphis.setup_theme()`, but AccelerANTgine and
+BeschleunigerBallett still load `docs-tooling/source_templates/sphinx-book/conf_base.py` by file
+path. Its five constants (`SPHINX_EXTENSIONS`, `HTML_THEME`, `HTML_THEME_OPTIONS`,
+`HTML_STATIC_PATH`, `HTML_CSS_FILES`) are therefore a public contract, pinned by
+`tests/test_theme.py`. The file may import only the standard library, because neither consumer
+installs the theme package, and its colours arrive only through the generated `custom.css`.
+
 ## Where to Continue
 
 - Setup and first builds: [Getting Started](getting-started.md)

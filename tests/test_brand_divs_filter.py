@@ -1,22 +1,4 @@
-"""Tests for brand-divs.lua, the one bridge from Markdown to every output.
-
-That filter decides what the book, the slides, the deck and the website
-actually contain -- 330 lines and eighteen handlers -- and it had no tests at
-all. Three defects had accumulated behind that gap:
-
-- a tab-set printed every tab's *label* but only the first tab's *body*, so the
-  book advertised C++ and GLSL sections it did not contain;
-- the document-level handler was registered as ``Doc``, which pandoc never
-  calls (the key is ``Pandoc``), so the "List of Listings" the filter's own
-  header documented was never emitted;
-- ``FORMAT:match("latex") and not FORMAT:match("beamer") ~= nil`` reads as
-  ``... and ((not X) ~= nil)`` in Lua, which is always true -- the beamer
-  exclusion did nothing, and only worked out because pandoc reports "beamer"
-  rather than "latex" for that writer.
-
-These run pandoc for real, because the filter's contract is what pandoc does
-with it, not what the Lua looks like.
-"""
+"""Tests for brand-divs.lua through real pandoc: its contract is what pandoc does with it."""
 
 from __future__ import annotations
 
@@ -47,7 +29,7 @@ def render(markdown: str, to: str = "latex") -> str:
     return result.stdout
 
 
-# ── admonitions ──────────────────────────────────────────────────────────────
+# Admonitions
 
 
 def test_a_titled_admonition_becomes_its_environment_with_the_title():
@@ -83,7 +65,7 @@ def test_html_output_leaves_the_div_for_sphinx_to_style():
     assert "note" in out
 
 
-# ── tab sets: every tab must survive ──────────────────────────────────────────
+# Tab sets: every tab must survive
 
 
 TAB_SET = """::: {.tab-set}
@@ -105,14 +87,8 @@ GLSLBODYMARKER
 
 
 def test_a_tab_set_renders_every_tab_body_not_just_the_first():
-    """The defect this test exists for: two of three bodies were dropped.
-
-    Print has no interactive tabs, so the only honest rendering is to show
-    them all. Showing one body under a bar naming three is content loss that
-    reads to the reader as a broken document.
-    """
-    # Markers carry no underscore on purpose: LaTeX escapes _ to \_, so a
-    # marker containing one never matches the rendered output verbatim.
+    """Print has no interactive tabs, so every tab body must render, not only the first."""
+    # No underscore in the markers: LaTeX escapes _ to \_, so they would never match.
     out = render(TAB_SET)
     for marker in ("RUSTBODYMARKER", "CPPBODYMARKER", "GLSLBODYMARKER"):
         assert marker in out, f"{marker} was dropped from the output"
@@ -145,7 +121,7 @@ def test_an_empty_tab_set_is_left_alone():
     assert "nothing here" in out
 
 
-# ── code blocks ──────────────────────────────────────────────────────────────
+# Code blocks
 
 
 def test_a_titled_listing_gets_a_titled_box():
@@ -167,7 +143,7 @@ def test_a_listing_title_with_specials_is_escaped():
     assert "\\_" in out and "\\&" in out
 
 
-# ── spans ────────────────────────────────────────────────────────────────────
+# Spans
 
 
 def test_a_gls_span_becomes_a_glossary_reference():
@@ -180,7 +156,7 @@ def test_a_nomen_span_registers_a_nomenclature_entry():
     assert "\\nomenclature{BRDF}{Bidirectional reflectance}" in out
 
 
-# ── speaker notes ────────────────────────────────────────────────────────────
+# Speaker notes
 
 
 def test_speaker_notes_are_stripped_from_the_book():
@@ -196,7 +172,7 @@ def test_speaker_notes_survive_into_beamer():
     assert "Say this out loud" in out
 
 
-# ── format detection ─────────────────────────────────────────────────────────
+# Format detection
 
 
 def test_beamer_and_book_take_different_column_syntax():

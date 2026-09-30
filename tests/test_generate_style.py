@@ -38,8 +38,7 @@ from style.generate_style import (
 
 RAW_BRAND = {
     "name": "Test",
-    # Identity is generated into the Pandoc metadata alongside the fonts, so a
-    # brand without it is not a brand render_yaml_block can serve.
+    # render_yaml_block emits identity too, so a test brand needs one.
     "identity": {
         "name": "Test Author",
         "first_name": "Test",
@@ -113,7 +112,7 @@ RAW_BRAND = {
 BRAND = resolve_brand(RAW_BRAND)
 
 
-# -- alias resolution: the "never write a literal twice" guarantee -------------
+# Alias resolution: never write a literal twice
 
 
 def test_alias_resolves_within_a_group():
@@ -142,7 +141,7 @@ def test_unknown_alias_is_an_error():
         _resolve_group({"a": "@nope"})
 
 
-# -- LaTeX --------------------------------------------------------------------
+# LaTeX
 
 
 def test_latex_uses_uppercase_hex_without_hash():
@@ -165,8 +164,7 @@ def test_latex_defines_the_shared_link_colour():
 
 
 def test_latex_defines_accent_deep_for_the_beamer_examples_remap():
-    # The slide template points smile's generic `green` at brandAccentDeep so
-    # `examples` blocks stay green now that the link colour is not.
+    # The slide template remaps smile's `green` to brandAccentDeep for `examples` blocks.
     out = render_latex(BRAND)
     assert "\\definecolor{brandAccentDeep}{HTML}{145A3C}" in out
 
@@ -180,14 +178,13 @@ def test_latex_fonts_are_safe_to_input_twice():
 
 
 def test_latex_mono_carries_its_options():
-    # Scale=1 defeats Pandoc's Scale=MatchLowercase; without it the mono is
-    # widened against Roboto and the book's line breaking regresses.
+    # Scale=1 defeats Pandoc's MatchLowercase, which widens the mono and breaks lines worse.
     out = render_latex_fonts(BRAND)
     assert "\\brandMonoFont}{Latin Modern Mono}" in out
     assert "\\setmonofont[Scale=1,BoldFont=lmmonolt10-bold.otf]{Latin Modern Mono}" in out
 
 
-# -- CSS ----------------------------------------------------------------------
+# CSS
 
 
 def test_css_block_carries_fonts_import_and_every_token():
@@ -199,16 +196,14 @@ def test_css_block_carries_fonts_import_and_every_token():
 
 
 def test_css_omits_the_tex_mono_font():
-    # fonts.mono names a TeX font no browser has; emitting it would suggest the
-    # web renders code in it.
+    # fonts.mono names a TeX font no browser has.
     assert "--brand-font-mono" not in render_css_block(BRAND)
 
 
 def test_dark_tokens_get_their_own_names_and_never_shadow_light_ones():
     out = render_css_block(BRAND)
     assert "--brand-dark-link: #7df5ba;" in out
-    # A second `--brand-link:` would retint every var(--brand-link) use in dark
-    # mode, which is exactly the silent breakage we avoid.
+    # A second `--brand-link:` would silently retint every var(--brand-link) in dark mode.
     assert len(re.findall(r"^\s*--brand-link:", out, re.M)) == 1
 
 
@@ -227,7 +222,7 @@ def test_css_update_is_idempotent():
     assert once == twice
 
 
-# -- Pandoc YAML --------------------------------------------------------------
+# Pandoc YAML
 
 
 def test_yaml_block_sets_font_and_link_colour_by_name():
@@ -235,8 +230,7 @@ def test_yaml_block_sets_font_and_link_colour_by_name():
     assert "mainfont: Roboto" in out
     assert "monofont: Latin Modern Mono" in out
     assert "monofontoptions:\n  - Scale=1\n  - BoldFont=lmmonolt10-bold.otf" in out
-    # Without a fallback, glyphs the mono lacks (the slides use λ and ∑) are
-    # dropped from the PDF silently.
+    # Without a fallback, glyphs the mono lacks (λ, ∑) drop from the PDF silently.
     assert "monofontfallback:\n  - FreeMono:mode=node;" in out
     # Naming the LaTeX colour keeps the hex in brand-colors.tex only.
     for key in ("linkcolor", "urlcolor", "citecolor"):
@@ -274,16 +268,11 @@ def test_yaml_without_mainfont_is_an_error_not_a_silent_noop():
         apply_yaml_block("title: x\n", render_yaml_block(BRAND))
 
 
-# -- The real brand.json ------------------------------------------------------
+# The real brand.json
 
 
 def test_tokens_json_is_fully_resolved_for_other_applications():
-    """No value may still be an ``@alias``.
-
-    Checked per value rather than by scanning the text for "@": the identity
-    section carries email addresses, so a bare substring search reports every
-    build as unresolved. An alias is a value that *starts* with @.
-    """
+    """No value may still be an ``@alias``; checked per value, since emails contain "@"."""
     payload = json.loads(render_tokens_json(load_brand()))
 
     def unresolved(value: object, path: str) -> list[str]:
@@ -299,11 +288,7 @@ def test_tokens_json_is_fully_resolved_for_other_applications():
 
 
 def test_tokens_json_carries_every_brand_section():
-    """It is documented as brand.json resolved, so it must not drop sections.
-
-    It silently omitted the syntax palettes, leaving any consumer that is
-    neither LaTeX nor Sphinx unable to read the brand's code colours.
-    """
+    """It is documented as brand.json resolved, so it must not drop sections."""
     source = load_brand()
     payload = json.loads(render_tokens_json(source))
     expected = {k for k in source if not k.startswith("_")}
@@ -326,25 +311,17 @@ def test_repo_brand_json_renders_every_target():
 
 
 def test_only_one_stylesheet_is_maintained_in_place():
-    # CSS_TARGETS are hand-written stylesheets with a generated token block. A
-    # second one would mean the style is forked, which is how the old
-    # source_templates/sphinx-book/custom.css silently drifted ~270 lines (and
-    # how ANTfrastructure's docs/_static copy ended up silently discarded).
+    # A second hand-written stylesheet would be a fork, and forks here have drifted silently.
     assert len(CSS_TARGETS) == 1
 
-    # brand.css is different: fully generated, tokens only, for consumers that
-    # cannot install the theme (the Flutter site). It carries no rules to drift.
+    # brand.css is fully generated tokens for non-Sphinx consumers, with no rules to drift.
     generated_css = [p for p in desired_outputs() if p.name == "brand.css"]
     assert len(generated_css) == 1
     assert "{" in desired_outputs()[generated_css[0]]  # it really is a stylesheet
 
 
 def test_the_path_loaded_copy_is_generated_not_forked():
-    # AccelerANTgine loads source_templates/sphinx-book/ by path, so
-    # the stylesheet has to exist there -- but as a copy the generator owns, not
-    # a fork. The hand-written one fell ~490 lines behind and still painted
-    # links the pre-cyan green, so that site rendered a different brand while
-    # every drift check passed.
+    # A path-loading consumer needs the stylesheet there, as a generated copy, never a fork.
     outputs = desired_outputs()
     assert CSS_COPY_TARGETS, "the path-loading consumer needs its copy declared"
     for target in CSS_COPY_TARGETS:
@@ -353,11 +330,7 @@ def test_the_path_loaded_copy_is_generated_not_forked():
 
 
 def test_the_path_loaded_copy_on_disk_has_not_been_hand_edited():
-    """The one target with a history of being forked twice, checked in place.
-
-    CI runs ``--check`` over every target, but this file is the one that grew a
-    fork nobody noticed for weeks, so the suite fails on it directly too.
-    """
+    """The one target that was forked unnoticed, so the suite checks it in place too."""
     outputs = desired_outputs()
     for target in CSS_COPY_TARGETS:
         assert target.exists(), f"{target} is loaded by path from another repo -- keep it"
@@ -373,15 +346,13 @@ def test_resolve_brand_is_idempotent():
 
 
 def test_tokens_ship_inside_the_installable_package():
-    # Without this, `pip install sphinx-kataglyphis-theme` gives you the CSS but
-    # no way to read the brand from Python, and projects re-type the hex.
+    # Otherwise a pip install gets the CSS but no way to read the brand from Python.
     targets = [p for p in desired_outputs() if p.name == "brand.tokens.json"]
     assert any("sphinx_kataglyphis" in p.parts for p in targets)
 
 
 def test_tokens_are_reachable_from_the_build_container():
-    # The document builds mount only md2pdfLib/ and data/, so the pptx reference
-    # builder cannot read style/brand.tokens.json.
+    # The document builds mount only md2pdfLib/ and data/.
     targets = [p for p in desired_outputs() if p.name == "brand.tokens.json"]
     assert any(p.parent.parent.name == "md2pdfLib" for p in targets)
 
@@ -394,7 +365,7 @@ def test_every_tokens_copy_is_byte_identical():
     assert len({outputs[p] for p in targets}) == 1
 
 
-# -- Code highlighting: shared between the PDFs and the website ---------------
+# Code highlighting, shared between the PDFs and the website
 
 
 def test_syntax_theme_is_a_valid_pandoc_theme():
@@ -414,8 +385,7 @@ def test_syntax_theme_is_a_valid_pandoc_theme():
 
 
 def test_pygments_and_pandoc_draw_from_the_same_palette():
-    # The whole point: a code block must not look different in the book and on
-    # the website. Neither mapping may reference a key the palettes don't have.
+    # A code block must look the same in the book and on the website.
     pandoc_keys = {key for key, _, _ in SYNTAX_TOKENS.values() if key}
     pygments_keys = {key for _, key, _ in PYGMENTS_TOKENS}
     for palette in (BRAND["syntax"], BRAND["syntax_dark"]):
@@ -437,12 +407,7 @@ def test_pygments_module_is_importable_python():
 
 
 def test_every_brand_colour_token_is_actually_used():
-    """A token nobody reads is a claim the brand does not keep.
-
-    `white`/`black` are the only exceptions: they exist as alias targets inside
-    brand.json (`"text_on_accent": "@white"`), so they are consumed there rather
-    than by a CSS rule.
-    """
+    """A token nobody reads is a claim the brand does not keep; white/black are alias bases."""
     css = CSS_TARGETS[0].read_text(encoding="utf-8")
     start = css.index(CSS_START)
     end = css.index(CSS_END) + len(CSS_END)
@@ -462,12 +427,7 @@ def test_every_brand_colour_token_is_actually_used():
 
 
 def test_the_style_readme_quotes_only_real_brand_values():
-    """style/README.md documents brand.json as the single source of truth, and
-    still went stale itself: its Python example quoted a `colors.link` and a
-    `colors_dark.link` that the brand had moved on from. Any hex the file shows
-    must be a value the brand actually holds -- except the near-miss it cites
-    on purpose, as the bug that motivated the shared token sheet.
-    """
+    """Every hex style/README.md quotes must be a brand value, bar its deliberate near-miss."""
     readme = Path(__file__).resolve().parents[1] / "style" / "README.md"
     brand = load_brand()
     real = {
@@ -490,10 +450,7 @@ def test_dartdoc_sheet_is_one_of_the_generated_targets():
 
 
 def test_dartdoc_sheet_carries_no_colour_the_brand_does_not_define():
-    """The defect this emitter replaces: the hand-written sheet opened with a
-    "Sphinx press theme overrides" header and painted a Tailwind slate/sky
-    palette (#0284c7 links, #22c55e hover) over a brand whose link is #0e7490.
-    """
+    """Every hex in dartdoc.css must be a brand value."""
     brand = load_brand()
     real = {
         value.lstrip("#").lower()
@@ -505,25 +462,19 @@ def test_dartdoc_sheet_carries_no_colour_the_brand_does_not_define():
 
 
 def test_dartdoc_sheet_opens_and_closes_on_its_markers():
-    """dartdoc-build.sh truncates a previous append at the START line and appends
-    this file, so the marker has to be the first line or a rebuild stacks copies.
-    """
+    """dartdoc-build.sh truncates at the START line, so it must come first or rebuilds stack."""
     lines = render_dartdoc_css(load_brand()).splitlines()
     assert lines[0] == DARTDOC_CSS_START
     assert lines[-1] == DARTDOC_CSS_END
 
 
 def test_dartdoc_themes_define_the_same_variables():
-    """A variable set in one theme and not the other leaks the other theme's
-    value through, which is how a dark page ends up with a light border.
-    """
+    """A variable set in only one theme leaks the other theme's value through."""
     assert [name for name, _, _ in DARTDOC_LIGHT_VARS] == [name for name, _, _ in DARTDOC_DARK_VARS]
 
 
 def test_dartdoc_layout_holds_no_colour_of_its_own():
-    """Colours live in the two generated theme blocks; the layout may only
-    reference them, so a hex cannot be hand-typed back into the sheet.
-    """
+    """The layout may only reference the generated theme colours, never type a hex."""
     assert not re.findall(r"#[0-9a-fA-F]{3,8}\b", DARTDOC_LAYOUT_CSS)
 
 

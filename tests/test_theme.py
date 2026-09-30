@@ -1,11 +1,4 @@
-"""Tests for the sphinx-kataglyphis-theme package.
-
-The generator (style/generate_style.py) is well covered, but the package that
-*ships* the brand to every downstream repo had no tests at all -- so nothing
-caught the drifted conf_base.py that left this repo's own docs site without a
-code palette. These cover the contract downstream projects actually depend on:
-brand() and setup_theme().
-"""
+"""Tests for the sphinx-kataglyphis-theme contract downstream repos rely on."""
 
 from __future__ import annotations
 
@@ -19,7 +12,7 @@ from sphinx_kataglyphis import brand, brand_css_path, setup_theme
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-# ── brand() ──────────────────────────────────────────────────────────────────
+# brand()
 
 
 def test_brand_exposes_the_documented_tokens():
@@ -37,11 +30,7 @@ def test_brand_has_no_unresolved_aliases():
 
 
 def test_brand_is_immune_to_caller_mutation():
-    """One caller assigning into the result must not change the brand for the next.
-
-    The parse is cached; handing out the cached dict itself made the brand
-    editable at a distance.
-    """
+    """One caller assigning into the result must not change the brand for the next."""
     original = brand()["colors"]["accent"]
     brand()["colors"]["accent"] = "#ff0000"
     brand()["colors"].pop("link", None)
@@ -61,7 +50,7 @@ def test_brand_css_ships_with_the_package():
     assert f"--brand-accent: {brand()['colors']['accent']}" in css.read_text("utf-8")
 
 
-# ── setup_theme() ────────────────────────────────────────────────────────────
+# setup_theme()
 
 
 @pytest.fixture
@@ -78,11 +67,7 @@ def test_setup_theme_applies_the_brand(conf):
 
 
 def test_setup_theme_wires_the_shared_code_palette(conf):
-    """The book, the slides and the website must highlight code the same way.
-
-    A drifted baseline that omitted these is why this repo's own site rendered
-    code with stock Pygments colours instead of the brand.
-    """
+    """The book, the slides and the website must highlight code the same way."""
     setup_theme(conf)
     assert conf["html_theme_options"]["pygments_light_style"] == "kataglyphis-dark"
     assert conf["html_theme_options"]["pygments_dark_style"] == "kataglyphis-dark"
@@ -157,15 +142,7 @@ def test_extra_conf_wins_over_the_baseline(conf):
     assert conf["myst_heading_anchors"] == 3
 
 
-# ── the frozen path-loaded baseline ──────────────────────────────────────────
-#
-# docs-tooling/source_templates/sphinx-book/conf_base.py is loaded by
-# *filesystem path* from two repos' docs/source/conf.py -- AccelerANTgine
-# and BeschleunigerBallett -- each reading the same five constants off
-# it. Nothing in this repo imports it, so nothing here would otherwise notice a
-# rename, a brand literal creeping back in, or a Pygments style that only exists
-# once sphinx-kataglyphis-theme is installed -- neither consumer installs it.
-# These tests stand in for the two builds this repo cannot run.
+# The path-loaded baseline: stand-ins for the two consumer builds this repo cannot run
 
 
 def _load_conf_base():
@@ -200,13 +177,7 @@ def test_the_path_loaded_baseline_keeps_every_constant_its_consumer_reads():
 
 
 def _builtin_pygments_styles() -> set[str]:
-    """The styles Pygments itself ships, excluding entry-point registrations.
-
-    Not ``get_all_styles()``: that also yields styles registered by installed
-    packages, so in *this* repo's venv -- where sphinx-kataglyphis-theme is a dev
-    dependency -- it happily contains "kataglyphis-dark", and a check built on it
-    passes for exactly the value it exists to reject.
-    """
+    """Pygments' own styles; get_all_styles() would include this venv's kataglyphis-dark."""
     import pygments.styles as styles
 
     builtin = getattr(styles, "_STYLE_NAME_TO_MODULE_MAP", None)
@@ -216,12 +187,7 @@ def _builtin_pygments_styles() -> set[str]:
 
 
 def test_the_path_loaded_baseline_needs_only_pygments_own_styles():
-    """It cannot name kataglyphis-dark: its consumer has no theme package.
-
-    Sphinx fails on an unregistered style, so a style that only the theme
-    package provides would turn that site's build red -- while still passing
-    here, because this venv does install the package.
-    """
+    """Its consumers lack the theme package, and Sphinx fails on an unregistered style."""
     shipped = _builtin_pygments_styles()
     assert "kataglyphis-dark" not in shipped, "guard is inert if the brand style is built in"
     options = _load_conf_base().HTML_THEME_OPTIONS
@@ -233,12 +199,7 @@ def test_the_path_loaded_baseline_needs_only_pygments_own_styles():
 
 
 def test_the_path_loaded_baseline_highlights_dark_in_both_colour_modes():
-    """The generated custom.css paints div.highlight dark in *both* modes.
-
-    A light token set on that background is unreadable, not merely off-brand:
-    the previous pairing put #515151 comments on #1a2d23 at 1.8:1, well under
-    WCAG AA. Both slots must therefore be the same dark style.
-    """
+    """custom.css paints code dark in both modes, where a light token set is unreadable."""
     from pygments.styles import get_style_by_name
 
     options = _load_conf_base().HTML_THEME_OPTIONS
@@ -264,14 +225,7 @@ def _string_literals(value: object):
 
 
 def test_the_path_loaded_baseline_writes_no_brand_value_of_its_own():
-    """Colours reach it through the generated custom.css, never by hand.
-
-    Checked against the module's *values*, not its source text. Its comments
-    legitimately quote the brand background the stand-in palette was chosen to
-    match, and a line-based comment stripper cannot tell those from a literal:
-    it reads the ``#`` of ``"#6af0ad"`` as the start of a comment and discards
-    the very colour it was looking for.
-    """
+    """Checked on values, not source: a comment stripper would read "#6af0ad" as a comment."""
     hex_colour = re.compile(r"#[0-9a-fA-F]{6}\b")
     base = _load_conf_base()
     for name in dir(base):
@@ -285,30 +239,16 @@ def test_the_path_loaded_baseline_writes_no_brand_value_of_its_own():
 
 
 def test_the_path_loaded_baseline_claims_no_repository_of_its_own():
-    """It is shared, so it cannot know whose repo it is.
-
-    It used to hardcode ANTfrastructure's URL, pointing every consumer's
-    repository button at the wrong project.
-    """
+    """It is shared, so it cannot know whose repo it is."""
     assert "repository_url" not in _load_conf_base().HTML_THEME_OPTIONS
 
 
-# The shim's docstring says it "tracks setup_theme()'s options", and for a long
-# time nothing checked that it did. It drifted at least twice on record -- once
-# blanking `secondary_sidebar_items`, so the one site on this route was the only
-# Kataglyphis site with no page TOC, and once pointing the repository button at
-# ANTfrastructure. Both were found by looking, and fixed by hand.
-#
-# Everything the two sides deliberately disagree on, and why:
+# Where the shim deliberately differs from setup_theme(), and why:
 CONF_BASE_MAY_DIFFER = {
-    # setup_theme names the theme package's own style; the shim cannot, because
-    # neither consumer installs the package. Pinned instead by
-    # test_the_path_loaded_baseline_needs_only_pygments_own_styles above.
+    # The shim cannot name the theme's style; the Pygments-only test above pins it.
     "pygments_light_style",
     "pygments_dark_style",
-    # setup_theme derives it from the repository_url it was handed; the shim has
-    # no argument to derive it from and leaves the button on for its consumers,
-    # which set repository_url on their own copy afterwards.
+    # No repository_url to derive it from; consumers set their own afterwards.
     "use_repository_button",
 }
 
@@ -320,12 +260,7 @@ def _setup_theme_options() -> dict:
 
 
 def test_the_path_loaded_baseline_tracks_setup_themes_theme_options():
-    """Same keys, same values, except the ones listed as deliberate.
-
-    Without this, a navbar depth or TOC level changed in setup_theme() leaves
-    the path-loaded consumers on the old value and every test still passes --
-    which is how the missing page TOC survived.
-    """
+    """Same keys, same values, except the ones listed as deliberate."""
     shim = _load_conf_base().HTML_THEME_OPTIONS
     canonical = _setup_theme_options()
 
@@ -365,12 +300,7 @@ def test_the_path_loaded_baseline_tracks_setup_themes_extensions():
     assert conf["extensions"] == _load_conf_base().SPHINX_EXTENSIONS
 
 
-# ── auto_discover ────────────────────────────────────────────────────────────
-#
-# setup_theme(auto_discover=True) writes an index.md with a toctree over the
-# sources it finds, and the scaffold CLI below writes a whole doc directory.
-# Both are documented entry points a downstream project uses on day one, and
-# neither had a test -- invisible because the package was outside --cov.
+# auto_discover
 
 
 def test_auto_discover_writes_an_index_over_the_sources_it_finds(conf, tmp_path):
@@ -417,7 +347,7 @@ def test_auto_discover_is_off_by_default(conf, tmp_path):
     assert not (tmp_path / "index.md").exists()
 
 
-# ── the scaffold CLI ─────────────────────────────────────────────────────────
+# The scaffold CLI
 
 
 def test_scaffold_writes_a_doc_directory_that_builds(tmp_path, monkeypatch):
@@ -498,11 +428,7 @@ def test_the_cli_requires_a_command(monkeypatch):
 
 
 def test_the_module_is_runnable_as_advertised(tmp_path):
-    """`python -m sphinx_kataglyphis scaffold <dir>` is what the docs tell you to run.
-
-    A subprocess, because __main__.py only executes on that path -- importing the
-    package never runs it, so nothing else here would notice it breaking.
-    """
+    """A subprocess, because __main__.py only runs under `python -m sphinx_kataglyphis`."""
     import subprocess
     import sys
 
@@ -518,16 +444,11 @@ def test_the_module_is_runnable_as_advertised(tmp_path):
     assert "scaffold complete" in result.stdout
 
 
-# ── identity reaches downstream repos ────────────────────────────────────────
+# Identity reaches downstream repos
 
 
 def test_author_and_copyright_fall_back_to_the_brand_identity(conf):
-    """A consuming repo should inherit these the way it inherits the colours.
-
-    Every downstream conf.py used to retype the author; three of the four still
-    do. Defaulting them here is what makes the identity reusable rather than
-    merely centralised inside this one repo.
-    """
+    """A consuming repo inherits author and copyright the way it inherits the colours."""
     setup_theme(conf)
     identity = brand()["identity"]
     assert conf["author"] == identity["name"]

@@ -1,21 +1,4 @@
-"""Binary assets get the same discipline the brand tokens already get.
-
-``tests/test_generate_style.py`` fails if a colour is declared in brand.json and
-nothing reads it, and ``style/generate_style.py --check`` fails if one of the
-three generated ``brand.tokens.json`` copies drifts. Nothing applied either rule
-to the images, and both failure modes were present:
-
-- The logo was committed **five times**, byte-identical, under five names. None
-  was generated and nothing compared them, so updating the brand mark meant
-  editing five files and four would have gone stale silently.
-- Six images were referenced by nothing at all -- 5.4 MB of a 9.1 MB repo,
-  including a single 5.0 MB JPEG that no chapter, template or preset named.
-- Four screenshots existed twice, once for the README and once for the Sphinx
-  gallery, because the two render from different roots.
-
-These tests are that rule. An asset is either referenced by something, or listed
-below with a reason.
-"""
+"""Every binary asset is referenced by something, or allowlisted below with its reason."""
 
 from __future__ import annotations
 
@@ -28,13 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 ASSET_SUFFIXES = (".png", ".jpg", ".jpeg", ".svg")
 
-# Byte-identical copies that have to exist, each because a consumer cannot reach
-# the others. The build container mounts only md2pdfLib/ and data/, so a LaTeX
-# template cannot read the host-side copy, and the host-side README cannot read
-# a path that only exists inside the image.
-#
-# Keep the *reason*, not just the path: a copy whose consumer goes away is a
-# copy to delete, and only the reason says which one that is.
+# Copies a mount boundary forces; keep each reason, it says when a copy can go.
 DUPLICATED_ON_PURPOSE = {
     frozenset(
         {
@@ -50,13 +27,9 @@ DUPLICATED_ON_PURPOSE = {
 
 # Assets nothing names today, kept for a stated reason rather than deleted.
 UNREFERENCED_ON_PURPOSE = {
-    # The vector master the PNG above is exported from. Nothing builds from it
-    # yet -- it is what makes re-exporting the raster copies possible at all.
+    # The vector master the raster logos are re-exported from.
     "images/logo-t3-wireframe.svg",
-    # The CV's photo slot: myCV_METADATA.cls defines \photo{<size>}{<file>} and
-    # data/cv/cv.tex deliberately omits the call ("dropping it makes
-    # \makecvheader give the header block the full width"). The mechanism and
-    # the asset are both live; only the current layout declines to use them.
+    # myCV_METADATA.cls still offers \photo; only the current CV layout omits it.
     "data/cv/images/portrait.jpg",
 }
 
@@ -99,12 +72,7 @@ def test_no_asset_is_committed_twice():
 
 
 def test_a_deliberate_duplicate_set_is_still_identical():
-    """The allowlist says these are copies; it has to stay true.
-
-    Listing a set here is the point at which the copies stop being compared by
-    accident, so compare them on purpose. A logo updated in one root and not the
-    others is exactly the drift the allowlist is permitting the *shape* of.
-    """
+    """Allowlisted copies must stay byte-identical, since nothing else compares them."""
     for group in DUPLICATED_ON_PURPOSE:
         present = sorted(p for p in group if (REPO_ROOT / p).is_file())
         assert present == sorted(group), (

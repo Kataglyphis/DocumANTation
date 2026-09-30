@@ -1,6 +1,4 @@
-# Keep the Docker build context small. The image only needs pyproject.toml,
-# uv.lock and the beamer/smile theme submodules (ADD'd in the Dockerfile);
-# everything below is irrelevant at build time.
+# The image needs only pyproject.toml, uv.lock and the theme submodules; keep the context small.
 .git
 .github
 .venv

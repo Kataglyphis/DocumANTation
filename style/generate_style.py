@@ -1,31 +1,5 @@
 #!/usr/bin/env python3
-"""Generate derived brand-style files from the single source of truth.
-
-``style/brand.json`` holds the canonical brand tokens (colors, fonts). This
-script renders the LaTeX and CSS consumers from it so the style is defined
-exactly once and stays identical everywhere:
-
-- LaTeX:  md2pdfLib/style/brand-colors.tex  (\\definecolor + aliases)
-- LaTeX:  md2pdfLib/style/brand-fonts.tex   (\\brandMainFont + \\brandSetMainFont)
-- LaTeX:  md2pdfLib/style/brand-identity.tex (\\brandName, \\myurl, \\githubBase, ...)
-- CSS:    the token block inside the theme's custom.css, maintained between
-          generated markers. That file is the only web stylesheet -- the theme
-          package ships it, so consuming repos install it instead of copying it.
-          The consumers that load it by path instead get a generated verbatim
-          copy (``CSS_COPY_TARGETS``), so their copy cannot drift.
-- YAML:   the ``mainfont:`` key in each Pandoc metadata file (Pandoc reads YAML,
-          not LaTeX, so the value is generated in place between markers).
-- JSON:   brand.json with aliases resolved, for any other application that wants
-          the brand without implementing alias resolution. Written both to
-          style/brand.tokens.json (stable path for non-Python consumers reading
-          the submodule) and into the theme package, so `pip install
-          sphinx-kataglyphis-theme` + `from sphinx_kataglyphis import brand`
-          works with no repo checkout at all.
-
-Usage:
-    python style/generate_style.py --check   # fail if derived files drifted
-    python style/generate_style.py --write   # regenerate derived files
-"""
+"""Render every brand consumer from style/brand.json; --check fails on drift, --write fixes it."""
 
 from __future__ import annotations
 
@@ -37,61 +11,35 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BRAND_JSON = REPO_ROOT / "style" / "brand.json"
-# Resolved tokens, for consumers that should not have to understand aliases.
-# Emitted twice on purpose: once at a stable repo path for non-Python projects
-# reading the submodule, and once inside the theme package so that
-# `pip install sphinx-kataglyphis-theme` ships it. Both are generated, so
-# --check keeps them identical to brand.json.
+# Resolved tokens at a stable repo path for non-Python readers and inside the package for pip.
 TOKENS_TARGETS = [
     REPO_ROOT / "style" / "brand.tokens.json",
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json",
-    # The document builds run in a container that mounts only md2pdfLib/ and
-    # data/, so the pptx reference builder cannot reach style/. These copies are
-    # generated and --check'd, so they cannot drift from brand.json.
+    # The build container mounts only md2pdfLib/ and data/, so the pptx builder needs a copy.
     REPO_ROOT / "md2pdfLib" / "style" / "brand.tokens.json",
 ]
 
 STY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-colors.tex"
 FONTS_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-fonts.tex"
-# Who the documents are by. On TEXINPUTS, so any document or class can
-# \input{brand-identity.tex} without knowing where it lives.
+# On TEXINPUTS, so any document or class can \input{brand-identity.tex} by name.
 IDENTITY_PATH = REPO_ROOT / "md2pdfLib" / "style" / "brand-identity.tex"
-# Code highlighting: the dark palette drives every code block (book, slides,
-# pptx, web). A former light/print theme was removed -- all documents now use
-# the same dark syntax palette for a single brand code-block look.
+# The dark palette drives every code block: book, slides, pptx and web.
 SYNTAX_THEME_DARK = REPO_ROOT / "md2pdfLib/themes/pygments.theme"
 PYGMENTS_MODULE = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py"
-# Standalone token stylesheet for web projects that are not Sphinx (the
-# Flutter site): a plain <link> away from the same brand, no build step.
+# Standalone token sheet for non-Sphinx web projects (the Flutter site).
 BRAND_CSS = REPO_ROOT / "style" / "brand.css"
-# Dartdoc theme sheet, appended to `dart doc`'s own static-assets/styles.css
-# by ANTfrastructure linux/scripts/lib/dartdoc-build.sh.
+# Appended to `dart doc`'s styles.css by ANTfrastructure's linux/scripts/lib/dartdoc-build.sh.
 DARTDOC_CSS = REPO_ROOT / "style" / "dartdoc.css"
-# The web style lives in exactly one file: the theme package ships it and
-# setup_theme() puts it on html_static_path, so every consuming repo gets the
-# same CSS without copying it. Do not add a second target here.
+# The one web stylesheet, shipped by the theme package; do not add a second target.
 CSS_TARGETS = [
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css",
 ]
-# Verbatim copies of that stylesheet, for the consumers that cannot install the
-# package. Two repos load source_templates/sphinx-book/conf_base.py by path --
-# AccelerANTgine and BeschleunigerBallett -- and the first
-# symlinks its _static/css/custom.css into that directory, so the file has to
-# exist there. Deleting it broke that repo's docs site until it was restored.
-#
-# Generated rather than maintained, which is the whole point. The hand-written
-# fork fell ~490 lines behind and still painted links the pre-cyan green
-# (#1ca06a / #7df5ba), so that one site rendered a different brand from every
-# other Kataglyphis site while every drift check passed. A copy the generator
-# owns cannot do that: --check fails the moment one is edited in place.
+# Verbatim copies for consumers that load conf_base.py by path; generated, so --check catches edits.
 CSS_COPY_TARGETS = [
     REPO_ROOT / "docs-tooling/source_templates/sphinx-book/custom.css",
 ]
 
-# Pandoc metadata files, each with the identity keys that make sense for it.
-# `author` belongs on every document; `institute` is the speaker's affiliation on
-# the slides, and emitting it into the book would put an affiliation line on a
-# book title page that never had one.
+# Identity keys per document: institute belongs on the slides, not on the book's title page.
 YAML_TARGETS: dict[Path, tuple[str, ...]] = {
     REPO_ROOT / "md2pdfLib/pandoc/base.yml": (),
     REPO_ROOT / "md2pdfLib/presentation/pandoc/metadata.yml": ("institute",),
@@ -102,9 +50,7 @@ CSS_START = "/* generated:brand-tokens:start */"
 CSS_END = "/* generated:brand-tokens:end */"
 YAML_START = "# generated:brand:start"
 YAML_END = "# generated:brand:end"
-# Pandoc metadata keys owned by brand.json. Any of these written by hand
-# outside the generated block is removed, so a document cannot quietly
-# re-specify the brand font or link colour.
+# Keys brand.json owns; hand-written copies outside the generated block are removed.
 MANAGED_YAML_KEYS = (
     "author",
     "institute",
@@ -120,11 +66,7 @@ NOTE = "GENERATED from style/brand.json by style/generate_style.py -- do not edi
 
 
 def _resolve_group(group: dict[str, str], fallback: dict[str, str] | None = None) -> dict[str, str]:
-    """Resolve ``@alias`` values against the group, then *fallback*.
-
-    Keeps a literal from being written twice in brand.json: `"text_on_accent":
-    "@white"` means "the same colour as white", not "a copy of #ffffff".
-    """
+    """Resolve ``@alias`` values against the group, then *fallback*."""
     resolved: dict[str, str] = {}
     for key, value in group.items():
         seen = [key]
@@ -144,12 +86,7 @@ def _resolve_group(group: dict[str, str], fallback: dict[str, str] | None = None
 
 
 def resolve_brand(raw: dict) -> dict:
-    """Return *raw* with every ``@alias`` replaced by its literal value.
-
-    The ``render_*`` functions require resolved input -- an unresolved dict
-    would emit a literal ``@accent`` into the CSS. Idempotent, so resolving
-    twice is harmless.
-    """
+    """Return *raw* with every ``@alias`` resolved, as render_* needs; idempotent."""
     colors = _resolve_group(raw["colors"])
     return {
         **raw,
@@ -198,17 +135,7 @@ def render_latex(brand: dict) -> str:
 
 
 def render_latex_identity(brand: dict) -> str:
-    r"""Render the identity as LaTeX macros.
-
-    ``\providecommand`` throughout, for two reasons: the file is safe to
-    ``\input`` more than once, and a document that genuinely needs a different
-    value (a CV profile tailored to one application, say) can still define it
-    first and win.
-
-    The ``\my*`` and ``\githubBase`` names are the ones bookclass.cls and the
-    beamer header already used when they carried these literals themselves, so
-    they keep working -- they are just no longer the place the value lives.
-    """
+    r"""Render the identity as \providecommand macros, which a document may define first."""
     identity = brand["identity"]
     # (macro name, identity key) -- one \providecommand each, in this order.
     macros = (
@@ -222,15 +149,12 @@ def render_latex_identity(brand: dict) -> str:
         ("brandGithub", "github"),
         ("brandGithubUrl", "github_url"),
         ("brandGithubHost", "github_host"),
-        # Social handles the CV links. They were typed into data/cv/cv.tex, and
-        # the LinkedIn one is the author's name in hyphenated form -- an
-        # identity value in the one spelling a whole-string scan cannot see.
+        # LinkedIn's handle hyphenates the name, a spelling whole-string scans miss.
         ("brandLinkedin", "linkedin"),
         ("brandYoutube", "youtube"),
         ("brandInstitute", "institute"),
     )
-    # The names bookclass.cls and the beamer header already used, kept as
-    # aliases so neither has to change the macro it renders.
+    # Names bookclass.cls and the beamer header already use, kept as aliases.
     aliases = (
         ("myname", "brandName"),
         ("myauthor", "brandName"),
@@ -274,12 +198,7 @@ def _css_var(name: str, prefix: str = "--brand-") -> str:
 
 
 def render_css_block(brand: dict) -> str:
-    """Render every brand token as a CSS custom property.
-
-    Dark tokens get their own ``--brand-dark-*`` names rather than shadowing the
-    light ones inside a ``[data-theme="dark"]`` block: shadowing would silently
-    retint every existing ``var(--brand-*)`` use in dark mode.
-    """
+    """Render every token as a CSS property; dark ones get --brand-dark-* rather than shadowing."""
     fonts = brand["fonts"]
     lines = [
         CSS_START,
@@ -289,9 +208,7 @@ def render_css_block(brand: dict) -> str:
         "",
         ":root {",
         f"  --brand-font-main: '{fonts['main']}', sans-serif;",
-        # fonts.mono is deliberately not emitted: it names a TeX font (Latin
-        # Modern Mono) that no browser has, so the web keeps the generic
-        # monospace stack.
+        # No fonts.mono: it names a TeX font no browser has, so the web keeps generic monospace.
         "",
     ]
     lines += [f"  {_css_var(k)}: {v};" for k, v in brand["colors"].items()]
@@ -301,9 +218,7 @@ def render_css_block(brand: dict) -> str:
     return "\n".join(lines)
 
 
-# Pandoc/KDE highlight token -> (palette key, bold, italic). The emphasis is
-# structural and identical in both palettes, so it lives here rather than in
-# brand.json, which stays a pure colour/font file.
+# Pandoc/KDE token -> (palette key, bold, italic); structural emphasis stays out of brand.json.
 SYNTAX_TOKENS: dict[str, tuple[str | None, bool, bool]] = {
     "Alert": ("error", True, False),
     "Annotation": ("comment", False, True),
@@ -336,8 +251,7 @@ SYNTAX_TOKENS: dict[str, tuple[str | None, bool, bool]] = {
     "Warning": ("warning", True, True),
 }
 
-# Pygments token -> palette key. Same palette as SYNTAX_TOKENS above, so a code
-# block on the website matches the same code block in the book.
+# Pygments token -> palette key, the palette SYNTAX_TOKENS uses, so web and book code agree.
 PYGMENTS_TOKENS: list[tuple[str, str, str]] = [
     # (Pygments token, palette key, extra emphasis)
     ("Text", "fg", ""),
@@ -455,14 +369,11 @@ def render_brand_css(brand: dict) -> str:
     )
 
 
-# Dartdoc ships its own palette in static-assets/styles.css and exposes it as
-# `--main-*` custom properties on `.light-theme` / `.dark-theme`.
+# Dartdoc exposes its palette as --main-* properties on .light-theme / .dark-theme.
 DARTDOC_CSS_START = "/* Kataglyphis brand overrides for Dartdoc START */"
 DARTDOC_CSS_END = "/* Kataglyphis brand overrides for Dartdoc END */"
 
-# (css variable, brand section, token). The section is named per row so a dark
-# block can still reach a light token -- the mint `accent` is the hover colour
-# in both themes, and writing it twice is what brand.json exists to prevent.
+# (css variable, brand section, token); a per-row section lets a dark block reach a light token.
 DartdocVars = tuple[tuple[str, str, str], ...]
 
 DARTDOC_LIGHT_VARS: DartdocVars = (
@@ -527,8 +438,7 @@ DARTDOC_DARK_VARS: DartdocVars = (
     ("--kg-shadow-tint", "colors", "black"),
 )
 
-# Geometry only. Every colour below is a var() resolved from the two generated
-# theme blocks, so no hex can be introduced here without the generator noticing.
+# Geometry only: every colour below is a var() from the two generated theme blocks.
 DARTDOC_LAYOUT_CSS = """:root {
   --kg-radius-sm: 8px;
   --kg-radius-md: 12px;
@@ -914,14 +824,7 @@ def _dartdoc_theme_block(brand: dict, selector: str, variables: DartdocVars) -> 
 
 
 def render_dartdoc_css(brand: dict) -> str:
-    """Render the Dartdoc theme sheet -- the brand, for `dart doc` output.
-
-    `dart doc` has no theme mechanism; the only hook is appending to the
-    generated ``static-assets/styles.css``, which ANTfrastructure's
-    ``linux/scripts/lib/dartdoc-build.sh`` does with this file. Both marker
-    lines are load-bearing: that script truncates a previous append at the START
-    line, so re-running a docs build cannot stack copies.
-    """
+    """The Dartdoc theme sheet; dartdoc-build.sh truncates re-runs at its START marker."""
     fonts = brand["fonts"]
     root_block = f":root {{\n  --kg-font-main: '{fonts['main']}', sans-serif;\n}}"
     return (
@@ -947,14 +850,7 @@ def render_dartdoc_css(brand: dict) -> str:
 
 
 def render_tokens_json(brand: dict) -> str:
-    """brand.json with aliases resolved -- the read-me-from-anywhere artifact.
-
-    Every brand section, including the syntax palettes: this file is the only
-    way a consumer that is neither LaTeX nor Sphinx can read the brand, and it
-    used to omit `syntax`/`syntax_dark` while claiming to be brand.json
-    resolved -- so such a consumer could not match the book's code colours even
-    though they are part of the brand.
-    """
+    """brand.json with aliases resolved and every section included, readable from anywhere."""
     payload = {
         "_comment": NOTE + " Read this file (not brand.json) from other applications.",
         "name": brand["name"],
@@ -963,27 +859,14 @@ def render_tokens_json(brand: dict) -> str:
         "syntax": brand["syntax"],
         "syntax_dark": brand["syntax_dark"],
         "fonts": brand["fonts"],
-        # So a Sphinx conf.py or any other consumer can read the author and the
-        # URLs instead of retyping them: `brand()["identity"]["name"]`.
+        # So any consumer reads the author and URLs instead of retyping them.
         "identity": brand["identity"],
     }
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
 
 
 def render_yaml_block(brand: dict, extra_keys: tuple[str, ...] = ()) -> str:
-    """Render the Pandoc metadata keys that brand.json owns.
-
-    ``linkcolor``/``urlcolor``/``citecolor`` name the LaTeX colour defined by
-    brand-colors.tex rather than repeating the hex, so the value still lives in
-    exactly one place. Pandoc turns ``colorlinks`` on implicitly once any of
-    them is set.
-
-    Args:
-        brand: The resolved brand.
-        extra_keys: Identity keys this particular document should also carry,
-            beyond ``author`` -- ``institute`` for the slides. Emitting those
-            everywhere would put an affiliation on documents that never had one.
-    """
+    """Render the Pandoc keys brand.json owns, plus this document's identity *extra_keys*."""
     identity = brand["identity"]
     return "\n".join(
         [

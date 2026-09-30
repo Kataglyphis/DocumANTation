@@ -1,14 +1,4 @@
-"""Tests for the command-line entry points every build actually goes through.
-
-These were the repo's coverage hole: ``md2pdfLib/build.py`` sat at 0% -- nothing
-tested the CLI that each of the six document targets invokes -- and the ``main()``
-of the strict gate and the brand gate were uncovered too. All three were
-exercised only by running a container build by hand.
-
-They are also where the argument plumbing lives, and that plumbing changed:
-``run_from_cli`` used to read the output name back out of ``sys.argv``, which
-meant build.py had to rewrite ``sys.argv`` to hand a parsed value over.
-"""
+"""Tests for the command-line entry points every build actually goes through."""
 
 from __future__ import annotations
 
@@ -28,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 BRAND = json.loads((REPO_ROOT / "style" / "brand.tokens.json").read_text("utf-8"))
 
 
-# ── md2pdfLib/build.py ───────────────────────────────────────────────────────
+# md2pdfLib/build.py
 
 
 @pytest.fixture
@@ -45,11 +35,7 @@ def captured(monkeypatch) -> list[tuple[BuildConfig, str | None]]:
 
 @pytest.mark.parametrize("name", sorted(PRESETS))
 def test_every_registered_type_is_reachable_from_the_cli(monkeypatch, captured, name: str):
-    """`build.py <type>` must resolve to that preset, for all of them.
-
-    The choices come from PRESETS, so a preset added without a CLI entry is
-    impossible -- this pins that they stay in step.
-    """
+    """`build.py <type>` must resolve to that preset, for all of them."""
     monkeypatch.setattr("sys.argv", ["build.py", name])
     build_cli.main()
     (config, output_name) = captured[0]
@@ -58,8 +44,7 @@ def test_every_registered_type_is_reachable_from_the_cli(monkeypatch, captured, 
 
 
 def test_the_output_name_is_passed_as_an_argument(monkeypatch, captured):
-    """Not via sys.argv. The old path rewrote sys.argv to smuggle it across,
-    which any later argv reader in the process would have seen."""
+    """Not via sys.argv, which any later argv reader in the process would see."""
     monkeypatch.setattr("sys.argv", ["build.py", "book", "mybook.tex"])
     build_cli.main()
     (config, output_name) = captured[0]
@@ -116,7 +101,7 @@ def test_a_build_error_is_a_message_not_a_traceback(monkeypatch, capsys):
     assert capsys.readouterr().err.strip() == "Error: pandoc exploded"
 
 
-# ── md2pdfLib/check_build_log.py ─────────────────────────────────────────────
+# md2pdfLib/check_build_log.py
 
 
 def test_the_strict_gate_passes_a_clean_log(monkeypatch, tmp_path, capsys):
@@ -184,12 +169,10 @@ def test_the_strict_gate_refuses_a_json_log_that_is_not_an_array(monkeypatch, tm
     assert "expected a JSON array" in capsys.readouterr().err
 
 
-# ── md2pdfLib/presentation/pptx/verify_brand.py ──────────────────────────────
+# md2pdfLib/presentation/pptx/verify_brand.py
 
 
-# The gate parses every XML part (a regex scan matches broken markup happily),
-# so a fixture has to declare the prefixes it uses or it fails as malformed --
-# which is the check doing its job, not a fixture detail worth hiding.
+# The gate parses every part, so a fixture must declare its prefixes or fail as malformed.
 _A_NS = 'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"'
 _P_NS = 'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"'
 

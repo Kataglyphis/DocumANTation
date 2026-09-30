@@ -1,11 +1,4 @@
-"""Tests for the generated pptx reference deck (the brand's route into PowerPoint).
-
-The reference deck is the only thing that colours a pptx, and it is binary --
-so if it ever silently fell back to pandoc's stock Office theme, no diff and no
-drift check would show it. These tests assert the brand actually lands in the
-theme XML, and that a slot the patcher fails to find is a loud error rather
-than a half-branded deck.
-"""
+"""Tests for the generated pptx reference deck, a binary no diff would show falling back."""
 
 from __future__ import annotations
 
@@ -41,9 +34,7 @@ from md2pdfLib.presets import pptx
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BRAND = json.loads((REPO_ROOT / "style" / "brand.tokens.json").read_text("utf-8"))
 
-# The shape pandoc's default reference.pptx uses: dk1/lt1 as sysClr, the rest
-# as srgbClr. Kept minimal on purpose -- the real file is asserted against in
-# test_build_reference_against_real_pandoc.
+# Pandoc's shape (dk1/lt1 sysClr, the rest srgbClr); the real file has its own test below.
 THEME_XML = (
     "<a:theme><a:themeElements><a:clrScheme name='Office'>"
     '<a:dk1><a:sysClr val="windowText" lastClr="000000"/></a:dk1>'
@@ -70,7 +61,7 @@ def _colors(xml: str) -> dict[str, str]:
     return dict(re.findall(r'<a:(\w+)><a:srgbClr val="([0-9A-F]{6})"/></a:\1>', xml))
 
 
-# ── the brand -> Office mapping ──────────────────────────────────────────────
+# The brand -> Office mapping
 
 
 def test_every_office_slot_is_brand_defined():
@@ -96,7 +87,7 @@ def test_links_match_the_other_documents():
     assert brand_theme_colors(BRAND)["hlink"] == BRAND["colors"]["link"]
 
 
-# ── theme patching ───────────────────────────────────────────────────────────
+# Theme patching
 
 
 def test_patch_replaces_colours_and_font():
@@ -139,7 +130,7 @@ def test_a_missing_font_slot_fails_loudly():
         patch_theme_xml(without_font, brand_theme_colors(BRAND), BRAND["fonts"]["main"])
 
 
-# ── end to end, against pandoc's real reference deck ─────────────────────────
+# End to end, against pandoc's real reference deck
 
 
 @pytest.mark.skipif(
@@ -173,7 +164,7 @@ def test_build_reference_against_real_pandoc(tmp_path):
     assert not (tmp_path / "reference.default.pptx").exists(), "temp file left behind"
 
 
-# ── the on-brand gate ────────────────────────────────────────────────────────
+# The on-brand gate
 
 
 def _deck(path: Path, theme: str = "", slide: str = "") -> Path:
@@ -214,8 +205,7 @@ def test_gate_catches_an_off_brand_colour_on_a_slide(tmp_path):
 
 
 def test_gate_is_case_insensitive_about_hex(tmp_path):
-    """OOXML writes uppercase; brand.json stores lowercase. A gate that missed
-    this would pass everything and check nothing."""
+    """OOXML writes uppercase hex and brand.json lowercase; the gate must match both."""
     accent = BRAND["colors"]["accent"].lstrip("#").lower()
     deck = _deck(tmp_path / "ok.pptx", theme=f'<a:srgbClr val="{accent}"/>')
     assert off_brand_colors(deck, brand_hexes(BRAND)) == {}
@@ -230,10 +220,9 @@ def test_gate_refuses_a_deck_with_nothing_to_check(tmp_path):
         off_brand_colors(empty, brand_hexes(BRAND))
 
 
-# ── layout branding (the beamer look, ported) ───────────────────────────────
+# Layout branding (the beamer look, ported)
 
-# Minimal but structurally faithful to pandoc's default deck: cSld/spTree,
-# placeholders with the lstStyle/spPr shapes observed in the real file.
+# Minimal, but shaped like pandoc's default deck's placeholders.
 TITLE_LAYOUT_XML = (
     '<p:sldLayout><p:cSld name="Title Slide"><p:spTree>'
     '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr/>'
@@ -263,8 +252,7 @@ SECTION_LAYOUT_XML = (
     "</p:spTree></p:cSld></p:sldLayout>"
 )
 
-# Title placeholder with no xfrm of its own -- geometry inherited from master,
-# exactly like the real "Title and Content" layout.
+# No title xfrm of its own, so geometry comes from the master, as in the real layout.
 CONTENT_LAYOUT_XML = (
     '<p:sldLayout><p:cSld name="Title and Content"><p:spTree>'
     '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr/>'
@@ -350,16 +338,14 @@ def _jpeg_size(path: Path) -> tuple[int, int]:
 
 
 def test_srcrect_constants_match_the_actual_asset():
-    """The wedge crop is derived from the image's aspect against the wedge
-    box; if the asset is replaced or resized, this recomputes it and catches
-    drift. The top/bottom split is a framing choice; only the sum is geometry."""
+    """The crop's total follows the image aspect; only the top/bottom split is framing."""
     w, h = _jpeg_size(TITLE_BG_IMAGE)
     visible = w * SLIDE_CY / WEDGE_CX
     expected_total = round((h - visible) / h * 100_000)
     assert abs((TITLE_BG_SRCRECT_T + TITLE_BG_SRCRECT_B) - expected_total) <= 100
 
 
-# ── finalize: the media pandoc drops, and the gate that notices ─────────────
+# Finalize: the media pandoc drops, and the gate that notices
 
 
 def _mini_deck(tmp_path: Path, with_media: bool) -> Path:
@@ -418,8 +404,7 @@ def test_finalize_injects_slide_numbers_on_content_slides(tmp_path: Path):
     assert "slide numbers on 1 slides" in done
     with zipfile.ZipFile(deck) as z:
         slide = z.read("ppt/slides/slide1.xml").decode()
-    # a plain shape with explicit accent-block geometry -- NOT a placeholder,
-    # which viewers only display with header/footer machinery enabled
+    # A plain shape, not a placeholder, which viewers ignore without header/footer settings.
     assert "Brand Slide Number" in slide
     assert '<a:off x="8229600" y="4914900"/>' in slide
     assert 'type="slidenum"' in slide and "<p:ph " not in slide
@@ -456,8 +441,7 @@ def test_deck_metadata_reads_author_and_title():
     from md2pdfLib.presentation.pptx.make_reference import deck_metadata
 
     meta = deck_metadata()
-    # this repo's presentation metadata carries both keys, and its author is
-    # generated from the identity -- so read it from there, not from a literal
+    # The author is generated from the identity, so compare against that, not a literal.
     assert meta.get("author") == BRAND["identity"]["name"]
     assert meta.get("title")
 
@@ -471,8 +455,7 @@ def test_pptx_preset_gets_toc_and_numbering():
 
 
 def test_finalize_unwraps_a14_alternate_content(tmp_path: Path):
-    """Pandoc's --toc slide hides its content in an a14 Choice with an empty
-    Fallback; non-Microsoft viewers render a blank slide unless unwrapped."""
+    """The --toc slide's a14 Choice has an empty Fallback, blank outside PowerPoint."""
     from md2pdfLib.presentation.pptx.finalize_deck import unwrap_alternate_content
 
     deck = tmp_path / "deck.pptx"
@@ -493,10 +476,7 @@ def test_finalize_unwraps_a14_alternate_content(tmp_path: Path):
 
 
 def test_finalize_keeps_math_slides_well_formed(tmp_path: Path):
-    """Math lands in an a14 Choice that *declares* xmlns:a14 and whose Fallback
-    is not empty. Promoting the Choice drops the element carrying that
-    declaration, so the surviving <a14:m> is left unbound and PowerPoint
-    refuses to open the deck without a repair prompt."""
+    """The math Choice declares xmlns:a14, which must survive its promotion."""
     import xml.etree.ElementTree as ET
 
     from md2pdfLib.presentation.pptx.finalize_deck import unwrap_alternate_content
@@ -528,8 +508,7 @@ def test_finalize_keeps_math_slides_well_formed(tmp_path: Path):
 
 
 def test_verify_brand_rejects_malformed_xml(tmp_path: Path):
-    """The a14 namespace bug shipped a deck PowerPoint could not open, and every
-    regex-based check passed it. The gate must parse what it approves."""
+    """Regex checks pass broken markup, so the gate must parse what it approves."""
     from md2pdfLib.presentation.pptx.verify_brand import malformed_parts
 
     deck = tmp_path / "deck.pptx"
@@ -553,14 +532,11 @@ def test_verify_brand_accepts_well_formed_xml(tmp_path: Path):
     assert malformed_parts(deck) == {}
 
 
-# ── shape ids ────────────────────────────────────────────────────────────────
+# Shape ids
 
 
 def test_finalize_renumbers_pandocs_duplicate_shape_ids(tmp_path: Path):
-    """Pandoc gives the shape tree and a TextBox the same id on at least one
-    slide of this deck. PowerPoint renumbers it on load -- verified in a deck
-    it had round-tripped -- so nothing downstream reports it; a consumer that
-    does not renumber is left with two shapes claiming one identity."""
+    """Pandoc can give the shape tree and a TextBox one id; PowerPoint silently renumbers it."""
     from md2pdfLib.presentation.pptx.finalize_deck import dedupe_shape_ids
 
     deck = tmp_path / "deck.pptx"

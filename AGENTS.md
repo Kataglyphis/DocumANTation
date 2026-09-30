@@ -113,10 +113,10 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
 ### Code Style
 
 - **Type annotations required** on all functions (`str | None` unions)
-- **No comments** unless the logic is genuinely non-obvious
+- **Comments: one line, only the why**, the family rule in [ANTfrastructure `AGENTS.md` § Comments](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/AGENTS.md#comments-one-line-only-the-why)
 - Use `pathlib.Path` for all path operations (not `os.path` or string concatenation)
 - All `subprocess.run()` calls **must** use `check=True`
-- All public-API functions **must** have docstrings (Google style)
+- All public-API functions **must** have a docstring: one summary line, Google-style Args/Returns only where not obvious
 - Use the top-level `build.py` entry point instead of per-document wrapper scripts
 - `if __name__ == "__main__":` blocks call `main()`, which parses arguments and
   passes them on — nothing reaches back into `sys.argv` to hand a value over

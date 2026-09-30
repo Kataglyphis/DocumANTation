@@ -7,14 +7,9 @@ IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
 # cv only: english (default) or german. Both come from the same sources.
 CV_LANG ?= english
-# cv only: which section set and summary to build, one file per target in
-# data/cv/profiles/. Orthogonal to CV_LANG.
+# cv only: section set and summary, one file per target in data/cv/profiles/; orthogonal to CV_LANG.
 CV_PROFILE ?= default
-# cv only: the tag appended to the generated CV basename, which the build script
-# builds as CV_<First>_<Last>_<suffix> from the brand identity. Empty means the
-# language, i.e. the published names. Tailored profiles set it -- the filename
-# is the first thing a recruiter sees. The name half is never written here:
-# it lives in style/brand.json like every other identity value.
+# cv only: <suffix> of CV_<First>_<Last>_<suffix> (the name comes from style/brand.json); empty means the language.
 CV_JOB_SUFFIX ?=
 # cv only: full output basename, overriding the generated one entirely.
 CV_JOB ?=
@@ -35,13 +30,11 @@ cv-mistral-rse:
 cv-mistral-platform:
 	$(MAKE) cv CV_PROFILE=mistral-platform CV_JOB_SUFFIX=Mistral_Platform
 
-# Application: Lead HPC/AI Computational Scientist / Engineer, AMD GENCI
-# Center of Excellence (Paris).
+# Application: Lead HPC/AI Computational Scientist / Engineer, AMD GENCI Center of Excellence (Paris).
 cv-amd-hpc:
 	$(MAKE) cv CV_PROFILE=amd-hpc CV_JOB_SUFFIX=AMD_HPC
 
-# Application: Computer Vision Engineer, Bamboo, Terabase Energy (Paris).
-# Suffix "Terabase", not "Terabase_CV": CV_..._CV.pdf reads as a typo.
+# Application: Computer Vision Engineer, Bamboo, Terabase Energy (Paris); not _CV, CV_..._CV.pdf reads as a typo.
 cv-terabase-cv:
 	$(MAKE) cv CV_PROFILE=terabase-cv CV_JOB_SUFFIX=Terabase
 
@@ -49,9 +42,7 @@ cv-terabase-cv:
 cv-parallel-ai:
 	$(MAKE) cv CV_PROFILE=parallel-ai CV_JOB_SUFFIX=Parallel_AI
 
-# Cover letters: the `letter` target typesets data/cv/letters/<CV_PROFILE>.tex
-# with the CV profile of the same name (its tagline, its header). One target
-# per application, next to the application's CV target.
+# Cover letters typeset data/cv/letters/<CV_PROFILE>.tex with the CV profile of the same name.
 letter-parallel-ai:
 	$(MAKE) letter CV_PROFILE=parallel-ai CV_JOB_SUFFIX=Parallel_AI
 
@@ -62,18 +53,7 @@ cv-c12-automation:
 letter-c12-automation:
 	$(MAKE) letter CV_PROFILE=c12-automation CV_JOB_SUFFIX=C12_AI_Automation
 
-# Live-demo mode: rebuild on every source change. Requires `entr`
-# (apt install entr / brew install entr). Pair with a PDF viewer that
-# auto-reloads (zathura, evince, skim) for a live editing experience.
-#
-# One recipe, generated per target, so the entr check and the install hint are
-# written once instead of once per target. Adding a watchable target is the two
-# data lines below and its name in WATCH_TARGETS.
-#
-# Generated with $(eval) rather than written as a `watch-%:` pattern rule:
-# make skips implicit-rule search for .PHONY targets, so a pattern rule plus
-# the .PHONY line above silently produces "Nothing to be done for watch-book"
-# -- the watcher never starts, and nothing reports why.
+# watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation
 WATCH_EXT_beamer = md
 WATCH_DIR_book = data/book
@@ -94,7 +74,4 @@ endef
 
 $(foreach target,$(WATCH_TARGETS),$(eval $(call WATCH_RULE,$(target))))
 
-# There is deliberately no standalone update-sty target: the theme refresh
-# (md2pdfLib/presentation/scripts/update_own_sty.sh) only makes sense inside a
-# build container, and the beamer target already runs it there. Run standalone
-# in a --rm container, its texmf changes were discarded with the container.
+# No standalone update-sty target: in a --rm container its texmf changes are discarded; beamer runs it.

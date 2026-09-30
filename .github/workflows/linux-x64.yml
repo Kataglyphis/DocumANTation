@@ -1,20 +1,6 @@
 name: Linux x64 · build + test
 
-# Brand drift, lint, types and the test suite. Deliberately does NOT build the
-# documents: that needs the ~8.5 GB texlive-full image, and building it on every
-# push cost more than it caught. Document builds are a local step:
-#
-#     STRICT_WARNINGS=1 ./scripts/build_in_container.sh {book|beamer|demo|example|pptx|cv}
-#
-# What that means for this workflow: nothing here compiles LaTeX, so nothing
-# here catches a broken template, a missing package or an overfull box. The
-# suite covers the parts that do not need a TeX distribution -- preset wiring,
-# the Lua filter through real pandoc, the pptx post-processing, brand and
-# identity drift -- and the strict warning gates run when you build locally.
-#
-# Named for the family convention (2026-09-24): a lane that runs a test suite
-# is a platform lane, and this one runs pytest against an amd64 pandoc on a
-# Linux x64 runner. "Lint" would report a failing test under the wrong name.
+# No LaTeX here (the texlive image is ~8.5 GB): build locally with STRICT_WARNINGS=1 ./scripts/build_in_container.sh.
 
 on:
   push:
@@ -39,10 +25,7 @@ jobs:
       - name: Brand drift check
         run: uv run python style/generate_style.py --check
 
-      # --extra dev on every step: ruff, ty, pytest and pytest-cov all live in
-      # that extra, and so does the theme package tests/test_theme.py imports.
-      # Without it a fresh checkout resolves pygments alone and the step dies at
-      # "program not found" rather than on a real failure.
+      # --extra dev on every step: the tools and the theme tests/test_theme.py imports live there.
       - name: Lint
         run: uv run --extra dev ruff check .
 
@@ -52,20 +35,11 @@ jobs:
       - name: Type check
         run: uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
 
-      # AGENTS.md has a Shell Scripting Conventions section that nothing used to
-      # enforce -- the container wrapper, the glossary pipeline and the theme
-      # refresh are all shell, and none of them was linted. `git ls-files` rather
-      # than a fixed list, so a script added later cannot slip past the gate; it
-      # does not descend into the beamer/smile submodules, which are not ours.
+      # git ls-files, so a new script cannot slip past; it skips the beamer/smile submodules.
       - name: Shell lint
         run: uv run --extra dev shellcheck $(git ls-files '*.sh')
 
-      # tests/test_brand_divs_filter.py drives the Lua filter through real
-      # pandoc and skips without it. Skipping in CI is how make_reference's
-      # largest function went untested for months, so install it -- at the very
-      # version the image pins, read from the Dockerfile so there is no second
-      # copy of the number to drift. Pandoc alone is a ~30 MB download; it is
-      # the TeX distribution that made the document builds expensive, not this.
+      # The pandoc tests skip without it; the version comes from the Dockerfile so it cannot drift.
       - name: Install pandoc (the version the image pins)
         run: |
           version="$(sed -n 's/^ARG PANDOC_VERSION=//p' Dockerfile)"
