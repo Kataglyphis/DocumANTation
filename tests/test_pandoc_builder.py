@@ -1,8 +1,4 @@
-"""Unit tests for the pure helpers in md2pdfLib.pandoc_builder.
-
-These exercise the command-assembly and input-discovery logic without invoking
-pandoc or LaTeX, so they run fast in CI.
-"""
+"""Unit tests for the pure helpers in md2pdfLib.pandoc_builder, with no pandoc or LaTeX."""
 
 from __future__ import annotations
 
@@ -59,8 +55,7 @@ def test_get_sorted_markdown_files_orders_by_numeric_prefix(tmp_path: Path):
 
 
 def test_get_sorted_markdown_files_ties_break_by_name(tmp_path: Path):
-    # Same numeric prefix must not fall back to filesystem order, which
-    # differs between machines.
+    # Filesystem order differs between machines, so a shared prefix must sort by name.
     for name in ["01-beta.md", "01-alpha.md", "02-gamma.md"]:
         (tmp_path / name).write_text("x", encoding="utf-8")
     result = [Path(p).name for p in get_sorted_markdown_files(tmp_path)]

@@ -1,4 +1,3 @@
-# Dockerfile
 # nerdctl build . -t pandoc_all
 FROM ubuntu:26.04
 ENV TZ="Europe/Berlin"
@@ -27,12 +26,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 ARG UV_VERSION=0.12.17
 RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
 
-# Install the pinned runtime dependencies from the lockfile into the md2pdf venv.
-# We export the lock to a requirements file and pip-install it, then delete the
-# project metadata so it does NOT linger at / — otherwise runtime `uv run`
-# (used by the build scripts) would discover it and spawn a stray .venv instead
-# of using this md2pdf venv. The project itself runs from the mounted
-# /md2pdfLib volume and is never installed (see [tool.uv] package = false).
+# Delete the project metadata after install, or a runtime `uv run` finds it at / and spawns a stray .venv.
 COPY pyproject.toml uv.lock /tmp/deps/
 RUN uv venv md2pdf && \
     . md2pdf/bin/activate && \

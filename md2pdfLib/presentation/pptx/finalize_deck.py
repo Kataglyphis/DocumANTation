@@ -1,27 +1,4 @@
-"""Finish an emitted deck: layout media, slide numbers, code boxes.
-
-Pandoc copies slide layouts and their relationship parts verbatim from the
-reference deck, but rebuilds ppt/media/ only from what the *slides* embed --
-media referenced solely by a layout (the brand title background) is silently
-left behind, so the layout's image relationship dangles and the title slide
-loses its background depending on the viewer's tolerance for broken refs.
-
-Pandoc also never instantiates sldNum placeholders on slides, so the
-footline's slide number -- styled and positioned by the layout -- would never
-render. This step runs right after pandoc, writes the missing media back in,
-and injects a sldNum instance into every content slide. It only knows the
-media the reference build put there (make_reference.py's constants), so an
-unexpected dangling reference still fails loudly in verify_brand.py's
-integrity check rather than being papered over here.
-
-Code blocks are finished here too (style_code.py): pandoc leaves them
-unboxed and at body size, which overflows the slide. Everything in this
-module is unconditional -- a deck that skipped it is a broken deck, not a
-less strictly checked one.
-
-Usage:
-    python md2pdfLib/presentation/pptx/finalize_deck.py <deck.pptx>
-"""
+"""Finish an emitted deck; see docs/build-pipeline.md § Presentation."""
 
 from __future__ import annotations
 
@@ -30,8 +7,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-# Import as a package module even when run as a script by path -- see the note
-# in fit_titles.py.
+# Import as a package module even when run by path; see fit_titles.py.
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -71,16 +47,7 @@ def missing_layout_media(deck: Path) -> set[str]:
 
 
 def _sldnum_shape(total: int) -> str:
-    """A plain text shape on the footline accent block: "<n> / <total>".
-
-    Deliberately NOT a sldNum placeholder: slide-level placeholder instances
-    only display when the deck's header/footer machinery is switched on, and
-    LibreOffice ignores them without it (verified by rendering). A normal
-    shape with an explicit position and an embedded field renders everywhere,
-    at the cost of carrying its own styling -- white, bold, centred, like the
-    beamer footlineright ("Page 6 / 37"). The total is a static run: the deck
-    is final when this runs, so the count cannot go stale.
-    """
+    """Text shape "<n> / <total>" on the footline accent block, not a sldNum placeholder."""
     white = '<a:solidFill><a:schemeClr val="lt1"/></a:solidFill>'
     paragraph = (
         '<a:p><a:pPr algn="ctr"/>'
@@ -109,10 +76,7 @@ def inject_slide_numbers(deck: Path) -> int:
             return None  # no footline on this layout, so nothing to number
         if 'type="slidenum"' in xml:
             return None  # pandoc grew the feature; nothing to do
-        # append_shapes rather than a regex substitution: it puts the shape in
-        # literally, and returns None for a slide with no shape tree -- which is
-        # the same "leave this slide alone" the transform already means by it.
-        # The local name it replaces also shadowed the imported shape() builder.
+        # append_shapes substitutes literally and returns None without a shape tree.
         return append_shapes(xml, [_sldnum_shape(len(parts.slides))])
 
     return edit_slides(deck, transform)
@@ -122,11 +86,7 @@ _CNVPR_ID_RE = re.compile(r'(<p:cNvPr\b[^>]*?\bid=")(\d+)(")')
 
 
 def _renumber_duplicate_ids(xml: str) -> str | None:
-    """Give repeat ids in one slide part fresh ones; None when already unique.
-
-    A module-level function rather than a closure in the loop below, so the
-    per-slide state it mutates is its own locals.
-    """
+    """Give repeat ids in one slide part fresh ones; None when already unique."""
     ids = [int(i) for _, i, _ in _CNVPR_ID_RE.findall(xml)]
     if len(ids) == len(set(ids)):
         return None
@@ -147,20 +107,7 @@ def _renumber_duplicate_ids(xml: str) -> str | None:
 
 
 def dedupe_shape_ids(deck: Path) -> int:
-    """Make every shape id unique per slide; return how many slides changed.
-
-    Pandoc reuses one id on at least one slide of this deck -- the shape
-    tree's own non-visual id and a TextBox's both come out as 1 -- but
-    ECMA-376 requires cNvPr/@id to be unique within the part, because that is
-    what animations and selection target. PowerPoint renumbers it on load
-    (verified in a deck it had round-tripped: the TextBox came back as 4), so
-    the damage is invisible there and unknown everywhere else.
-
-    The first shape to claim an id keeps it, which is the same choice
-    PowerPoint made. Runs after unwrap_alternate_content, so there are no
-    mc:Choice/mc:Fallback branches left -- inside those, two shapes sharing an
-    id is legitimate, since only one branch ever renders.
-    """
+    """Make shape ids unique per slide, first claimant keeping its id; return slides changed."""
     return edit_slides(deck, lambda parts, name, xml: _renumber_duplicate_ids(xml))
 
 
@@ -171,17 +118,7 @@ _SLD_ROOT_RE = re.compile(r"(<p:sld\b)([^>]*)(>)")
 
 
 def _rebind_namespaces(xml: str, carried: dict[str, str]) -> str:
-    """Re-declare *carried* xmlns prefixes on the ``<p:sld>`` root.
-
-    Args:
-        xml: A slide part whose mc:AlternateContent wrappers were removed.
-        carried: prefix -> URI collected from the dropped wrapper elements.
-
-    Returns:
-        The slide part with any prefix the root does not already declare added
-        to it. Declaring a prefix the content happens not to use is harmless;
-        leaving one unbound is not well-formed.
-    """
+    """Re-declare on ``<p:sld>`` each *carried* prefix -> URI the root lacks."""
     root = _SLD_ROOT_RE.search(xml)
     if root is None or not carried:
         return xml
@@ -212,27 +149,12 @@ def _promote_alternate_content(xml: str) -> str | None:
 
 
 def unwrap_alternate_content(deck: Path) -> int:
-    """Unwrap mc:AlternateContent on slides; return how many slides changed.
-
-    Pandoc wraps content in an AlternateContent whose Choice requires the
-    Microsoft a14 extension. Two cases occur: the --toc slide's content
-    placeholder (EMPTY Fallback -- PowerPoint renders the Choice, every other
-    viewer honours the fallback and shows a blank slide; LibreOffice renders
-    literally nothing, verified), and every slide carrying inline or display
-    math (Fallback holds a flattened rendering). Promote the Choice and drop
-    the wrapper in both cases.
-
-    The Choice carries the xmlns declarations its content needs (a14 for the
-    math wrapper), so dropping it would orphan those prefixes and leave the
-    part not well-formed -- PowerPoint then refuses to open the deck without a
-    repair prompt. Re-declare anything the Choice bound on the <p:sld> root.
-    """
+    """Promote each a14 mc:Choice, whose Fallback other viewers show; return slides changed."""
     return edit_slides(deck, lambda parts, name, xml: _promote_alternate_content(xml))
 
 
 def finalize(deck: Path) -> list[str]:
-    """Repair what pandoc drops and box its code blocks. Returns a
-    human-readable list of what was done."""
+    """Repair what pandoc drops and box its code blocks; return what was done."""
     known = {TITLE_BG_MEDIA: TITLE_BG_IMAGE}
     done: list[str] = []
     for part in sorted(missing_layout_media(deck)):

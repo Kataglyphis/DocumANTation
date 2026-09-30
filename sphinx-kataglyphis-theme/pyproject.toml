@@ -3,11 +3,7 @@ name = "sphinx-kataglyphis-theme"
 version = "0.1.0"
 description = "Reusable Sphinx theme config + CSS for Kataglyphis documentation sites"
 requires-python = ">=3.14"
-# This is the package that ships the brand to every downstream repo, and it was
-# published with no author, licence or project URL at all. Kept in step with
-# style/brand.json by tests/test_identity_is_single_source.py, which checks both
-# manifests -- a packaging manifest cannot read JSON at parse time, so it is
-# pinned rather than generated.
+# Pinned, not generated (a manifest cannot read JSON); tests/test_identity_is_single_source.py holds it to brand.json.
 license = { text = "MIT" }
 authors = [{ name = "Jonas Heinle", email = "jonasheinle@googlemail.com" }]
 dependencies = [
@@ -18,9 +14,7 @@ dependencies = [
     "pygments>=2.17",
 ]
 
-# Register the shared Kataglyphis code palette as real Pygments styles, so the
-# website highlights code the same way the book and slides do. Generated from
-# style/brand.json -- see sphinx_kataglyphis/highlight.py.
+# Real Pygments styles, so the website highlights code like the book and slides.
 [project.entry-points."pygments.styles"]
 kataglyphis-light = "sphinx_kataglyphis.highlight:KataglyphisLightStyle"
 kataglyphis-dark = "sphinx_kataglyphis.highlight:KataglyphisDarkStyle"
@@ -37,6 +31,5 @@ build-backend = "setuptools.build_meta"
 packages = ["sphinx_kataglyphis"]
 
 [tool.setuptools.package-data]
-# brand.tokens.json is generated from style/brand.json; shipping it lets any
-# installing project read the brand instead of copying values.
+# Shipping brand.tokens.json lets any installing project read the brand instead of copying values.
 sphinx_kataglyphis = ["_static/css/*.css", "brand.tokens.json"]

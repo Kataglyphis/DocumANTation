@@ -1,19 +1,4 @@
-"""Build a brand-themed pandoc reference.pptx from style/brand.json.
-
-PowerPoint decks get their colours and fonts from a *reference document*, which
-is a binary .pptx. Committing one would put brand values in a file nothing can
-diff, nothing can drift-check, and no one can review -- the exact failure this
-repo's generated-from-brand.json pipeline exists to prevent, and the same shape
-as the stylesheet forks that silently rotted here before.
-
-So build it instead: take pandoc's own default reference.pptx, patch the Office
-theme's colour scheme and fonts with the brand, and write the result to the
-build directory. It is a build artifact, never committed, regenerated on every
-build, and every value in it comes from brand.tokens.json.
-
-Usage:
-    python md2pdfLib/presentation/pptx/make_reference.py <output.pptx>
-"""
+"""Build the brand reference.pptx at build time; a committed binary cannot be drift-checked."""
 
 from __future__ import annotations
 
@@ -24,8 +9,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-# Import as a package module even when run as a script by path -- see the note
-# in fit_titles.py.
+# Import as a package module even when run by path; see fit_titles.py.
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -45,26 +29,16 @@ from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
     shape,
 )
 
-# The image the beamer title page shows in its right-hand wedge (presets.py
-# passes it as titlegraphic); the pptx title layout reproduces that wedge with
-# the same asset. Resolved relative to the md2pdf root's parent so it works on
-# the host checkout and inside the container (where /data is a sibling mount
-# of /md2pdfLib).
+# The beamer title image; relative to the md2pdf root's parent, so host and container agree.
 TITLE_BG_IMAGE = MD2PDF_ROOT.parent / "data/presentation/images/title-background.jpg"
 TITLE_BG_REL_ID = "rIdBrandTitleBg"
 TITLE_BG_MEDIA = "ppt/media/brandTitleBg.jpg"
 
-# Slide geometry of pandoc's default deck (16:9). The patchers position
-# everything in these EMU coordinates; the build fails loudly if the deck's
-# slide size ever changes (see build_reference).
+# Pandoc's default 16:9 slide in EMU; build_reference fails loudly if it changes.
 SLIDE_CX = 9144000
 SLIDE_CY = 5143500
 
-# The title-page wedge: the right ~38% of the slide, with a slanted left edge
-# like the awesome-beamer title page. The image is portrait (1800x4000); the
-# srcRect crop keeps a band matching the wedge box's aspect, biased toward the
-# top of the picture where its subject sits. A test recomputes the total crop
-# from the image file, so these cannot drift from the asset.
+# The slanted title wedge; a test recomputes the srcRect crop from the image, so it cannot drift.
 WEDGE_X = 5669280  # 62% across
 WEDGE_CX = SLIDE_CX - WEDGE_X
 WEDGE_SLANT = 25000  # left-edge slant, in 1/100000 of the wedge width
@@ -72,8 +46,7 @@ WEDGE_EDGE_EMU = 91440  # accent sliver peeking out along the slanted edge
 TITLE_BG_SRCRECT_T = 8000
 TITLE_BG_SRCRECT_B = 25390
 
-# Layouts that get the accent separator bar under the title -- the pptx
-# equivalent of the beamer theme's accent `separator` rule.
+# Layouts that get beamer's accent separator rule under the title.
 SEPARATOR_LAYOUTS = (
     "Title and Content",
     "Two Content",
@@ -83,10 +56,7 @@ SEPARATOR_LAYOUTS = (
 )
 SEPARATOR_HEIGHT_EMU = 27432  # 0.03in, ~2.2pt -- a rule, not a banner
 
-# The beamer footline: a light strip across the bottom with an accent block on
-# the right (the theme's `footline` / `footlineright` boxes), the author on
-# the left and the deck title in the centre. Author/title are read from the
-# presentation metadata at build time -- the same file that feeds pandoc.
+# The beamer footline; author and title come from the metadata file that feeds pandoc.
 FOOTLINE_HEIGHT_EMU = 228600  # 0.238in
 FOOTLINE_ACCENT_CX = 914400  # 1in accent block, right-aligned
 PRESENTATION_METADATA = MD2PDF_ROOT / "presentation/pandoc/metadata.yml"
@@ -97,12 +67,7 @@ class ReferenceBuildError(Exception):
 
 
 def brand_theme_colors(brand: dict) -> dict[str, str]:
-    """Map brand tokens onto the twelve Office theme colour slots.
-
-    Office fixes the slot names, so this mapping is the one place the brand
-    meets PowerPoint's vocabulary. accent1 is what shapes and headings pick up
-    by default, so it gets the brand accent.
-    """
+    """Map brand tokens onto the twelve Office theme colour slots; accent1 drives shapes."""
     colors = brand["colors"]
     return {
         "dk1": colors["text_main"],
@@ -126,15 +91,9 @@ def _hex(value: str) -> str:
 
 
 def patch_theme_xml(xml: str, colors: dict[str, str], font: str) -> str:
-    """Return *xml* with the brand's colours and font substituted in.
-
-    Raises if a slot is missing rather than quietly leaving an Office default
-    in place: a deck that is silently half-brand is worse than a failed build.
-    """
+    """Return *xml* in brand colours and font; a missing slot raises rather than half-brand."""
     for slot, value in colors.items():
-        # dk1/lt1 ship as <a:sysClr val="windowText" .../>, the rest as
-        # <a:srgbClr val="1F497D"/>. Replace whichever is inside the slot with a
-        # literal brand colour, so all twelve slots are brand-defined.
+        # dk1/lt1 ship as sysClr, the rest as srgbClr; replace either with the brand value.
         pattern = re.compile(rf"(<a:{slot}>)\s*<a:(?:sysClr|srgbClr)\b[^/]*?/>\s*(</a:{slot}>)")
         xml, count = pattern.subn(rf'\1<a:srgbClr val="{_hex(value)}"/>\2', xml)
         if count != 1:
@@ -182,11 +141,7 @@ def _style_placeholder_text(
     size_hundredths: int | None = None,
     anchor_center: bool = False,
 ) -> str:
-    """Replace a placeholder's level-1 list style with the given treatment.
-
-    Replaces the whole <a:lstStyle> rather than merging: unset properties fall
-    back to the master, which is the inheritance PowerPoint uses anyway.
-    """
+    """Replace a placeholder's whole level-1 list style; unset properties inherit the master."""
     start, end = _sp_span(xml, ph_type)
     block = xml[start:end]
     attrs = (
@@ -226,13 +181,7 @@ def _set_placeholder_xfrm(xml: str, ph_type: str, x: int, y: int, cx: int, cy: i
 
 
 def _append_shape(xml: str, shape_xml: str) -> str:
-    """Add one shape to a layout's shape tree.
-
-    Was re.subn, which made the replacement string a regex template -- and these
-    shapes carry the deck author and title from the presentation metadata, so a
-    backslash in either would have been read as an escape. append_shapes
-    substitutes literally.
-    """
+    """Add one shape to a layout's shape tree, raising when it has none."""
     patched = append_shapes(xml, [shape_xml])
     if patched is None:
         raise ReferenceBuildError("Layout has no <p:spTree> to receive a shape.")
@@ -245,12 +194,7 @@ def _rect(shape_id: int, name: str, x: int, y: int, cx: int, cy: int, fill: str)
 
 
 def deck_metadata() -> dict[str, str]:
-    """author/title from the presentation metadata, for the footline.
-
-    A two-key regex read rather than a YAML dependency: both values are plain
-    single-line scalars in this repo's metadata, and a missing key just means
-    that footline text is omitted.
-    """
+    """Author and title for the footline, read by regex: both are single-line scalars."""
     out: dict[str, str] = {}
     if PRESENTATION_METADATA.is_file():
         text = PRESENTATION_METADATA.read_text("utf-8")
@@ -317,11 +261,7 @@ def _wedge(shape_id: int, name: str, x: int, fill: str) -> str:
 
 
 def _title_geometry(layout_xml: str, master_xml: str) -> tuple[int, int, int, int]:
-    """(x, y, cx, cy) of the title placeholder, falling back to the master.
-
-    Content layouts inherit the title box from the slide master, so their own
-    title <p:sp> often carries no <a:xfrm>.
-    """
+    """(x, y, cx, cy) of the title placeholder, from the master when the layout inherits it."""
     for xml in (layout_xml, master_xml):
         try:
             start, end = _sp_span(xml, "title")
@@ -334,22 +274,14 @@ def _title_geometry(layout_xml: str, master_xml: str) -> tuple[int, int, int, in
 
 
 def patch_title_slide_layout(xml: str) -> str:
-    """The beamer title page, in OOXML.
-
-    What the beamer theme actually renders (verified against the built PDF):
-    a WHITE page -- not an image-covered one -- with the title bold and
-    left-aligned in the top-left, the subtitle in grey below it over an accent
-    rule, and the image confined to a right-hand wedge with a slanted edge,
-    an accent sliver marking the diagonal.
-    """
+    """The beamer title page: white, title over an accent rule, image in a slanted wedge."""
     bg = (
         '<p:bg><p:bgPr><a:solidFill><a:schemeClr val="lt1"/></a:solidFill>'
         "<a:effectLst/></p:bgPr></p:bg>"
     )
     xml = _insert_bg(xml, bg)
 
-    # The wedge: accent quad first, image quad on top shifted right, so only a
-    # sliver of accent shows along the slanted edge -- the beamer diagonal.
+    # The image quad sits shifted right on an accent quad, leaving an accent sliver on the slant.
     accent_fill = '<a:solidFill><a:schemeClr val="accent1"/></a:solidFill>'
     image_fill = (
         f'<a:blipFill rotWithShape="1"><a:blip r:embed="{TITLE_BG_REL_ID}"/>'
@@ -361,8 +293,7 @@ def patch_title_slide_layout(xml: str) -> str:
     )
     xml = _append_shape(xml, _wedge(9102, "Brand Wedge", WEDGE_X, image_fill))
 
-    # Title and subtitle move to the left column, clear of the wedge, and take
-    # the frametitle treatment: bold small caps, black; subtitle in grey.
+    # Title and subtitle move left of the wedge, in the frametitle treatment.
     text_cx = WEDGE_X - int(WEDGE_SLANT / 100000 * WEDGE_CX) - 2 * 457200
     xml = _set_placeholder_xfrm(xml, "ctrTitle", 457200, 1097280, text_cx, 1600200)
     xml = _style_placeholder_text(xml, "ctrTitle", bold=True, small_caps=True, align_left=True)
@@ -380,8 +311,7 @@ def patch_title_slide_layout(xml: str) -> str:
 
 
 def patch_section_header_layout(xml: str) -> str:
-    """Section pages go accent-on-dark, like the beamer theme's section slides
-    (`section number projected` is accent on black)."""
+    """Section pages go accent-on-dark, like the beamer theme's section slides."""
     bg = (
         '<p:bg><p:bgPr><a:solidFill><a:schemeClr val="dk1"/></a:solidFill>'
         "<a:effectLst/></p:bgPr></p:bg>"
@@ -397,17 +327,14 @@ def patch_section_header_layout(xml: str) -> str:
 def patch_content_layout(
     xml: str, master_xml: str, shape_id: int, author: str = "", deck_title: str = ""
 ) -> str:
-    """Content slides take the beamer frame: bold small-caps title, an accent
-    separator rule under it, and the footline -- author left, deck title
-    centre, accent block right (the slide number lands on it later)."""
+    """Content slides take the beamer frame: small-caps title, accent rule, and the footline."""
     x, y, cx, cy = _title_geometry(xml, master_xml)
     accent_fill = '<a:solidFill><a:schemeClr val="accent1"/></a:solidFill>'
     xml = _style_placeholder_text(xml, "title", bold=True, small_caps=True, align_left=True)
     xml = _append_shape(
         xml, _rect(shape_id, "Brand Separator", x, y + cy, cx, SEPARATOR_HEIGHT_EMU, accent_fill)
     )
-    # Footline: light full-width strip (a soft grey derived from text-black by
-    # alpha, so it needs no colour slot of its own) + the accent block right.
+    # Grey by alpha over text-black, so the footline strip needs no colour slot of its own.
     grey_fill = (
         '<a:solidFill><a:schemeClr val="dk1"><a:alpha val="8000"/></a:schemeClr></a:solidFill>'
     )
@@ -459,10 +386,7 @@ def patch_content_layout(
                 align="ctr",
             ),
         )
-    # The slide number lives ON the accent block, white and bold -- the beamer
-    # footlineright. The layout only styles/positions the placeholder; the
-    # per-slide instances that make it render are injected by finalize_deck.py,
-    # because pandoc does not instantiate sldNum placeholders on slides.
+    # Pandoc never instantiates sldNum on slides; finalize_deck.py adds the per-slide number.
     xml = _set_placeholder_xfrm(
         xml,
         "sldNum",
@@ -539,8 +463,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
     if not themes_patched:
         raise ReferenceBuildError("No ppt/theme/*.xml found in pandoc's reference.pptx.")
 
-    # -- geometry guard: every patcher positions in SLIDE_CX/CY coordinates,
-    #    so a changed slide size must fail here, not misplace shapes quietly.
+    # Every patcher positions in SLIDE_CX/CY, so a changed slide size must fail here.
     pres = parts["ppt/presentation.xml"].decode("utf-8")
     size = re.search(r'<p:sldSz cx="(\d+)" cy="(\d+)"', pres)
     if not size or (int(size.group(1)), int(size.group(2))) != (SLIDE_CX, SLIDE_CY):
@@ -549,8 +472,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
             f"got {size.groups() if size else 'none'}); update the layout patchers."
         )
 
-    # -- layout branding: the beamer look, one layout at a time, found by the
-    #    names pandoc selects layouts with -- never by file number.
+    # Layouts are found by the names pandoc selects them with, never by file number.
     masters = sorted(n for n in parts if MASTER_RE.fullmatch(n))
     if not masters:
         raise ReferenceBuildError("No slide master found in pandoc's reference.pptx.")

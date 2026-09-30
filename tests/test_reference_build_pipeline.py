@@ -1,20 +1,4 @@
-"""Drive build_reference() end to end without pandoc installed.
-
-``make_reference.build_reference`` is ~100 statements that patch pandoc's default
-reference deck into the brand: twelve theme colour slots, both font slots, the
-title wedge, the section background, the footline on five content layouts, the
-slide-size guard and the "did every expected layout turn up" check.
-
-The only test that covered it, ``test_build_reference_against_real_pandoc``,
-skips unless pandoc is on PATH -- and pandoc lives in the build image, not in the
-environment CI runs the suite in. So on every CI run that whole function was
-skipped, and the module sat at ~60% coverage with its largest function untested.
-
-Pandoc is only needed to *obtain* the input deck, so this substitutes a minimal
-one carrying exactly the parts the patchers require. That covers the pipeline and
-its failure modes anywhere, and the real-pandoc test still guards the assumption
-that pandoc's own deck still looks like this.
-"""
+"""Drive build_reference() end to end on a minimal stand-in for pandoc's default deck."""
 
 from __future__ import annotations
 
@@ -40,8 +24,7 @@ _A = 'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"'
 _P = 'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"'
 _R = 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"'
 
-# The twelve Office slots patch_theme_xml rewrites. dk1/lt1 ship as sysClr in
-# pandoc's deck and the rest as srgbClr, so the fixture mixes both forms.
+# Pandoc ships dk1/lt1 as sysClr and the rest as srgbClr, so the fixture mixes both.
 _SLOTS = {
     "dk1": '<a:sysClr val="windowText" lastClr="000000"/>',
     "lt1": '<a:sysClr val="window" lastClr="FFFFFF"/>',

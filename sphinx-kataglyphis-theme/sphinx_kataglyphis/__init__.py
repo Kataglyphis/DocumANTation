@@ -1,18 +1,4 @@
-"""
-Reusable Sphinx theme + scaffold for Kataglyphis documentation sites.
-
-Usage in a new project's ``conf.py``::
-
-    from sphinx_kataglyphis import setup_theme
-    setup_theme(globals(), repository_url="https://github.com/org/repo")
-
-The brand tokens (colours, fonts) are packaged with the theme, so any Python
-project that installs it can read them without vendoring values::
-
-    from sphinx_kataglyphis import brand
-    brand()["colors"]["accent"]        # '#6af0ad'
-    brand()["fonts"]["main"]           # 'Roboto'
-"""
+"""Kataglyphis Sphinx theme: ``setup_theme(globals(), ...)`` in conf.py, ``brand()`` for tokens."""
 
 import argparse
 import copy
@@ -21,11 +7,10 @@ from functools import lru_cache
 from importlib.resources import files
 from pathlib import Path
 
-# ── brand tokens ─────────────────────────────────────────────────────────────
+# Brand tokens
 
 BRAND_TOKENS_RESOURCE = "brand.tokens.json"
-# __name__ rather than __package__: both name this package, but __package__ is
-# typed `str | None`, which importlib.resources.files() does not accept.
+# __name__, not __package__: files() does not accept __package__'s `str | None`.
 _PACKAGE = __name__
 
 
@@ -36,18 +21,7 @@ def _load_brand() -> dict:
 
 
 def brand() -> dict:
-    """Return the Kataglyphis brand tokens, with all aliases resolved.
-
-    Generated from ``style/brand.json`` by ``style/generate_style.py``; this is
-    the single source of truth for every colour and font. Shipped inside the
-    package so ``pip install sphinx-kataglyphis-theme`` is enough to read it.
-
-    Each call returns a fresh copy. The parse is cached, but handing every
-    caller the *same* dict would let one of them assign into it and silently
-    change the brand for every later caller in the process -- a brand that can
-    be edited at a distance is exactly what the single source of truth exists
-    to prevent.
-    """
+    """Return a fresh copy of the resolved brand tokens, so no caller edits them for all."""
     return copy.deepcopy(_load_brand())
 
 
@@ -56,7 +30,7 @@ def brand_css_path() -> Path:
     return Path(str(files(_PACKAGE).joinpath("_static/css/custom.css")))
 
 
-# ── helpers ──────────────────────────────────────────────────────────────────
+# Helpers
 
 
 def _discover_markdown_files(source_dir: Path) -> list[str]:
@@ -92,19 +66,11 @@ def _needs_index(source_dir: Path) -> bool:
     return not (source_dir / "index.md").exists() and not (source_dir / "index.rst").exists()
 
 
-# ── the groups setup_theme applies ───────────────────────────────────────────
-#
-# One function per group of Sphinx settings. setup_theme() had them inline and
-# had grown to the longest function in the project; split out, each is small
-# enough to read whole and says in its name which settings it owns.
+# The groups setup_theme applies, one function per group of settings
 
 
 def _write_index(source_dir: Path, project_name: str) -> None:
-    """Generate index.md over the sources found in *source_dir*.
-
-    A hand-written index (of either suffix) is left alone -- overwriting
-    someone's landing page would be data loss, not a convenience.
-    """
+    """Generate index.md over *source_dir*, never over a hand-written index."""
     if not _needs_index(source_dir):
         return
     sources = _discover_markdown_files(source_dir)
@@ -131,11 +97,7 @@ def _apply_theme(conf_globals: dict, repository_url: str, theme_options_extra: d
         "show_toc_level": 2,
         "secondary_sidebar_items": ["page-toc"],
         "primary_sidebar_end": [],
-        # Same code palette as the book and the slides -- see
-        # sphinx_kataglyphis/highlight.py, generated from style/brand.json.
-        # Both modes use the dark style: the brand code-block look is dark bg
-        # in every output (PDF, PPTX, web light/dark), so token colours must
-        # be the light-on-dark set regardless of the site's overall theme.
+        # Code blocks are dark in every output, so both modes take the dark token set.
         "pygments_light_style": "kataglyphis-dark",
         "pygments_dark_style": "kataglyphis-dark",
     }
@@ -149,16 +111,7 @@ def _apply_theme(conf_globals: dict, repository_url: str, theme_options_extra: d
 
 
 def _apply_static_paths(conf_globals: dict, html_css_files_extra: list | None) -> None:
-    """Assign html_static_path, html_css_files and templates_path.
-
-    The package's _static comes last so the theme's css/custom.css wins over a
-    same-named local copy: a project that forks the stylesheet gets its fork
-    silently discarded, which is worse than not having one. Put per-project
-    rules in their own file and pass html_css_files_extra.
-
-    A project with no _static of its own is normal -- Sphinx warns about a
-    missing html_static_path entry, so only list it when it exists.
-    """
+    """Assign static paths and CSS; the package's _static comes last so its custom.css wins."""
     pkg_dir = Path(__file__).resolve().parent
     conf_dir = Path(conf_globals.get("__file__", "conf.py")).resolve().parent
 
@@ -178,17 +131,7 @@ def _apply_static_paths(conf_globals: dict, html_css_files_extra: list | None) -
 def _apply_metadata(
     conf_globals: dict, project_name: str, copyright_: str, author: str, release: str
 ) -> None:
-    """setdefault the project metadata, falling back to the brand identity.
-
-    Author and copyright come from brand.json's ``identity`` section when
-    neither conf.py nor the caller supplies one, so a consuming repo inherits
-    them the same way it inherits the colours. Every downstream conf.py used to
-    retype them; that is how the name reached sixteen files in this repo and
-    why three of the four consuming repos still hold their own copy.
-
-    ``release`` gets no such fallback: a version number is per project, and a
-    truthy default once published every project as 0.0.1.
-    """
+    """setdefault the project metadata; author and copyright fall back to the brand identity."""
     identity = brand()["identity"]
     if project_name:
         conf_globals.setdefault("project", project_name)
@@ -200,55 +143,31 @@ def _apply_metadata(
         conf_globals.setdefault("release", release)
 
 
-# ── conf.py helper ───────────────────────────────────────────────────────────
+# conf.py helper
 
 
 def setup_theme(
     conf_globals: dict,
-    # ---- project metadata ----
+    # Project metadata
     repository_url: str = "",
     project_name: str = "",
     copyright_: str = "",
     author: str = "",
-    # Empty, like the other metadata defaults: a truthy "0.0.1" default meant
-    # every project that did not pass a release silently published version
-    # 0.0.1 -- including this repo's own docs.
+    # Empty: a version is per project, and a truthy default publishes a wrong one silently.
     release: str = "",
-    # ---- auto-discovery ----
+    # Auto-discovery
     auto_discover: bool = False,
     source_dir: str = ".",
-    # ---- config overrides ----
+    # Config overrides
     extensions_extra: list | None = None,
     theme_options_extra: dict | None = None,
     html_css_files_extra: list | None = None,
     **extra_conf,
 ) -> None:
-    """Apply Kataglyphis theme defaults to a Sphinx conf.py namespace.
+    """Apply the Kataglyphis theme to a conf.py namespace: ``setup_theme(globals(), ...)``.
 
-    Call from your project's ``conf.py``::
-
-        from sphinx_kataglyphis import setup_theme
-        setup_theme(globals(), repository_url="https://github.com/org/repo")
-
-    When *auto_discover* is ``True`` the package scans *source_dir* for
-    ``.md`` / ``.rst`` files and writes an ``index.md`` with a toctree that
-    references them – so you can simply drop markdown files and build.
-
-    **What this overwrites.** Three groups, deliberately different:
-
-    - *The theme itself* — ``html_theme``, ``html_theme_options``,
-      ``html_static_path``, ``html_css_files``, ``extensions``,
-      ``myst_all_links_external`` are **assigned**, clobbering anything
-      ``conf.py`` set before the call. That is the point: the brand is not
-      negotiable per project. Extend them via ``extensions_extra`` /
-      ``theme_options_extra`` / ``html_css_files_extra`` instead.
-    - *Project metadata* — ``project``, ``copyright``, ``author``, ``release``
-      use ``setdefault``, so a value already in ``conf.py`` wins. ``author`` and
-      ``copyright`` fall back to the brand's ``identity`` section when neither
-      ``conf.py`` nor the call supplies one, so a consuming repo inherits them
-      the same way it inherits the colours instead of retyping them.
-    - *Anything else* — ``**extra_conf`` is assigned last and wins over
-      everything above.
+    Theme settings are assigned (extend them via the ``*_extra`` arguments), project
+    metadata is only set when absent, and ``**extra_conf`` wins over both.
     """
     if auto_discover:
         _write_index(Path(source_dir).resolve(), project_name)
@@ -263,7 +182,7 @@ def setup_theme(
         conf_globals[key] = value
 
 
-# ── scaffold CLI ─────────────────────────────────────────────────────────────
+# Scaffold CLI
 
 
 def _scaffold(dest: Path) -> None:

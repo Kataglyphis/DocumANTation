@@ -41,6 +41,15 @@ The `pptx` target renders the same markdown as a PowerPoint deck:
 4. In strict mode, `verify_brand.py` fails the build if the emitted deck's
    colours or theme fonts are not brand values.
 
+The deck has to look right in viewers that never re-lay it out, which shapes
+these steps. Code and title sizes are computed rather than left to `normAutofit`,
+because LibreOffice honours a stored `fontScale` only when it agrees with its own
+measurement, and the slide number is a plain text shape because LibreOffice
+ignores slide-level `sldNum` placeholders. Unwrapping `mc:AlternateContent` must
+re-declare the Choice's namespace prefixes on `<p:sld>`, or PowerPoint demands a
+repair, and pandoc's repeated `cNvPr` ids within a slide are renumbered because
+ECMA-376 requires them unique.
+
 ## CV
 
 The `cv` target is a direct LuaLaTeX build:

@@ -1,19 +1,4 @@
-"""Every preset must be buildable, and every source must be built by a preset.
-
-Two orphan classes hid here for a long time, both silent:
-
-- ``data/example/`` had no preset at all. Its own getting-started chapter told
-  the reader to put their Markdown there and run ``make book`` -- which builds
-  ``data/book/`` -- so following the instructions produced nothing.
-- ``data/presentation/demo/`` sat one level below the beamer input directory,
-  and :func:`get_sorted_markdown_files` lists a single level, so pandoc never
-  saw it. Two rotted references (an image that had been deleted and a theme path
-  that had moved) lived in it unnoticed, because no build ever read them.
-
-Neither showed up as a failure anywhere. These tests make both impossible: a
-preset whose inputs are missing fails, and a Markdown source no preset collects
-fails.
-"""
+"""Every preset must be buildable, and every source must be built by a preset."""
 
 from __future__ import annotations
 
@@ -27,8 +12,7 @@ from md2pdfLib.presets import PRESETS
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# Markdown that is documentation *about* a directory rather than content built
-# from it. Anything else under data/ must belong to a preset.
+# Markdown about a directory rather than built from it; everything else must belong to a preset.
 PROSE_EXEMPT = {
     "data/cv/README.md",
     "data/cv/profiles/README.md",
@@ -37,8 +21,7 @@ PROSE_EXEMPT = {
 
 @pytest.mark.parametrize("name", sorted(PRESETS))
 def test_every_preset_has_the_files_it_names(name: str):
-    """A preset naming a path that does not exist fails at build time, in a
-    container, on someone else's machine. Catch it here instead."""
+    """A missing path otherwise fails at build time, in a container, on someone else's machine."""
     config = PRESETS[name]()
 
     input_dir = resolve_project_path(config.input_dir)
@@ -81,12 +64,7 @@ def test_no_markdown_source_is_orphaned():
 
 
 def test_a_subdirectory_of_an_input_dir_needs_its_own_preset():
-    """The specific trap: get_sorted_markdown_files() does not recurse.
-
-    Dropping a chapter into a subdirectory of an input_dir looks like it should
-    work and silently builds nothing, so every such subdirectory must itself be
-    some preset's input_dir.
-    """
+    """get_sorted_markdown_files() does not recurse, so Markdown subdirectories need a preset."""
     input_dirs = {resolve_project_path(f().input_dir).resolve() for f in PRESETS.values()}
     for input_dir in sorted(input_dirs):
         for child in sorted(p for p in input_dir.iterdir() if p.is_dir()):
@@ -99,13 +77,7 @@ def test_a_subdirectory_of_an_input_dir_needs_its_own_preset():
             )
 
 
-# ── a preset the user cannot find, or the wrappers cannot build ──────────────
-#
-# Adding a document type touches six places: presets.py, the Makefile, the
-# container script, AGENTS.md, README.md and the docs site. Two targets were
-# added and the docs site was missed on the first pass -- the published
-# instructions listed four of the six ways to build. Nothing failed, because
-# nothing checks prose against code.
+# A new document type touches presets.py, the Makefile, the container script and three docs
 
 MAKEFILE = REPO_ROOT / "Makefile"
 CONTAINER_SCRIPT = REPO_ROOT / "scripts" / "build_in_container.sh"

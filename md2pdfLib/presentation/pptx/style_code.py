@@ -1,33 +1,4 @@
-"""Give pptx code blocks the beamer code box: dark, framed, and sized to fit.
-
-The slides render fenced code inside the shared brand tcolorbox
-(md2pdfLib/common/latex/brand-code-block.tex): dark fill, accent frame,
-rounded corners, and \\scriptsize verbatim that wraps instead of overflowing.
-Pandoc's pptx writer has no equivalent -- it drops the highlighted runs
-straight into the content placeholder at the master's 24pt body size and draws
-no background at all. Two things follow, both visible in a rendered deck: the
-code runs off the bottom of the slide (nothing shrinks it, and long lines wrap
-mid-token), and the dark palette's foreground (#c9d1d9, chosen for a #0d1117
-box) sits on the white placeholder at almost no contrast.
-
-So build the box here, the same way make_reference.py rebuilds the beamer
-title wedge and footline in OOXML: lift each code paragraph out of the
-placeholder into its own roundRect shape carrying the brand's code colours,
-and pick the largest font size at which the block still fits the space it got.
-Fitting is arithmetic rather than PowerPoint's normAutofit because the deck
-must look right in a viewer that never re-lays it out: LibreOffice honours a
-stored fontScale only when it agrees with its own measurement, and pandoc
-emits no autofit hint at all.
-
-The code boxes stack below whatever prose the placeholder keeps, in source
-order. A code block that sits *between* two prose paragraphs therefore lands
-under both -- the deck's code slides are code-only or prose-then-code, and
-re-flowing prose out of its placeholder would cost it the list styling it
-inherits from there.
-
-Usage:
-    python md2pdfLib/presentation/pptx/style_code.py <deck.pptx>
-"""
+"""Box pptx code blocks like the beamer tcolorbox; see docs/build-pipeline.md § Presentation."""
 
 from __future__ import annotations
 
@@ -38,8 +9,7 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import unescape
 
-# Import as a package module even when run as a script by path -- see the note
-# in fit_titles.py.
+# Import as a package module even when run by path; see fit_titles.py.
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -60,40 +30,28 @@ from md2pdfLib.presentation.pptx.pptx_common import (  # noqa: E402
     sized_runs,
 )
 
-# The palette pandoc coloured the runs with -- presets.pptx passes this exact
-# file as --syntax-highlighting, so reading the box fill from it is the only
-# way the fill cannot disagree with the text sitting on it.
+# The file presets.pptx passes as --syntax-highlighting, so box fill and text always agree.
 SLIDE_HIGHLIGHT_THEME = MD2PDF_ROOT / "themes" / "pygments.theme"
 
 EMU_PER_POINT = 12700
 EMU_PER_MM = 36000
 
-# tcolorbox geometry from brand-code-block.tex, in EMU: 3mm padding, 2mm
-# corner arc, and the slides' heavier boxrule=1.3pt.
+# tcolorbox geometry from brand-code-block.tex: 3mm padding, 2mm arc, the slides' 1.3pt rule.
 BOX_PAD_EMU = 3 * EMU_PER_MM
 BOX_ARC_EMU = 2 * EMU_PER_MM
 BOX_LINE_EMU = round(1.3 * EMU_PER_POINT)
 BOX_GAP_EMU = EMU_PER_MM * 3
-# What the frame costs a box on each axis. Named once: the fitter subtracts it
-# and box_height adds it back, and the two disagreeing mis-sizes every box.
+# Named once: the fitter subtracts it and box_height adds it back, so they cannot disagree.
 BOX_CHROME_EMU = 2 * (BOX_PAD_EMU + BOX_LINE_EMU)
 
-# Font sizes in hundredths of a point, as OOXML counts them. The cap is
-# beamer's \scriptsize scaled to this slide: 7pt on a 128mm beamer frame is
-# 14pt across a 254mm PowerPoint slide. The floor is where code stops being
-# readable from a room -- past it a block is allowed to overflow, exactly as
-# an oversized beamer frame does, rather than shrinking to nothing.
+# Hundredths of a pt: the cap is beamer's scriptsize scaled up, the floor stays readable.
 CODE_SIZE_MAX = 1400
 CODE_SIZE_MIN = 800
 CODE_SIZE_STEP = 50
 
-# Advance width per character as a fraction of the font size. Latin Modern
-# Mono is 0.5, but a viewer without it substitutes (Courier New and DejaVu
-# Sans Mono are both ~0.6), so measure with the widest of them: over-measuring
-# costs a font step, under-measuring puts text through the frame.
+# The widest substitute mono: over-measuring costs a font step, under-measuring hits the frame.
 MONO_ADVANCE = 0.6
-# Proportional text averages narrower than mono; used only to guess how much
-# vertical room the prose above a code box needs.
+# Prose is narrower; used only to place the first code box.
 PROSE_ADVANCE = 0.5
 LINE_HEIGHT = 1.25
 # The master's bodyStyle asks for 20% space before each paragraph.
@@ -101,19 +59,15 @@ PROSE_SPACE_BEFORE = 0.2
 # What prose in the placeholder renders at when the master declares no size.
 BODY_SIZE_DEFAULT = 2400
 
-# Ids for the shapes this module adds. Far above pandoc's own (2, 3, ...) and
-# clear of finalize_deck.py's slide numbers at 9500.
+# Far above pandoc's ids and clear of finalize_deck.py's slide numbers at 9500.
 _SHAPE_ID_BASE = 9600
-# Also how an already-boxed block is recognised: the code paragraph inside a
-# finished box still looks exactly like the one pandoc emitted, so a second
-# run over the same deck would box the boxes.
+# Also marks an already-boxed block, so a second run does not box the boxes.
 _CODE_BOX_NAME = "Brand Code Block"
 _P_RE = re.compile(r"<a:p>.*?</a:p>|<a:p/>", re.S)
 _RUN_RE = re.compile(r"<a:r>.*?</a:r>", re.S)
 _PPR_RE = re.compile(r"<a:pPr\b((?:[^>\"]|\"[^\"]*\")*?)(?:/>|>.*?</a:pPr>)", re.S)
 _BR_RE = re.compile(r"<a:br\s*/>|<a:br>.*?</a:br>", re.S)
-# saxutils only knows the three entities it must; code is full of quotes, and
-# every undecoded &quot; would measure five characters wide instead of one.
+# saxutils decodes only three entities; an undecoded &quot; would measure six characters.
 _ENTITIES = {"&quot;": '"', "&apos;": "'"}
 _PH_RE = re.compile(r"<p:ph\b([^>]*)/>")
 
@@ -142,12 +96,7 @@ def mono_run_re(mono: str) -> re.Pattern[str]:
 
 
 def is_code_paragraph(paragraph: str, mono: re.Pattern[str]) -> bool:
-    """True when every run in *paragraph* is set in the mono font.
-
-    Inline ``code`` inside prose is mono too, but never alone in its
-    paragraph, so requiring *all* runs separates a fenced block from a bullet
-    that merely mentions a filename.
-    """
+    """True when every run is mono; inline ``code`` is never alone in its paragraph."""
     runs = _RUN_RE.findall(paragraph)
     return bool(runs) and all(mono.search(run) for run in runs)
 
@@ -177,12 +126,7 @@ def wrapped_line_count(lines: list[str], size: int, usable_cx: int) -> int:
 
 
 def fit_code_size(lines: list[str], cx: int, cy: int) -> tuple[int, int]:
-    """Return (font size, rendered line count) for a block of *cx* x *cy*.
-
-    The largest size at which the wrapped block fits *cy*, or the floor when
-    nothing fits -- a block is left to overflow rather than shrunk past
-    readability.
-    """
+    """(font size, rendered lines) of the largest fit, else the floor: overflow beats unreadable."""
     usable_cx = cx - BOX_CHROME_EMU
     usable_cy = cy - BOX_CHROME_EMU
     count = 0
@@ -200,12 +144,7 @@ def box_height(rendered_lines: int, size: int) -> int:
 
 
 def prose_height(paragraphs: list[str], size: int, cx: int) -> int:
-    """Estimated height of the prose left in the placeholder.
-
-    Proportional text cannot be measured without the font, so this is an
-    estimate; it decides only where the first code box starts, and erring wide
-    costs a little slide space rather than an overlap.
-    """
+    """Estimated prose height; it only places the first code box, so it errs wide."""
     columns = max(1, int(cx // _char_width(size, PROSE_ADVANCE)))
     total = 0.0
     for paragraph in paragraphs:
@@ -231,8 +170,7 @@ def code_shape(
     shape_id: int, paragraph: str, size: int, x: int, y: int, cx: int, cy: int, fill: str
 ) -> str:
     """A rounded, dark, accent-framed box holding one code block."""
-    # roundRect measures its corner radius against the shorter side, so the
-    # arc has to be recomputed per box to stay a constant 2mm.
+    # roundRect measures its radius against the shorter side, so recompute it per box.
     adjust = min(50000, round(BOX_ARC_EMU / min(cx, cy) * 100000))
     pad = BOX_PAD_EMU
     geometry = (
@@ -263,16 +201,7 @@ def code_shape(
 
 
 def _append_shapes(xml: str, shapes: list[str]) -> str:
-    """Add *shapes* to the slide's shape tree, like make_reference._append_shape.
-
-    Loud on a missing spTree for the same reason that one is: a slide whose
-    shape tree does not match would otherwise lose its code boxes silently
-    while still being counted as styled.
-
-    The literal-substitution reason lives with append_shapes now, which
-    make_reference.py shares -- its own shapes carry the deck title, so it had
-    the same exposure through a regex-based version.
-    """
+    """Add *shapes* to the slide's shape tree, raising rather than losing them silently."""
     patched = append_shapes(xml, shapes)
     if patched is None:
         raise CodeStyleError("Slide has no <p:spTree> to receive its code boxes.")
@@ -289,11 +218,7 @@ def _placeholder_key(sp: str) -> str | None:
 
 
 def placeholder_box(sp: str, layout_xml: str, master_xml: str) -> tuple[int, int, int, int] | None:
-    """(x, y, cx, cy) of *sp*, resolved the way PowerPoint inherits geometry.
-
-    Pandoc emits ``<p:spPr/>``, so a slide's content placeholder is positioned
-    entirely by the layout, which in turn often defers to the master.
-    """
+    """(x, y, cx, cy) of *sp*, inherited from layout then master as PowerPoint does."""
     key = _placeholder_key(sp)
     candidates = [sp]
     for xml in (layout_xml, master_xml):
@@ -332,13 +257,13 @@ def style_slide(
             continue
         x, y, cx, cy = geometry
 
+        # Boxes stack below all remaining prose, so code between two paragraphs lands under both.
         top = y + (prose_height(prose, body_size, cx) + BOX_GAP_EMU if prose else 0)
         available = y + cy - top - BOX_GAP_EMU * (len(code) - 1)
         if available <= 0:
             continue
 
-        # Each block gets a share of the leftover room proportional to its
-        # length, so one long block on a slide cannot starve a short one.
+        # Room in proportion to length, so one long block cannot starve a short one.
         blocks = [code_lines(paragraph) for paragraph in code]
         total_lines = sum(len(lines) for lines in blocks)
         shapes: list[str] = []

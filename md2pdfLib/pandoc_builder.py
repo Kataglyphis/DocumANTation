@@ -19,19 +19,13 @@ _FILENAME_RE = re.compile(r"[A-Za-z0-9._-]+")
 
 
 def safe_output_name(raw_name: str, default_suffix: str = ".tex") -> str:
-    """Return a safe output filename.
-
-    - strips path components (preventing path traversal)
-    - only allows letters, numbers, dot, underscore, hyphen
-    - appends *default_suffix* if the name doesn't already end with it
-    """
+    """Return a path-free filename of [A-Za-z0-9._-], adding *default_suffix* if missing."""
     name = Path(raw_name or "").name
     if not _FILENAME_RE.fullmatch(name):
         raise BuildError(
             "Invalid output filename. Use only letters, numbers, dot, underscore and hyphen."
         )
-    # default_suffix is included so a format whose extension is not in the fixed
-    # list still round-trips: "deck.pptx" must not become "deck.pptx.pptx".
+    # default_suffix too, so "deck.pptx" does not become "deck.pptx.pptx".
     for suffix in (".tex", ".pdf", ".log", default_suffix):
         if name.endswith(suffix):
             return name
@@ -50,18 +44,12 @@ def _markdown_sort_key(path: Path) -> tuple[int, str]:
         raise BuildError(
             f"Markdown files must start with a numeric prefix like '01-'. Invalid file: {path.name}"
         )
-    # Name as tiebreaker: two files sharing a prefix otherwise fall back to
-    # iterdir()'s filesystem order, which differs between machines -- the same
-    # sources could produce differently-ordered documents.
+    # The name breaks ties; iterdir() order differs between machines.
     return (int(prefix), path.name)
 
 
 def get_sorted_markdown_files(input_dir: str | Path) -> list[str]:
-    """Return *.md files from *input_dir* sorted by numeric prefix.
-
-    Files are expected to follow the pattern ``NN-description.md``.
-    The numeric prefix is parsed from the first segment before ``-``.
-    """
+    """Return the *.md files of *input_dir* sorted by their ``NN-`` numeric prefix."""
     path = Path(input_dir)
     if not path.is_dir():
         raise BuildError(f"Input directory does not exist: {input_dir}")
@@ -161,14 +149,7 @@ def build_pandoc_cmd(config: BuildConfig, input_files: list[str], output_path: s
 
 
 def run_pandoc(config: BuildConfig) -> None:
-    """Execute the full pandoc build pipeline.
-
-    1. Resolve the output name
-    2. Create the output directory
-    3. Discover and sort input markdown files
-    4. Build the pandoc command
-    5. Run pandoc (raises :class:`BuildError` on failure)
-    """
+    """Build *config* with pandoc; raises :class:`BuildError` on failure."""
     output_name = safe_output_name(
         config.output_name or config.default_output_name,
         default_suffix=config.output_suffix,
@@ -189,9 +170,7 @@ def run_pandoc(config: BuildConfig) -> None:
     except subprocess.CalledProcessError as exc:
         raise BuildError(f"Pandoc failed with exit code {exc.returncode}") from exc
     except FileNotFoundError as exc:
-        # Running a build target on the host instead of in the container is the
-        # common way to get here, and a raw WinError 2 / ENOENT traceback names
-        # neither the missing program nor the fix.
+        # Usually a host run; a raw ENOENT names neither the missing program nor the fix.
         raise BuildError(
             "pandoc is not on PATH. Builds run in the container: "
             "./scripts/build_in_container.sh <target>"
@@ -199,17 +178,7 @@ def run_pandoc(config: BuildConfig) -> None:
 
 
 def run_from_cli(config: BuildConfig, output_name: str | None = None) -> None:
-    """Run *config*, reporting a :class:`BuildError` as a message, not a traceback.
-
-    The output name is a parameter rather than something read back out of
-    ``sys.argv``: the only caller is build.py, which has already parsed the
-    arguments with argparse, and it had to rewrite ``sys.argv`` to hand the
-    name over -- a global mutation that any later argv reader would have seen.
-
-    Args:
-        config: The preset to build.
-        output_name: Overrides the preset's default output filename.
-    """
+    """Run *config*, reporting a :class:`BuildError` as a message, not a traceback."""
     try:
         if output_name:
             config.output_name = output_name

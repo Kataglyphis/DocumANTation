@@ -1,11 +1,4 @@
-"""Tests for the pptx code boxes (the beamer tcolorbox, rebuilt in OOXML).
-
-Pandoc drops highlighted code into the content placeholder at the master's
-body size with no background: the block runs off the bottom of the slide, and
-the dark palette's foreground sits on white at almost no contrast. Neither is
-something the build's other gates can see -- the deck is valid, on-brand and
-well-formed while being unreadable -- so the box geometry is asserted here.
-"""
+"""Tests for the pptx code boxes, whose geometry no other gate can see."""
 
 from __future__ import annotations
 
@@ -42,9 +35,7 @@ MONO = mono_run_re(mono_font())
 MONO_FONT = mono_font()
 CODE_FILL = code_box_fill()
 
-# The content placeholder geometry every code slide inherits. Written the way
-# pandoc's reference deck writes it -- `<a:off ... />`, with the space before
-# the slash that this module's first cut did not match.
+# Written as pandoc writes it, `<a:off ... />` with a space before the slash.
 CONTENT_X, CONTENT_Y, CONTENT_CX, CONTENT_CY = 457200, 1200151, 8229600, 3394472
 MASTER_XML = (
     "<p:sldMaster><p:cSld><p:spTree>"
@@ -110,7 +101,7 @@ def _boxes(xml: str) -> list[tuple[int, int, int, int]]:
     ]
 
 
-# ── telling code from prose ──────────────────────────────────────────────────
+# Telling code from prose
 
 
 def test_a_fenced_block_is_every_run_in_the_mono_font():
@@ -126,13 +117,12 @@ def test_inline_code_in_a_bullet_is_not_a_code_block():
 
 
 def test_code_lines_decode_entities_before_measuring():
-    """A raw &quot; measures five characters wide and costs the block a font
-    step it did not need -- and, once, a phantom trailing line in every box."""
+    """A raw &quot; would measure six characters wide and cost the block a font step."""
     lines = code_lines(_code_paragraph("print(&quot;hi&quot;)", "done"))
     assert lines == ['print("hi")', "done"]
 
 
-# ── fitting ──────────────────────────────────────────────────────────────────
+# Fitting
 
 
 def test_short_code_keeps_the_beamer_equivalent_size():
@@ -153,13 +143,12 @@ def test_a_long_line_is_counted_as_the_rows_it_wraps_to():
 
 
 def test_shrinking_stops_at_the_readable_floor():
-    """Past the floor a block overflows, exactly as an oversized beamer frame
-    does. Shrinking to fit any input would put unreadable code on a slide."""
+    """Past the floor a block overflows, like an oversized beamer frame, rather than shrink."""
     size, _ = fit_code_size([f"line {i}" for i in range(400)], CONTENT_CX, CONTENT_CY)
     assert size == CODE_SIZE_MIN
 
 
-# ── geometry ─────────────────────────────────────────────────────────────────
+# Geometry
 
 
 def test_placeholder_geometry_is_inherited_from_the_master():
@@ -201,7 +190,7 @@ def test_shapes_added_to_one_slide_get_distinct_ids():
     assert len(ids) == len(set(ids)), "duplicate ids make PowerPoint repair the deck"
 
 
-# ── the box itself ───────────────────────────────────────────────────────────
+# The box itself
 
 
 def test_the_code_moves_out_of_the_placeholder_into_a_branded_box():
@@ -222,15 +211,13 @@ def test_prose_on_the_slide_is_left_in_the_placeholder():
 
 
 def test_code_containing_backslashes_survives_the_move():
-    r"""The deck has a LaTeX slide: `\int_0^\infty` is a backslash escape in
-    any regex replacement string, and a `re.sub`-based mover dies on it."""
+    r"""`\int_0^\infty` is an escape in a regex replacement, so a re.sub-based mover dies."""
     out = _styled(_code_paragraph(r"\int_0^\infty e^{-x} \, dx = 1"))
     assert r"\int_0^\infty e^{-x} \, dx = 1" in out
 
 
 def test_styling_an_already_boxed_slide_is_a_no_op():
-    """The paragraph inside a finished box still looks like pandoc's, and this
-    module ships a CLI -- so a second run must not box the boxes."""
+    """A boxed paragraph still looks like pandoc's, so a second run must not box the boxes."""
     once = _styled(_code_paragraph("make beamer"))
     assert style_slide(once, LAYOUT_XML, MASTER_XML, MONO, CODE_FILL) is None
 
@@ -241,15 +228,12 @@ def test_a_slide_without_code_is_untouched():
 
 
 def test_the_box_fill_is_the_palette_pandoc_highlighted_with():
-    """The fill and the text on it come from one file, so a re-generated
-    palette cannot leave light-on-light code behind."""
+    """Fill and text come from one file, so a regenerated palette cannot mismatch them."""
     assert BRAND["syntax_dark"]["bg"].lstrip("#").upper() == CODE_FILL
 
 
 def test_the_box_reads_the_palette_the_pptx_preset_actually_passes_pandoc():
-    """The fill is only guaranteed to match the code on it while this module
-    and the preset name the same theme. Point the preset at the light palette
-    and the runs go dark-on-dark inside an unchanged dark box."""
+    """Fill and code match only while this module and the preset name the same theme."""
     assert Path(pptx().highlight_style).name == SLIDE_HIGHLIGHT_THEME.name
 
 
@@ -261,16 +245,14 @@ def test_the_box_uses_only_brand_colours():
     )
 
 
-# ── the box against the one it copies ────────────────────────────────────────
+# The box against the one it copies
 
 CODE_BOX_TEX = REPO_ROOT / "md2pdfLib" / "common" / "latex" / "brand-code-block.tex"
 SLIDES_TEX = REPO_ROOT / "data" / "presentation" / "latex" / "main.tex"
 
 
 def _tex_length(path: Path, key: str, unit: str) -> float:
-    # Comments first: brand-code-block.tex documents the book's own
-    # `top=2.5mm` override in a comment, which otherwise matches before the
-    # real option does.
+    # Strip comments first: one documents the book's `top=2.5mm`, which would match first.
     body = re.sub(r"(?<!\\)%.*", "", path.read_text("utf-8"))
     match = re.search(rf"\b{key}=([\d.]+){unit}\b", body)
     assert match is not None, f"no {key}=<n>{unit} in {path.name}"
@@ -278,9 +260,7 @@ def _tex_length(path: Path, key: str, unit: str) -> float:
 
 
 def test_the_box_geometry_matches_the_beamer_tcolorbox():
-    """brand-code-block.tex calls itself "the single copy" of the brand code
-    box, and this module is a second one in another language -- no --check or
-    grep can relate them. Round the corners there and the deck must follow."""
+    """This module copies brand-code-block.tex in another language; nothing else relates them."""
     assert _tex_length(CODE_BOX_TEX, "arc", "mm") * EMU_PER_MM == BOX_ARC_EMU
     for side in ("left", "right", "top", "bottom"):
         assert _tex_length(CODE_BOX_TEX, side, "mm") * EMU_PER_MM == BOX_PAD_EMU, side
@@ -288,7 +268,7 @@ def test_the_box_geometry_matches_the_beamer_tcolorbox():
     assert round(_tex_length(SLIDES_TEX, "boxrule", "pt") * EMU_PER_POINT) == BOX_LINE_EMU
 
 
-# ── the deck ─────────────────────────────────────────────────────────────────
+# The deck
 
 
 def test_style_code_blocks_rewrites_only_slides_with_code(tmp_path: Path):

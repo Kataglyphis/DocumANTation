@@ -7,18 +7,12 @@ CONTAINER_RUNTIME="${CONTAINER_RUNTIME:-nerdctl}"
 IMAGE="${IMAGE:-pandoc_all}"
 STRICT_WARNINGS="${STRICT_WARNINGS:-0}"
 CV_LANG="${CV_LANG:-english}"
-# Which section set and summary the CV build shows; one file per target in
-# data/cv/profiles/. Orthogonal to CV_LANG: every profile builds in both
-# languages. See data/cv/profiles/README.md.
+# CV section set and summary, one file per target; see data/cv/profiles/README.md.
 CV_PROFILE="${CV_PROFILE:-default}"
-# Appended to the generated CV basename instead of CV_LANG, for a CV tailored to
-# one application. Keeps the author's name out of the caller (see the Makefile).
+# Replaces CV_LANG in the basename of a tailored CV; the name half never comes from the caller.
 CV_JOB_SUFFIX="${CV_JOB_SUFFIX:-}"
 
-# The published CV filename carries the author's name, so it is read from the
-# brand rather than typed here -- the same rule the templates follow. The
-# generated tokens have every alias resolved and put `identity` last, so
-# scoping to that block distinguishes identity.name from the brand's own name.
+# The author name comes from the brand; identity is last in the tokens, so this skips brand.name.
 BRAND_TOKENS="${PROJECT_ROOT}/style/brand.tokens.json"
 identity_value() {
     sed -n '/"identity"/,$p' "$BRAND_TOKENS" \
@@ -41,10 +35,7 @@ if [ $# -ne 1 ]; then
     usage
 fi
 
-# Appends a step that only runs under STRICT_WARNINGS=1, so the gate's condition
-# is written once instead of once per target. The book target is the exception:
-# it passes --strict-warnings into compile_with_glossaries.sh, which runs the
-# checks itself, rather than chaining a step of its own.
+# The strict gate's condition, written once; book passes --strict-warnings to its own script instead.
 strict_step() {
     if [ "$STRICT_WARNINGS" = "1" ]; then
         CMD+=" && $1"
@@ -62,9 +53,7 @@ case "$TARGET" in
         CMD+=" --type book"
         ;;
     beamer|demo)
-        # Same pipeline for both: demo is the primitives showcase in
-        # data/presentation/demo/ built as its own deck (see presets.demo).
-        # Both need the beamer themes installed into the container's texmf.
+        # demo is the showcase deck (presets.demo); both need the beamer themes in texmf.
         CMD='. md2pdf/bin/activate && chmod +x /md2pdfLib/presentation/scripts/update_own_sty.sh && /md2pdfLib/presentation/scripts/update_own_sty.sh'
         CMD+=" && uv run python /md2pdfLib/build.py ${TARGET}"
         strict_step "uv run python /md2pdfLib/check_build_log.py /data/out/${TARGET}.json --format pandoc-json"
@@ -75,22 +64,14 @@ case "$TARGET" in
         strict_step "uv run python /md2pdfLib/check_build_log.py /data/out/example.json --format pandoc-json"
         ;;
     pptx)
-        # The reference deck carries the brand for pptx and is generated from
-        # brand.json here, every build, rather than committed as a binary.
-        # finalize_deck.py runs unconditionally: pandoc drops media that only
-        # slide layouts reference, so the title background must be re-attached
-        # to every emitted deck, not just strict-checked ones.
+        # finalize_deck.py is not a strict step: every deck needs the layout media pandoc drops.
         CMD='. md2pdf/bin/activate && uv run python /md2pdfLib/presentation/pptx/make_reference.py /data/out/reference.pptx && uv run python /md2pdfLib/build.py pptx && uv run python /md2pdfLib/presentation/pptx/finalize_deck.py /data/out/presentation.pptx'
         strict_step "uv run python /md2pdfLib/check_build_log.py /data/out/pptx.json --format pandoc-json"
-        # The log gate only sees what pandoc complains about. A deck that builds
-        # cleanly and comes out stock Office blue would pass it, so check the
-        # artifact itself.
+        # The log gate cannot see a clean build that came out off-brand, so check the deck.
         strict_step "uv run python /md2pdfLib/presentation/pptx/verify_brand.py /data/out/presentation.pptx"
         ;;
     cv|letter)
-        # `letter` is the CV document with a cover letter as its body: same
-        # class, header and profile, so it shares this whole branch. It adds a
-        # \def\cvletter and a different filename prefix, nothing else.
+        # letter is the CV document with a letter body: only \cvletter and the prefix differ.
         case "$CV_LANG" in
             english|german) ;;
             *)
@@ -98,11 +79,7 @@ case "$TARGET" in
                 exit 2
                 ;;
         esac
-        # The job name is the filename the CV is published under on
-        # jonasheinle.de, so the deliverable is a reproducible build output
-        # rather than a binary someone has to remember to re-commit. Output goes
-        # to /data/out like every other target, which keeps aux/log/pdf out of
-        # the source tree.
+        # The job name is the published filename, so the CV is a build output, not a committed binary.
         if [ ! -f "${PROJECT_ROOT}/data/cv/profiles/${CV_PROFILE}.tex" ]; then
             printf 'Unknown CV_PROFILE "%s": data/cv/profiles/%s.tex does not exist\n' \
                 "$CV_PROFILE" "$CV_PROFILE" >&2
@@ -117,11 +94,7 @@ case "$TARGET" in
             fi
             CV_PREFIX="Cover_Letter"
         fi
-        # Tailored profiles are named per application, and the filename is the
-        # first thing the person receiving it sees -- so the distinguishing tag
-        # is set by whoever adds the profile (see the Makefile) rather than
-        # mangled out of the profile slug here. Only the tag: the name half
-        # comes from the brand, so no caller has to spell it.
+        # The tag is set with the profile (see the Makefile), never derived from its slug.
         CV_NAME="$(identity_value first_name)_$(identity_value last_name)"
         if [ "$CV_NAME" = "_" ]; then
             printf 'Could not read the author name from %s\n' "$BRAND_TOKENS" >&2
@@ -129,8 +102,7 @@ case "$TARGET" in
             exit 1
         fi
         CV_JOB="${CV_JOB:-${CV_PREFIX}_${CV_NAME}_${CV_JOB_SUFFIX:-$CV_LANG}}"
-        # Selects the language without editing cv.tex; see the class options.
-        # The profile goes in the same way, as a \def cv.tex falls back on.
+        # Language and profile go in as class option and \def, so cv.tex needs no edit.
         CV_ARG="\\def\\cvprofile{${CV_PROFILE}}"
         if [ "$TARGET" = "letter" ]; then
             CV_ARG="${CV_ARG}\\def\\cvletter{${CV_PROFILE}}"
@@ -148,12 +120,7 @@ case "$TARGET" in
         ;;
 esac
 
-# Put the brand snippets, shared environments and the document classes on the
-# LaTeX search path so documents can say \input{brand-colors.tex},
-# \input{brand-cv.tex} or \documentclass{myCV_METADATA} without knowing where
-# those live relative to their build directory. A project consuming this repo
-# as a submodule points TEXINPUTS at its own checkout the same way. The
-# trailing colon keeps the default search path.
+# Brand snippets and classes resolve by name from anywhere; the trailing colon keeps the default path.
 BRAND_TEXINPUTS="/md2pdfLib/style:/md2pdfLib/cv/template/latex:/md2pdfLib/common/latex:"
 
 "${CONTAINER_RUNTIME}" run --rm \

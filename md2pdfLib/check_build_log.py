@@ -10,16 +10,11 @@ from pathlib import Path
 
 WARNING_LINE_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^\s*(?:LaTeX|Package|Class)\b.*Warning:"),
-    # \vbox too: a vertically overfull page loses content past the margin just
-    # as an \hbox loses it past the edge, and only \hbox was caught before.
+    # \vbox too: a vertically overfull page loses content past the margin.
     re.compile(r"^\s*(?:Under|Over)full \\[hv]box"),
-    # Pandoc's own warnings (missing resource, duplicate identifier, ...) as
-    # they appear in teed stdout/stderr text logs.
+    # Pandoc's own warnings as they appear in teed text logs.
     re.compile(r"^\[WARNING\]"),
-    # A glyph the font cannot render is dropped silently from the PDF, so it is
-    # a defect, not a nicety. LuaTeX reports it without the word "Warning", and
-    # Pandoc prefixes its own copy with [WARNING] -- neither matched the
-    # patterns above, which is how 81 missing λ/∑ once passed a "strict" build.
+    # A glyph the font lacks is silently dropped; LuaTeX reports it without "Warning".
     re.compile(r"Missing character: There is no "),
 )
 
@@ -69,18 +64,7 @@ def _load_pandoc_json_text(log_path: Path) -> str:
         sys.exit(1)
 
     latex_outputs: list[str] = []
-    # Pandoc's own WARNING entries are separate from the embedded LaTeX log and
-    # were previously only inspected as a fallback when no LaTeX output existed
-    # -- so for any build that reached LaTeX, pandoc-level warnings passed the
-    # strict gate unseen. Collect them unconditionally.
-    #
-    # The `[WARNING]` prefix is added here because pandoc's own `pretty` string
-    # carries no marker of its own, and that prefix is what WARNING_LINE_PATTERNS
-    # matches. It used to be added on the LaTeX path only, so a target that never
-    # reaches LaTeX read its pandoc warnings back as ordinary prose and no pattern
-    # matched them -- pptx is such a target, and it is strict-gated, so
-    # `STRICT_WARNINGS=1 ./scripts/build_in_container.sh pptx` could not fail on a
-    # missing resource or a duplicate identifier. Both paths mark them now.
+    # Always collect pandoc warnings, with the [WARNING] marker their pretty text lacks.
     warnings: list[str] = []
     other: list[str] = []
     for entry in payload:
@@ -97,10 +81,7 @@ def _load_pandoc_json_text(log_path: Path) -> str:
             latex_outputs.append(contents)
 
     if latex_outputs:
-        # Only the last LaTeX log matters -- earlier passes legitimately warn
-        # about undefined references that the final pass resolves. The remaining
-        # entries are pandoc's INFO chatter, which holds no diagnostic the LaTeX
-        # log does not.
+        # Only the last LaTeX pass counts: earlier ones warn about references it resolves.
         return "\n".join([*warnings, latex_outputs[-1]])
 
     return "\n".join([*warnings, *other])
@@ -126,12 +107,7 @@ def _find_warning_lines(text: str, ignore_patterns: list[re.Pattern[str]]) -> li
 def _split_advisories(
     warning_lines: list[str], advisory_patterns: list[re.Pattern[str]]
 ) -> tuple[list[str], list[str]]:
-    """Split *warning_lines* into (fatal, advisory).
-
-    Advisories are still printed -- the point is to stop a diagnostic that costs
-    only quality from failing the build, not to stop anyone seeing it. An
-    ``--ignore-regex`` line is dropped before it ever gets here.
-    """
+    """Split *warning_lines* into (fatal, advisory); advisories print but never fail."""
     fatal: list[str] = []
     advisory: list[str] = []
     for line in warning_lines:

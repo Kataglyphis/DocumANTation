@@ -1,22 +1,4 @@
-"""Identity belongs to style/brand.json, exactly like the colours do.
-
-AGENTS.md has stated the rule for a long time -- "All \\url{}, \\email{},
-\\github{} references must use consistent values. The canonical URL is
-... and GitHub handle is ..." -- and nothing enforced it. So the author name was
-typed by hand into 16 files, and the supporting values had already drifted:
-
-    URL        www.jonasheinle.de   jonasheinle.de
-    email      contact@jonasheinle.de   jonasheinle@googlemail.com
-    institute  Karlsruhe Institute of Technology   ... (KIT)
-
-Every one of those now comes from the `identity` section of brand.json, through
-md2pdfLib/style/brand-identity.tex for LaTeX, the generated Pandoc metadata for
-Pandoc, and brand.tokens.json for everything else. These tests are the rule.
-
-Prose is exempt: a README or a chapter may say the author's name. What may not
-happen is a *template or config* carrying the value, because that is the copy
-that silently goes stale.
-"""
+"""Identity comes from style/brand.json; prose may name it, no template or config may copy it."""
 
 from __future__ import annotations
 
@@ -32,9 +14,7 @@ IDENTITY = json.loads((REPO_ROOT / "style" / "brand.tokens.json").read_text("utf
 
 # Where a literal is a bug rather than content: things a build reads.
 CONFIG_SUFFIXES = (".tex", ".cls", ".yml", ".yaml", ".py", ".sh", ".toml", ".json")
-# Build inputs with no suffix at all. A suffix-only filter never saw these, and
-# the Makefile was carrying `CV_Jonas_Heinle_Mistral_RSE` while every check
-# passed -- the file was not being read, not passing a read.
+# Build inputs with no suffix, which a suffix-only filter never reads.
 CONFIG_BASENAMES = ("Makefile", "Dockerfile")
 
 # Files that legitimately carry a literal, each for a stated reason.
@@ -49,40 +29,23 @@ EXEMPT = {
     "md2pdfLib/pandoc/base.yml",
     "md2pdfLib/presentation/pandoc/metadata.yml",
     "md2pdfLib/example/pandoc/metadata.yml",
-    # Packaging manifests cannot read a JSON file at parse time. Pinned instead
-    # by test_the_package_manifest_agrees_with_the_identity below.
+    # Manifests cannot read JSON at parse time; pinned by a test below instead.
     "pyproject.toml",
     "sphinx-kataglyphis-theme/pyproject.toml",
     # These tests, which necessarily name the values they check.
     "tests/test_identity_is_single_source.py",
 }
 
-# CV section files are prose that happens to be written in LaTeX. The institute
-# name appears in them as the provider of a course and as a referee's employer --
-# the same string as the author's affiliation, meaning something different. A
-# reworded sentence there is content, not brand drift.
-#
-# Scoped to the keys that genuinely appear as prose. It used to exempt those
-# files from *every* check, which is why `\github{Kataglyphis/Repo}` -- markup,
-# not prose -- sat unnoticed in section_projects.tex ten times over, and why
-# the guard written to catch exactly that passed on its own fault injection.
+# CV sections name the institute as prose with another meaning; only that key is exempt there.
 EXEMPT_PROSE_PREFIX = ("data/cv/section_",)
 EXEMPT_PROSE_KEYS = frozenset({"institute"})
 
-# Values distinctive enough that finding one in a config file means it was typed
-# there. "Jonas"/"Heinle" alone are too short to scan for safely, and the full
-# name is the one that mattered.
+# Values distinctive enough that a match means it was typed; first or last name alone is not.
 SCANNED = ("name", "email", "contact_email", "url", "url_display", "github_url", "institute")
 
 
 def _tracked_config_files(prose_exempt_key: str | None = None) -> list[str]:
-    """Tracked files a build reads.
-
-    Args:
-        prose_exempt_key: When this identity key is one that legitimately
-            appears in CV prose, those section files are skipped. Any other
-            check sees them, because markup in them is still markup.
-    """
+    """Tracked files a build reads; CV prose is skipped only for a *prose_exempt_key*."""
     out = subprocess.run(
         ["git", "ls-files"], cwd=REPO_ROOT, capture_output=True, text=True, check=True
     ).stdout.split()
@@ -93,19 +56,13 @@ def _tracked_config_files(prose_exempt_key: str | None = None) -> list[str]:
         if (p.endswith(CONFIG_SUFFIXES) or p.rsplit("/", 1)[-1] in CONFIG_BASENAMES)
         and p not in EXEMPT
         and not (skip_prose and p.startswith(EXEMPT_PROSE_PREFIX))
-        # git ls-files still lists a file deleted but not yet staged, and every
-        # caller reads what it returns.
+        # git ls-files still lists a deleted but unstaged file.
         and (REPO_ROOT / p).is_file()
     ]
 
 
 def _code_of(rel: str) -> str:
-    """*rel*'s content with whole-line comments dropped.
-
-    A comment explaining where a value comes from is documentation, not a second
-    copy the build reads. ``#`` covers shell, YAML, TOML and make; ``%`` LaTeX;
-    ``//`` the odd JS-flavoured config.
-    """
+    """*rel* without whole-line comments, which document a value rather than copy it."""
     text = (REPO_ROOT / rel).read_text(encoding="utf-8", errors="replace")
     return "\n".join(
         line for line in text.splitlines() if not line.lstrip().startswith(("%", "#", "//"))
@@ -121,8 +78,7 @@ def test_no_config_file_hardcodes_an_identity_value(key: str):
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
-        # Skip comment-only mentions: a comment explaining where a value comes
-        # from is documentation, not a second copy the build reads.
+        # A comment naming a value documents it; it is not a copy the build reads.
         code = "\n".join(
             line for line in text.splitlines() if not line.lstrip().startswith(("%", "#", "//"))
         )
@@ -136,25 +92,7 @@ def test_no_config_file_hardcodes_an_identity_value(key: str):
 
 
 def test_no_config_file_writes_the_name_with_a_separator():
-    r"""A filename-safe spelling of the name is still the name.
-
-    The scan above looks for ``"Jonas Heinle"`` verbatim. A build output named
-    after the author cannot contain a space, so both the container script and
-    the Makefile wrote ``CV_Jonas_Heinle_...`` -- the identity, in the one form
-    the guard could not see, in the two files it was not reading either.
-
-    Both now build the basename from ``identity.first_name`` /
-    ``identity.last_name``, so the name reaches the filename without any caller
-    spelling it.
-
-    Separators only, no space: the space spelling is the plain name and belongs
-    to the scan above, so each test owns one spelling and a single defect is
-    reported once.
-
-    No ``\b`` anchors either. ``_`` is a word character, so ``\bJonas`` never
-    matches inside ``CV_Jonas_Heinle_`` -- a first draft of this test anchored
-    that way and passed against both real defects it was written for.
-    """
+    r"""A filename-safe spelling is still the name; no \b anchors, as _ is a word character."""
     first, last = IDENTITY["first_name"], IDENTITY["last_name"]
     joined = re.compile(re.escape(first) + r"[_.\-]" + re.escape(last), re.IGNORECASE)
     offenders = [rel for rel in _tracked_config_files() if joined.search(_code_of(rel))]
@@ -180,11 +118,7 @@ def test_the_url_has_exactly_one_spelling():
     )
 
 
-# Every manifest EXEMPT excuses for being unable to read JSON at parse time.
-# Both are checked below, so the exemption buys a pin, not a blind spot -- the
-# theme's entry used to be listed here as "pinned instead by
-# test_the_package_manifest_agrees_with_the_identity", while that test read only
-# the root manifest and the theme's carried no author at all.
+# The manifests EXEMPT excuses, each checked below, so the exemption buys a pin, not a blind spot.
 PINNED_MANIFESTS = ("pyproject.toml", "sphinx-kataglyphis-theme/pyproject.toml")
 
 
@@ -205,12 +139,7 @@ def test_the_package_manifest_agrees_with_the_identity(manifest: str):
 
 
 def test_every_exempt_manifest_is_actually_pinned():
-    """An EXEMPT entry has to be paid for by a check somewhere.
-
-    EXEMPT is the list of files allowed to carry an identity literal. For the
-    generated ones the generator is the check; for a manifest it is the test
-    above, and nothing previously connected the two lists.
-    """
+    """An exempt manifest must be paid for by the pin above."""
     manifests = {p for p in EXEMPT if p.endswith((".toml", ".cfg"))}
     assert manifests <= set(PINNED_MANIFESTS), (
         f"exempt but unpinned: {sorted(manifests - set(PINNED_MANIFESTS))}; "
@@ -223,9 +152,7 @@ def test_the_latex_identity_file_defines_every_macro_the_templates_use():
     generated = (REPO_ROOT / "md2pdfLib" / "style" / "brand-identity.tex").read_text("utf-8")
     defined = set(re.findall(r"\\providecommand\{\\(\w+)\}", generated))
 
-    # Only the macros this file could own. `\\brand*` also matches the font and
-    # code-box macros that brand-fonts.tex and brand-code-block.tex define, and
-    # those are not this file's business.
+    # Only macros this file owns: `\\brand*` also matches the font and code-box macros.
     candidates = re.compile(r"\\(" + "|".join(sorted(defined, key=len, reverse=True)) + r")\b")
     used: set[str] = set()
     for rel in _tracked_config_files():
@@ -263,27 +190,11 @@ def test_the_identity_reaches_every_output_kind():
         assert payload["identity"] == IDENTITY, tokens
 
 
-# ── assembled URLs, which a literal scan cannot see ──────────────────────────
-#
-# The scan above looks for whole identity values. It missed three real defects
-# because each built a URL from a prefix plus an argument:
-#
-#   \github{#1}       -> https://www.github.com/#1     (a host the brand does not use)
-#   \personalLink{#1} -> http://www.#1                 (HTTP, plus a www.)
-#   \github{Kataglyphis/Repo}                          (the handle, typed ten times)
-#
-# None of those contains an identity value verbatim, so none tripped the scan.
+# Assembled URLs (a prefix plus an argument), which a whole-value scan cannot see
 
 
 def test_no_template_builds_a_github_url_by_hand():
-    r"""Only brand-identity.tex may name *this* brand's GitHub URL.
-
-    Scoped to the handle on purpose: a third-party GitHub URL is ordinary
-    content -- the workflow downloads pandoc from jgm/pandoc, and the scaffold
-    writes "org/repo" as a placeholder. Neither is a copy of the identity.
-    A www.github.com host is always wrong, though: the brand never uses it,
-    and the CV class did.
-    """
+    r"""Only brand-identity.tex names this brand's GitHub URL; www.github.com is always wrong."""
     own = r"https?://(?:www\.)?github\.com/" + re.escape(IDENTITY["github"])
     offenders = []
     for rel in _tracked_config_files():
@@ -345,11 +256,7 @@ def test_the_personal_site_is_never_linked_over_http():
 
 
 def test_the_social_layer_is_defined_exactly_once():
-    r"""bookclass and myCV each carried a copy, and \github had drifted apart.
-
-    Same name, different meaning: the book prefixed the profile URL to a repo,
-    the CV hardcoded https://www.github.com and took a full path.
-    """
+    r"""Shared social macros live once, never as a copy per document class."""
     classes = [
         REPO_ROOT / "md2pdfLib" / "book" / "template" / "latex" / "bookclass.cls",
         REPO_ROOT / "md2pdfLib" / "cv" / "template" / "latex" / "myCV_METADATA.cls",

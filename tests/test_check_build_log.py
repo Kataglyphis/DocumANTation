@@ -53,8 +53,7 @@ def test_load_pandoc_json_extracts_latex_output(tmp_path: Path):
 
 
 def test_detects_missing_characters():
-    # A glyph the font lacks is dropped from the PDF silently; LuaTeX reports it
-    # without the word "Warning", so it needs its own pattern.
+    # LuaTeX reports a dropped glyph without the word "Warning", so it needs its own pattern.
     text = "\n".join(
         [
             "Missing character: There is no λ (U+03BB) in font Latin Modern Mono!",
@@ -73,8 +72,7 @@ def test_missing_character_can_be_ignored_explicitly():
 
 
 def test_detects_vbox_badness():
-    # A vertically overfull page loses content past the bottom margin just as
-    # an \hbox loses it past the edge; only \hbox used to be caught.
+    # A vertically overfull page loses content past the bottom margin, like an \hbox.
     text = "\n".join(
         [
             "Overfull \\vbox (7.6pt too high) detected at line 42",
@@ -91,8 +89,7 @@ def test_detects_pandoc_warning_lines():
 
 
 def test_pandoc_json_surfaces_warning_entries_alongside_latex_output(tmp_path: Path):
-    # Pandoc's own WARNING entries used to be read only when no LaTeX output
-    # existed, so any build that reached LaTeX passed the gate with them unseen.
+    # Pandoc's own warnings count even when a LaTeX log is present.
     payload = [
         {"verbosity": "WARNING", "pretty": "Duplicate identifier 'intro'"},
         {"verbosity": "INFO", "pretty": "Loaded template"},
@@ -106,12 +103,7 @@ def test_pandoc_json_surfaces_warning_entries_alongside_latex_output(tmp_path: P
 
 
 def test_pandoc_json_surfaces_warnings_when_the_target_never_reaches_latex(tmp_path: Path):
-    """A pptx build emits no "LaTeX output" entries, and is still strict-gated.
-
-    Its log therefore always took the no-LaTeX return, where the [WARNING]
-    marker the detector matches was never added -- so pandoc could report a
-    missing resource and the deck still built clean under STRICT_WARNINGS=1.
-    """
+    """A pptx log has no "LaTeX output" entries and is still strict-gated."""
     payload = [
         {"verbosity": "WARNING", "pretty": "Could not fetch resource images/missing.png"},
         {"verbosity": "INFO", "pretty": "Loaded reference.pptx"},
@@ -124,11 +116,7 @@ def test_pandoc_json_surfaces_warnings_when_the_target_never_reaches_latex(tmp_p
     ]
 
 
-# ── advisories: reported, never fatal ────────────────────────────────────────
-#
-# The book's strict build treats two diagnostics as advisory (see
-# md2pdfLib/scripts/compile_with_glossaries.sh): a loose line and a tcolorbox
-# page-break hint. Both cost quality and lose nothing, unlike an overfull box.
+# Advisories: reported, never fatal (the book's pair, from compile_with_glossaries.sh)
 
 ADVISORY_PATTERNS = [
     re.compile(r"^\s*Underfull \\hbox"),

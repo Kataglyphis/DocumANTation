@@ -23,10 +23,7 @@ jobs:
         with:
           submodules: recursive
 
-      # Requires Pages to be enabled once, manually: repo Settings -> Pages ->
-      # Build and deployment -> Source: "GitHub Actions". The workflow token
-      # cannot create the Pages site itself (that needs repo-admin rights),
-      # so this step fails with "Get Pages site failed" until that is done.
+      # Pages must be enabled once by hand (Source: GitHub Actions); the token cannot create the site.
       - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
@@ -35,9 +32,7 @@ jobs:
         with:
           python-version: "3.14"
 
-      # linux-x64.yml runs this too, but it does not gate the deploy: on a push
-      # both workflows start together, so without it here a drifted custom.css
-      # publishes while the drift check is still going red beside it.
+      # Repeated here because linux-x64.yml runs in parallel and cannot stop a drifted custom.css deploying.
       - name: Brand drift check
         run: uv run python style/generate_style.py --check
 
@@ -49,9 +44,7 @@ jobs:
         with:
           path: docs/_build/html
 
-  # develop and master still BUILD, so a broken docs tree goes red there too; only
-  # main deploys, because the github-pages environment accepts main alone. Without
-  # the gate every develop push ended in a red deploy with no steps.
+  # Every branch builds; only main deploys, because the github-pages environment accepts main alone.
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: build

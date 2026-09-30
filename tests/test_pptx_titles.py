@@ -1,10 +1,4 @@
-"""Tests for frame-title fitting (keeping a title out of the separator rule).
-
-Pandoc leaves the title run unsized, so it renders at the master's 33pt, where
-seven of this deck's titles need a second line that falls out of the
-placeholder and through the accent rule beneath it. The beamer deck keeps the
-same strings on one line, so overflow is a defect, not a style choice.
-"""
+"""Tests for frame-title fitting: an overflowing title crosses the separator rule."""
 
 from __future__ import annotations
 
@@ -109,9 +103,7 @@ def test_fit_titles_only_rewrites_the_slides_that_overflow(tmp_path: Path):
         assert re.search(r'sz="\d+"', z.read("ppt/slides/slide1.xml").decode())
         assert z.read("ppt/slides/slide2.xml").decode() == _slide(SHORT)
 
-    # Fitting an already-fitted deck changes nothing. finalize_deck.py runs this
-    # step on decks that may have been through it before, and reporting a
-    # no-change pass as a fit rewrote the whole archive for nothing.
+    # Refitting a fitted deck must change nothing, since finalize_deck.py may re-run on it.
     with zipfile.ZipFile(deck) as z:
         before = {n: z.read(n) for n in z.namelist()}
     assert fit_titles(deck) == 0
