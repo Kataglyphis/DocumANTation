@@ -74,6 +74,8 @@ reproducibility.
 ### Prerequisites
 - **nerdctl** (or docker)
 - **buildkitd** running (`systemctl --user status buildkit.service`)
+- **ripgrep** (`rg`) to search the tree: `winget install --id BurntSushi.ripgrep.MSVC -e --scope user`
+  or `apt install ripgrep`
 
 ```bash
 git clone --recurse-submodules git@github.com:Kataglyphis/DocumANTation.git
