@@ -18,6 +18,7 @@ make cv-parallel-ai                                 # AI Engineer, Parallel
 make letter-parallel-ai                             # its cover letter
 make cv-c12-automation                              # AI Automation Engineer, C12 Quantum Electronics
 make letter-c12-automation                          # its cover letter
+make cv-tissium-automation                          # AI & Automation Lead, TISSIUM
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf` — the filenames the

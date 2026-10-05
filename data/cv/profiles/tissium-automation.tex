@@ -1,0 +1,123 @@
+% Profile: tissium-automation -- AI & Automation Lead, TISSIUM (Paris,
+% hybrid; Portfolio Strategy; biopolymer tissue-repair medical devices;
+% posting read 2026-09-28).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "Develop automations, integrations, and internal tools eliminating
+%    manual work"
+%        -> the labeling bullet second: hand-labeling cut by 75%, in the
+%           owner's own self-labeling tool (\cvshowmldetailtrue) -- an
+%           internal tool whose output other projects used
+%   "Track record building deployed solutions actively used by teams" /
+%   "Ownership ... across the full lifecycle: identification through
+%    adoption"
+%        -> the coding-agent bullet, first: started on the owner's own
+%           initiative with a colleague, grown into a production service the
+%           institute's researchers use. The summary names that span
+%           ("from the idea to adoption") and the bullet is its evidence
+%   "Deliver AI-powered tools and workflows for R&D, Quality, Regulatory,
+%    and Manufacturing teams" / "Work within ... manufacturing contexts"
+%        -> the summary opens on what Fraunhofer IPA is -- the Fraunhofer
+%           Institute for Manufacturing Engineering and Automation, its
+%           official English name -- and the KI-PrOT bullet
+%           (\cvshowkiprottrue): AI inside a chemical surface-treatment
+%           process, dataset versioned with DVC. The tagline says "R&D and
+%           manufacturing"; Quality and Regulatory are NOT claimed
+%   "Maintain existing automations and digital tools ensuring continuity
+%    and adoption"
+%        -> the CI/CD, GPU and monitoring bullet (owned, i.e. maintained)
+%           and the runbooks/onboarding-docs bullet (\cvshowdocstrue), which
+%           is continuity and adoption for exactly those systems
+%   "Lead company-wide GenAI adoption" / "train teams on AI tools"
+%        -> the gateway bullet (\cvshowgatewaytrue): governed LLM access for
+%           the department's 45 researchers; the coding agent's users; in
+%           the summary, four years of teaching. Training teams on AI tools
+%           as such is NOT on record, so it is not claimed
+%   "Engage stakeholders across functions" / "Strong stakeholder
+%    management and communication"
+%        -> the summary: teams in quantum computing, biotech, mechanical
+%           engineering and electroplating (owner, 2026-09-23)
+%   "Define roadmaps for ... advanced initiatives like polymer behavior
+%    simulation"
+%        -> the KQCBW quantum-physics simulation port (\cvshowquantumtrue):
+%           the one simulation on the page, ~700x
+%   "Python coding capability and practical GenAI/LLM experience (RAG,
+%    fine-tuning)"
+%        -> Python in the summary and first in the tag row; vLLM, RAG and
+%           LoRA next to it. RAG is use for information retrieval, not a
+%           RAG system built (the c12-automation rule); LoRA is the tag the
+%           experience section keeps because the fine-tuning is real
+%   "Preferred: document-heavy workflow knowledge"
+%        -> the summary's last clause: the owner's public documentation
+%           pipeline, which typeset this CV. Nothing more is claimed
+%   Paris, hybrid -> \cvrelocatetrue; French B1 in section_private.
+%
+% Not claimed: AWS or GCP (every system on the page is on-premises), GxP or
+% any quality system, regulated-industry experience (medtech, pharma,
+% biotech: the owner WORKS WITH biotech researchers at a research institute,
+% which is not a regulated environment), training non-technical teams on AI
+% tools, and a years-of-experience figure. The posting asks for 5-10 years;
+% the timeline on the page shows what there is and the profile does not
+% round it up.
+%
+% Nothing is deleted for this profile: every bullet it does not show is only
+% switched off here and stays in section_experience.tex.
+
+% "AI & automation" is the posting's own title; "R&D and manufacturing" are
+% the two of its four functions the page has evidence for.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | AI \& automation for R\&D and manufacturing}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | KI-Automatisierung für F\&E und Produktion}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+% Paris, hybrid.
+\cvrelocatetrue
+% Governed LLM access for a whole department: the nearest thing on the page
+% to "company-wide GenAI adoption".
+\cvshowgatewaytrue
+% Runbooks and onboarding docs: "continuity and adoption" of the systems the
+% owner maintains.
+\cvshowdocstrue
+% The one simulation on the page, for the posting's polymer-simulation
+% roadmap.
+\cvshowquantumtrue
+% AI in a chemical production process, with a versioned dataset: the
+% manufacturing context, and the closest bullet to a biopolymer
+% manufacturer's own processes.
+\cvshowkiprottrue
+% The self-labeling tool (an internal tool), MLflow/ClearML.
+\cvshowmldetailtrue
+% Off: Hugging Face, Docker and TypeScript/Node.js are not what this posting
+% asks for, and without "(from Hugging Face)" the coding-agent bullet is a
+% line shorter.
+\cvshowstackdetailfalse
+% Not rendered here, kept in the source: the computer-vision, edge and HPC
+% depth this reader needs least. RemaNet's React frontend is the full-stack
+% evidence other profiles use; here KI-PrOT takes its place as the
+% manufacturing project.
+\cvshowremanetfalse
+\cvshowberghoffalse
+\cvshowsafetyfalse
+\cvshowcudakernelsfalse
+\cvshowbuildsfalse
+% Air above the tag boxes, as on the other 2026 profiles.
+\setlength{\cvtagsep}{3pt}
+% The c12-automation row, reordered: Python, then the posting's GenAI asks
+% (vLLM, RAG, LoRA), then the rest. Same tags, same width, so the row stays
+% one line.
+\renewcommand{\cvFhgTags}{Python, vLLM, RAG, LoRA, PyTorch, uv, Go, Docker, Grafana, GitLab CI/CD, CUDA, C++}
+
+% The tool teams use, then the manual work removed, then AI in a production
+% process, then the platform maintained and documented, then the simulation
+% for the roadmap. Every bullet is listed, hidden ones too.
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgAgent\cvFhgVlm\cvFhgKiprot\cvFhgGateway\cvFhgCicd\cvFhgDocs%
+	\cvFhgQuantum\cvFhgRemanet\cvFhgBerghof\cvFhgSafety\cvFhgBuilds\cvFhgKernels}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_tissium_automation}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
@@ -52,6 +52,10 @@ cv-c12-automation:
 
 letter-c12-automation:
 	$(MAKE) letter CV_PROFILE=c12-automation CV_JOB_SUFFIX=C12_AI_Automation
+
+# Application: AI & Automation Lead, TISSIUM (Paris).
+cv-tissium-automation:
+	$(MAKE) cv CV_PROFILE=tissium-automation CV_JOB_SUFFIX=Tissium_AI_Automation
 
 # watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation
