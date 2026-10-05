@@ -16,6 +16,7 @@ make cv-parallel-ai                      # AI Engineer, Parallel, English
 make letter-parallel-ai                  # its cover letter (letters/parallel-ai.tex; see ../README.md)
 make cv-c12-automation                   # AI Automation Engineer, C12 Quantum Electronics, English
 make letter-c12-automation               # its cover letter
+make cv-tissium-automation               # AI & Automation Lead, TISSIUM, English
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -82,6 +83,7 @@ fits proves nothing about the German one.
 | `terabase-cv` | Computer Vision Engineer, Bamboo, Terabase Energy (Paris R&D hub, remote) | `CV_Jonas_Heinle_Terabase.pdf` |
 | `parallel-ai` | AI Engineer, Parallel (Paris, on-site) | `CV_Jonas_Heinle_Parallel_AI.pdf` |
 | `c12-automation` | AI Automation Engineer, C12 Quantum Electronics (Paris, on-site) | `CV_Jonas_Heinle_C12_AI_Automation.pdf` |
+| `tissium-automation` | AI & Automation Lead, TISSIUM (Paris, hybrid) | `CV_Jonas_Heinle_Tissium_AI_Automation.pdf` |
 | `all` | Every section — a compile check for the dormant ones, not a published CV (`make cv CV_PROFILE=all CV_JOB=CV_all`, without `STRICT_WARNINGS`) | `CV_all.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
@@ -114,6 +116,13 @@ was trained in PyTorch. See the note at the top of
 LangGraph, n8n, OVH, Tailscale, Ansible and Google Workspace, and the profile
 claims none of them. Its cover letter names them as the tools the owner would
 learn first.
+
+`tissium-automation` follows it too. Its posting names AWS or GCP, GxP and
+quality systems, regulated-industry experience (medtech, pharma, biotech),
+training non-technical teams on AI tools and 5-10 years of experience, and
+the profile claims none of them. Working with biotech researchers is on the
+page; a regulated environment is not. See the notes at the top of
+`tissium-automation.tex`.
 
 A fact arriving late does not relax this. Go moved off the not-claimed list on
 2026-09-04 because the work turned up, not because the posting wanted it.
