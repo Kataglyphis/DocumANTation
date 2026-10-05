@@ -114,6 +114,7 @@ nerdctl run --rm --entrypoint "" -v "$(pwd)/md2pdfLib:/md2pdfLib" -v "$(pwd)/dat
 
 - **Type annotations required** on all functions (`str | None` unions)
 - **Comments: one line, only the why**, the family rule in [ANTfrastructure `AGENTS.md` § Comments](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/AGENTS.md#comments-one-line-only-the-why)
+- **Search with `rg`**, not `grep -r`: the family rule in [ANTfrastructure `AGENTS.md` § Searching the tree](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/AGENTS.md#searching-the-tree-ripgrep-rg).
 - Use `pathlib.Path` for all path operations (not `os.path` or string concatenation)
 - All `subprocess.run()` calls **must** use `check=True`
 - All public-API functions **must** have a docstring: one summary line, Google-style Args/Returns only where not obvious
