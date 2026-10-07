@@ -141,7 +141,7 @@ Code must stay 3.14-compatible (`requires-python = ">=3.14"`).
 uv run --extra dev ruff check .
 uv run --extra dev ruff format --check .
 uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
-uv run --extra dev shellcheck $(git ls-files '*.sh')
+git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
 uv run --extra dev pytest tests/ -q
 ```
 
@@ -180,7 +180,8 @@ where only `/md2pdfLib` is mounted.
 
 These are enforced: `linux-x64.yml` runs `shellcheck` over `git ls-files '*.sh'`,
 so every tracked script is linted and a new one cannot be added outside the
-gate. Run it locally with `uv run --extra dev shellcheck $(git ls-files '*.sh')`.
+gate. Run it locally with `git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck`:
+NUL-separated, because an unquoted `$(git ls-files ...)` word-splits (SC2046).
 
 ### Shared Compile Script
 
