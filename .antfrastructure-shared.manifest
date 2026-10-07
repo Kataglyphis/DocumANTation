@@ -1,0 +1,8 @@
+# What this repo takes from ANTfrastructure: nothing. A row would name an asset id
+# from ANTfrastructure's shared/config/shared-assets.manifest, and there is none.
+#
+# DocumANTation has no ANTfrastructure submodule and holds no copy of a hub asset:
+# the hub vendors this repo (its third_party/DocumANTation), not the other way round.
+# The ruff config in pyproject.toml, .gitattributes and the shell scripts are its own.
+#
+# Checked by the hub's linux/scripts/run-lint-gates.sh <this repo> (shared-config drift).
