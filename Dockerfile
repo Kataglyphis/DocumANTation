@@ -23,7 +23,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     rm -rf /var/lib/apt/lists/*
 
 # Pinned uv installer (reproducible; avoids "curl | sh" pulling a moving target).
-ARG UV_VERSION=0.12.17
+ARG UV_VERSION=0.12.23
 RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
 
 # Delete the project metadata after install, or a runtime `uv run` finds it at / and spawns a stray .venv.
