@@ -34,10 +34,10 @@ RUN uv venv md2pdf && \
     uv pip install -r /tmp/requirements.txt && \
     rm -rf /tmp/deps /tmp/requirements.txt
 
-ARG PANDOC_VERSION=3.11
+ARG PANDOC_VERSION=3.12
 # SHA256 of the official pandoc .deb releases (verify tamper-free downloads).
-ARG PANDOC_SHA256_AMD64=89d4c9d97818c62a97157f0072844e4602c6cee795bf84abd1aee7273abcda99
-ARG PANDOC_SHA256_ARM64=d03e1be90fa510aaddc9b1e17f3e4615de0ab8a0aa7e7553502a3c9701887730
+ARG PANDOC_SHA256_AMD64=91903ff19f1b1d4db4129797c7e18f71212990d7394fcff1787719aebf04e372
+ARG PANDOC_SHA256_ARM64=9c9165d5eb627b2ccc12868478f847487bda9dc043aa09a964105d5aebfc7b79
 ARG TARGETARCH
 RUN set -eu; \
     case "$TARGETARCH" in \
