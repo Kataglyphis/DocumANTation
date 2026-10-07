@@ -1,0 +1,5 @@
+# Only adds the ubuntu-26.04 labels the pinned actionlint predates; actionlint finds it by path, so it lives here.
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04
+    - ubuntu-26.04-arm
