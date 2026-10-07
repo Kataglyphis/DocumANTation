@@ -97,13 +97,16 @@ nerdctl run --rm --entrypoint "" -v "${PWD}/md2pdfLib:/md2pdfLib" -v "${PWD}/dat
 ```python
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class User:
     name: str
     roles: list[str]
 
+
 def headline(user: User) -> str:
     return f"{user.name} ({', '.join(user.roles)})"
+
 
 print(headline(User(name="Ada", roles=["admin", "speaker"])))
 ```

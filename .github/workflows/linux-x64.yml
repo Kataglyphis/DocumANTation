@@ -37,7 +37,7 @@ jobs:
 
       # git ls-files, so a new script cannot slip past; it skips the beamer/smile submodules.
       - name: Shell lint
-        run: uv run --extra dev shellcheck $(git ls-files '*.sh')
+        run: git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
 
       # The pandoc tests skip without it; the version comes from the Dockerfile so it cannot drift.
       - name: Install pandoc (the version the image pins)

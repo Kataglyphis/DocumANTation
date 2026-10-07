@@ -68,10 +68,10 @@ pip install -e ./third_party/DocumANTation/sphinx-kataglyphis-theme
 ```python
 from sphinx_kataglyphis import brand
 
-brand()["colors"]["accent"]       # the brand accent
-brand()["colors"]["link"]         # link colour, light theme
-brand()["colors_dark"]["link"]    # ... and dark
-brand()["fonts"]["main"]          # 'Roboto'
+brand()["colors"]["accent"]  # the brand accent
+brand()["colors"]["link"]  # link colour, light theme
+brand()["colors_dark"]["link"]  # ... and dark
+brand()["fonts"]["main"]  # 'Roboto'
 ```
 
 ### Sphinx docs
@@ -81,6 +81,7 @@ brand()["fonts"]["main"]          # 'Roboto'
 
 ```python
 from sphinx_kataglyphis import setup_theme
+
 setup_theme(globals(), repository_url="https://github.com/org/repo")
 ```
 
@@ -97,6 +98,7 @@ work in any Pygments consumer, not just Sphinx:
 
 ```python
 from pygments.styles import get_style_by_name
+
 get_style_by_name("kataglyphis-dark")
 ```
 

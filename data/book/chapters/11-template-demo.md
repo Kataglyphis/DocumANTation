@@ -47,6 +47,7 @@ Python (syntax highlighting):
 ```python
 from dataclasses import dataclass
 
+
 @dataclass
 class Point:
     x: float
@@ -54,6 +55,7 @@ class Point:
 
     def norm2(self) -> float:
         return self.x**2 + self.y**2
+
 
 print(Point(3, 4).norm2())
 ```
