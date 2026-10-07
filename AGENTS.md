@@ -339,7 +339,7 @@ Pandoc and uv pins are synced from ANTfrastructure's
 | Component | Version | Source |
 |-----------|---------|--------|
 | Ubuntu | 26.04 | `FROM ubuntu:26.04` in Dockerfile |
-| Pandoc | 3.11 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ANTfrastructure) |
+| Pandoc | 3.12 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ANTfrastructure) |
 | TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
 | uv | 0.12.23 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ANTfrastructure) |
 | Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
