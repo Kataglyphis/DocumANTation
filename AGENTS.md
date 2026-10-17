@@ -320,7 +320,7 @@ so such a subdirectory needs its own preset (that is what `demo` is).
   `\providecommand` to allow override
 - `--entrypoint ""` in a `nerdctl run` of the `pandoc_all` image is a leftover,
   not a requirement: the image has had no `ENTRYPOINT` since 2026-05-22
-  (`ba7dda8`), only a `CMD`, which a command after the image name replaces
+  (`23734a7`), only a `CMD`, which a command after the image name replaces
   (measured 2026-09-25). The scripts still pass it; it is harmless.
 - **Do not** replace `texlive-full` in the Dockerfile with individual texlive
   collections — the full scheme is deliberate: documents are free to pull in
