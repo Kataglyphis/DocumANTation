@@ -9,14 +9,17 @@ Downstream repos consume it as a git submodule.
 
 | Path | Purpose |
 | --- | --- |
-| `source_templates/sphinx-book/` | Landing-page template for a docs site, plus a frozen path-loaded shim that no repository loads any more — see its [README](source_templates/sphinx-book/README.md) |
+| `source_templates/sphinx-book/` | Landing-page template for a docs site, and how to call `setup_theme()` — see its [README](source_templates/sphinx-book/README.md) |
 
-Only genuinely shared things live here. Two former residents left:
+Only genuinely shared things live here. Three former residents left:
 
+- `source_templates/sphinx-book/conf_base.py` and its generated `custom.css` copy, a Sphinx
+  baseline that AccelerANTgine and BeschleunigerBallett loaded by file path, were deleted once
+  both called `setup_theme()` (2026-10-19).
 - `source_templates/sphinx-python/`, a baseline for Python API docs (autodoc/napoleon), was
-  removed: an org-wide audit found no `conf.py` that read it, and unlike the `sphinx-book` shim it
-  imports `sphinx_kataglyphis`, so any consumer able to load it could call `setup_theme()` instead
-  and get the brand CSS and shared code palette the baseline lacked.
+  removed: an org-wide audit found no `conf.py` that read it, and it imports `sphinx_kataglyphis`,
+  so any consumer able to load it could call `setup_theme()` instead and get the brand CSS and
+  shared code palette the baseline lacked.
   `git log -- docs-tooling/source_templates/sphinx-python/` has it if a Python project wants the
   autodoc defaults back.
 - `sync_versions.py` and `generate-website-licenses.py` moved back to ANTfrastructure: they read
@@ -43,6 +46,4 @@ git submodule add https://github.com/Kataglyphis/DocumANTation third_party/Docum
 
 Then install the theme package and call `setup_theme()`:
 [`source_templates/sphinx-book/README.md`](source_templates/sphinx-book/README.md). There is
-deliberately no copy-the-files route: every copy this repo handed out drifted. The last two
-repos that loaded a template by path, AccelerANTgine and BeschleunigerBallett, call
-`setup_theme()` since 2026-10-19.
+deliberately no copy-the-files route: every copy this repo handed out drifted.

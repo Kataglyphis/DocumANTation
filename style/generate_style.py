@@ -34,10 +34,6 @@ DARTDOC_CSS = REPO_ROOT / "style" / "dartdoc.css"
 CSS_TARGETS = [
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css",
 ]
-# Verbatim copies for consumers that load conf_base.py by path; generated, so --check catches edits.
-CSS_COPY_TARGETS = [
-    REPO_ROOT / "docs-tooling/source_templates/sphinx-book/custom.css",
-]
 
 # Identity keys per document: institute belongs on the slides, not on the book's title page.
 YAML_TARGETS: dict[Path, tuple[str, ...]] = {
@@ -940,9 +936,6 @@ def desired_outputs() -> dict[Path, str]:
     for css in CSS_TARGETS:
         current = css.read_text(encoding="utf-8") if css.exists() else ""
         outputs[css] = apply_css_block(current, css_block)
-    theme_css = outputs[CSS_TARGETS[0]]
-    for target in CSS_COPY_TARGETS:
-        outputs[target] = theme_css
     for yml, extra_keys in YAML_TARGETS.items():
         block = render_yaml_block(brand, extra_keys)
         outputs[yml] = apply_yaml_block(yml.read_text(encoding="utf-8"), block)

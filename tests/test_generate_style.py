@@ -9,7 +9,6 @@ from pathlib import Path
 import pytest
 
 from style.generate_style import (
-    CSS_COPY_TARGETS,
     CSS_END,
     CSS_START,
     CSS_TARGETS,
@@ -318,26 +317,6 @@ def test_only_one_stylesheet_is_maintained_in_place():
     generated_css = [p for p in desired_outputs() if p.name == "brand.css"]
     assert len(generated_css) == 1
     assert "{" in desired_outputs()[generated_css[0]]  # it really is a stylesheet
-
-
-def test_the_path_loaded_copy_is_generated_not_forked():
-    # A path-loading consumer needs the stylesheet there, as a generated copy, never a fork.
-    outputs = desired_outputs()
-    assert CSS_COPY_TARGETS, "the path-loading consumer needs its copy declared"
-    for target in CSS_COPY_TARGETS:
-        assert target in outputs, f"{target} is not generated"
-        assert outputs[target] == outputs[CSS_TARGETS[0]]
-
-
-def test_the_path_loaded_copy_on_disk_has_not_been_hand_edited():
-    """The one target that was forked unnoticed, so the suite checks it in place too."""
-    outputs = desired_outputs()
-    for target in CSS_COPY_TARGETS:
-        assert target.exists(), f"{target} is loaded by path from another repo -- keep it"
-        assert target.read_text(encoding="utf-8") == outputs[target], (
-            f"{target} was edited by hand. Edit style/brand.json or the theme "
-            "stylesheet, then run: python style/generate_style.py --write"
-        )
 
 
 def test_resolve_brand_is_idempotent():

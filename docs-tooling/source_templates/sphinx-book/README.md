@@ -9,23 +9,10 @@ git submodule.
 | File | Status |
 | --- | --- |
 | `index_template.rst` | Landing-page template with cards — copy it and edit it |
-| `conf_base.py` | **Frozen, unused.** No repository loads it since 2026-10-19 |
-| `custom.css` | **Generated, unused.** A verbatim copy of the theme stylesheet |
 
 The theme baseline and the visual style are not *authored* here: they live once, in the
 `sphinx-kataglyphis-theme/` package, whose brand tokens are generated from
 [`style/brand.json`](../../../style/README.md).
-
-### `conf_base.py` and `custom.css` have no consumer left
-
-AccelerANTgine and BeschleunigerBallett loaded `conf_base.py` by filesystem path, and
-AccelerANTgine symlinked its `_static/css/custom.css` here. Both call `setup_theme()` since
-2026-10-19, and no family checkout loads either file any more. They stay until they are deleted
-together with their tests; do not give them a new consumer.
-
-- `conf_base.py` is **frozen**: pure constants, no imports, no brand values.
-- `custom.css` is **generated** by `style/generate_style.py`; `--check` and the test suite hold
-  it to the theme stylesheet byte for byte.
 
 ## How to consume
 
