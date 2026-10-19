@@ -142,7 +142,7 @@ def test_extra_conf_wins_over_the_baseline(conf):
     assert conf["myst_heading_anchors"] == 3
 
 
-# Links
+# Links and branding defaults
 
 
 def test_markdown_links_resolve_as_sphinx_targets(conf):
@@ -157,6 +157,42 @@ def test_heading_anchors_set_in_conf_py_survive(conf):
     conf["myst_heading_anchors"] = 2
     setup_theme(conf)
     assert conf["myst_heading_anchors"] == 2
+
+
+def test_the_family_logo_is_the_default_logo_and_favicon(conf):
+    setup_theme(conf)
+    logo = Path(conf["html_logo"])
+    assert logo.is_file()
+    assert conf["html_favicon"] == conf["html_logo"]
+    assert logo.read_bytes() == (REPO_ROOT / "images" / logo.name).read_bytes()
+
+
+def test_the_project_name_is_the_page_title_and_logo_text(conf):
+    """Sphinx's default title doubled "documentation" on an index titled "<x> documentation"."""
+    setup_theme(conf, project_name="Hub", release="1.0")
+    assert conf["html_title"] == "Hub"
+    assert conf["html_theme_options"]["logo"] == {"text": "Hub"}
+
+
+def test_no_title_is_invented_without_a_project(conf):
+    setup_theme(conf)
+    assert "html_title" not in conf
+    assert "logo" not in conf["html_theme_options"]
+
+
+def test_explicit_branding_wins(conf):
+    conf["html_logo"] = "mine.png"
+    setup_theme(
+        conf,
+        project_name="Hub",
+        theme_options_extra={"logo": {"text": "Other"}},
+        html_title="Custom",
+        html_favicon="mine.ico",
+    )
+    assert conf["html_logo"] == "mine.png"
+    assert conf["html_favicon"] == "mine.ico"
+    assert conf["html_title"] == "Custom"
+    assert conf["html_theme_options"]["logo"] == {"text": "Other"}
 
 
 # The path-loaded baseline: stand-ins for the two consumer builds this repo cannot run

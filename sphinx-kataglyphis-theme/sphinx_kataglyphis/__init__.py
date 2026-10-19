@@ -10,6 +10,7 @@ from pathlib import Path
 # Brand tokens
 
 BRAND_TOKENS_RESOURCE = "brand.tokens.json"
+LOGO_RESOURCE = "logo-t3-wireframe.png"
 LINKS_EXTENSION = "sphinx_kataglyphis.links"
 # __name__, not __package__: files() does not accept __package__'s `str | None`.
 _PACKAGE = __name__
@@ -145,6 +146,18 @@ def _apply_metadata(
         conf_globals.setdefault("release", release)
 
 
+def _apply_branding(conf_globals: dict) -> None:
+    """setdefault the family logo and favicon, and the project name as the page title."""
+    logo = str(files(_PACKAGE).joinpath(LOGO_RESOURCE))
+    conf_globals.setdefault("html_logo", logo)
+    conf_globals.setdefault("html_favicon", logo)
+    project = conf_globals.get("project")
+    if project:
+        # Sphinx's "<project> <release> documentation" doubles an index titled "... documentation".
+        conf_globals.setdefault("html_title", project)
+        conf_globals["html_theme_options"].setdefault("logo", {"text": project})
+
+
 # conf.py helper
 
 
@@ -169,7 +182,7 @@ def setup_theme(
     """Apply the Kataglyphis theme to a conf.py namespace: ``setup_theme(globals(), ...)``.
 
     Theme settings are assigned (extend them via the ``*_extra`` arguments), project
-    metadata is only set when absent, and ``**extra_conf`` wins over both.
+    metadata and the branding defaults are only set when absent, and ``**extra_conf`` wins over all.
     """
     if auto_discover:
         _write_index(Path(source_dir).resolve(), project_name)
@@ -178,6 +191,7 @@ def setup_theme(
     _apply_theme(conf_globals, repository_url, theme_options_extra)
     _apply_static_paths(conf_globals, html_css_files_extra)
     _apply_metadata(conf_globals, project_name, copyright_, author, release)
+    _apply_branding(conf_globals)
 
     # Last, so a project can override anything above.
     for key, value in extra_conf.items():

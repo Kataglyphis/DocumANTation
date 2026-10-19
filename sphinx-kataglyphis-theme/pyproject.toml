@@ -32,4 +32,4 @@ packages = ["sphinx_kataglyphis"]
 
 [tool.setuptools.package-data]
 # Shipping brand.tokens.json lets any installing project read the brand instead of copying values.
-sphinx_kataglyphis = ["_static/css/*.css", "brand.tokens.json"]
+sphinx_kataglyphis = ["_static/css/*.css", "brand.tokens.json", "logo-t3-wireframe.png"]

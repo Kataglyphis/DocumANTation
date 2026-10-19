@@ -71,6 +71,11 @@ setup_theme(
 That brings the theme, the brand CSS, the shared code palette and the Kataglyphis fonts. This
 repo's own `docs/conf.py` makes the same call, so what works here works downstream.
 
+Defaults, each set only when `conf.py` or the call has not set it: the family logo as `html_logo`
+and `html_favicon`, the project name as `html_title` and as the logo text (Sphinx's own title,
+`<project> <release> documentation`, doubled an index titled "… documentation"), and
+`myst_heading_anchors = 6`.
+
 ### Links
 
 Markdown links are written for GitHub and work on the site too:
