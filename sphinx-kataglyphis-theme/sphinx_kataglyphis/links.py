@@ -1,0 +1,120 @@
+"""Sphinx extension: a Markdown link to a repository file the site lacks goes to GitHub."""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any
+from urllib.parse import quote
+
+from docutils import nodes
+from myst_parser.mdit_to_docutils.sphinx_ import SphinxRenderer
+from sphinx import addnodes
+from sphinx.application import Sphinx
+from sphinx.transforms import SphinxTransform
+
+HREF_ATTR = "kataglyphis_href"
+_WRAPPED_FLAG = "_kataglyphis_keeps_href"
+
+
+def repository_root(srcdir: Path) -> Path | None:
+    """The nearest directory at or above *srcdir* holding ``.git`` (a file in a submodule)."""
+    for candidate in (srcdir, *srcdir.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return None
+
+
+def repository_url(base_url: str, branch: str, root: Path, target: Path, fragment: str) -> str:
+    """``<base_url>/blob/<branch>/<path>``, ``tree`` for a directory, with the fragment kept."""
+    kind = "tree" if target.is_dir() else "blob"
+    url = f"{base_url.rstrip('/')}/{kind}/{branch}/{quote(target.relative_to(root).as_posix())}"
+    return f"{url}#{fragment}" if fragment else url
+
+
+def _is_myst_link(node: nodes.Node) -> bool:
+    return (
+        isinstance(node, (addnodes.download_reference, addnodes.pending_xref))
+        and node.get("reftype") == "myst"
+    )
+
+
+def _myst_links(parent: nodes.Element) -> list[nodes.Element]:
+    return [node for node in parent.findall(nodes.Element) if _is_myst_link(node)]
+
+
+def _href(node: nodes.Element) -> str | None:
+    """The link as written; without the recorded href only a path-valued reftarget will do."""
+    if HREF_ATTR in node:
+        return node[HREF_ATTR]
+    if isinstance(node, addnodes.download_reference) or node.get("refdomain") is None:
+        return node["reftarget"]
+    return None
+
+
+class RepositoryFileLinks(SphinxTransform):
+    """Send a MyST link to a repository file the site does not publish to that file on GitHub."""
+
+    # Before DoctreeReadEvent (880), so the download collector never sees a rewritten link.
+    default_priority = 500
+
+    def apply(self, **kwargs: Any) -> None:
+        base_url = (self.config.html_theme_options or {}).get("repository_url", "")
+        if not self.config.kataglyphis_repository_links or not base_url:
+            return
+        srcdir = Path(self.env.srcdir).resolve()
+        root = repository_root(srcdir)
+        if root is None:
+            return
+        for node in _myst_links(self.document):
+            href = _href(node)
+            if not href or "://" in href:
+                continue
+            path, _, fragment = href.partition("#")
+            if not path:
+                continue
+            target = Path(self.env.relfn2path(path, self.env.docname)[1]).resolve()
+            if not target.exists() or not target.is_relative_to(root):
+                continue
+            if self._published(node, target, srcdir):
+                continue
+            url = repository_url(
+                base_url, self.config.kataglyphis_repository_branch, root, target, fragment
+            )
+            children = [child.deepcopy() for child in node.children]
+            if not node.astext():
+                children = [nodes.literal(path, path)]
+            node.replace_self(nodes.reference("", "", *children, refuri=url))
+
+    def _published(self, node: nodes.Element, target: Path, srcdir: Path) -> bool:
+        """A document in the build, or a file under the source dir Sphinx copies as a download."""
+        if target.is_dir() or not target.is_relative_to(srcdir):
+            return False
+        if node.get("refdomain") == "doc":
+            return node["reftarget"] in self.env.found_docs
+        return True
+
+
+def _keep_hrefs_of_path_links() -> None:
+    """MyST keeps no link's href and drops a file link's #fragment; record the href on the node."""
+    if getattr(SphinxRenderer, _WRAPPED_FLAG, False):
+        return
+    original = SphinxRenderer.render_link_unknown
+
+    def render_link_unknown(self: SphinxRenderer, token: Any) -> None:
+        start = len(self.current_node.children)
+        original(self, token)
+        href = self.md.normalizeLinkText(str(token.attrGet("href") or ""))
+        for node in self.current_node.children[start:]:
+            if isinstance(node, nodes.Element) and _is_myst_link(node):
+                node[HREF_ATTR] = href
+
+    SphinxRenderer.render_link_unknown = render_link_unknown
+    setattr(SphinxRenderer, _WRAPPED_FLAG, True)
+
+
+def setup(app: Sphinx) -> dict[str, Any]:
+    app.add_config_value("kataglyphis_repository_links", True, "env", bool)
+    app.add_config_value("kataglyphis_repository_branch", "develop", "env", str)
+    _keep_hrefs_of_path_links()
+    app.add_transform(RepositoryFileLinks)
+    return {"parallel_read_safe": True, "parallel_write_safe": True}

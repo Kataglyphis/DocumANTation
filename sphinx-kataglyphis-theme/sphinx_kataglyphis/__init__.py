@@ -10,6 +10,7 @@ from pathlib import Path
 # Brand tokens
 
 BRAND_TOKENS_RESOURCE = "brand.tokens.json"
+LINKS_EXTENSION = "sphinx_kataglyphis.links"
 # __name__, not __package__: files() does not accept __package__'s `str | None`.
 _PACKAGE = __name__
 
@@ -80,12 +81,13 @@ def _write_index(source_dir: Path, project_name: str) -> None:
 
 
 def _apply_extensions(conf_globals: dict, extensions_extra: list | None) -> None:
-    """Assign the extension list and the one MyST setting the brand fixes."""
-    extensions = ["myst_parser", "sphinx_design"]
+    """Assign the extension list; setdefault MyST's heading anchors."""
+    extensions = ["myst_parser", "sphinx_design", LINKS_EXTENSION]
     if extensions_extra:
         extensions.extend(extensions_extra)
     conf_globals["extensions"] = extensions
-    conf_globals["myst_all_links_external"] = True
+    # GitHub anchors every heading, so `page.md#slug` links written for GitHub resolve here too.
+    conf_globals.setdefault("myst_heading_anchors", 6)
 
 
 def _apply_theme(conf_globals: dict, repository_url: str, theme_options_extra: dict | None) -> None:

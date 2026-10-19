@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 import pytest
-from sphinx_kataglyphis import brand, brand_css_path, setup_theme
+from sphinx_kataglyphis import LINKS_EXTENSION, brand, brand_css_path, setup_theme
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -140,6 +140,23 @@ def test_extra_conf_wins_over_the_baseline(conf):
     setup_theme(conf, html_title="Custom", myst_heading_anchors=3)
     assert conf["html_title"] == "Custom"
     assert conf["myst_heading_anchors"] == 3
+
+
+# Links
+
+
+def test_markdown_links_resolve_as_sphinx_targets(conf):
+    """myst_all_links_external kept `x.md` verbatim, a 404 on every site."""
+    setup_theme(conf)
+    assert not conf.get("myst_all_links_external")
+    assert conf["myst_heading_anchors"] == 6
+    assert LINKS_EXTENSION in conf["extensions"]
+
+
+def test_heading_anchors_set_in_conf_py_survive(conf):
+    conf["myst_heading_anchors"] = 2
+    setup_theme(conf)
+    assert conf["myst_heading_anchors"] == 2
 
 
 # The path-loaded baseline: stand-ins for the two consumer builds this repo cannot run
@@ -297,7 +314,9 @@ def test_the_path_loaded_baseline_tracks_setup_themes_extensions():
     """A site missing sphinx_design renders its cards as raw directives."""
     conf: dict = {"__file__": "conf.py"}
     setup_theme(conf)
-    assert conf["extensions"] == _load_conf_base().SPHINX_EXTENSIONS
+    # The shim's consumers do not install the theme package, so they cannot load its extension.
+    expected = [e for e in conf["extensions"] if e != LINKS_EXTENSION]
+    assert expected == _load_conf_base().SPHINX_EXTENSIONS
 
 
 # auto_discover

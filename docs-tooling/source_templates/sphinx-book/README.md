@@ -71,6 +71,21 @@ setup_theme(
 That brings the theme, the brand CSS, the shared code palette and the Kataglyphis fonts. This
 repo's own `docs/conf.py` makes the same call, so what works here works downstream.
 
+### Links
+
+Markdown links are written for GitHub and work on the site too:
+
+- A link to `page.md` or `page.md#a-heading` resolves to the built page. Every heading gets
+  GitHub's slug, so an anchor that works on GitHub works here.
+- A link to a repository file the site does not publish (outside the docs source dir, a
+  directory, an excluded page) goes to `<repository_url>/blob/develop/<path>`, `tree` for a
+  directory, with its `#fragment`. The repository is the nearest `.git` above the source dir.
+- A link to a file that does not exist stays a MyST warning, so `sphinx-build -W` still fails on
+  it.
+
+`kataglyphis_repository_links=False` turns the GitHub links off; `kataglyphis_repository_branch`
+names another branch. Both go into the `setup_theme()` call.
+
 ## Per-project tweaks
 
 Do not fork the stylesheet. Put project rules in their own file and use the brand tokens, not
