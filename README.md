@@ -6,27 +6,19 @@
   <h1>DocumANTation</h1>
 
   <h4>One brand, one toolchain → book, slides, PowerPoint, CV and a docs site. Containerized, reproducible, pixel-perfect.</h4>
-
-  <p>
-    <a href="https://kataglyphis.github.io/DocumANTation/"><strong>Documentation</strong></a>
-    ·
-    <a href="#getting-started"><strong>Quick Start</strong></a>
-    ·
-    <a href="#why-not-just-pandoc"><strong>Why this?</strong></a>
-  </p>
 </div>
 
-## One brand, six outputs
+[![Linux x64](https://github.com/Kataglyphis/DocumANTation/actions/workflows/linux-x64.yml/badge.svg)](https://github.com/Kataglyphis/DocumANTation/actions/workflows/linux-x64.yml)
+[![Docs](https://github.com/Kataglyphis/DocumANTation/actions/workflows/docs.yml/badge.svg)](https://github.com/Kataglyphis/DocumANTation/actions/workflows/docs.yml)
 
-A print-ready book, a Beamer slide deck, a PowerPoint deck, a bilingual CV, a
-primitives showcase and a Sphinx docs site — every one of them taking its
-colours, fonts, code-block palette **and author details** from a single
-`style/brand.json`.
+[**Docs site**](https://kataglyphis.github.io/DocumANTation/)
 
-The slide deck and the PowerPoint deck are the same Markdown rendered twice, so
-they cannot drift from each other. The book, the CV and the starter document have
-sources of their own; what they share is the brand and the toolchain, not the
-prose.
+Formulate everything in Markdown, use LaTeX's power through Pandoc, and build it in one
+container. A print-ready book, a Beamer slide deck, a PowerPoint deck, a bilingual CV, a
+primitives showcase and a Sphinx docs site all take their colours, fonts, code-block palette
+**and author details** from a single `style/brand.json`: change one value, run
+`generate_style.py --write`, and every output rebrands at once. The same brand ships as
+`sphinx-kataglyphis-theme`, the theme the Kataglyphis docs sites use.
 
 <p align="center">
   <a href="images/book-title.png"><img src="images/book-title.png" alt="Book title page with desert ant logo" width="200" /></a>
@@ -35,135 +27,44 @@ prose.
   <a href="images/cv-page.png"><img src="images/cv-page.png" alt="CV page" width="280" /></a>
 </p>
 
-Change one value in `style/brand.json`, run `generate_style.py --write`, and
-every output rebrands simultaneously — the PDFs, the PowerPoint, and the Sphinx
-documentation website.
+## Highlights
 
-## About The Project
+- **Slides and deck from one source**: `data/presentation/` renders to Beamer and to pptx, so the two cannot disagree.
+- **Brand-consistent code blocks**: `brand.json` → Pandoc, Pygments, LaTeX and CSS, the same dark palette everywhere.
+- **Identity is a token too**: author, URL, GitHub handle and institute are generated, never retyped.
+- **Containerized builds**: one Dockerfile, pinned Pandoc (SHA256-verified) and uv; the host needs only a container runtime.
+- **Strict build gates**: `STRICT_WARNINGS=1` turns Pandoc and LaTeX warnings into failures, locally, since CI compiles no LaTeX.
+- **Bilingual CV from one source**: `CV_LANG=english|german`, with cover letters in the same class.
 
-Formulate everything in Markdown. Use LaTeX power via Pandoc. Containerized for
-reproducibility.
-
-### Key Features
-
-| Feature | Detail |
-|---------|--------|
-| **Six targets, one toolchain** | Book (scrbook), Beamer slides, PowerPoint deck, bilingual CV (and cover letters in its class), showcase deck, starter doc — one container, one command each |
-| **Slides and deck from one source** | `data/presentation/` renders to both Beamer and pptx, so the two cannot disagree |
-| **Brand-consistent code blocks** | `brand.json` → Pandoc + Pygments + LaTeX + CSS — same dark palette everywhere |
-| **Containerized builds** | One Dockerfile, pinned Pandoc (SHA256-verified) and uv, zero host dependencies beyond a container runtime |
-| **Strict build gates** | `STRICT_WARNINGS=1` turns Pandoc/LaTeX warnings into build failures — locally, since CI compiles no LaTeX |
-| **Generated style pipeline** | `generate_style.py` fans `brand.json` into 15 consumer files; `--check` prevents drift |
-| **Identity is a token too** | Author, URL, GitHub handle and institute are generated into LaTeX, Pandoc metadata and Sphinx — never retyped |
-| **Reusable Sphinx theme** | `sphinx-kataglyphis-theme` — pip-installable package with brand tokens and Pygments styles |
-
-## Why not just Pandoc?
-
-| | Pandoc + template | Eisvogel | Typst | DocumANTation |
-|---|---|---|---|---|
-| Six targets, one brand + toolchain | Manual | No | No | Book + Beamer + PPTX + CV + showcase + starter |
-| Author/URL/handle as generated tokens | No | No | No | `identity` in `brand.json` → LaTeX, Pandoc, Sphinx |
-| Brand-consistent code highlighting | Manual | No | Partial | `brand.json` → all formats |
-| Containerized reproducible build | Manual | No | No | One Dockerfile, pinned Pandoc + uv |
-| Strict build-log warning gates | No | No | No | `STRICT_WARNINGS=1` |
-| Bilingual CV from one source | No | No | No | `CV_LANG=english\|german` |
-| Sphinx theme with same brand | No | No | No | `sphinx-kataglyphis-theme` |
-
-## Getting Started
-
-### Prerequisites
-- **nerdctl** (or docker)
-- **buildkitd** running (`systemctl --user status buildkit.service`)
-- **ripgrep** (`rg`) to search the tree: `winget install --id BurntSushi.ripgrep.MSVC -e --scope user`
-  or `apt install ripgrep`
+## Quick start
 
 ```bash
-git clone --recurse-submodules git@github.com:Kataglyphis/DocumANTation.git
-nerdctl build . -t pandoc_all
+git clone --recurse-submodules --branch develop https://github.com/Kataglyphis/DocumANTation.git
+cd DocumANTation
+nerdctl build . -t pandoc_all            # once; BuildKit must be running
+./scripts/build_in_container.sh book     # or beamer, demo, example, pptx, cv, letter
 ```
 
-### Build a document
+Everything lands in `data/out/`. With `make` installed, `make book` (and every other target)
+does the same. Prerequisites, every target, live rebuilds and the docs site:
+[docs/getting-started.md](docs/getting-started.md).
 
-```bash
-./scripts/build_in_container.sh book     # a4paper book, full TeX pipeline
-./scripts/build_in_container.sh beamer   # PDF slides
-./scripts/build_in_container.sh demo     # the slide primitives showcase
-./scripts/build_in_container.sh example  # the minimal starter document
-./scripts/build_in_container.sh pptx     # PowerPoint deck, same sources
-./scripts/build_in_container.sh cv       # CV; CV_LANG=german for the German one
-CV_PROFILE=parallel-ai ./scripts/build_in_container.sh letter  # data/cv/letters/<CV_PROFILE>.tex
-```
+## Documentation
 
-Everything lands in `data/out/` — the CV as `CV_Jonas_Heinle_<language>.pdf`,
-both variants from the same sources in `data/cv/`. With `make` installed,
-`make {book|beamer|demo|example|pptx|cv}` and `make cv-all` do the same (the
-per-application CV and letter targets are listed in `data/cv/README.md`), and
-`STRICT_WARNINGS=1` turns build-log warnings into failures on any target.
+| Topic | Read |
+| --- | --- |
+| What each output looks like | [docs/gallery.md](docs/gallery.md) |
+| Layout, document types, features, and why not just Pandoc | [docs/overview.md](docs/overview.md) |
+| Prerequisites, every target, live demo mode, the docs site | [docs/getting-started.md](docs/getting-started.md) |
+| The Pandoc and LuaLaTeX stages of each target | [docs/build-pipeline.md](docs/build-pipeline.md) |
+| Tooling, the image's dependencies and their pins | [docs/project-info.md](docs/project-info.md) |
+| The brand and the files generated from it | [style/README.md](style/README.md) |
+| CV profiles and cover letters | [data/cv/README.md](data/cv/README.md) |
+| The Sphinx templates downstream repositories consume | [docs-tooling/README.md](docs-tooling/README.md) |
+| Reporting a vulnerability | [SECURITY.md](SECURITY.md) |
+| Rules for agents and contributors | [AGENTS.md](AGENTS.md) |
 
-### Live demo mode
+## Contributing and contact
 
-Edit Markdown and watch the PDF rebuild automatically:
-
-```bash
-make watch-beamer    # rebuilds on every .md change
-make watch-book      # same for the book
-```
-
-Uses `entr` to watch source files. Pair with a PDF viewer that auto-reloads
-(e.g., `zathura`, `evince`, or `skim` on macOS) for a live editing experience.
-
-### Build this documentation site
-
-Sphinx builds it on the host, not in the container:
-
-```bash
-uv run --extra docs sphinx-build -W -b html docs docs/_build/html
-```
-
-The generated HTML lands in `docs/_build/html/`.
-The published site is at
-[kataglyphis.github.io/DocumANTation](https://kataglyphis.github.io/DocumANTation/).
-
-> The full guide — what the image contains, driving the container by hand, and
-> the per-target compilation stages — is in
-> [docs/getting-started.md](docs/getting-started.md) and
-> [docs/build-pipeline.md](docs/build-pipeline.md).
-
-## Dependencies
-
-Everything the builds need lives in the `pandoc_all` image built from the
-[`Dockerfile`](Dockerfile) — Pandoc, TeX Live, Ghostscript, ImageMagick, uv and
-the two vendored LaTeX theme submodules. Nothing has to be installed on the host
-but a container runtime.
-
-The full component list, with the version, upstream and license of each, is
-maintained in **ANTfrastructure**, which vendors this repository as a submodule
-and holds its Pandoc and uv pins. It does not build the image: `nerdctl build`
-does, locally, and no workflow here or in ANTfrastructure builds it.
-
-- [Third-Party Software & Licenses](https://github.com/Kataglyphis/ANTfrastructure/blob/main/docs/third-party-licenses.md)
-  — see the *Documentation Image (`pandoc_all`)* section.
-
-`PANDOC_VERSION` and `UV_VERSION` in this Dockerfile are ARG defaults synced
-from ANTfrastructure's `linux/scripts/01-core/versions.env`; bump them there and
-run `python3 docs/scripts/sync_versions.py --write` **in the ANTfrastructure
-checkout** (the script lives there, not in this repo), not by editing this
-file. The script rewrites the copy in that checkout's `third_party/DocumANTation`
-submodule, so the bump is then committed here from there.
-
-## Contributing
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-Released under the MIT License — see [LICENSE](LICENSE). The third-party
-components listed under [Dependencies](#dependencies) keep their own licenses.
-
-## Contact
-Jonas Heinle - [@Cataglyphis_](https://twitter.com/Cataglyphis_) - jonasheinle@googlemail.com
-
-Project Link: [https://github.com/Kataglyphis/DocumANTation](https://github.com/Kataglyphis/DocumANTation)
+DocumANTation is one of the [Kataglyphis repositories](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/repository-family.md),
+which share one way to contribute and one contact. Licence: MIT, see [LICENSE](LICENSE).

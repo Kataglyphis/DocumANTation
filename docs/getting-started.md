@@ -4,7 +4,7 @@ This guide takes you from clone to a working local setup for documentation and P
 
 ## 1) Prerequisites
 
-- `nerdctl`
+- `nerdctl` (or docker: the scripts take `CONTAINER_RUNTIME=docker`)
 - BuildKit running for local image builds: `systemctl --user status buildkit.service`
 - Git with submodule support
 - Optional: `make` for shortcut targets
@@ -50,7 +50,9 @@ uv run --extra docs sphinx-build -W -b html docs docs/_build/html
 ```
 
 Generated HTML lands in `docs/_build/html/`. The container is only for the PDF
-document targets in the next step.
+document targets in the next step. The published site is at
+[kataglyphis.github.io/DocumANTation](https://kataglyphis.github.io/DocumANTation/):
+`docs.yml` builds it on every push and deploys it from `main` only.
 
 ## 5) Build a Document Target
 
@@ -88,6 +90,7 @@ nomenclature pass. Replace its Markdown with your own to start a project.
 ```bash
 ./scripts/build_in_container.sh cv                  # English
 CV_LANG=german ./scripts/build_in_container.sh cv   # German
+CV_PROFILE=parallel-ai ./scripts/build_in_container.sh letter  # data/cv/letters/<CV_PROFILE>.tex
 ```
 
 Both land in `data/out/` as `CV_Jonas_Heinle_<language>.pdf`. `CV_PROFILE`
@@ -114,6 +117,20 @@ make cv-all              # both published CV variants
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh cv
 ```
+
+## 7) Live Demo Mode
+
+Edit Markdown and watch the PDF rebuild automatically:
+
+```bash
+make watch-beamer    # rebuilds on every .md change
+make watch-book      # same for the book
+```
+
+Uses `entr` to watch source files. Pair with a PDF viewer that auto-reloads
+(e.g., `zathura`, `evince`, or `skim` on macOS) for a live editing experience.
+`watch-cv`, `watch-demo` and `watch-example` exist too (`WATCH_TARGETS` in the
+`Makefile`); the CV one watches the `.tex` sources in `data/cv/`.
 
 ## Running the Container Manually
 

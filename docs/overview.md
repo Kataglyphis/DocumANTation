@@ -3,6 +3,36 @@
 DocumANTation converts Markdown content into PDF outputs for books, presentations, and CVs.
 It combines Pandoc, LuaLaTeX, and containerized tooling so the same build flow can be reused across document types.
 
+## Key Features
+
+| Feature | Detail |
+|---------|--------|
+| **Six targets, one toolchain** | Book (scrbook), Beamer slides, PowerPoint deck, bilingual CV (and cover letters in its class), showcase deck, starter doc — one container, one command each |
+| **Slides and deck from one source** | `data/presentation/` renders to both Beamer and pptx, so the two cannot disagree |
+| **Brand-consistent code blocks** | `brand.json` → Pandoc + Pygments + LaTeX + CSS — same dark palette everywhere |
+| **Containerized builds** | One Dockerfile, pinned Pandoc (SHA256-verified) and uv, zero host dependencies beyond a container runtime |
+| **Strict build gates** | `STRICT_WARNINGS=1` turns Pandoc/LaTeX warnings into build failures — locally, since CI compiles no LaTeX |
+| **Generated style pipeline** | `generate_style.py` fans `brand.json` into 15 consumer files; `--check` prevents drift |
+| **Identity is a token too** | Author, URL, GitHub handle and institute are generated into LaTeX, Pandoc metadata and Sphinx — never retyped |
+| **Reusable Sphinx theme** | `sphinx-kataglyphis-theme` — pip-installable package with brand tokens and Pygments styles |
+
+The slide deck and the PowerPoint deck are the same Markdown rendered twice, so
+they cannot drift from each other. The book, the CV and the starter document have
+sources of their own; what they share is the brand and the toolchain, not the
+prose.
+
+## Why not just Pandoc?
+
+| | Pandoc + template | Eisvogel | Typst | DocumANTation |
+|---|---|---|---|---|
+| Six targets, one brand + toolchain | Manual | No | No | Book + Beamer + PPTX + CV + showcase + starter |
+| Author/URL/handle as generated tokens | No | No | No | `identity` in `brand.json` → LaTeX, Pandoc, Sphinx |
+| Brand-consistent code highlighting | Manual | No | Partial | `brand.json` → all formats |
+| Containerized reproducible build | Manual | No | No | One Dockerfile, pinned Pandoc + uv |
+| Strict build-log warning gates | No | No | No | `STRICT_WARNINGS=1` |
+| Bilingual CV from one source | No | No | No | `CV_LANG=english\|german` |
+| Sphinx theme with same brand | No | No | No | `sphinx-kataglyphis-theme` |
+
 ## Repository Structure
 
 | Path | Purpose |
