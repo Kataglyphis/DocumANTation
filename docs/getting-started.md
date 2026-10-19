@@ -12,7 +12,7 @@ This guide takes you from clone to a working local setup for documentation and P
 ## 2) Clone the Repository
 
 ```bash
-git clone --recurse-submodules git@github.com:Kataglyphis/DocumANTation.git
+git clone --branch develop --recurse-submodules https://github.com/Kataglyphis/DocumANTation.git
 cd DocumANTation
 ```
 
@@ -28,7 +28,7 @@ git submodule update --init --recursive
 nerdctl build . -t pandoc_all
 ```
 
-The `pandoc_all` image (see the [`Dockerfile`](https://github.com/Kataglyphis/DocumANTation/blob/main/Dockerfile))
+The `pandoc_all` image (see the [`Dockerfile`](https://github.com/Kataglyphis/DocumANTation/blob/develop/Dockerfile))
 bundles everything the PDF pipeline needs, so you never install TeX on the host:
 
 - Ubuntu 26.04 with the full **TeX Live** distribution and **LuaLaTeX**
@@ -163,4 +163,4 @@ nerdctl run --rm -it \
 
 - Repository structure and shared components: [Overview](overview.md)
 - TeX and Pandoc compilation stages: [Build Pipeline](build-pipeline.md)
-- Rules and quick commands for agents/contributors: [AGENTS.md](https://github.com/Kataglyphis/DocumANTation/blob/main/AGENTS.md)
+- Rules and quick commands for agents/contributors: [AGENTS.md](https://github.com/Kataglyphis/DocumANTation/blob/develop/AGENTS.md)

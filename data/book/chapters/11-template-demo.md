@@ -187,7 +187,7 @@ A \emph{template} is a reusable layout and style definition that ensures consist
 \end{algorithm}
 ```
 
-## Math demo {#math-demo}
+## Math demo
 
 Inline math: $E = mc^2$.
 

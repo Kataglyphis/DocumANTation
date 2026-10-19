@@ -17,7 +17,7 @@ The full list, with the version, upstream and license of each component, is
 maintained in **ANTfrastructure**, which vendors this repository as a submodule
 and holds the image's Pandoc and uv pins (the image itself is built locally with
 `nerdctl build`; no workflow builds it) — see
-[Third-Party Software & Licenses](https://github.com/Kataglyphis/ANTfrastructure/blob/main/docs/third-party-licenses.md),
+[Third-Party Software & Licenses](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/third-party-licenses.md#documentation-image-pandoc_all),
 under *Documentation Image (`pandoc_all`)*.
 
 `PANDOC_VERSION` and `UV_VERSION` in the `Dockerfile` are ARG defaults synced
@@ -32,19 +32,4 @@ This repository is also the single source of truth for the shared Kataglyphis
 docs theme (`sphinx-kataglyphis-theme/`) and docs tooling (`docs-tooling/`),
 which downstream repositories consume as a submodule.
 
-## Contribution Flow
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Make the code and documentation changes together.
-4. Run the relevant checks and document builds.
-5. Open a pull request.
-
-## License
-
-This project is released under the MIT License.
-
-## Contact
-
-- Jonas Heinle - [@Cataglyphis_](https://twitter.com/Cataglyphis_) - jonasheinle@googlemail.com
-- Project repository: <https://github.com/Kataglyphis/DocumANTation>
+Contributing, the licence (MIT) and contact are the family's: [repository-family.md](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/repository-family.md).
