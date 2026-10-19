@@ -287,7 +287,7 @@ never passed to pandoc, so such a subdirectory needs its own preset (that is wha
   | Workflow | Name | Runs | Was |
   | --- | --- | --- | --- |
   | `linux-x64.yml` | "Linux x64 · build + test" | brand drift, lint, types, tests | `checks.yml` |
-  | `docs.yml` | "Docs · publish" | builds the Sphinx docs on every push; publishes them to GitHub Pages from `main` only | `docs-pages.yml` |
+  | `docs.yml` | "Docs · publish" | builds the Sphinx docs on every push; publishes them to GitHub Pages from `develop` | `docs-pages.yml` |
 
   Two were removed on purpose: `publish-image.yml`, because nothing consumed the GHCR image it
   pushed, and the document-building job, because building the ~8.5 GB `texlive-full` image on

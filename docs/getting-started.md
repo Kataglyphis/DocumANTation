@@ -49,7 +49,7 @@ uv run --extra docs sphinx-build -W -b html docs docs/_build/html
 
 The HTML lands in `docs/_build/html/`. The published site is
 [kataglyphis.github.io/DocumANTation](https://kataglyphis.github.io/DocumANTation/): `docs.yml`
-builds it on every push and deploys it from `main` only.
+builds it on every push and deploys it from `develop`.
 
 ## 5) Build a Document Target
 
