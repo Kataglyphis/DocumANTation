@@ -9,7 +9,7 @@ Downstream repos consume it as a git submodule.
 
 | Path | Purpose |
 | --- | --- |
-| `source_templates/sphinx-book/` | Landing-page template for a docs site, plus a frozen path-loaded shim for two legacy consumers — see its [README](source_templates/sphinx-book/README.md) before touching either |
+| `source_templates/sphinx-book/` | Landing-page template for a docs site, plus a frozen path-loaded shim that no repository loads any more — see its [README](source_templates/sphinx-book/README.md) |
 
 Only genuinely shared things live here. Two former residents left:
 
@@ -43,6 +43,6 @@ git submodule add https://github.com/Kataglyphis/DocumANTation third_party/Docum
 
 Then install the theme package and call `setup_theme()`:
 [`source_templates/sphinx-book/README.md`](source_templates/sphinx-book/README.md). There is
-deliberately no copy-the-files route for new consumers: every copy this repo handed out drifted.
-The two repos that still load a template by path are documented there, and the stylesheet one of
-them links is generated, so it cannot drift again.
+deliberately no copy-the-files route: every copy this repo handed out drifted. The last two
+repos that loaded a template by path, AccelerANTgine and BeschleunigerBallett, call
+`setup_theme()` since 2026-10-19.

@@ -96,12 +96,11 @@ the CV profile of the same name, so it shares the CV's class, header and footer.
 
 ## Shared Sphinx Baseline
 
-New projects brand their docs with `sphinx_kataglyphis.setup_theme()`, but AccelerANTgine and
-BeschleunigerBallett still load `docs-tooling/source_templates/sphinx-book/conf_base.py` by file
-path. Its five constants (`SPHINX_EXTENSIONS`, `HTML_THEME`, `HTML_THEME_OPTIONS`,
-`HTML_STATIC_PATH`, `HTML_CSS_FILES`) are therefore a public contract, pinned by
-`tests/test_theme.py`. The file may import only the standard library, because neither consumer
-installs the theme package; its colours arrive only through the generated `custom.css`.
+Every family Sphinx site brands its docs with `sphinx_kataglyphis.setup_theme()`. The last two
+that loaded `docs-tooling/source_templates/sphinx-book/conf_base.py` by file path, AccelerANTgine
+and BeschleunigerBallett, switched on 2026-10-19, so the file and its generated `custom.css` have
+no consumer left. `tests/test_theme.py` still pins its five constants to `setup_theme()` until
+both files are deleted.
 
 ## Where to Continue
 

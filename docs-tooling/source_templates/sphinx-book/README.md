@@ -9,41 +9,23 @@ git submodule.
 | File | Status |
 | --- | --- |
 | `index_template.rst` | Landing-page template with cards — copy it and edit it |
-| `conf_base.py` | **Frozen legacy shim.** Loaded by path, not by anything here |
-| `custom.css` | **Generated.** A verbatim copy of the theme stylesheet |
+| `conf_base.py` | **Frozen, unused.** No repository loads it since 2026-10-19 |
+| `custom.css` | **Generated, unused.** A verbatim copy of the theme stylesheet |
 
 The theme baseline and the visual style are not *authored* here: they live once, in the
 `sphinx-kataglyphis-theme/` package, whose brand tokens are generated from
 [`style/brand.json`](../../../style/README.md).
 
-### Why `conf_base.py` and `custom.css` are still here
+### `conf_base.py` and `custom.css` have no consumer left
 
-**Two** repositories load `conf_base.py` **by filesystem path** from their own
-`docs/source/conf.py`:
+AccelerANTgine and BeschleunigerBallett loaded `conf_base.py` by filesystem path, and
+AccelerANTgine symlinked its `_static/css/custom.css` here. Both call `setup_theme()` since
+2026-10-19, and no family checkout loads either file any more. They stay until they are deleted
+together with their tests; do not give them a new consumer.
 
-| Repo | Notes |
-| --- | --- |
-| `AccelerANTgine` | also symlinks its `_static/css/custom.css` into this directory |
-| `BeschleunigerBallett` | branch `develop`; falls back to an inline copy of these values if the path is missing |
-
-Both read `SPHINX_EXTENSIONS`, `HTML_THEME`, `HTML_THEME_OPTIONS`, `HTML_STATIC_PATH` and
-`HTML_CSS_FILES`, and both set their own `repository_url` afterwards. Deleting the two files broke
-the first of them with
-
-```text
-ImportError: Cannot load shared Sphinx baseline from .../sphinx-book/conf_base.py
-```
-
-until they were restored. So keep them, but not as a supported route:
-
-- `conf_base.py` is **frozen**: pure constants, no imports, no brand values. It deliberately lags
-  `setup_theme()`: it can name only a Pygments style that Pygments itself ships, because neither
-  consumer installs `sphinx-kataglyphis-theme`. Migrate them to `setup_theme()`; do not grow this
-  file.
-- `custom.css` is **generated** by `style/generate_style.py`; do not edit it. As a hand-written
-  fork it rotted as predicted: ~490 lines behind the original and still painting links the
-  pre-cyan green, so one site rendered a different brand while every drift check passed. It is
-  now a byte copy that `--check` and the test suite both enforce.
+- `conf_base.py` is **frozen**: pure constants, no imports, no brand values.
+- `custom.css` is **generated** by `style/generate_style.py`; `--check` and the test suite hold
+  it to the theme stylesheet byte for byte.
 
 ## How to consume
 

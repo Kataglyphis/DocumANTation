@@ -45,7 +45,7 @@ identity values, never structure.
 | `md2pdfLib/style/brand-identity.tex` | LaTeX: `\brandName`, `\brandEmail`, `\brandGithub`, `\brandUrl`, `\brandInstitute`, plus the `\myname` / `\myurl` / `\githubBase` aliases the book class and beamer header already used |
 | `md2pdfLib/pandoc/base.yml`, `md2pdfLib/presentation/pandoc/metadata.yml`, `md2pdfLib/example/pandoc/metadata.yml` | Pandoc: `author`, `mainfont`, `monofont`, `monofontoptions`, `linkcolor`, `urlcolor`, `citecolor` — plus `institute` on the presentation only (between `# generated:brand:` markers) |
 | `sphinx-kataglyphis-theme/.../_static/css/custom.css` | Web: `--brand-*` custom properties (between `/* generated:brand-tokens: */` markers) |
-| `docs-tooling/source_templates/sphinx-book/custom.css` | Verbatim copy of the file above, for the one consumer that loads it by path instead of installing the package |
+| `docs-tooling/source_templates/sphinx-book/custom.css` | None since 2026-10-19: a verbatim copy of the file above, kept beside the unused `conf_base.py` until both are deleted |
 | `md2pdfLib/themes/pygments.theme` | Pandoc code highlighting, dark — used by **all** documents (book, slides, pptx) |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
