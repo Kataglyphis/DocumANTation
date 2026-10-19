@@ -102,6 +102,43 @@ def test_links_stay_sphinx_downloads_without_a_repository_to_point_at(tmp_path, 
     assert runs and all(h.startswith("_downloads/") for h in runs)
 
 
+EXPORTED_LINKS = """\
+- [scripts](../linux/scripts/)
+- [patches](upstream/patches/)
+- [agents](../AGENTS.md)
+"""
+
+
+@pytest.mark.parametrize("marker", [".github", ".gitmodules"])
+def test_an_exported_tree_without_git_links_like_a_checkout(tmp_path, capsys, marker):
+    """`git archive` drops .git; the hub's directory links became dead `#../linux/...` anchors."""
+    docs = _repository(tmp_path, body=EXPORTED_LINKS)
+    root = docs.parent
+    (root / ".git").rmdir()
+    if marker == ".github":
+        (root / marker).mkdir()
+    else:
+        (root / marker).write_text("", encoding="utf-8")
+    code, html, warnings = _build(docs, tmp_path, capsys, f"repository_url={REPO_URL!r}")
+    assert code == 0, warnings
+    assert {
+        f"{REPO_URL}/tree/develop/linux/scripts",
+        f"{REPO_URL}/tree/develop/docs/upstream/patches",
+        f"{BLOB}/AGENTS.md",
+    } <= _hrefs(html)
+
+
+def test_a_directory_link_with_no_repository_root_fails_the_build(tmp_path, capsys):
+    """Without a root there is no GitHub path, and MyST's warning keeps -W from shipping `#`."""
+    docs = _repository(tmp_path, body="[scripts](../linux/scripts/)\n")
+    (docs.parent / ".git").rmdir()
+    if repository_root(docs) is not None:
+        pytest.skip("an ancestor of the temp dir is itself a repository")
+    code, _, warnings = _build(docs, tmp_path, capsys, f"repository_url={REPO_URL!r}")
+    assert code != 0
+    assert "linux/scripts/" in warnings
+
+
 def test_the_branch_is_configurable(tmp_path, capsys):
     docs = _repository(tmp_path, body="[agents](../AGENTS.md)\n")
     conf = f"repository_url={REPO_URL!r}, kataglyphis_repository_branch='main'"

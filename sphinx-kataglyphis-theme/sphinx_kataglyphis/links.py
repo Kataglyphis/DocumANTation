@@ -16,6 +16,8 @@ from sphinx.transforms import SphinxTransform
 HREF_ATTR = "kataglyphis_href"
 _WRAPPED_FLAG = "_kataglyphis_keeps_href"
 SUBMODULE_BRANCH = "develop"
+# An export (git archive) has no .git; .gitmodules and .github are tracked and live at the root.
+ROOT_MARKERS = (".git", ".gitmodules", ".github")
 _GITMODULES_SECTION = re.compile(r'\s*\[submodule\s+"[^"]*"\s*\]')
 _GITMODULES_KEY = re.compile(r"\s*(path|url|branch)\s*=\s*(.*?)\s*$", re.IGNORECASE)
 
@@ -27,9 +29,9 @@ class Submodule(NamedTuple):
 
 
 def repository_root(srcdir: Path) -> Path | None:
-    """The nearest directory at or above *srcdir* holding ``.git`` (a file in a submodule)."""
+    """The nearest directory at or above *srcdir* holding one of the ``ROOT_MARKERS``."""
     for candidate in (srcdir, *srcdir.parents):
-        if (candidate / ".git").exists():
+        if any((candidate / marker).exists() for marker in ROOT_MARKERS):
             return candidate
     return None
 

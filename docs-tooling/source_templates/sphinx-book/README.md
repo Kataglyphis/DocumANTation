@@ -84,7 +84,10 @@ Markdown links are written for GitHub and work on the site too:
   GitHub's slug, so an anchor that works on GitHub works here.
 - A link to a repository file the site does not publish (outside the docs source dir, a
   directory, an excluded page) goes to `<repository_url>/blob/develop/<path>`, `tree` for a
-  directory, with its `#fragment`. The repository is the nearest `.git` above the source dir.
+  directory, with its `#fragment`. The repository root is the nearest directory above the
+  source dir holding `.git`, `.gitmodules` or `.github`, so an export without `.git`
+  (`git archive`) links like a checkout. With none of them nothing is rewritten: a file link
+  stays a Sphinx download and a directory link a MyST warning.
 - A path inside a submodule goes to the submodule's own repository: its `url` in `.gitmodules`
   (https, ssh or `git@host:` form) and its `branch =`, else `develop`. A nested submodule
   resolves through each level's `.gitmodules`.
