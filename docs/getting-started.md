@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide takes you from clone to a working local setup for documentation and PDF builds.
+From clone to a built document and the docs site.
 
 ## 1) Prerequisites
 
@@ -16,7 +16,7 @@ git clone --branch develop --recurse-submodules https://github.com/Kataglyphis/D
 cd DocumANTation
 ```
 
-If you cloned without submodules:
+Cloned without submodules:
 
 ```bash
 git submodule update --init --recursive
@@ -28,33 +28,32 @@ git submodule update --init --recursive
 nerdctl build . -t pandoc_all
 ```
 
-The `pandoc_all` image (see the [`Dockerfile`](https://github.com/Kataglyphis/DocumANTation/blob/develop/Dockerfile))
-bundles everything the PDF pipeline needs, so you never install TeX on the host:
+The `pandoc_all` image ([`Dockerfile`](https://github.com/Kataglyphis/DocumANTation/blob/develop/Dockerfile))
+carries everything the PDF pipeline needs; the host never installs TeX:
 
 - Ubuntu 26.04 with the full **TeX Live** distribution and **LuaLaTeX**
 - **Pandoc** (pinned via the `PANDOC_VERSION` build arg)
 - ImageMagick, Ghostscript, and a `uv`-managed `md2pdf` virtualenv
 - the `awesome-beamer` and `smile` LaTeX themes baked into `texmf`
 
-> The build pulls `texlive-full`, so the first build is large and slow. Make sure
-> the beamer/smile submodules are checked out first (step 2) — the image copies
-> them in.
+> The build pulls `texlive-full`, so the first build is large and slow. Check out the
+> beamer/smile submodules first (step 2): the image copies them in.
 
 ## 4) Build the Documentation Site
 
-The HTML documentation site (this site) builds **on the host** with Sphinx — it
-does *not* use the `pandoc_all` container:
+This site builds **on the host** with Sphinx, not in the `pandoc_all` container:
 
 ```bash
 uv run --extra docs sphinx-build -W -b html docs docs/_build/html
 ```
 
-Generated HTML lands in `docs/_build/html/`. The container is only for the PDF
-document targets in the next step. The published site is at
-[kataglyphis.github.io/DocumANTation](https://kataglyphis.github.io/DocumANTation/):
-`docs.yml` builds it on every push and deploys it from `main` only.
+The HTML lands in `docs/_build/html/`. The published site is
+[kataglyphis.github.io/DocumANTation](https://kataglyphis.github.io/DocumANTation/): `docs.yml`
+builds it on every push and deploys it from `main` only.
 
 ## 5) Build a Document Target
+
+Every output lands in `data/out/`.
 
 ### Book
 
@@ -70,10 +69,8 @@ document targets in the next step. The published site is at
 ./scripts/build_in_container.sh demo     # the slide primitives showcase
 ```
 
-`beamer` and `pptx` build `data/presentation/`; `demo` builds the showcase
-sources in `data/presentation/demo/` as a deck of its own. They are a
-separate target because `get_sorted_markdown_files()` lists one level, so
-a subdirectory of an input directory is never picked up by its parent.
+`beamer` and `pptx` build `data/presentation/`; `demo` builds `data/presentation/demo/` as a deck
+of its own ([why a separate target](overview.md#demo)).
 
 ### Starter document
 
@@ -81,9 +78,9 @@ a subdirectory of an input directory is never picked up by its parent.
 ./scripts/build_in_container.sh example
 ```
 
-The minimal document in `data/example/chapters/` — one Pandoc call straight
-to `data/out/example_output.pdf`, with no bibliography, glossary or
-nomenclature pass. Replace its Markdown with your own to start a project.
+Writes `data/out/example_output.pdf` from `data/example/chapters/` in one Pandoc call, with no
+bibliography, glossary or nomenclature pass. Replace its Markdown with your own to start a
+project.
 
 ### CV
 
@@ -93,12 +90,12 @@ CV_LANG=german ./scripts/build_in_container.sh cv   # German
 CV_PROFILE=parallel-ai ./scripts/build_in_container.sh letter  # data/cv/letters/<CV_PROFILE>.tex
 ```
 
-Both land in `data/out/` as `CV_Jonas_Heinle_<language>.pdf`. `CV_PROFILE`
-selects a tailored section set from `data/cv/profiles/`, and the `letter` target
-typesets that profile's cover letter (`data/cv/letters/<CV_PROFILE>.tex`) in the
-same class; `data/cv/README.md` in the repository has both.
+The CV lands as `CV_Jonas_Heinle_<language>.pdf`. `CV_PROFILE` selects a tailored section set
+from `data/cv/profiles/`, and `letter` typesets that profile's cover letter
+(`data/cv/letters/<CV_PROFILE>.tex`) in the same class; `data/cv/README.md` in the repository has
+both.
 
-Optional host shortcuts if `make` is installed:
+With `make` installed:
 
 ```bash
 make book
@@ -118,25 +115,25 @@ STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh cv
 ```
 
+What fails the build: [Build Pipeline § Strict Warning Checks](build-pipeline.md#strict-warning-checks).
+
 ## 7) Live Demo Mode
 
-Edit Markdown and watch the PDF rebuild automatically:
+The PDF rebuilds on every source change:
 
 ```bash
 make watch-beamer    # rebuilds on every .md change
 make watch-book      # same for the book
 ```
 
-Uses `entr` to watch source files. Pair with a PDF viewer that auto-reloads
-(e.g., `zathura`, `evince`, or `skim` on macOS) for a live editing experience.
-`watch-cv`, `watch-demo` and `watch-example` exist too (`WATCH_TARGETS` in the
+It watches with `entr`; pair it with a PDF viewer that reloads by itself (`zathura`, `evince`, or
+`skim` on macOS). `watch-cv`, `watch-demo` and `watch-example` exist too (`WATCH_TARGETS` in the
 `Makefile`); the CV one watches the `.tex` sources in `data/cv/`.
 
 ## Running the Container Manually
 
-`build_in_container.sh` and `make` are wrappers around a plain `nerdctl run`. To
-drive the container yourself — for debugging, or a one-off command — run it
-directly, mounting `md2pdfLib/` and `data/`:
+`build_in_container.sh` and `make` wrap a plain `nerdctl run`. To debug or run a one-off
+command, mount `md2pdfLib/` and `data/` yourself:
 
 ```bash
 nerdctl run --rm --entrypoint "" \
@@ -145,12 +142,12 @@ nerdctl run --rm --entrypoint "" \
   pandoc_all sh -c '. md2pdf/bin/activate && uv run python /md2pdfLib/build.py beamer'
 ```
 
-> **`--entrypoint ""` is optional.** The image's default `CMD` drops you into an
-> interactive shell, but it has no `ENTRYPOINT` (not since 2026-05-22), so a
-> command after the image name replaces that `CMD` with or without the flag
-> (measured 2026-09-25). The wrapper scripts still pass it; it is harmless.
+> **`--entrypoint ""` is optional.** The image has had no `ENTRYPOINT` since 2026-05-22
+> (`23734a7`), only a `CMD` that opens an interactive shell, so a command after the image name
+> replaces that `CMD` with or without the flag (measured 2026-09-25). The wrapper scripts still
+> pass it; it is harmless.
 
-Drop into an interactive shell in the container to poke around:
+An interactive shell in the container:
 
 ```bash
 nerdctl run --rm -it \

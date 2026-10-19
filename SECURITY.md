@@ -2,10 +2,9 @@
 
 ## Reporting a Vulnerability
 
-Please report vulnerabilities privately via
+Report vulnerabilities privately via
 [GitHub security advisories](https://github.com/Kataglyphis/DocumANTation/security/advisories/new)
-or by email to <jonasheinle@googlemail.com>. Do not open a public issue for
-security reports.
+or by email to <jonasheinle@googlemail.com>, never in a public issue.
 
 ## Supported Versions
 

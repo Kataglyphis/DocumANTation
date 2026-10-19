@@ -1,15 +1,14 @@
 # Gallery
 
-Every output below is built from the same toolchain, and the slide deck and the
-PowerPoint deck from the very same Markdown. The brand (colours, fonts,
-code-block styling) flows from a single `brand.json` into all of them — change
-one value and rebuild, and they update simultaneously.
+Every output below comes from the same toolchain; the slide deck and the PowerPoint deck from the
+same Markdown. The brand (colours, fonts, code-block styling) flows from one `brand.json` into all
+of them: change a value, rebuild, and every output follows.
 
 ## Book (A4, KOMA-Script scrbook)
 
-A print-ready textbook with dark code blocks, syntax highlighting, glossary,
-nomenclature, and bibliography. Built with Pandoc + LuaLaTeX through the full
-TeX pipeline (biber, makeglossaries, makeindex).
+A print-ready textbook with dark code blocks, syntax highlighting, glossary, nomenclature and
+bibliography, built with Pandoc + LuaLaTeX through the full TeX pipeline (biber, makeglossaries,
+makeindex).
 
 ```{image} ../images/book-page.png
 :alt: Book page showing dark code block with syntax highlighting
@@ -19,8 +18,8 @@ TeX pipeline (biber, makeglossaries, makeindex).
 
 ## Beamer Slides
 
-A 16:9 presentation deck with the same dark code-block look, tcolorbox
-environments for definitions and examples, and sidebar navigation.
+A 16:9 deck with the same dark code blocks, tcolorbox environments for definitions and examples,
+and sidebar navigation.
 
 ```{image} ../images/beamer-slide.png
 :alt: Beamer title slide with brand styling
@@ -30,15 +29,14 @@ environments for definitions and examples, and sidebar navigation.
 
 ## PowerPoint Deck
 
-The same Markdown that builds the Beamer PDF also produces a PowerPoint deck
-via Pandoc + a branded reference template generated from `brand.json` at build
-time. Code blocks are boxed with the same brand palette.
+The Beamer PDF's Markdown, rendered by Pandoc against a branded reference template generated from
+`brand.json` at build time. Code blocks are boxed in the brand palette.
 
 ## CV
 
-A professional curriculum vitae built directly with LuaLaTeX (not Pandoc). The
-same source files produce both English and German variants via a class option —
-`CV_LANG=english` or `CV_LANG=german` — without editing any `.tex` file.
+Built directly with LuaLaTeX, not Pandoc. The same source files produce the English and the German
+variant through a class option — `CV_LANG=english` or `CV_LANG=german` — without editing a `.tex`
+file.
 
 ```{image} ../images/cv-page.png
 :alt: CV page with brand accent color
@@ -48,8 +46,8 @@ same source files produce both English and German variants via a class option �
 
 ## Sphinx Website
 
-This documentation site uses the same brand via the `sphinx-kataglyphis-theme`
-package. Code blocks share the identical dark palette as the PDF outputs.
+This site takes the same brand from the `sphinx-kataglyphis-theme` package; its code blocks use
+the PDFs' dark palette.
 
 ## The brand pipeline
 
@@ -66,5 +64,3 @@ style/brand.json
     ├─► brand.css            → standalone web tokens
     └─► brand.tokens.json    → PPTX reference deck builder
 ```
-
-One JSON file. Every output. Zero drift.
