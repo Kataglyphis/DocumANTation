@@ -85,6 +85,9 @@ Markdown links are written for GitHub and work on the site too:
 - A link to a repository file the site does not publish (outside the docs source dir, a
   directory, an excluded page) goes to `<repository_url>/blob/develop/<path>`, `tree` for a
   directory, with its `#fragment`. The repository is the nearest `.git` above the source dir.
+- A path inside a submodule goes to the submodule's own repository: its `url` in `.gitmodules`
+  (https, ssh or `git@host:` form) and its `branch =`, else `develop`. A nested submodule
+  resolves through each level's `.gitmodules`.
 - A link to a file that does not exist stays a MyST warning, so `sphinx-build -W` still fails on
   it.
 

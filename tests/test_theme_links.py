@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 from sphinx.cmd.build import build_main
-from sphinx_kataglyphis.links import repository_root
+from sphinx_kataglyphis.links import repository_root, repository_url, web_url
 
 REPO_URL = "https://github.com/org/repo"
 BLOB = f"{REPO_URL}/blob/develop"
@@ -108,6 +108,85 @@ def test_the_branch_is_configurable(tmp_path, capsys):
     code, html, warnings = _build(docs, tmp_path, capsys, conf)
     assert code == 0, warnings
     assert f"{REPO_URL}/blob/main/AGENTS.md" in _hrefs(html)
+
+
+SUBMODULE_LINKS = """\
+- [hub index](../third_party/hub/docs/INDEX.md#the-index)
+- [hub scripts](../third_party/hub/linux/scripts/)
+- [hub](../third_party/hub/)
+- [nested](../third_party/hub/third_party/doc/README.md)
+- [not a submodule](../third_party/hubby/notes.md)
+"""
+
+
+def _checkout(path: Path, gitmodules: str = "") -> Path:
+    """A submodule checkout: ``.git`` is a file, ``.gitmodules`` declares its own submodules."""
+    path.mkdir(parents=True, exist_ok=True)
+    (path / ".git").write_text("gitdir: elsewhere\n", encoding="utf-8")
+    if gitmodules:
+        (path / ".gitmodules").write_text(gitmodules, encoding="utf-8")
+    return path
+
+
+def test_a_link_into_a_submodule_goes_to_the_submodules_repository(tmp_path, capsys):
+    """GitHub serves no file under a gitlink; .gitmodules names the repository that has it."""
+    docs = _repository(tmp_path, body=SUBMODULE_LINKS)
+    root = docs.parent
+    (root / ".gitmodules").write_text(
+        '[submodule "hub"]\n\tpath = third_party/hub\n'
+        "\turl = git@github.com:Org/Hub.git\n\tbranch = main\n",
+        encoding="utf-8",
+    )
+    hub = _checkout(
+        root / "third_party" / "hub",
+        '[submodule "third_party/doc"]\n'
+        "\tpath = third_party/doc\n\turl = https://github.com/Org/Doc.git\n",
+    )
+    (hub / "docs").mkdir()
+    (hub / "docs" / "INDEX.md").write_text("# The index\n", encoding="utf-8")
+    (hub / "linux" / "scripts").mkdir(parents=True)
+    (hub / "linux" / "scripts" / "run.sh").write_text("true\n", encoding="utf-8")
+    nested = _checkout(hub / "third_party" / "doc")
+    (nested / "README.md").write_text("# Doc\n", encoding="utf-8")
+    (root / "third_party" / "hubby").mkdir()
+    (root / "third_party" / "hubby" / "notes.md").write_text("# Notes\n", encoding="utf-8")
+
+    code, html, warnings = _build(docs, tmp_path, capsys, f"repository_url={REPO_URL!r}")
+    assert code == 0, warnings
+    assert {
+        "https://github.com/Org/Hub/blob/main/docs/INDEX.md#the-index",
+        "https://github.com/Org/Hub/tree/main/linux/scripts",
+        "https://github.com/Org/Hub/tree/main",
+        # No `branch =` in the hub's .gitmodules: the family's default branch.
+        "https://github.com/Org/Doc/blob/develop/README.md",
+        f"{BLOB}/third_party/hubby/notes.md",
+    } <= _hrefs(html)
+
+
+@pytest.mark.parametrize(
+    ("clone_url", "web"),
+    [
+        ("https://github.com/Org/Hub.git", "https://github.com/Org/Hub"),
+        ("https://github.com/google/fuzztest", "https://github.com/google/fuzztest"),
+        ("git@github.com:Org/Hub.git", "https://github.com/Org/Hub"),
+        ("ssh://git@github.com/Org/Hub.git/", "https://github.com/Org/Hub"),
+        ("../Sibling.git", "https://github.com/org/Sibling"),
+    ],
+)
+def test_a_clone_url_becomes_the_repositorys_web_url(clone_url, web):
+    assert web_url(clone_url, REPO_URL) == web
+
+
+def test_a_dot_branch_follows_the_superprojects_branch(tmp_path):
+    """`branch = .` is git's spelling for "the branch the superproject is on"."""
+    (tmp_path / ".gitmodules").write_text(
+        '[submodule "lib"]\n\tpath = lib\n\turl = https://github.com/org/lib\n\tbranch = .\n',
+        encoding="utf-8",
+    )
+    target = _checkout(tmp_path / "lib") / "README.md"
+    target.write_text("# Lib\n", encoding="utf-8")
+    url = repository_url(REPO_URL, "main", tmp_path.resolve(), target.resolve(), "")
+    assert url == "https://github.com/org/lib/blob/main/README.md"
 
 
 def test_the_repository_root_is_the_nearest_git_checkout(tmp_path):

@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
-from typing import Any
-from urllib.parse import quote
+from typing import Any, NamedTuple
+from urllib.parse import quote, urljoin, urlsplit
 
 from docutils import nodes
 from myst_parser.mdit_to_docutils.sphinx_ import SphinxRenderer
@@ -14,6 +15,15 @@ from sphinx.transforms import SphinxTransform
 
 HREF_ATTR = "kataglyphis_href"
 _WRAPPED_FLAG = "_kataglyphis_keeps_href"
+SUBMODULE_BRANCH = "develop"
+_GITMODULES_SECTION = re.compile(r'\s*\[submodule\s+"[^"]*"\s*\]')
+_GITMODULES_KEY = re.compile(r"\s*(path|url|branch)\s*=\s*(.*?)\s*$", re.IGNORECASE)
+
+
+class Submodule(NamedTuple):
+    path: Path
+    url: str
+    branch: str
 
 
 def repository_root(srcdir: Path) -> Path | None:
@@ -24,10 +34,49 @@ def repository_root(srcdir: Path) -> Path | None:
     return None
 
 
+def submodules(root: Path) -> list[Submodule]:
+    """The submodules *root*'s ``.gitmodules`` declares that have a path and a url."""
+    gitmodules = root / ".gitmodules"
+    if not gitmodules.is_file():
+        return []
+    entries: list[dict[str, str]] = []
+    for line in gitmodules.read_text(encoding="utf-8").splitlines():
+        if _GITMODULES_SECTION.match(line):
+            entries.append({})
+        elif entries and (key := _GITMODULES_KEY.match(line)):
+            entries[-1][key[1].lower()] = key[2].strip('"')
+    return [
+        Submodule((root / entry["path"]).resolve(), entry["url"], entry.get("branch", ""))
+        for entry in entries
+        if entry.get("path") and entry.get("url")
+    ]
+
+
+def web_url(clone_url: str, parent_url: str) -> str:
+    """``https://<host>/<owner>/<repo>`` for a clone URL: https, ssh, scp form, or relative."""
+    url = clone_url.strip().rstrip("/").removesuffix(".git")
+    if url.startswith(("./", "../")):
+        return urljoin(f"{parent_url.rstrip('/')}/", url).rstrip("/")
+    if "://" in url:
+        parts = urlsplit(url)
+        return f"https://{parts.hostname}{parts.path}"
+    host, _, path = url.partition(":")
+    return f"https://{host.rpartition('@')[2]}/{path.lstrip('/')}"
+
+
 def repository_url(base_url: str, branch: str, root: Path, target: Path, fragment: str) -> str:
-    """``<base_url>/blob/<branch>/<path>``, ``tree`` for a directory, with the fragment kept."""
+    """``<repo>/blob/<branch>/<path>`` (``tree`` for a directory) in the repo holding *target*."""
+    while sub := next(
+        (s for s in submodules(root) if s.path != root and target.is_relative_to(s.path)), None
+    ):
+        base_url, root = web_url(sub.url, base_url), sub.path
+        # `branch = .` is git's "the superproject's branch".
+        branch = branch if sub.branch == "." else sub.branch or SUBMODULE_BRANCH
     kind = "tree" if target.is_dir() else "blob"
-    url = f"{base_url.rstrip('/')}/{kind}/{branch}/{quote(target.relative_to(root).as_posix())}"
+    path = target.relative_to(root).as_posix()
+    url = f"{base_url.rstrip('/')}/{kind}/{branch}"
+    if path != ".":
+        url = f"{url}/{quote(path)}"
     return f"{url}#{fragment}" if fragment else url
 
 
