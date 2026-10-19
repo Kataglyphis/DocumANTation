@@ -168,6 +168,11 @@ where only `/md2pdfLib` is mounted.
 
 ---
 
+## Docs Conventions
+
+**Write docs like a developer: short and precise** (owner, 2026-10-19). Say what a thing does,
+how to run it and what breaks; no filler, no marketing, no repetition.
+
 ## Shell Scripting Conventions
 
 - **Shebang:** `#!/usr/bin/env bash`
