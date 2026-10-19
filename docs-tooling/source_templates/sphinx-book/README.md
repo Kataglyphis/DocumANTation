@@ -94,6 +94,10 @@ Markdown links are written for GitHub and work on the site too:
 - A link to a file that does not exist stays a MyST warning, so `sphinx-build -W` still fails on
   it.
 
+With `exhale` among the extensions, the links in its tree views (`*_view_hierarchy.rst.include`)
+get the ids docutils gives Exhale's labels: Exhale writes `#exhale-class-classFoo-1-1Bar` with
+its case kept, docutils lowercases the id. No `include-read` hook of your own is needed.
+
 `kataglyphis_repository_links=False` turns the GitHub links off; `kataglyphis_repository_branch`
 names another branch. Both go into the `setup_theme()` call.
 

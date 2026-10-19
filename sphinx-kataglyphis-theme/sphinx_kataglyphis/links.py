@@ -1,4 +1,4 @@
-"""Sphinx extension: a Markdown link to a repository file the site lacks goes to GitHub."""
+"""Sphinx extension: repository links go to GitHub; Exhale's tree-view links hit their anchors."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from typing import Any, NamedTuple
 from urllib.parse import quote, urljoin, urlsplit
 
 from docutils import nodes
+from docutils.nodes import make_id
 from myst_parser.mdit_to_docutils.sphinx_ import SphinxRenderer
 from sphinx import addnodes
 from sphinx.application import Sphinx
@@ -20,6 +21,9 @@ SUBMODULE_BRANCH = "develop"
 ROOT_MARKERS = (".git", ".gitmodules", ".github")
 _GITMODULES_SECTION = re.compile(r'\s*\[submodule\s+"[^"]*"\s*\]')
 _GITMODULES_KEY = re.compile(r"\s*(path|url|branch)\s*=\s*(.*?)\s*$", re.IGNORECASE)
+EXHALE_TREE_VIEW_SUFFIX = "_view_hierarchy.rst.include"
+# Exhale's tree view links a label with its case and dots kept; the docutils id has neither.
+_EXHALE_TREE_LINK = re.compile(r'(href="[^"#]+\.html#)([^"]+)"')
 
 
 class Submodule(NamedTuple):
@@ -163,9 +167,18 @@ def _keep_hrefs_of_path_links() -> None:
     setattr(SphinxRenderer, _WRAPPED_FLAG, True)
 
 
+def exhale_tree_anchors(
+    app: Sphinx, relative_path: Path, parent_docname: str, content: list[str]
+) -> None:
+    """With Exhale loaded, point its tree views' links at the ids docutils gives its labels."""
+    if "exhale" in app.extensions and relative_path.name.endswith(EXHALE_TREE_VIEW_SUFFIX):
+        content[0] = _EXHALE_TREE_LINK.sub(lambda m: f'{m[1]}{make_id(m[2])}"', content[0])
+
+
 def setup(app: Sphinx) -> dict[str, Any]:
     app.add_config_value("kataglyphis_repository_links", True, "env", bool)
     app.add_config_value("kataglyphis_repository_branch", "develop", "env", str)
+    app.connect("include-read", exhale_tree_anchors)
     _keep_hrefs_of_path_links()
     app.add_transform(RepositoryFileLinks)
     return {"parallel_read_safe": True, "parallel_write_safe": True}

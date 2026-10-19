@@ -688,7 +688,7 @@ dependencies = [
 requires-dist = [
     { name = "myst-parser", specifier = ">=3" },
     { name = "pygments", specifier = ">=2.17" },
-    { name = "sphinx", specifier = ">=7" },
+    { name = "sphinx", specifier = ">=7.2.5" },
     { name = "sphinx-book-theme", specifier = ">=1" },
     { name = "sphinx-design", specifier = ">=0.6" },
 ]

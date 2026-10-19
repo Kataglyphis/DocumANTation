@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import re
+import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -234,3 +236,52 @@ def test_the_repository_root_is_the_nearest_git_checkout(tmp_path):
     (sub / ".git").write_text("gitdir: ../../.git/modules/hub\n", encoding="utf-8")
     assert repository_root(sub / "docs") == sub
     assert repository_root(tmp_path / "third_party") == tmp_path
+
+
+EXHALE_HREF = "classKataglyphis_1_1Foo.html#exhale-class-classKataglyphis-1-1Foo"
+
+
+def _exhale_site(tmp_path: Path) -> Path:
+    """What Exhale writes: a tree view of raw HTML included by library_root, and a labelled page."""
+    docs = tmp_path / "repo" / "docs"
+    api = docs / "api"
+    api.mkdir(parents=True)
+    (docs / "index.md").write_text(
+        "# Repo\n\n```{toctree}\napi/library_root\napi/classKataglyphis_1_1Foo\n```\n",
+        encoding="utf-8",
+    )
+    (api / "library_root.rst").write_text(
+        "Library API\n===========\n\n.. include:: class_view_hierarchy.rst.include\n",
+        encoding="utf-8",
+    )
+    (api / "class_view_hierarchy.rst.include").write_text(
+        f'.. raw:: html\n\n   <ul><li>Class <a href="{EXHALE_HREF}">Foo</a></li></ul>\n',
+        encoding="utf-8",
+    )
+    (api / "classKataglyphis_1_1Foo.rst").write_text(
+        ".. _exhale_class_classKataglyphis_1_1Foo:\n\nClass Foo\n=========\n", encoding="utf-8"
+    )
+    return docs
+
+
+@pytest.mark.parametrize("with_exhale", [True, False], ids=["exhale", "no-exhale"])
+def test_exhale_tree_view_links_hit_the_ids_docutils_makes(
+    tmp_path, capsys, monkeypatch, with_exhale
+):
+    """Exhale links `#exhale-class-classKataglyphis-1-1Foo`; docutils lowercases the label's id."""
+    stub = types.ModuleType("exhale")
+    stub.setup = lambda app: {"parallel_read_safe": True}
+    monkeypatch.setitem(sys.modules, "exhale", stub)
+    docs = _exhale_site(tmp_path)
+    conf = "extensions_extra=['exhale']" if with_exhale else ""
+    code, _, warnings = _build(docs, tmp_path, capsys, conf)
+    assert code == 0, warnings
+    api = tmp_path / "html" / "api"
+    tree = {h for h in _hrefs((api / "library_root.html").read_text(encoding="utf-8")) if "#" in h}
+    if not with_exhale:
+        assert EXHALE_HREF in tree
+        return
+    assert "classKataglyphis_1_1Foo.html#exhale-class-classkataglyphis-1-1foo" in tree
+    assert EXHALE_HREF not in tree
+    page = (api / "classKataglyphis_1_1Foo.html").read_text(encoding="utf-8")
+    assert 'id="exhale-class-classkataglyphis-1-1foo"' in page
