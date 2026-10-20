@@ -1,0 +1,3 @@
+# pandoc runs from the repo root with --resource-path . (md2pdfLib/pandoc_builder.py), so its sources link from there.
+data/book/* | .
+data/presentation/* | .
