@@ -8,6 +8,7 @@ import types
 from pathlib import Path
 
 import pytest
+from sphinx.application import Sphinx
 from sphinx.cmd.build import build_main
 from sphinx_kataglyphis.links import repository_root, repository_url, web_url
 
@@ -285,3 +286,48 @@ def test_exhale_tree_view_links_hit_the_ids_docutils_makes(
     assert EXHALE_HREF not in tree
     page = (api / "classKataglyphis_1_1Foo.html").read_text(encoding="utf-8")
     assert 'id="exhale-class-classkataglyphis-1-1foo"' in page
+
+
+EXHALE_APPLIER = "collapsible-lists/js/apply-collapsible-lists.js"
+
+
+def _exhale_with_a_tree_view(data: Path) -> types.ModuleType:
+    """Exhale 0.3.7's tree-view setup: at builder-inited it adds its data dir and two scripts."""
+    js = data / "collapsible-lists" / "js"
+    js.mkdir(parents=True)
+    (js / "CollapsibleLists.compressed.js").write_text("var CollapsibleLists={};\n", "utf-8")
+    (js / "apply-collapsible-lists.js").write_text(
+        "$(document).ready(function() {\n    CollapsibleLists.apply();\n});\n", "utf-8"
+    )
+
+    def builder_inited(app: Sphinx) -> None:
+        app.config.html_static_path.append(str(data))
+        app.add_js_file("collapsible-lists/js/CollapsibleLists.compressed.js")
+        app.add_js_file(EXHALE_APPLIER)
+
+    def setup(app: Sphinx) -> dict:
+        app.connect("builder-inited", builder_inited)
+        return {"parallel_read_safe": True}
+
+    stub = types.ModuleType("exhale")
+    stub.setup = setup
+    return stub
+
+
+@pytest.mark.parametrize("with_exhale", [True, False], ids=["exhale", "no-exhale"])
+def test_exhale_tree_view_collapses_without_jquery(tmp_path, capsys, monkeypatch, with_exhale):
+    """Exhale's applier calls `$(document).ready`; Sphinx 6 and later ship no jQuery."""
+    monkeypatch.setitem(sys.modules, "exhale", _exhale_with_a_tree_view(tmp_path / "exhale"))
+    docs = _exhale_site(tmp_path)
+    conf = "extensions_extra=['exhale']" if with_exhale else ""
+    code, _, warnings = _build(docs, tmp_path, capsys, conf)
+    assert code == 0, warnings
+    applier = tmp_path / "html" / "_static" / EXHALE_APPLIER
+    if not with_exhale:
+        assert not applier.exists()
+        return
+    script = applier.read_text(encoding="utf-8")
+    assert "$(" not in script
+    assert "CollapsibleLists.apply()" in script
+    page = (tmp_path / "html" / "api" / "library_root.html").read_text(encoding="utf-8")
+    assert f'src="../_static/{EXHALE_APPLIER}?v=' in page

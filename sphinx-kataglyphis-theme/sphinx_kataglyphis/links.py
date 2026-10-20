@@ -1,4 +1,4 @@
-"""Sphinx extension: repository links go to GitHub; Exhale's tree-view links hit their anchors."""
+"""Sphinx extension: repository links go to GitHub; Exhale's tree views link right and collapse."""
 
 from __future__ import annotations
 
@@ -24,6 +24,8 @@ _GITMODULES_KEY = re.compile(r"\s*(path|url|branch)\s*=\s*(.*?)\s*$", re.IGNOREC
 EXHALE_TREE_VIEW_SUFFIX = "_view_hierarchy.rst.include"
 # Exhale's tree view links a label with its case and dots kept; the docutils id has neither.
 _EXHALE_TREE_LINK = re.compile(r'(href="[^"#]+\.html#)([^"]+)"')
+EXHALE_TREE_APPLIER = "collapsible-lists/js/apply-collapsible-lists.js"
+_EXHALE_STATIC = Path(__file__).resolve().parent / "exhale_static"
 
 
 class Submodule(NamedTuple):
@@ -175,10 +177,23 @@ def exhale_tree_anchors(
         content[0] = _EXHALE_TREE_LINK.sub(lambda m: f'{m[1]}{make_id(m[2])}"', content[0])
 
 
+def exhale_tree_without_jquery(app: Sphinx) -> None:
+    """Copy a jQuery-free applier over Exhale's, whose ``$`` Sphinx 6 no longer ships."""
+    static = app.config.html_static_path
+    ours = str(_EXHALE_STATIC)
+    if ours not in static and any(
+        (Path(app.confdir, entry) / EXHALE_TREE_APPLIER).is_file() for entry in static
+    ):
+        # Sphinx copies html_static_path in order and overwrites, so the last entry wins.
+        static.append(ours)
+
+
 def setup(app: Sphinx) -> dict[str, Any]:
     app.add_config_value("kataglyphis_repository_links", True, "env", bool)
     app.add_config_value("kataglyphis_repository_branch", "develop", "env", str)
     app.connect("include-read", exhale_tree_anchors)
+    # After Exhale's own builder-inited (priority 500), which adds its tree view's static dir.
+    app.connect("builder-inited", exhale_tree_without_jquery, priority=900)
     _keep_hrefs_of_path_links()
     app.add_transform(RepositoryFileLinks)
     return {"parallel_read_safe": True, "parallel_write_safe": True}

@@ -65,7 +65,9 @@ Markdown links are written for GitHub and work on the site too:
 
 With `exhale` among the extensions, the links in its tree views (`*_view_hierarchy.rst.include`)
 get the ids docutils gives Exhale's labels: Exhale writes `#exhale-class-classFoo-1-1Bar` with
-its case kept, docutils lowercases the id. No `include-read` hook of your own is needed.
+its case kept, docutils lowercases the id. No `include-read` hook of your own is needed. Its tree
+views fold without jQuery: the theme copies its own `apply-collapsible-lists.js` over Exhale's,
+whose `$(document).ready` throws `$ is not defined` since Sphinx 6 dropped jQuery.
 
 `kataglyphis_repository_links=False` turns the GitHub links off; `kataglyphis_repository_branch`
 names another branch. Both go into the `setup_theme()` call.
