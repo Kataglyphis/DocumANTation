@@ -72,13 +72,10 @@ html[data-theme="dark"] {
 
 /* -- Primary sidebar -------------------------------------------- */
 
+/* No position here: below the theme's breakpoint the sidebar is an off-canvas drawer. */
 .bd-sidebar-primary {
   background: linear-gradient(180deg, var(--brand-surface-gradient-from) 0%, var(--brand-surface-gradient-to) 100%);
   border-right: 1px solid var(--brand-surface-border);
-  max-height: 100vh;
-  overflow-y: auto;
-  position: sticky;
-  top: 0;
 }
 
 /* -- Secondary sidebar: re-enabled for page TOC on desktop ------ */

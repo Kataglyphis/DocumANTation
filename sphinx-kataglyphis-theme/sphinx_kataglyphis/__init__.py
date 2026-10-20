@@ -100,6 +100,8 @@ def _apply_theme(conf_globals: dict, repository_url: str, theme_options_extra: d
         "show_toc_level": 2,
         "secondary_sidebar_items": ["page-toc"],
         "primary_sidebar_end": [],
+        # pydata 0.20's default adds a header whose hidden sidebar toggles the theme JS binds.
+        "navbar_persistent": [],
         # Code blocks are dark in every output, so both modes take the dark token set.
         "pygments_light_style": "kataglyphis-dark",
         "pygments_dark_style": "kataglyphis-dark",
