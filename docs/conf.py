@@ -11,7 +11,7 @@ project = "DocumANTation"
 IDENTITY = brand()["identity"]
 author = IDENTITY["name"]
 
-# Logo, favicon, page title and heading anchors are the theme's defaults, as downstream gets them.
+# Title and heading anchors are the theme's defaults, as downstream gets them; the logo is below.
 setup_theme(
     globals(),
     repository_url=f"{IDENTITY['github_url']}/{project}",
@@ -21,3 +21,7 @@ setup_theme(
     exclude_patterns=["_build", "Thumbs.db", ".DS_Store"],
     source_suffix={".rst": "restructuredtext", ".md": "markdown"},
 )
+
+# The repository's own logo, in place of setup_theme()'s shared default.
+html_logo = "../images/logos/documantation.svg"
+html_favicon = html_logo
