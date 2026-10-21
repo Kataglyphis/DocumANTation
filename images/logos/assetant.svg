@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="AssetANT: an ant in the Cornell box">
+<title>AssetANT: an ant in the Cornell box</title>
+<defs><clipPath id="tileclip"><rect x="24" y="24" width="464" height="464" rx="112"/></clipPath><linearGradient id="lw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8f1f1a"/><stop offset="1" stop-color="#c2362b"/></linearGradient><linearGradient id="rw" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#17703e"/><stop offset="1" stop-color="#2a9d58"/></linearGradient><radialGradient id="glow" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".28"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient></defs>
+<g clip-path="url(#tileclip)"><rect x="24" y="24" width="464" height="464" fill="#cfc8bb"/><polygon points="24,24 488,24 360,140 152,140" fill="#efeae0"/><polygon points="24,488 488,488 360,356 152,356" fill="#b9b1a2"/><polygon points="24,24 152,140 152,356 24,488" fill="url(#lw)"/><polygon points="488,24 360,140 360,356 488,488" fill="url(#rw)"/><rect x="152" y="140" width="208" height="216" fill="#e2dccf"/><polygon points="214,58 298,58 284,86 228,86" fill="#fffbe6"/><rect x="24" y="24" width="464" height="464" fill="url(#glow)"/><ellipse cx="270" cy="440" rx="100" ry="16" fill="#000000" opacity=".12"/><polygon points="200,358 316,358 344,336 228,336" fill="#f4f0e8"/><polygon points="200,358 316,358 316,446 200,446" fill="#dcd6ca"/><polygon points="316,358 344,336 344,420 316,446" fill="#c6bfb1"/></g><rect x="25.5" y="25.5" width="461" height="461" rx="110.5" fill="none" stroke="#00000018" stroke-width="3"/>
+<g transform="translate(258 298) scale(.78)"><g fill="none" stroke="#0e271c" stroke-linecap="round" stroke-linejoin="round">
+<path d="M50,2 L68,24 L82,53" stroke-width="25.1"/>
+<path d="M32,6 L26,30 L10,53" stroke-width="25.1"/>
+<path d="M14,6 L-8,28 L-38,53" stroke-width="25.1"/>
+</g>
+<g fill="none" stroke="#0e271c" stroke-linecap="round" stroke-linejoin="round">
+<path d="M58,4 L76,26" stroke-width="29"/>
+<path d="M76,26 L90,55" stroke-width="25.1"/>
+<path d="M40,8 L34,32" stroke-width="29"/>
+<path d="M34,32 L18,55" stroke-width="25.1"/>
+<path d="M22,8 L0,30" stroke-width="29"/>
+<path d="M0,30 L-30,55" stroke-width="25.1"/>
+<path d="M92,-28 L104,-62 Q122,-64 140,-48" stroke-width="25.1"/>
+<path d="M104,-6 Q116,-2 113,8" stroke-width="23.8"/>
+</g>
+<g fill="#0e271c" stroke="#0e271c" stroke-width="16" stroke-linejoin="round"><ellipse cx="-58" cy="-8" rx="44" ry="30" transform="rotate(-18 -58 -8)"/><ellipse cx="-6" cy="2" rx="8" ry="12"/><path d="M4,6 C2,-8 10,-20 26,-22 C40,-24 52,-20 58,-14 C66,-8 68,0 64,6 C56,12 14,14 4,6 Z"/><ellipse cx="86" cy="-14" rx="23" ry="18" transform="rotate(12 86 -14)"/></g>
+<ellipse cx="91" cy="-19" rx="5.5" ry="6.5" fill="#0e271c" stroke="#0e271c" stroke-width="16"/></g>
+<g transform="translate(258 298) scale(.78)"><g fill="none" stroke="#3aa77a" stroke-linecap="round" stroke-linejoin="round">
+<path d="M50,2 L68,24 L82,53" stroke-width="9.1"/>
+<path d="M32,6 L26,30 L10,53" stroke-width="9.1"/>
+<path d="M14,6 L-8,28 L-38,53" stroke-width="9.1"/>
+</g>
+<g fill="none" stroke="#6af0ad" stroke-linecap="round" stroke-linejoin="round">
+<path d="M58,4 L76,26" stroke-width="13"/>
+<path d="M76,26 L90,55" stroke-width="9.1"/>
+<path d="M40,8 L34,32" stroke-width="13"/>
+<path d="M34,32 L18,55" stroke-width="9.1"/>
+<path d="M22,8 L0,30" stroke-width="13"/>
+<path d="M0,30 L-30,55" stroke-width="9.1"/>
+<path d="M92,-28 L104,-62 Q122,-64 140,-48" stroke-width="9.1"/>
+<path d="M104,-6 Q116,-2 113,8" stroke-width="7.8"/>
+</g>
+<g fill="#6af0ad"><ellipse cx="-58" cy="-8" rx="44" ry="30" transform="rotate(-18 -58 -8)"/><ellipse cx="-6" cy="2" rx="8" ry="12"/><path d="M4,6 C2,-8 10,-20 26,-22 C40,-24 52,-20 58,-14 C66,-8 68,0 64,6 C56,12 14,14 4,6 Z"/><ellipse cx="86" cy="-14" rx="23" ry="18" transform="rotate(12 86 -14)"/></g>
+<ellipse cx="91" cy="-19" rx="5.5" ry="6.5" fill="#0e271c"/></g>
+
+</svg>

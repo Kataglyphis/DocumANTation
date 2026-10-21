@@ -17,6 +17,7 @@ md2pdfLib/scripts/            → shared shell scripts
 md2pdfLib/presentation/pptx/  → OOXML post-processing for the PowerPoint target
 md2pdfLib/presentation/pptx/pptx_common.py → shared OOXML layer for that package
 Dockerfile         → container build definition
+images/logos/      → every family repository's logo, drawn by scripts/make_repo_logos.py
 ```
 
 ### The pptx package

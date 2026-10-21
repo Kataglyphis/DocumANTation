@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://jonasheinle.de">
-    <img src="images/logo-t3-wireframe.png" alt="Kataglyphis — wireframe desert ant" width="200" />
+    <img src="images/logos/documantation.svg" alt="DocumANTation logo: an open book with the ant as its figure" width="200" />
   </a>
 
   <h1>DocumANTation</h1>
