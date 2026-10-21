@@ -2,8 +2,9 @@
 
 One logo per Kataglyphis repository: the same rounded tile, a dark tile in the repository's own
 colour, the same mint *Cataglyphis* (all six legs on the thorax), and one prop for the topic.
-Each repository keeps a copy as `images/logo.svg` and links it from its README header; the docs
-sites keep the theme's shared wireframe ant.
+Each repository keeps a copy as `images/logo.svg`, links it from its README header, and renders
+its PNG, ICO and BMP icons (packages, app launchers, favicons) from it at the sizes those files
+had; the docs sites keep the theme's shared wireframe ant.
 
 | Repository | File | Motif |
 | --- | --- | --- |
@@ -22,5 +23,6 @@ sites keep the theme's shared wireframe ant.
 | jotrockenmitlocken | `jotrockenmitlocken.svg` | the portrait, *mit Locken* |
 
 Redraw them with `python scripts/make_repo_logos.py` (stdlib only), then copy each changed file
-into its repository's `images/logo.svg`. The `ant 0.99` label is Roboto Bold as outlines, so no
-SVG needs a font.
+into its repository's `images/logo.svg` and re-render that repository's icons from it, one
+native raster per size (2026-10-21: headless Chromium). The `ant 0.99` label is Roboto Bold as
+outlines, so no SVG needs a font.
