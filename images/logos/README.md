@@ -4,7 +4,9 @@ One logo per Kataglyphis repository: the same rounded tile, a dark tile in the r
 colour, the same mint *Cataglyphis* (all six legs on the thorax), and one prop for the topic.
 Each repository keeps a copy as `images/logo.svg`, links it from its README header, and renders
 its PNG, ICO and BMP icons (packages, app launchers, favicons) from it at the sizes those files
-had. Its Sphinx docs set `html_logo` and `html_favicon` to that SVG in `docs/conf.py`, or
+had. The book's title page and the beamer slides use the same mark at 512 px
+(`md2pdfLib/book/template/latex/logos/Engine_logo.png`, `md2pdfLib/presentation/images/logo.png`,
+identical copies). Its Sphinx docs set `html_logo` and `html_favicon` to that SVG in `docs/conf.py`, or
 `docs/source/conf.py`, after `setup_theme()`, which otherwise sets the theme's shared wireframe.
 
 | Repository | File | Motif |

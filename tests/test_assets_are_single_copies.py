@@ -19,6 +19,10 @@ DUPLICATED_ON_PURPOSE = {
             "images/logo-t3-wireframe.png",
             # setup_theme()'s default logo and favicon; an installed wheel cannot reach images/.
             "sphinx-kataglyphis-theme/sphinx_kataglyphis/logo-t3-wireframe.png",
+        }
+    ),
+    frozenset(
+        {
             # bookclass.cls renders it on the book title page, from the mount.
             "md2pdfLib/book/template/latex/logos/Engine_logo.png",
             # data/presentation/latex/main.tex passes it to beamer's \logo.
