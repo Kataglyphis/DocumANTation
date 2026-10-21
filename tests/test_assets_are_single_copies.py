@@ -15,6 +15,8 @@ ASSET_SUFFIXES = (".png", ".jpg", ".jpeg", ".svg")
 DUPLICATED_ON_PURPOSE = {
     frozenset(
         {
+            # The raster master; test_theme.py holds the theme's packaged copy to it.
+            "images/logo-t3-wireframe.png",
             # setup_theme()'s default logo and favicon; an installed wheel cannot reach images/.
             "sphinx-kataglyphis-theme/sphinx_kataglyphis/logo-t3-wireframe.png",
             # bookclass.cls renders it on the book title page, from the mount.
