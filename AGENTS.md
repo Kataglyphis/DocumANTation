@@ -69,6 +69,10 @@ make cv-all
 
 # Any target, with the strict warning gates
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
+
+# Renovate reads this repo's configuration through a separate ANTfrastructure checkout
+bash scripts/renovate-local.sh --apply --dry-run
+bash scripts/renovate-local.sh --apply
 ```
 
 ### What the strict gate fails on
