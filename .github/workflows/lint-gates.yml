@@ -1,0 +1,15 @@
+name: Linux x64 · quality gates
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    uses: Kataglyphis/ANTfrastructure/.github/workflows/lint-gates.yml@develop
+    with:
+      submodules: 'true'
+      ratchets: true
+      hub-checkout: true

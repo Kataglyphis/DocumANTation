@@ -282,13 +282,16 @@ never passed to pandoc, so such a subdirectory needs its own preset (that is wha
   for book templates
 - **Do not** use `docker` for **local** commands; use **nerdctl** (BuildKit / rootless). The
   scripts accept `CONTAINER_RUNTIME=docker` where nerdctl is missing; both run the same image.
-- **Do not** add a workflow that builds the `Dockerfile` or the documents. Two workflows exist,
-  and neither needs a TeX distribution, named per the family convention (2026-09-24):
+- **Do not** add a workflow that builds the `Dockerfile` or the documents. The two build and
+  publishing workflows need no TeX distribution, named per the family convention (2026-09-24):
 
   | Workflow | Name | Runs | Was |
   | --- | --- | --- | --- |
   | `linux-x64.yml` | "Linux x64 · build + test" | brand drift, lint, types, tests | `checks.yml` |
   | `docs.yml` | "Docs · publish" | builds the Sphinx docs on every push; publishes them to GitHub Pages from `develop` | `docs-pages.yml` |
+
+  Separate quality workflows measure code and verify submodule pins; they do not build the
+  image or documents.
 
   Two were removed on purpose: `publish-image.yml`, because nothing consumed the GHCR image it
   pushed, and the document-building job, because building the ~8.5 GB `texlive-full` image on
