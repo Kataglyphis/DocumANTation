@@ -31,4 +31,23 @@ This repository is the single source of the shared Kataglyphis docs theme
 (`sphinx-kataglyphis-theme/`) and docs tooling (`docs-tooling/`), which downstream repositories
 consume as a submodule.
 
+## Dependency updates
+
+Run `bash scripts/renovate-local.sh --apply --dry-run` to review the plan, then
+`bash scripts/renovate-local.sh --apply` to update supported manifests and lockfiles. The wrapper
+reads this repository's `.github/renovate.json` and delegates to ANTfrastructure's shared
+Renovate driver. It uses a sibling ANTfrastructure checkout (`../ANTfrastructure`),
+`antfrastructure-tools/`, or `ANTFRASTRUCTURE_DIR` when available. Otherwise it clones the latest
+`develop` into a temporary directory and removes it after the run. It cannot be a submodule here
+because ANTfrastructure already vendors DocumANTation. The driver bootstraps pinned Node and
+Renovate and reads a GitHub CLI login or `GITHUB_COM_TOKEN` for GitHub dependency lookups.
+
+The shared driver updates the direct `awesome-beamer` and `smile` submodules to the latest commit
+on each remote default branch during `--apply`. It initializes missing checkouts first. The report
+and dry run show the target commits without cloning the submodules.
+The read-only `renovate-entrypoint.yml` workflow checks the wrapper and shared preset on pushes
+and pull requests.
+See [ANTfrastructure's dependency update guide](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/dependency-updates.md)
+for the driver's exit codes and lockfile rules.
+
 Contributing, the licence (MIT) and contact are the family's: [repository-family.md](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/repository-family.md).
