@@ -2,6 +2,12 @@
 
 Rules for agents and contributors. An explicit instruction from the user overrides them.
 
+**Reuse before adding Bash or PowerShell code.** Search this repository, every direct
+submodule, and the separate ANTfrastructure checkout for an existing implementation. Call
+or extend its canonical owner, passing project-specific values as arguments. For new
+behavior needed by multiple consumers, create or extend one shared owner module and call
+it here. Keep unique product logic in this repository.
+
 ---
 
 ## Project Overview

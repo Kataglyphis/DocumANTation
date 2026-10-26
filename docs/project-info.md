@@ -16,6 +16,10 @@ wrapper uses the same tracked-file helper for the existing type-check directorie
 `ANTFRASTRUCTURE_DIR=../ANTfrastructure bash scripts/check-python-types.sh` from this repo when
 ANTfrastructure is checked out beside it. Reports go to ignored `logs/code-quality/`.
 
+Before adding Bash or PowerShell behavior, search this repository, its direct submodules and the
+separate ANTfrastructure checkout. Reuse or extend the shared owner with project-specific values;
+[AGENTS.md](../AGENTS.md) holds the contributor rule.
+
 ## External Dependencies
 
 The `pandoc_all` container image carries everything the builds need: chiefly `pandoc` for the

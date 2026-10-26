@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Search local submodules and the separate ANTfrastructure checkout before adding Bash or
+  PowerShell behavior; extend the shared owner for functionality used by other consumers.
 - Scope the Linux Ruff lint, format and ty gates to tracked project Python through
   ANTfrastructure's shared helpers, so recursive theme submodules cannot break the gates.
 - Add a local Renovate command that uses a separate ANTfrastructure checkout and documents

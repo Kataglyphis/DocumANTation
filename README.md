@@ -65,7 +65,7 @@ does the same. Prerequisites, every target, live rebuilds and the docs site:
 | CV profiles and cover letters | [data/cv/README.md](data/cv/README.md) |
 | The Sphinx templates downstream repositories consume | [docs-tooling/README.md](docs-tooling/README.md) |
 | Reporting a vulnerability | [SECURITY.md](SECURITY.md) |
-| Rules for agents and contributors | [AGENTS.md](AGENTS.md) |
+| Rules for agents and contributors, including shared Bash/PowerShell reuse | [AGENTS.md](AGENTS.md) |
 
 The Linux Ruff and ty gates use ANTfrastructure's shared tracked-file helper, so they scan this
 repository's Python files without descending into theme submodules.
