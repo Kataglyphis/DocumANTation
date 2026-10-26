@@ -13,8 +13,11 @@ if [ -z "${ANTFRASTRUCTURE_DIR:-}" ]; then
   else
     _ANTFRASTRUCTURE_TMP="$(mktemp -d)"
     trap 'rm -rf -- "${_ANTFRASTRUCTURE_TMP}"' EXIT
+    _GITHUB_HOME="$(python3 -c \
+      'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["identity"]["github_url"])' \
+      "${_REPO_ROOT}/style/brand.json")"
     git clone --quiet --depth 1 --single-branch --branch develop --no-recurse-submodules \
-      https://github.com/Kataglyphis/ANTfrastructure.git "${_ANTFRASTRUCTURE_TMP}/ANTfrastructure"
+      "${_GITHUB_HOME}/ANTfrastructure.git" "${_ANTFRASTRUCTURE_TMP}/ANTfrastructure"
     ANTFRASTRUCTURE_DIR="${_ANTFRASTRUCTURE_TMP}/ANTfrastructure"
   fi
 fi
