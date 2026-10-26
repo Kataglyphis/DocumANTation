@@ -10,9 +10,11 @@
 | Sphinx | Builds this documentation site |
 
 The Linux CI lint and format gate uses ANTfrastructure's tracked-Python helper. It checks every
-Python file owned by this repository and skips the contents of nested Git submodules. Run
-`bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check` from this repo
-when ANTfrastructure is checked out beside it. Reports go to ignored `logs/code-quality/`.
+Python file owned by this repository and skips the contents of nested Git submodules. The ty
+wrapper uses the same tracked-file helper for the existing type-check directories. Run
+`bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check` and
+`ANTFRASTRUCTURE_DIR=../ANTfrastructure bash scripts/check-python-types.sh` from this repo when
+ANTfrastructure is checked out beside it. Reports go to ignored `logs/code-quality/`.
 
 ## External Dependencies
 

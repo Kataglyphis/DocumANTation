@@ -43,7 +43,7 @@ jobs:
         run: bash antfrastructure-tools/linux/scripts/refactor-python.sh --root "$GITHUB_WORKSPACE" --check
 
       - name: Type check
-        run: uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
+        run: bash scripts/check-python-types.sh
 
       # git ls-files, so a new script cannot slip past; it skips the beamer/smile submodules.
       - name: Shell lint

@@ -139,15 +139,16 @@ type checks; `pytest` + `pytest-cov` + `shellcheck-py` under the `dev` extra. Co
 ```bash
 # On the host -- these are the CI gates in linux-x64.yml, in this order:
 bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check
-uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
+ANTFRASTRUCTURE_DIR=../ANTfrastructure bash scripts/check-python-types.sh
 git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
 uv run --extra dev pytest tests/ -q
 ```
 
-The shared Ruff gate selects every tracked first-party Python file, including tests, and checks
-lint and formatting without walking nested theme submodules. Set the helper path to an
-ANTfrastructure checkout if it is not a sibling. `--extra dev` is required for ty, pytest,
-pytest-cov and the theme package imported by `tests/test_theme.py`.
+The shared Ruff gate selects every tracked first-party Python file, including tests. The type
+wrapper selects the tracked Python files in the three existing type-check directories. Both avoid
+walking nested theme submodules. Set `ANTFRASTRUCTURE_DIR` to an ANTfrastructure checkout for the
+type wrapper; CI checks it out at `antfrastructure-tools/`. `--extra dev` is required for ty,
+pytest, pytest-cov and the theme package imported by `tests/test_theme.py`.
 
 `tests/test_brand_divs_filter.py` drives `md2pdfLib/common/filters/brand-divs.lua` through **real
 pandoc** and skips when pandoc is absent, so a host without it skips those 23 tests. CI installs

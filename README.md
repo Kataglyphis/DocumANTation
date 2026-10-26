@@ -67,8 +67,8 @@ does the same. Prerequisites, every target, live rebuilds and the docs site:
 | Reporting a vulnerability | [SECURITY.md](SECURITY.md) |
 | Rules for agents and contributors | [AGENTS.md](AGENTS.md) |
 
-The Linux lint and format gate calls ANTfrastructure's shared tracked-Python helper, so it scans
-this repository's Python files without descending into theme submodules.
+The Linux Ruff and ty gates use ANTfrastructure's shared tracked-file helper, so they scan this
+repository's Python files without descending into theme submodules.
 
 ## Contributing and contact
 
