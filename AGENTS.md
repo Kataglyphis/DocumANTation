@@ -137,18 +137,17 @@ type checks; `pytest` + `pytest-cov` + `shellcheck-py` under the `dev` extra. Co
 ### Running Tools
 
 ```bash
-# On the host -- all five are CI gates in linux-x64.yml, in this order:
-uv run --extra dev ruff check .
-uv run --extra dev ruff format --check .
+# On the host -- these are the CI gates in linux-x64.yml, in this order:
+bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check
 uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
 git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
 uv run --extra dev pytest tests/ -q
 ```
 
-`--extra dev` is required: ruff, ty, pytest, pytest-cov and the theme package
-`tests/test_theme.py` imports all live in that extra. Without it a fresh checkout resolves
-`pygments` alone, and every command above fails with "program not found" instead of on a real
-defect.
+The shared Ruff gate selects every tracked first-party Python file, including tests, and checks
+lint and formatting without walking nested theme submodules. Set the helper path to an
+ANTfrastructure checkout if it is not a sibling. `--extra dev` is required for ty, pytest,
+pytest-cov and the theme package imported by `tests/test_theme.py`.
 
 `tests/test_brand_divs_filter.py` drives `md2pdfLib/common/filters/brand-divs.lua` through **real
 pandoc** and skips when pandoc is absent, so a host without it skips those 23 tests. CI installs

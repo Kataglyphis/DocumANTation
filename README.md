@@ -67,6 +67,9 @@ does the same. Prerequisites, every target, live rebuilds and the docs site:
 | Reporting a vulnerability | [SECURITY.md](SECURITY.md) |
 | Rules for agents and contributors | [AGENTS.md](AGENTS.md) |
 
+The Linux lint and format gate calls ANTfrastructure's shared tracked-Python helper, so it scans
+this repository's Python files without descending into theme submodules.
+
 ## Contributing and contact
 
 DocumANTation is one of the [Kataglyphis repositories](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/repository-family.md),

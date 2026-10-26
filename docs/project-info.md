@@ -9,6 +9,11 @@
 | `ty` | Static type checks for the Python build logic |
 | Sphinx | Builds this documentation site |
 
+The Linux CI lint and format gate uses ANTfrastructure's tracked-Python helper. It checks every
+Python file owned by this repository and skips the contents of nested Git submodules. Run
+`bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check` from this repo
+when ANTfrastructure is checked out beside it. Reports go to ignored `logs/code-quality/`.
+
 ## External Dependencies
 
 The `pandoc_all` container image carries everything the builds need: chiefly `pandoc` for the
