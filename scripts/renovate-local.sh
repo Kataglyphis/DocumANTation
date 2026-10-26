@@ -6,10 +6,16 @@ _SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 _REPO_ROOT="$(cd "${_SCRIPT_DIR}/.." && pwd)"
 
 if [ -z "${ANTFRASTRUCTURE_DIR:-}" ]; then
-  if [ -d "${_REPO_ROOT}/antfrastructure-tools" ]; then
+  if [ -f "${_REPO_ROOT}/antfrastructure-tools/linux/scripts/renovate-local.sh" ]; then
     ANTFRASTRUCTURE_DIR="${_REPO_ROOT}/antfrastructure-tools"
-  else
+  elif [ -f "${_REPO_ROOT}/../ANTfrastructure/linux/scripts/renovate-local.sh" ]; then
     ANTFRASTRUCTURE_DIR="${_REPO_ROOT}/../ANTfrastructure"
+  else
+    _ANTFRASTRUCTURE_TMP="$(mktemp -d)"
+    trap 'rm -rf -- "${_ANTFRASTRUCTURE_TMP}"' EXIT
+    git clone --quiet --depth 1 --single-branch --branch develop --no-recurse-submodules \
+      https://github.com/Kataglyphis/ANTfrastructure.git "${_ANTFRASTRUCTURE_TMP}/ANTfrastructure"
+    ANTFRASTRUCTURE_DIR="${_ANTFRASTRUCTURE_TMP}/ANTfrastructure"
   fi
 fi
 
@@ -18,4 +24,4 @@ if [ ! -f "${ANTFRASTRUCTURE_DIR}/linux/scripts/renovate-local.sh" ]; then
   exit 1
 fi
 
-exec bash "${ANTFRASTRUCTURE_DIR}/linux/scripts/renovate-local.sh" "${_REPO_ROOT}" "$@"
+bash "${ANTFRASTRUCTURE_DIR}/linux/scripts/renovate-local.sh" "${_REPO_ROOT}" "$@"
