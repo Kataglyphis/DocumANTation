@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Ship the MIT LICENSE inside the sphinx-kataglyphis-theme wheel and sdist; the theme now declares
+  `license = "MIT"` with `license-files`, and a test holds its copy equal to the root LICENSE.
 - Search local submodules and the separate ANTfrastructure checkout before adding Bash or
   PowerShell behavior; extend the shared owner for functionality used by other consumers.
 - Scope the Linux Ruff lint, format and ty gates to tracked project Python through

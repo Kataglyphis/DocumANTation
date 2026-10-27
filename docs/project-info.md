@@ -41,6 +41,9 @@ script lives there, not here). It rewrites the copy in that checkout's
 This repository is the single source of the shared Kataglyphis docs theme
 (`sphinx-kataglyphis-theme/`) and docs tooling (`docs-tooling/`), which downstream repositories
 consume as a submodule.
+The theme's wheel and sdist carry `sphinx-kataglyphis-theme/LICENSE`, a copy of the root
+`LICENSE`: a package cannot include a file outside its project directory. Change both together;
+`tests/test_theme.py` fails when they differ.
 
 ## Dependency updates
 
