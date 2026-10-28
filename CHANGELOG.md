@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Pin smile at ae4926c, which drops its ANTfrastructure submodule and calls the hub's workflows with
-  `hub-checkout: true`; a recursive clone of ANTfrastructure, DocumANTation or smile now ends.
+- Pin smile at ae4926c and awesome-beamer at 4c5fc05, which drop their ANTfrastructure submodules and
+  call the hub's workflows with `hub-checkout: true`; a recursive clone of ANTfrastructure or
+  DocumANTation now ends.
 - Move `setup-uv` to v10.3.2 and refresh `uv.lock` (sphinx 9.2.0, pytest 9.2.0, ty 0.0.92,
   coverage 7.17.0, sphinxcontrib-jsmath 2.0.0) through the hub's local Renovate run; ruff stays at
   the hub's `RUFF_VERSION` until the hub moves it.
