@@ -53,6 +53,7 @@ run `--write`.
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
 | `style/dartdoc.css` | Dart API docs: appended to `dart doc`'s own `styles.css` by ANTfrastructure's `linux/scripts/lib/dartdoc-build.sh` |
+| `sphinx-kataglyphis-theme/sphinx_kataglyphis/dartdoc.css` | Same, shipped inside the wheel |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json` | Same, shipped inside the pip package |
 | `md2pdfLib/style/brand.tokens.json` | Same, reachable from the build container (it mounts only `md2pdfLib/` and `data/`) |
@@ -61,8 +62,17 @@ run `--write`.
 
 ### Python
 
+Install the released wheel, pinned with its hash (uv: `sphinx-kataglyphis-theme = { url = "..." }`
+under `[tool.uv.sources]`):
+
 ```bash
-pip install -e ./third_party/DocumANTation/sphinx-kataglyphis-theme
+pip install https://github.com/Kataglyphis/DocumANTation/releases/download/v0.1.0/sphinx_kataglyphis_theme-0.1.0-py3-none-any.whl
+```
+
+A shell script asks the installed package for a sheet instead of knowing its layout:
+
+```bash
+python -m sphinx_kataglyphis path dartdoc-css   # or brand-css
 ```
 
 ```python

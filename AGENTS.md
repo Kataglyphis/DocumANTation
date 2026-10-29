@@ -326,6 +326,14 @@ never passed to pandoc, so such a subdirectory needs its own preset (that is wha
 
 ---
 
+## Releasing the theme
+
+Every push to `main` is a release (`release.yml`): the Linux lane, then `scripts/build-theme-dist.sh`
+in the family image, then `v<version>` with the wheel and sdist through ANTfrastructure's
+`release-publish.yml`. Raise `sphinx-kataglyphis-theme/VERSION.txt` and give `CHANGELOG.md` a
+`## <version>` section before `main` moves; only the owner moves `main`. Prove a change to the
+release with a dry run: `gh workflow run release.yml --ref develop -f dry-run=true`.
+
 ## Version Pins
 
 The `Dockerfile` and `uv.lock` are authoritative; this table is a snapshot, and

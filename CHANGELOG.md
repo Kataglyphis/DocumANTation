@@ -1,7 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.1.0
 
+- Release the theme as `sphinx-kataglyphis-theme` 0.1.0: every push to `main` runs the Linux lane,
+  builds the sdist and the wheel from it in the family image, and publishes both as `v<version>`
+  through ANTfrastructure's `release-publish.yml`. `sphinx-kataglyphis-theme/VERSION.txt` is the one
+  version, read by the package and the release. The wheel now carries `dartdoc.css`, and
+  `python -m sphinx_kataglyphis path {brand-css,dartdoc-css}` prints where an installed sheet lives,
+  so a project needs only the wheel, not this repository as a submodule.
 - Clear every quality ratchet without allowlist entries, and run the lint gates on every push and
   pull request instead of only by hand. `build_reference` and `patch_content_layout` split into
   named steps (the reference deck stays byte-identical); the Dart docs' layout CSS moves out of

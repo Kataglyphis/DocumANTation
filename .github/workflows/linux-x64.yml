@@ -8,6 +8,8 @@ on:
   pull_request:
     branches: [main, master, develop]
   workflow_dispatch:
+  # release.yml runs this lane once more on the commit it releases.
+  workflow_call:
 
 # Read-only: the lane checks, it publishes nothing.
 permissions:

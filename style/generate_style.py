@@ -30,6 +30,8 @@ PYGMENTS_MODULE = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/highl
 BRAND_CSS = REPO_ROOT / "style" / "brand.css"
 # Appended to `dart doc`'s styles.css by ANTfrastructure's linux/scripts/lib/dartdoc-build.sh.
 DARTDOC_CSS = REPO_ROOT / "style" / "dartdoc.css"
+# The packaged copy, so a project with only the released wheel reaches the same sheet.
+DARTDOC_CSS_PACKAGED = REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/dartdoc.css"
 # The one web stylesheet, shipped by the theme package; do not add a second target.
 CSS_TARGETS = [
     REPO_ROOT / "sphinx-kataglyphis-theme/sphinx_kataglyphis/_static/css/custom.css",
@@ -559,6 +561,7 @@ def desired_outputs() -> dict[Path, str]:
         PYGMENTS_MODULE: render_pygments_module(brand),
         BRAND_CSS: render_brand_css(brand),
         DARTDOC_CSS: render_dartdoc_css(brand),
+        DARTDOC_CSS_PACKAGED: render_dartdoc_css(brand),
     }
     tokens = render_tokens_json(brand)
     for target in TOKENS_TARGETS:
