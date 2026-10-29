@@ -58,11 +58,17 @@ does the same. Prerequisites, every target, live rebuilds and the docs site:
 | Prerequisites, every target, live demo mode, the docs site | [docs/getting-started.md](docs/getting-started.md) |
 | The Pandoc and LuaLaTeX stages of each target | [docs/build-pipeline.md](docs/build-pipeline.md) |
 | Tooling, the image's dependencies and their pins | [docs/project-info.md](docs/project-info.md) |
+| Update dependencies with Renovate | [docs/project-info.md](docs/project-info.md#dependency-updates) |
+| CI quality reports, Ruff/ty and refactor previews | [Shared quality tooling](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/code-quality-tooling.md) |
+| Changes | [CHANGELOG.md](CHANGELOG.md) |
 | The brand and the files generated from it | [style/README.md](style/README.md) |
 | CV profiles and cover letters | [data/cv/README.md](data/cv/README.md) |
 | The Sphinx templates downstream repositories consume | [docs-tooling/README.md](docs-tooling/README.md) |
 | Reporting a vulnerability | [SECURITY.md](SECURITY.md) |
-| Rules for agents and contributors | [AGENTS.md](AGENTS.md) |
+| Rules for agents and contributors, including shared Bash/PowerShell reuse | [AGENTS.md](AGENTS.md) |
+
+The Linux Ruff and ty gates use ANTfrastructure's shared tracked-file helper, so they scan this
+repository's Python files without descending into theme submodules.
 
 ## Contributing and contact
 

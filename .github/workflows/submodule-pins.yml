@@ -1,0 +1,12 @@
+name: Submodule pins
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  pins:
+    uses: Kataglyphis/ANTfrastructure/.github/workflows/submodule-pins.yml@develop
+    with:
+      hub-checkout: true

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -41,6 +42,15 @@ def test_packaged_tokens_match_the_source_of_truth():
     """The copy inside the wheel must not drift from style/brand.tokens.json."""
     canonical = json.loads((REPO_ROOT / "style" / "brand.tokens.json").read_text("utf-8"))
     assert brand() == canonical
+
+
+def test_the_package_ships_the_repository_license():
+    """A wheel cannot package the root LICENSE, so its copy must not drift from it."""
+    theme = REPO_ROOT / "sphinx-kataglyphis-theme"
+    assert (theme / "LICENSE").read_bytes() == (REPO_ROOT / "LICENSE").read_bytes()
+    project = tomllib.loads((theme / "pyproject.toml").read_text("utf-8"))["project"]
+    assert project["license"] == "MIT"
+    assert project["license-files"] == ["LICENSE"]
 
 
 def test_brand_css_ships_with_the_package():
