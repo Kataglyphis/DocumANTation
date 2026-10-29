@@ -14,6 +14,7 @@ make cv-mistral-rse                                 # Research Software Engineer
 make cv-mistral-platform                            # Platform Engineer, Mistral Research Platform
 make cv-amd-hpc                                     # Lead HPC/AI Computational Scientist, AMD GENCI CoE
 make cv-terabase-cv                                 # Computer Vision Engineer, Bamboo, Terabase Energy
+make cv-skillcorner-cv                              # Computer Vision Scientist, SkillCorner
 make cv-parallel-ai                                 # AI Engineer, Parallel
 make letter-parallel-ai                             # its cover letter
 make cv-c12-automation                              # AI Automation Engineer, C12 Quantum Electronics

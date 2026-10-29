@@ -65,6 +65,7 @@ nerdctl build . -t pandoc_all
 make {book|beamer|demo|example|pptx|cv|letter}
 make cv CV_LANG=german
 make cv CV_PROFILE=<data/cv/profiles/*>
+make cv-skillcorner-cv
 make cv-all
 
 # Any target, with the strict warning gates

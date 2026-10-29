@@ -1,0 +1,37 @@
+% See profiles/README.md for the evidence behind this application's selection.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Computer Vision Scientist | PyTorch, detection \& production ML}{Computer Vision Scientist | PyTorch, Objekterkennung \& ML in Produktion}}
+
+\geometry{a4paper,left=1.2cm,right=1.2cm}
+\setlist[itemize,1]{before=\raggedright,itemsep=1pt}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvrelocatetrue
+\cvshowcudakernelstrue
+\cvshowquantumfalse
+\cvshowsemprobetrue
+\cvshowsafetytrue
+\cvshowbuildsfalse
+\cvshowkiprottrue
+\cvshowmldetailtrue
+\cvshowstackdetailtrue
+\cvshowcasdetailtrue
+\setlength{\cvtagsep}{3pt}
+
+% The LLM service adds little evidence for detection and video inference.
+\newif\ifcvskillcornershowagent
+\cvskillcornershowagentfalse
+
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgSafety\cvFhgBerghof\cvFhgRemanet\cvFhgKiprot\cvFhgVlm%
+    \cvFhgKernels\cvFhgCicd\cvFhgQuantum\cvFhgBuilds\cvFhgGateway\cvFhgDocs%
+    \ifcvskillcornershowagent\cvFhgAgent\fi}
+\renewcommand{\cvFhgTags}{Python, PyTorch, C++, CUDA, ONNX, MLflow, ClearML, DVC, Docker, GitLab CI/CD}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_skillcorner_cv}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

@@ -34,7 +34,7 @@ primitives showcase and a Sphinx docs site all take their colours, fonts, code-b
 - **Identity is a token too**: author, URL, GitHub handle and institute are generated, never retyped.
 - **Containerized builds**: one Dockerfile, pinned Pandoc (SHA256-verified) and uv; the host needs only a container runtime.
 - **Strict build gates**: `STRICT_WARNINGS=1` turns Pandoc and LaTeX warnings into failures, locally, since CI compiles no LaTeX.
-- **Bilingual CV from one source**: `CV_LANG=english|german`, with cover letters in the same class.
+- **Bilingual CV from one source**: `CV_LANG=english|german`, with application profiles including SkillCorner and cover letters in the same class.
 
 ## Quick start
 

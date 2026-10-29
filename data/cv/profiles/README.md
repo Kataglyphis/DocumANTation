@@ -12,6 +12,7 @@ make cv-mistral-rse                      # Research Software Engineer, Mistral, 
 make cv-mistral-platform                 # Platform Engineer, Mistral Research Platform, English
 make cv-amd-hpc                          # Lead HPC/AI Computational Scientist, AMD GENCI CoE, English
 make cv-terabase-cv                      # Computer Vision Engineer, Bamboo, Terabase Energy, English
+make cv-skillcorner-cv                   # Computer Vision Scientist, SkillCorner, English
 make cv-parallel-ai                      # AI Engineer, Parallel, English
 make letter-parallel-ai                  # its cover letter (letters/parallel-ai.tex; see ../README.md)
 make cv-c12-automation                   # AI Automation Engineer, C12 Quantum Electronics, English
@@ -81,6 +82,7 @@ fits proves nothing about the German one.
 | `mistral-platform` | Platform Engineer, Research Platform team, Mistral AI (Paris/Warsaw/London) | `CV_Jonas_Heinle_Mistral_Platform.pdf` |
 | `amd-hpc` | Lead HPC/AI Computational Scientist / Engineer, AMD GENCI Center of Excellence (Paris) | `CV_Jonas_Heinle_AMD_HPC.pdf` |
 | `terabase-cv` | Computer Vision Engineer, Bamboo, Terabase Energy (Paris R&D hub, remote) | `CV_Jonas_Heinle_Terabase.pdf` |
+| `skillcorner-cv` | Computer Vision Scientist, SkillCorner (Paris, hybrid) | `CV_Jonas_Heinle_SkillCorner.pdf` |
 | `parallel-ai` | AI Engineer, Parallel (Paris, on-site) | `CV_Jonas_Heinle_Parallel_AI.pdf` |
 | `c12-automation` | AI Automation Engineer, C12 Quantum Electronics (Paris, on-site) | `CV_Jonas_Heinle_C12_AI_Automation.pdf` |
 | `tissium-automation` | AI & Automation Lead, TISSIUM (Paris, hybrid) | `CV_Jonas_Heinle_Tissium_AI_Automation.pdf` |
@@ -91,6 +93,33 @@ answers each one. Keep that up: a year from now it is the only record of why a
 profile drops the sections it drops.
 
 ## Honesty
+
+### SkillCorner
+
+The `skillcorner-cv` profile targets the supplied Computer Vision Scientist posting. It leads
+with person detection across four cameras, PyTorch object detection on a Hailo-equipped PLC,
+and RemaNet activity recognition. The summary covers the recorded ownership of more than four
+industrial vision projects, from datasets through model design, training, evaluation and
+deployment. CUDA kernels show custom implementation; SemProbe stays under Publications and
+shows detector robustness evaluation. MLflow, ClearML, DVC, Docker, CI/CD and monitoring support
+the production and reproducibility requirements. English C1, French B1, cycling and the Paris
+relocation line remain visible.
+
+The profile uses the shared experience and education sections. Its local
+`cvskillcornershowagent` flag hides the LLM-service bullet to make room for the vision work;
+every Fraunhofer bullet identifier remains in the ordering macro. A4 paper, 12 mm side margins
+and ragged-right lists with 1 pt item spacing keep both languages readable on one page.
+It adds no claim of AWS,
+multi-object or player tracking, re-identification, GNNs, camera calibration, homography,
+TensorFlow, OpenCV proficiency or modified CNN/Transformer architectures. The supplied record
+does not establish those skills. Eye tracking in mixed reality is retained in its original
+context. ECML PKDD is named as the actual publication venue.
+
+Build the English application with `make cv-skillcorner-cv STRICT_WARNINGS=1`. For a German
+check that preserves the English filename, use
+`make cv CV_PROFILE=skillcorner-cv CV_LANG=german CV_JOB_SUFFIX=SkillCorner_german STRICT_WARNINGS=1`.
+
+### Other profiles
 
 A tailored CV reorders and re-selects true facts. It does not acquire skills
 the posting asks for. `mistral-rse` deliberately claims neither Kubernetes nor
