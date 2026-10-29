@@ -119,3 +119,45 @@ def test_the_allowlists_carry_no_entry_that_stopped_applying():
     listed = set(UNREFERENCED_ON_PURPOSE) | {p for group in DUPLICATED_ON_PURPOSE for p in group}
     missing = sorted(p for p in listed if not (REPO_ROOT / p).is_file())
     assert not missing, f"these are allowlisted but no longer tracked: {missing}"
+
+
+def _jpeg_has_exif(data: bytes) -> bool:
+    """True when an APP1 segment before the scan carries an Exif block."""
+    i = 2
+    while i + 4 <= len(data) and data[i] == 0xFF and data[i + 1] != 0xDA:
+        length = int.from_bytes(data[i + 2 : i + 4], "big")
+        if data[i + 1] == 0xE1 and data[i + 4 : i + 10] == b"Exif\0\0":
+            return True
+        i += 2 + length
+    return False
+
+
+def _png_has_exif(data: bytes) -> bool:
+    """True when the PNG carries an eXIf chunk."""
+    i = 8
+    while i + 8 <= len(data):
+        length = int.from_bytes(data[i : i + 4], "big")
+        if data[i + 4 : i + 8] == b"eXIf":
+            return True
+        i += 12 + length
+    return False
+
+
+def test_no_raster_asset_carries_exif():
+    """Camera EXIF can hold GPS coordinates, and every asset ships publicly."""
+    carrying = []
+    for rel in _tracked(("*.jpg", "*.jpeg", "*.png")):
+        data = (REPO_ROOT / rel).read_bytes()
+        if (_png_has_exif if rel.endswith(".png") else _jpeg_has_exif)(data):
+            carrying.append(rel)
+    assert not carrying, f"strip the EXIF block from: {carrying}"
+
+
+def test_the_exif_probes_see_a_planted_block():
+    """Both probes find a block, so the asset test cannot pass by reading nothing."""
+    app1 = b"\xff\xe1" + (8).to_bytes(2, "big") + b"Exif\0\0"
+    assert _jpeg_has_exif(b"\xff\xd8" + app1 + b"\xff\xda")
+    assert not _jpeg_has_exif(b"\xff\xd8\xff\xe0\x00\x04JF\xff\xda")
+    chunk = (0).to_bytes(4, "big") + b"eXIf" + b"\0" * 4
+    assert _png_has_exif(b"\x89PNG\r\n\x1a\n" + chunk)
+    assert not _png_has_exif(b"\x89PNG\r\n\x1a\n" + chunk.replace(b"eXIf", b"IEND"))

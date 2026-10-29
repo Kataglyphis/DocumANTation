@@ -36,6 +36,10 @@ and switches with its light/dark toggle. Which token is bold or italic is struct
 `SYNTAX_TOKENS` / `PYGMENTS_TOKENS` in `generate_style.py`; `brand.json` holds colour, font and
 identity values, never structure.
 
+`style/dartdoc-layout.css` is hand-written: the Dart docs' geometry, every colour a `var()` from
+the generated theme blocks. `generate_style.py` appends it to `style/dartdoc.css`; edit it, then
+run `--write`.
+
 ## Generated files — do not edit by hand
 
 | File | Consumer |
