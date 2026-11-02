@@ -1,0 +1,85 @@
+# Every push to main is a release: the lane once more on that commit, then v<version> with the theme's wheel and sdist (https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/branch-and-release-strategy.md).
+name: Release · theme wheel, then v<version>
+
+on:
+  push:
+    branches: [main]
+  # On main: the release again, when the pushed run can no longer be rerun. Elsewhere: a dry run.
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Run the lane and collect the release files on this branch, but tag and publish nothing
+        type: boolean
+        default: false
+
+permissions: {}
+
+# Never two releases at once, and never a cancelled one; a dry run on develop does not hold up main's.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # A minute, so a merge without a new version stops before the lane; elsewhere only a dry run runs.
+  version:
+    if: github.ref == 'refs/heads/main' || inputs.dry-run
+    # The grant covers the publish job of the same file; the check job itself takes contents: read.
+    permissions:
+      contents: write
+    uses: Kataglyphis/ANTfrastructure/.github/workflows/release-publish.yml@develop
+    with:
+      stage: check
+      name: DocumANTation
+      version-file: sphinx-kataglyphis-theme/VERSION.txt
+      dry-run: ${{ inputs.dry-run == true }}
+
+  linux-x64:
+    needs: version
+    permissions:
+      contents: read
+    uses: ./.github/workflows/linux-x64.yml
+
+  package:
+    needs: version
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      # No `image:` here or below: the actions default it from the hub's versions.env, its one owner.
+      - name: Prepare CI host
+        uses: Kataglyphis/ANTfrastructure/.github/actions/prepare-linux-ci-host@develop
+        with:
+          fetch-depth: '1'
+          submodules: 'false'
+
+      # The image's pinned CPython builds the sdist, then the wheel from it.
+      - name: Build and check the theme wheel and sdist
+        uses: Kataglyphis/ANTfrastructure/.github/actions/run-in-linux-container@develop
+        with:
+          script: bash scripts/build-theme-dist.sh dist /opt/venv/bin/python3
+
+      - name: Upload the theme packages
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: theme-dist
+          path: dist/
+          if-no-files-found: error
+
+  # needs: the lane and the build, so a red or cancelled one means no tag and no release.
+  release:
+    needs: [linux-x64, package]
+    permissions:
+      contents: write
+    uses: Kataglyphis/ANTfrastructure/.github/workflows/release-publish.yml@develop
+    with:
+      stage: publish
+      name: DocumANTation
+      version-file: sphinx-kataglyphis-theme/VERSION.txt
+      dry-run: ${{ inputs.dry-run == true }}
+      artifacts: theme-dist
+      collect: |
+        --include *.whl
+        --include *.tar.gz
+        --expect sphinx_kataglyphis_theme-{version}-py3-none-any.whl
+        --expect sphinx_kataglyphis_theme-{version}.tar.gz

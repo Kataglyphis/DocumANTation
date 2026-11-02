@@ -1,10 +1,12 @@
 [project]
 name = "sphinx-kataglyphis-theme"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Reusable Sphinx theme config + CSS for Kataglyphis documentation sites"
 requires-python = ">=3.14"
 # Pinned, not generated (a manifest cannot read JSON); tests/test_identity_is_single_source.py holds it to brand.json.
-license = { text = "MIT" }
+license = "MIT"
+# A copy of the root LICENSE: a wheel cannot package a file outside its project; tests/test_theme.py holds the two equal.
+license-files = ["LICENSE"]
 authors = [{ name = "Jonas Heinle", email = "jonasheinle@googlemail.com" }]
 dependencies = [
     # 7.2.5 added the include-read event the Exhale tree-view fix hooks.
@@ -31,11 +33,16 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["sphinx_kataglyphis"]
 
+# The release workflow reads the same file, so the tag and the wheel cannot disagree.
+[tool.setuptools.dynamic]
+version = { file = "VERSION.txt" }
+
 [tool.setuptools.package-data]
 # Shipping brand.tokens.json lets any installing project read the brand instead of copying values.
 sphinx_kataglyphis = [
     "_static/css/*.css",
     "exhale_static/collapsible-lists/js/*.js",
     "brand.tokens.json",
+    "dartdoc.css",
     "logo-t3-wireframe.png",
 ]

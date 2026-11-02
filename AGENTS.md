@@ -2,6 +2,12 @@
 
 Rules for agents and contributors. An explicit instruction from the user overrides them.
 
+**Reuse before adding Bash or PowerShell code.** Search this repository, every direct
+submodule, and the separate ANTfrastructure checkout for an existing implementation. Call
+or extend its canonical owner, passing project-specific values as arguments. For new
+behavior needed by multiple consumers, create or extend one shared owner module and call
+it here. Keep unique product logic in this repository.
+
 ---
 
 ## Project Overview
@@ -74,6 +80,10 @@ make letter-skillcorner-cv STRICT_WARNINGS=1
 
 # Any target, with the strict warning gates
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
+
+# Renovate reads this repo's configuration through a separate ANTfrastructure checkout
+bash scripts/renovate-local.sh --apply --dry-run
+bash scripts/renovate-local.sh --apply
 ```
 
 ### What the strict gate fails on
@@ -138,18 +148,18 @@ type checks; `pytest` + `pytest-cov` + `shellcheck-py` under the `dev` extra. Co
 ### Running Tools
 
 ```bash
-# On the host -- all five are CI gates in linux-x64.yml, in this order:
-uv run --extra dev ruff check .
-uv run --extra dev ruff format --check .
-uv run --extra dev ty check md2pdfLib style sphinx-kataglyphis-theme
+# On the host -- these are the CI gates in linux-x64.yml, in this order:
+bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check
+ANTFRASTRUCTURE_DIR=../ANTfrastructure bash scripts/check-python-types.sh
 git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
 uv run --extra dev pytest tests/ -q
 ```
 
-`--extra dev` is required: ruff, ty, pytest, pytest-cov and the theme package
-`tests/test_theme.py` imports all live in that extra. Without it a fresh checkout resolves
-`pygments` alone, and every command above fails with "program not found" instead of on a real
-defect.
+The shared Ruff gate selects every tracked first-party Python file, including tests. The type
+wrapper selects the tracked Python files in the three existing type-check directories. Both avoid
+walking nested theme submodules. Set `ANTFRASTRUCTURE_DIR` to an ANTfrastructure checkout for the
+type wrapper; CI checks it out at `antfrastructure-tools/`. `--extra dev` is required for ty,
+pytest, pytest-cov and the theme package imported by `tests/test_theme.py`.
 
 `tests/test_brand_divs_filter.py` drives `md2pdfLib/common/filters/brand-divs.lua` through **real
 pandoc** and skips when pandoc is absent, so a host without it skips those 23 tests. CI installs
@@ -290,13 +300,16 @@ never passed to pandoc, so such a subdirectory needs its own preset (that is wha
   for book templates
 - **Do not** use `docker` for **local** commands; use **nerdctl** (BuildKit / rootless). The
   scripts accept `CONTAINER_RUNTIME=docker` where nerdctl is missing; both run the same image.
-- **Do not** add a workflow that builds the `Dockerfile` or the documents. Two workflows exist,
-  and neither needs a TeX distribution, named per the family convention (2026-09-24):
+- **Do not** add a workflow that builds the `Dockerfile` or the documents. The two build and
+  publishing workflows need no TeX distribution, named per the family convention (2026-09-24):
 
   | Workflow | Name | Runs | Was |
   | --- | --- | --- | --- |
   | `linux-x64.yml` | "Linux x64 · build + test" | brand drift, lint, types, tests | `checks.yml` |
   | `docs.yml` | "Docs · publish" | builds the Sphinx docs on every push; publishes them to GitHub Pages from `develop` | `docs-pages.yml` |
+
+  Separate quality workflows measure code and verify submodule pins; they do not build the
+  image or documents.
 
   Two were removed on purpose: `publish-image.yml`, because nothing consumed the GHCR image it
   pushed, and the document-building job, because building the ~8.5 GB `texlive-full` image on
@@ -320,6 +333,14 @@ never passed to pandoc, so such a subdirectory needs its own preset (that is wha
   fails a build much later and less obviously than the one-time image-size cost.
 
 ---
+
+## Releasing the theme
+
+Every push to `main` is a release (`release.yml`): the Linux lane, then `scripts/build-theme-dist.sh`
+in the family image, then `v<version>` with the wheel and sdist through ANTfrastructure's
+`release-publish.yml`. Raise `sphinx-kataglyphis-theme/VERSION.txt` and give `CHANGELOG.md` a
+`## <version>` section before `main` moves; only the owner moves `main`. Prove a change to the
+release with a dry run: `gh workflow run release.yml --ref develop -f dry-run=true`.
 
 ## Version Pins
 

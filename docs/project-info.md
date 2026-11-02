@@ -9,6 +9,17 @@
 | `ty` | Static type checks for the Python build logic |
 | Sphinx | Builds this documentation site |
 
+The Linux CI lint and format gate uses ANTfrastructure's tracked-Python helper. It checks every
+Python file owned by this repository and skips the contents of nested Git submodules. The ty
+wrapper uses the same tracked-file helper for the existing type-check directories. Run
+`bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check` and
+`ANTFRASTRUCTURE_DIR=../ANTfrastructure bash scripts/check-python-types.sh` from this repo when
+ANTfrastructure is checked out beside it. Reports go to ignored `logs/code-quality/`.
+
+Before adding Bash or PowerShell behavior, search this repository, its direct submodules and the
+separate ANTfrastructure checkout. Reuse or extend the shared owner with project-specific values;
+[AGENTS.md](../AGENTS.md) holds the contributor rule.
+
 ## External Dependencies
 
 The `pandoc_all` container image carries everything the builds need: chiefly `pandoc` for the
@@ -30,5 +41,27 @@ script lives there, not here). It rewrites the copy in that checkout's
 This repository is the single source of the shared Kataglyphis docs theme
 (`sphinx-kataglyphis-theme/`) and docs tooling (`docs-tooling/`), which downstream repositories
 consume as a submodule.
+The theme's wheel and sdist carry `sphinx-kataglyphis-theme/LICENSE`, a copy of the root
+`LICENSE`: a package cannot include a file outside its project directory. Change both together;
+`tests/test_theme.py` fails when they differ.
+
+## Dependency updates
+
+Run `bash scripts/renovate-local.sh --apply --dry-run` to review the plan, then
+`bash scripts/renovate-local.sh --apply` to update supported manifests and lockfiles. The wrapper
+reads this repository's `.github/renovate.json` and delegates to ANTfrastructure's shared
+Renovate driver. It uses a sibling ANTfrastructure checkout (`../ANTfrastructure`),
+`antfrastructure-tools/`, or `ANTFRASTRUCTURE_DIR` when available. Otherwise it clones the latest
+`develop` into a temporary directory and removes it after the run. It cannot be a submodule here
+because ANTfrastructure already vendors DocumANTation. The driver bootstraps pinned Node and
+Renovate and reads a GitHub CLI login or `GITHUB_COM_TOKEN` for GitHub dependency lookups.
+
+The shared driver updates the direct `awesome-beamer` and `smile` submodules to the latest commit
+on each remote default branch during `--apply`. It initializes missing checkouts first. The report
+and dry run show the target commits without cloning the submodules.
+The read-only `renovate-entrypoint.yml` workflow checks the wrapper and shared preset on pushes
+and pull requests.
+See [ANTfrastructure's dependency update guide](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/dependency-updates.md)
+for the driver's exit codes and lockfile rules.
 
 Contributing, the licence (MIT) and contact are the family's: [repository-family.md](https://github.com/Kataglyphis/ANTfrastructure/blob/develop/docs/repository-family.md).

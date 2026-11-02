@@ -36,6 +36,10 @@ and switches with its light/dark toggle. Which token is bold or italic is struct
 `SYNTAX_TOKENS` / `PYGMENTS_TOKENS` in `generate_style.py`; `brand.json` holds colour, font and
 identity values, never structure.
 
+`style/dartdoc-layout.css` is hand-written: the Dart docs' geometry, every colour a `var()` from
+the generated theme blocks. `generate_style.py` appends it to `style/dartdoc.css`; edit it, then
+run `--write`.
+
 ## Generated files — do not edit by hand
 
 | File | Consumer |
@@ -49,6 +53,7 @@ identity values, never structure.
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/highlight.py` | Pygments styles `kataglyphis-light` / `kataglyphis-dark` — the **website**'s code highlighting |
 | `style/brand.css` | Any web project that is not the Sphinx theme (the Flutter site): `--brand-*` tokens, link it directly |
 | `style/dartdoc.css` | Dart API docs: appended to `dart doc`'s own `styles.css` by ANTfrastructure's `linux/scripts/lib/dartdoc-build.sh` |
+| `sphinx-kataglyphis-theme/sphinx_kataglyphis/dartdoc.css` | Same, shipped inside the wheel |
 | `style/brand.tokens.json` | Anything: `brand.json` with aliases resolved |
 | `sphinx-kataglyphis-theme/sphinx_kataglyphis/brand.tokens.json` | Same, shipped inside the pip package |
 | `md2pdfLib/style/brand.tokens.json` | Same, reachable from the build container (it mounts only `md2pdfLib/` and `data/`) |
@@ -57,8 +62,17 @@ identity values, never structure.
 
 ### Python
 
+Install the released wheel, pinned with its hash (uv: `sphinx-kataglyphis-theme = { url = "..." }`
+under `[tool.uv.sources]`):
+
 ```bash
-pip install -e ./third_party/DocumANTation/sphinx-kataglyphis-theme
+pip install https://github.com/Kataglyphis/DocumANTation/releases/download/v0.1.0/sphinx_kataglyphis_theme-0.1.0-py3-none-any.whl
+```
+
+A shell script asks the installed package for a sheet instead of knowing its layout:
+
+```bash
+python -m sphinx_kataglyphis path dartdoc-css   # or brand-css
 ```
 
 ```python

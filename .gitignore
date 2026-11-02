@@ -44,3 +44,5 @@ htmlcov/
 
 # Sphinx build output
 docs/_build/
+
+/logs/

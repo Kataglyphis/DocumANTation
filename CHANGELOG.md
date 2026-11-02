@@ -17,3 +17,36 @@
 - Record owner-confirmed maintenance of several institute GitLab repositories in Python, Rust and C++ as a shared bilingual fact; show it in the Scaleway CV and the all-sections profile.
 
 - Add the bilingual `scaleway-software` CV profile and `make cv-scaleway-software`, emphasizing documented gateway, infrastructure, operations and documentation work for Scaleway's Software Engineer role.
+
+## 0.1.0
+
+- Release the theme as `sphinx-kataglyphis-theme` 0.1.0: every push to `main` runs the Linux lane,
+  builds the sdist and the wheel from it in the family image, and publishes both as `v<version>`
+  through ANTfrastructure's `release-publish.yml`. `sphinx-kataglyphis-theme/VERSION.txt` is the one
+  version, read by the package and the release. The wheel now carries `dartdoc.css`, and
+  `python -m sphinx_kataglyphis path {brand-css,dartdoc-css}` prints where an installed sheet lives,
+  so a project needs only the wheel, not this repository as a submodule.
+- Clear every quality ratchet without allowlist entries, and run the lint gates on every push and
+  pull request instead of only by hand. `build_reference` and `patch_content_layout` split into
+  named steps (the reference deck stays byte-identical); the Dart docs' layout CSS moves out of
+  `generate_style.py` into the hand-written `style/dartdoc-layout.css` (every generated file
+  unchanged); the title background is re-encoded at 1350×3000 (392 KiB instead of 1.5 MB, same
+  aspect, so the pptx crop holds) without its camera EXIF, which carried GPS coordinates. A test
+  now fails any tracked JPEG or PNG that carries EXIF.
+- Pin smile at ae4926c and awesome-beamer at 4c5fc05, which drop their ANTfrastructure submodules and
+  call the hub's workflows with `hub-checkout: true`; a recursive clone of ANTfrastructure or
+  DocumANTation now ends.
+- Move `setup-uv` to v10.3.2 and refresh `uv.lock` (sphinx 9.2.0, pytest 9.2.0, ty 0.0.92,
+  coverage 7.17.0, sphinxcontrib-jsmath 2.0.0) through the hub's local Renovate run; ruff stays at
+  the hub's `RUFF_VERSION` until the hub moves it.
+- Ship the MIT LICENSE inside the sphinx-kataglyphis-theme wheel and sdist; the theme now declares
+  `license = "MIT"` with `license-files`, and a test holds its copy equal to the root LICENSE.
+- Search local submodules and the separate ANTfrastructure checkout before adding Bash or
+  PowerShell behavior; extend the shared owner for functionality used by other consumers.
+- Scope the Linux Ruff lint, format and ty gates to tracked project Python through
+  ANTfrastructure's shared helpers, so recursive theme submodules cannot break the gates.
+- Add a local Renovate command that uses a separate ANTfrastructure checkout and documents
+  the currently branchless theme submodules.
+- Add shared size, complexity, duplication and Ruff/ty reports in CI, plus a manual Python
+  refactor preview. The workflows check out ANTfrastructure separately to avoid a submodule
+  cycle; generated local reports stay in ignored `logs/`.
