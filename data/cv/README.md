@@ -10,6 +10,12 @@ directory through `TEXINPUTS`.
 ./scripts/build_in_container.sh cv                  # English
 CV_LANG=german ./scripts/build_in_container.sh cv   # German
 make cv-all                                         # both
+make cv-scaleway-software                           # Software Engineer, Scaleway (Paris)
+make cv-scaleway-backend                            # Backend Software Engineer (Python / DevOps), Scaleway, English
+make letter-scaleway-backend                        # matching English cover letter
+make cv-chipiron-ai                                 # AI Engineer, Chipiron (Paris), English
+make letter-chipiron-ai                             # matching English cover letter
+make letter-skillcorner-cv                          # Computer Vision Scientist, SkillCorner, English
 make cv-mistral-rse                                 # Research Software Engineer, Mistral
 make cv-mistral-platform                            # Platform Engineer, Mistral Research Platform
 make cv-amd-hpc                                     # Lead HPC/AI Computational Scientist, AMD GENCI CoE
@@ -26,6 +32,16 @@ under on jonasheinle.de, so the deliverables are reproducible, not committed bin
 this directory is a build artifact.
 
 ## Profiles
+
+Medical-imaging coursework during both degrees is a shared education fact, selected with
+`\cvshowmedicalcourseworktrue`. It appears in the Chipiron CV and its matching cover letter.
+
+Repository maintenance is reusable across applications via `\cvshowmaintainertrue`; see
+`profiles/README.md` for the confirmed fact and ordering hook.
+
+The Scaleway application builds with `make cv-scaleway-software STRICT_WARNINGS=1`.
+For its German variant, use `CV_LANG=german CV_PROFILE=scaleway-software CV_JOB_SUFFIX=Scaleway_Software_Engineer_German STRICT_WARNINGS=1 ./scripts/build_in_container.sh cv`.
+The separate suffix preserves both PDFs in `data/out/`.
 
 `CV_PROFILE` selects which sections a build shows and which summary sits above them: one file per
 target in `profiles/`, where `default` is the CV published on jonasheinle.de. It is orthogonal to

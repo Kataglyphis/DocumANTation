@@ -63,6 +63,10 @@
 % new content added for one application, and every other profile is at zero
 % slack. `all` turns it on.
 \newif\ifcvshowdocs \cvshowdocsfalse
+% Opt in to repository maintenance without changing existing profiles' page budgets.
+\newif\ifcvshowmaintainer \cvshowmaintainerfalse
+% Medical-imaging coursework is selected only when relevant to the application.
+\newif\ifcvshowmedicalcoursework \cvshowmedicalcourseworkfalse
 % The quantum-physics GPU-port bullet (Fraunhofer IPA's quantum-computing
 % group). Same shape as the gateway/docs pair: new content for one application
 % -- the AMD HPC one -- and the published profiles are at zero slack. `all`
@@ -137,7 +141,7 @@
 % bullet in a profile's order too, even hidden ones: a bullet left out of the
 % list never prints, whatever its flag says, and that failure is silent.
 \newcommand{\cvFraunhoferOrder}{%
-	\cvFhgKernels\cvFhgQuantum\cvFhgCicd\cvFhgBuilds\cvFhgGateway\cvFhgDocs%
+	\cvFhgKernels\cvFhgQuantum\cvFhgCicd\cvFhgMaintainer\cvFhgBuilds\cvFhgGateway\cvFhgDocs%
 	\cvFhgVlm\cvFhgAgent\cvFhgRemanet\cvFhgBerghof\cvFhgSafety\cvFhgKiprot}
 % The Fraunhofer IPA tag row, set per profile the same way (2026-09-23). The
 % row is one line wide and every tag in it competes for that line, so a

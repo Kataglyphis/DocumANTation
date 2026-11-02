@@ -77,6 +77,9 @@ fits proves nothing about the German one.
 | Profile | Target | Output |
 | --- | --- | --- |
 | `default` | General purpose; the pair published on jonasheinle.de | `CV_Jonas_Heinle_<language>.pdf` |
+| `scaleway-backend` | Backend Software Engineer (Python / DevOps), HDV Hardware Operations, Scaleway; English | `CV_Jonas_Heinle_Scaleway_Backend_Python_DevOps.pdf` |
+| `chipiron-ai` | AI Engineer (Always Open), Chipiron (Paris); English deliverable | `CV_Jonas_Heinle_Chipiron_AI_Engineer.pdf` |
+| `scaleway-software` | Software Engineer, Cloud Product Engineering, Scaleway (Paris) | `CV_Jonas_Heinle_Scaleway_Software_Engineer.pdf` |
 | `mistral-rse` | Research Software Engineer, Mistral AI (Paris) | `CV_Jonas_Heinle_Mistral_RSE.pdf` |
 | `mistral-platform` | Platform Engineer, Research Platform team, Mistral AI (Paris/Warsaw/London) | `CV_Jonas_Heinle_Mistral_Platform.pdf` |
 | `amd-hpc` | Lead HPC/AI Computational Scientist / Engineer, AMD GENCI Center of Excellence (Paris) | `CV_Jonas_Heinle_AMD_HPC.pdf` |
@@ -91,6 +94,43 @@ answers each one. Keep that up: a year from now it is the only record of why a
 profile drops the sections it drops.
 
 ## Honesty
+
+`scaleway-backend` targets the DevOps secondary track through documented GitLab CI/CD,
+container builds, Linux and DGX operations. The four years of structured application Python
+requested by the posting are not established by the current sources; teaching is not counted
+as application-development tenure. Terraform, Ansible, Proxmox, Kubernetes, bare-metal
+provisioning, VLAN administration and secrets management are not claimed. The English CV and
+matching letter are built separately from the original Scaleway Cloud Product application.
+
+`skillcorner-cv` supplies the header for the English Computer Vision Scientist cover letter,
+reusing `terabase-cv`'s section selection. The owner confirmed on 2026-10-25 that during the
+first six months at Fraunhofer IPA they designed, trained and optimized deep learning models
+for detection, tracking, re-identification and recognition. They also played American football
+while studying computer science and were already thinking about applications like SkillCorner's,
+which would have helped them as a player. The letter includes both facts; it does not claim
+professional sports-tracking deployments, AWS, GNNs, camera calibration, a playing level or team.
+Build with `make letter-skillcorner-cv STRICT_WARNINGS=1`; no separate SkillCorner CV is delivered.
+
+Owner-confirmed on 2026-10-25: medical-imaging lectures in electrical engineering during both
+bachelor's and master's studies. The shared bilingual education note is selected with
+`\cvshowmedicalcourseworktrue`, enabled by Chipiron and `all`. The degrees remain Computer
+Science; no named course, grade or clinical experience was specified.
+
+The owner also confirmed advanced university courses in AI and computer graphics, including
+practical rendering of MRI images. The Chipiron cover letter includes this academic work.
+Rendering MRI images does not establish MRI acquisition, reconstruction or clinical experience.
+
+`chipiron-ai` emphasizes industrial vision deployment, curated datasets, SemProbe's
+diffusion-based robustness evaluation and the quantum-simulation GPU port. It claims no MRI
+reconstruction, super-resolution, registration, deformation, phantom/patient-data validation or
+clinical experience. `make cv-chipiron-ai` builds the requested English deliverable; the shared
+source also carries a German summary, whose layout is not part of this delivery.
+
+Owner-confirmed on 2026-10-25: code maintainer for several institute repositories hosted on
+GitLab, in Python, Rust and C++. The bilingual shared bullet is `\cvFhgMaintainer` in
+`section_experience.tex`; opt in with `\cvshowmaintainertrue` and include the bullet in any
+custom `\cvFraunhoferOrder`. Scaleway and `all` enable it. Repository counts, formal review
+responsibilities and test-coverage results were not specified.
 
 A tailored CV reorders and re-selects true facts. It does not acquire skills
 the posting asks for. `mistral-rse` deliberately claims neither Kubernetes nor

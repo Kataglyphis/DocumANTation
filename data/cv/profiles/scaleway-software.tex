@@ -1,0 +1,41 @@
+% Go/Python and backend services: gateway plugins, CI/CD and production LLM serving.
+% Operations and maintainability: monitoring, runbooks and upstream build fixes.
+% Collaboration: the researcher service and KIT tutoring retain concrete evidence.
+% No Kubernetes, IaaS product ownership, incident rotation or API-design experience is claimed.
+% Earlier tagline retained: Go, Python and infrastructure.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Rust, Python \& Infrastructure}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Rust, Python \& Infrastruktur}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvshowteachingtitlefalse
+\cvrelocatetrue
+\cvshowgatewaytrue
+\cvshowdocstrue
+\cvshowmaintainertrue
+\cvshowstackdetailfalse
+\cvshowcudakernelsfalse
+\cvshowremanetfalse
+\cvshowberghoffalse
+\cvshowcasdetailfalse
+% Narrow German timeline cells need natural word spacing instead of stretched justification.
+\AtBeginEnvironment{itemize}{\raggedright}
+\setlength{\cvtagsep}{3pt}
+% Reclaim separator space so the employment timeline and languages fit one page.
+\renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
+\renewcommand{\cvFhgTags}{Go, Python, Rust, C++, Linux, Docker, GitLab CI/CD, BuildKit, Grafana, Prometheus}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgGateway\cvFhgCicd\cvFhgMaintainer\cvFhgBuilds\cvFhgDocs\cvFhgAgent\cvFhgVlm%
+    \cvFhgKernels\cvFhgQuantum\cvFhgRemanet\cvFhgBerghof\cvFhgSafety\cvFhgKiprot}
+
+\newcommand{\cvBody}{%
+    % German needs a smaller body to retain all dated entries on one page.
+    \IfLanguageName{english}{}{\let\normalsize\small\normalsize}%
+    % Use the footer's existing clearance for the compact language/publication row.
+    \enlargethispage{3\baselineskip}%
+    \input{section_headline_scaleway_software}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_teaching_mentoring}%
+    \input{section_education}%
+    \input{section_private}%
+}

@@ -4,6 +4,11 @@ WATCH_TARGETS = beamer book cv demo example
 .PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
+.PHONY: cv-scaleway-software
+.PHONY: cv-chipiron-ai
+.PHONY: letter-chipiron-ai
+.PHONY: letter-skillcorner-cv
+.PHONY: cv-scaleway-backend letter-scaleway-backend
 STRICT_WARNINGS ?= 0
 # cv only: english (default) or german. Both come from the same sources.
 CV_LANG ?= english
@@ -21,6 +26,25 @@ $(DOC_TARGETS):
 cv-all:
 	$(MAKE) cv CV_LANG=english
 	$(MAKE) cv CV_LANG=german
+
+# Keep application filenames stable across reproducible builds.
+cv-scaleway-software:
+	$(MAKE) cv CV_PROFILE=scaleway-software CV_JOB_SUFFIX=Scaleway_Software_Engineer
+
+cv-scaleway-backend:
+	$(MAKE) cv CV_LANG=english CV_PROFILE=scaleway-backend CV_JOB_SUFFIX=Scaleway_Backend_Python_DevOps
+
+letter-scaleway-backend:
+	$(MAKE) letter CV_LANG=english CV_PROFILE=scaleway-backend CV_JOB_SUFFIX=Scaleway_Backend_Python_DevOps
+
+cv-chipiron-ai:
+	$(MAKE) cv CV_LANG=english CV_PROFILE=chipiron-ai CV_JOB_SUFFIX=Chipiron_AI_Engineer
+
+letter-chipiron-ai:
+	$(MAKE) letter CV_LANG=english CV_PROFILE=chipiron-ai CV_JOB_SUFFIX=Chipiron_AI_Engineer
+
+letter-skillcorner-cv:
+	$(MAKE) letter CV_LANG=english CV_PROFILE=skillcorner-cv CV_JOB_SUFFIX=SkillCorner_Computer_Vision_Scientist
 
 # Application: Research Software Engineer, Mistral AI (Paris).
 cv-mistral-rse:

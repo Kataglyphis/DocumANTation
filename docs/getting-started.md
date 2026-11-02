@@ -84,6 +84,18 @@ project.
 
 ### CV
 
+`make cv-scaleway-backend letter-scaleway-backend STRICT_WARNINGS=1` builds the English CV
+and cover letter for Scaleway's HDV Backend Software Engineer (Python / DevOps) role.
+
+`make letter-skillcorner-cv STRICT_WARNINGS=1` builds the English SkillCorner application letter.
+
+`make cv-chipiron-ai STRICT_WARNINGS=1` builds the English Chipiron AI Engineer application
+as `data/out/CV_Jonas_Heinle_Chipiron_AI_Engineer.pdf`.
+`make letter-chipiron-ai STRICT_WARNINGS=1` builds its matching English cover letter.
+
+The Scaleway profile includes the shared, opt-in repository-maintenance fact; selection and
+provenance are documented in `data/cv/profiles/README.md` in the repository.
+
 ```bash
 ./scripts/build_in_container.sh cv                  # English
 CV_LANG=german ./scripts/build_in_container.sh cv   # German
@@ -106,6 +118,7 @@ make pptx
 make cv
 make cv CV_LANG=german
 make cv-all              # both published CV variants
+make cv-scaleway-software STRICT_WARNINGS=1  # Scaleway Software Engineer, English
 ```
 
 ## 6) Enable Strict Warning Checks

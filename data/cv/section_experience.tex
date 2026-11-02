@@ -134,6 +134,10 @@
                 % profile to render it next to the others, set "from" alone on
                 % a second line). Same facts. The first wording, kept:
                 % \item Wrote the runbooks and onboarding docs for the CI/CD and GPU cluster the group works from
+                % Owner-confirmed 2026-10-25; no repository count or review responsibilities inferred.
+                \def\cvFhgMaintainer{\ifcvshowmaintainer
+                \item Code maintainer for several institute repositories on \textbf{GitLab}, in \textbf{Python}, \textbf{Rust} and \textbf{C++}
+                \fi}
                 \def\cvFhgDocs{\ifcvshowdocs
                 \item Wrote the runbooks and onboarding docs for the group's CI/CD and GPU cluster
                 \fi}
@@ -454,6 +458,9 @@
             \item Zugriffsgeschütztes \textbf{KI-Gateway} des Instituts um eigene \textbf{WebAssembly}-Plugins in \textbf{Go} erweitert: Token-Metering und Rate-Limiting für \textbf{45 Forschende}
             \fi}
             % Siehe die Anmerkung im englischen Zweig: nennt die Systeme.
+            \def\cvFhgMaintainer{\ifcvshowmaintainer
+            \item Code-Maintainer mehrerer Instituts-Repositories auf \textbf{GitLab} in \textbf{Python}, \textbf{Rust} und \textbf{C++}
+            \fi}
             \def\cvFhgDocs{\ifcvshowdocs
             \item Runbooks und Onboarding-Dokumentation für die CI/CD und den GPU-Cluster geschrieben, mit denen die Gruppe arbeitet
             \fi}

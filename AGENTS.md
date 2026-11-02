@@ -66,6 +66,11 @@ make {book|beamer|demo|example|pptx|cv|letter}
 make cv CV_LANG=german
 make cv CV_PROFILE=<data/cv/profiles/*>
 make cv-all
+make cv-scaleway-software STRICT_WARNINGS=1
+make cv-scaleway-backend letter-scaleway-backend STRICT_WARNINGS=1
+make cv-chipiron-ai STRICT_WARNINGS=1
+make letter-chipiron-ai STRICT_WARNINGS=1
+make letter-skillcorner-cv STRICT_WARNINGS=1
 
 # Any target, with the strict warning gates
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
@@ -195,6 +200,9 @@ and was removed, so the valid invocations stay enumerable:
 ---
 
 ## LaTeX Conventions
+
+CV facts stay in shared bilingual sections; repository maintenance uses `\cvshowmaintainertrue`
+and `\cvFhgMaintainer`, with provenance recorded in `data/cv/profiles/README.md`.
 
 ### File Organization
 
