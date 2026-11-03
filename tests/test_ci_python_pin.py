@@ -1,4 +1,4 @@
-"""The lane and the image run only the family's pinned CPython, never a runner or distro interpreter."""
+"""The lane and the image run only the pinned CPython, never a runner or distro interpreter."""
 
 from __future__ import annotations
 
