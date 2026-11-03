@@ -148,7 +148,7 @@ type checks; `pytest` + `pytest-cov` + `shellcheck-py` under the `dev` extra. Co
 ### Running Tools
 
 ```bash
-# On the host -- these are the CI gates in linux-x64.yml, in this order:
+# On the host -- the gates scripts/ci-checks.sh runs in linux-x64.yml, on the family image's X.Y and X.Yt:
 bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check
 ANTFRASTRUCTURE_DIR=../ANTfrastructure bash scripts/check-python-types.sh
 git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
@@ -163,7 +163,7 @@ pytest, pytest-cov and the theme package imported by `tests/test_theme.py`.
 
 `tests/test_brand_divs_filter.py` drives `md2pdfLib/common/filters/brand-divs.lua` through **real
 pandoc** and skips when pandoc is absent, so a host without it skips those 23 tests. CI installs
-pandoc (at the version the Dockerfile pins) before the suite. Locally, use the image:
+pandoc (at the version and checksum the Dockerfile pins) before the suite. Locally, use the image:
 
 ```bash
 nerdctl run --rm --entrypoint "" -v "$(pwd):/repo" -w /repo pandoc_all   sh -c '. /md2pdf/bin/activate && uv pip install -q pytest          && python -m pytest tests/test_brand_divs_filter.py -o addopts=""'
@@ -345,8 +345,8 @@ release with a dry run: `gh workflow run release.yml --ref develop -f dry-run=tr
 ## Version Pins
 
 The `Dockerfile` and `uv.lock` are authoritative; this table is a snapshot, and
-`tests/test_docs_versions.py` fails when its Ubuntu, Pandoc or uv row drifts from the Dockerfile.
-Pandoc and uv are synced from ANTfrastructure's `linux/scripts/01-core/versions.env` by its
+`tests/test_docs_versions.py` fails when its Ubuntu, Pandoc, uv or Python row drifts from the Dockerfile.
+Pandoc, uv and Python are synced from ANTfrastructure's `linux/scripts/01-core/versions.env` by its
 `docs/scripts/sync_versions.py`: bump them there, never in the Dockerfile
 ([how](docs/project-info.md#external-dependencies)).
 
@@ -357,4 +357,4 @@ Pandoc and uv are synced from ANTfrastructure's `linux/scripts/01-core/versions.
 | TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
 | uv | 0.13.1 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ANTfrastructure) |
 | Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
-| Python | 3.14 | `python3-full` from Ubuntu 26.04 repos |
+| Python | 3.15.0 | `ARG PYTHON_VERSION` in Dockerfile, uv-managed (synced from ANTfrastructure); CI runs the family image's X.Y and X.Yt |

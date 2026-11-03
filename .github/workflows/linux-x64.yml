@@ -19,10 +19,14 @@ jobs:
   checks:
     name: Brand, Lint & Tests
     runs-on: ubuntu-26.04
-    timeout-minutes: 30
+    # About 7 min of it is the image pull.
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # No `image:` here or below: the actions default it from the hub's versions.env, its one owner.
+      - name: Prepare CI host
+        uses: Kataglyphis/ANTfrastructure/.github/actions/prepare-linux-ci-host@develop
         with:
+          fetch-depth: '1'
           submodules: recursive
 
       - name: Check out shared Python quality tooling
@@ -33,33 +37,13 @@ jobs:
           path: antfrastructure-tools
           persist-credentials: false
 
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - name: Brand, lint, types, shell and tests, Python X.Y
+        uses: Kataglyphis/ANTfrastructure/.github/actions/run-in-linux-container@develop
         with:
-          # The family pin, PYTHON_VERSION in ANTfrastructure's linux/scripts/01-core/versions.env; move it with that.
-          python-version: "3.15"
+          script: bash antfrastructure-tools/linux/scripts/ci-image-leg.sh pinned "${PWD}/.venv-leg-pinned" bash scripts/ci-checks.sh
 
-      - name: Brand drift check
-        run: uv run python style/generate_style.py --check
-
-      - name: Python lint and format
-        run: bash antfrastructure-tools/linux/scripts/refactor-python.sh --root "$GITHUB_WORKSPACE" --check
-
-      - name: Type check
-        run: bash scripts/check-python-types.sh
-
-      # git ls-files, so a new script cannot slip past; it skips the beamer/smile submodules.
-      - name: Shell lint
-        run: git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
-
-      # The pandoc tests skip without it; the version comes from the Dockerfile so it cannot drift.
-      - name: Install pandoc (the version the image pins)
-        run: |
-          version="$(sed -n 's/^ARG PANDOC_VERSION=//p' Dockerfile)"
-          test -n "$version"
-          url="https://github.com/jgm/pandoc/releases/download/${version}/pandoc-${version}-1-amd64.deb"
-          curl -fsSL -o /tmp/pandoc.deb "$url"
-          sudo dpkg -i /tmp/pandoc.deb
-          pandoc --version | head -1
-
-      - name: Test suite
-        run: uv run --extra dev pytest tests/ -q
+      - name: Brand, lint, types, shell and tests, Python X.Yt
+        if: ${{ !cancelled() }}
+        uses: Kataglyphis/ANTfrastructure/.github/actions/run-in-linux-container@develop
+        with:
+          script: bash antfrastructure-tools/linux/scripts/ci-image-leg.sh pinnedt "${PWD}/.venv-leg-pinnedt" bash scripts/ci-checks.sh
