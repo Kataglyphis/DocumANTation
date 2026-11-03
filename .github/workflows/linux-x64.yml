@@ -40,10 +40,10 @@ jobs:
       - name: Brand, lint, types, shell and tests, Python X.Y
         uses: Kataglyphis/ANTfrastructure/.github/actions/run-in-linux-container@develop
         with:
-          script: bash antfrastructure-tools/linux/scripts/ci-image-leg.sh pinned "${PWD}/.venv-leg-pinned" bash scripts/ci-checks.sh
+          script: bash antfrastructure-tools/linux/scripts/ci-image-leg.sh pinned .venv-leg-pinned bash scripts/ci-checks.sh
 
       - name: Brand, lint, types, shell and tests, Python X.Yt
         if: ${{ !cancelled() }}
         uses: Kataglyphis/ANTfrastructure/.github/actions/run-in-linux-container@develop
         with:
-          script: bash antfrastructure-tools/linux/scripts/ci-image-leg.sh pinnedt "${PWD}/.venv-leg-pinnedt" bash scripts/ci-checks.sh
+          script: bash antfrastructure-tools/linux/scripts/ci-image-leg.sh pinnedt .venv-leg-pinnedt bash scripts/ci-checks.sh
