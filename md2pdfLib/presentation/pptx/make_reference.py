@@ -59,6 +59,7 @@ SEPARATOR_HEIGHT_EMU = 27432  # 0.03in, ~2.2pt -- a rule, not a banner
 # The beamer footline; author and title come from the metadata file that feeds pandoc.
 FOOTLINE_HEIGHT_EMU = 228600  # 0.238in
 FOOTLINE_ACCENT_CX = 914400  # 1in accent block, right-aligned
+FOOTLINE_Y = SLIDE_CY - FOOTLINE_HEIGHT_EMU
 PRESENTATION_METADATA = MD2PDF_ROOT / "presentation/pandoc/metadata.yml"
 
 
@@ -334,15 +335,28 @@ def patch_content_layout(
     xml = _append_shape(
         xml, _rect(shape_id, "Brand Separator", x, y + cy, cx, SEPARATOR_HEIGHT_EMU, accent_fill)
     )
+    xml = _append_footline(xml, shape_id, accent_fill, author, deck_title)
+    return _place_slide_number(xml)
+
+
+def _append_footline(
+    xml: str, shape_id: int, accent_fill: str, author: str, deck_title: str
+) -> str:
+    """The beamer footline: a grey strip, the accent block, and the optional author and title."""
     # Grey by alpha over text-black, so the footline strip needs no colour slot of its own.
     grey_fill = (
         '<a:solidFill><a:schemeClr val="dk1"><a:alpha val="8000"/></a:schemeClr></a:solidFill>'
     )
-    foot_y = SLIDE_CY - FOOTLINE_HEIGHT_EMU
     xml = _append_shape(
         xml,
         _rect(
-            shape_id + 100, "Brand Footline", 0, foot_y, SLIDE_CX, FOOTLINE_HEIGHT_EMU, grey_fill
+            shape_id + 100,
+            "Brand Footline",
+            0,
+            FOOTLINE_Y,
+            SLIDE_CX,
+            FOOTLINE_HEIGHT_EMU,
+            grey_fill,
         ),
     )
     xml = _append_shape(
@@ -351,7 +365,7 @@ def patch_content_layout(
             shape_id + 200,
             "Brand Footline Accent",
             SLIDE_CX - FOOTLINE_ACCENT_CX,
-            foot_y,
+            FOOTLINE_Y,
             FOOTLINE_ACCENT_CX,
             FOOTLINE_HEIGHT_EMU,
             accent_fill,
@@ -364,7 +378,7 @@ def patch_content_layout(
                 shape_id + 300,
                 "Brand Footline Author",
                 182880,
-                foot_y,
+                FOOTLINE_Y,
                 2286000,
                 FOOTLINE_HEIGHT_EMU,
                 author,
@@ -378,7 +392,7 @@ def patch_content_layout(
                 shape_id + 400,
                 "Brand Footline Title",
                 (SLIDE_CX - 4114800) // 2,
-                foot_y,
+                FOOTLINE_Y,
                 4114800,
                 FOOTLINE_HEIGHT_EMU,
                 deck_title,
@@ -386,12 +400,17 @@ def patch_content_layout(
                 align="ctr",
             ),
         )
+    return xml
+
+
+def _place_slide_number(xml: str) -> str:
+    """Put the sldNum placeholder on the footline's accent block."""
     # Pandoc never instantiates sldNum on slides; finalize_deck.py adds the per-slide number.
     xml = _set_placeholder_xfrm(
         xml,
         "sldNum",
         SLIDE_CX - FOOTLINE_ACCENT_CX,
-        foot_y,
+        FOOTLINE_Y,
         FOOTLINE_ACCENT_CX,
         FOOTLINE_HEIGHT_EMU,
     )
@@ -438,32 +457,31 @@ def default_reference_pptx(dest: Path) -> None:
     dest.write_bytes(data)
 
 
-def build_reference(output: Path, brand: dict | None = None) -> Path:
-    """Write a brand-themed reference deck to *output* and return it."""
-    brand = brand if brand is not None else brand_tokens()
-    colors = brand_theme_colors(brand)
-    font = brand["fonts"]["main"]
-
+def _read_default_parts(output: Path) -> dict[str, bytes]:
+    """Every part of pandoc's default deck, fetched beside *output* and removed again."""
     output.parent.mkdir(parents=True, exist_ok=True)
     source = output.with_suffix(".default.pptx")
     default_reference_pptx(source)
-
-    themes_patched = 0
     try:
         with zipfile.ZipFile(source) as src:
-            parts: dict[str, bytes] = {i.filename: src.read(i.filename) for i in src.infolist()}
+            return {i.filename: src.read(i.filename) for i in src.infolist()}
     finally:
         source.unlink(missing_ok=True)
 
-    # -- theme colours + fonts (every theme part: the notes master has its own)
-    for name in parts:
-        if THEME_RE.fullmatch(name):
-            parts[name] = patch_theme_xml(parts[name].decode("utf-8"), colors, font).encode("utf-8")
-            themes_patched += 1
-    if not themes_patched:
-        raise ReferenceBuildError("No ppt/theme/*.xml found in pandoc's reference.pptx.")
 
-    # Every patcher positions in SLIDE_CX/CY, so a changed slide size must fail here.
+def _patch_themes(parts: dict[str, bytes], brand: dict) -> None:
+    """Brand every theme part; the notes master has its own."""
+    colors = brand_theme_colors(brand)
+    font = brand["fonts"]["main"]
+    themes = [name for name in parts if THEME_RE.fullmatch(name)]
+    if not themes:
+        raise ReferenceBuildError("No ppt/theme/*.xml found in pandoc's reference.pptx.")
+    for name in themes:
+        parts[name] = patch_theme_xml(parts[name].decode("utf-8"), colors, font).encode("utf-8")
+
+
+def _assert_slide_size(parts: dict[str, bytes]) -> None:
+    """Every patcher positions in SLIDE_CX/CY, so a changed slide size must fail here."""
     pres = parts["ppt/presentation.xml"].decode("utf-8")
     size = re.search(r'<p:sldSz cx="(\d+)" cy="(\d+)"', pres)
     if not size or (int(size.group(1)), int(size.group(2))) != (SLIDE_CX, SLIDE_CY):
@@ -472,12 +490,32 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
             f"got {size.groups() if size else 'none'}); update the layout patchers."
         )
 
-    # Layouts are found by the names pandoc selects them with, never by file number.
+
+def _first_master(parts: dict[str, bytes]) -> str:
+    """The slide master's XML, which content layouts inherit their title geometry from."""
     masters = sorted(n for n in parts if MASTER_RE.fullmatch(n))
     if not masters:
         raise ReferenceBuildError("No slide master found in pandoc's reference.pptx.")
-    master_xml = parts[masters[0]].decode("utf-8")
+    return parts[masters[0]].decode("utf-8")
 
+
+def _embed_title_image(parts: dict[str, bytes], layout_part: str) -> None:
+    """Add the title background image and the title layout's relationship to it."""
+    rels_name = f"ppt/slideLayouts/_rels/{layout_part.rsplit('/', 1)[-1]}.rels"
+    if rels_name not in parts:
+        raise ReferenceBuildError(f"Title Slide layout has no rels part ({rels_name}).")
+    ct, rels = _register_media(
+        parts["[Content_Types].xml"].decode("utf-8"), parts[rels_name].decode("utf-8")
+    )
+    parts["[Content_Types].xml"] = ct.encode("utf-8")
+    parts[rels_name] = rels.encode("utf-8")
+    if not TITLE_BG_IMAGE.is_file():
+        raise ReferenceBuildError(f"Title background image missing: {TITLE_BG_IMAGE}")
+    parts[TITLE_BG_MEDIA] = TITLE_BG_IMAGE.read_bytes()
+
+
+def _patch_layouts(parts: dict[str, bytes], master_xml: str) -> set[str]:
+    """Patch the layouts pandoc selects by name and return the names patched."""
     meta = deck_metadata()
     seen: set[str] = set()
     for name in sorted(parts):
@@ -487,17 +525,7 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
         layout = layout_name(xml)
         if layout == "Title Slide":
             xml = patch_title_slide_layout(xml)
-            rels_name = f"ppt/slideLayouts/_rels/{name.rsplit('/', 1)[-1]}.rels"
-            if rels_name not in parts:
-                raise ReferenceBuildError(f"Title Slide layout has no rels part ({rels_name}).")
-            ct, rels = _register_media(
-                parts["[Content_Types].xml"].decode("utf-8"), parts[rels_name].decode("utf-8")
-            )
-            parts["[Content_Types].xml"] = ct.encode("utf-8")
-            parts[rels_name] = rels.encode("utf-8")
-            if not TITLE_BG_IMAGE.is_file():
-                raise ReferenceBuildError(f"Title background image missing: {TITLE_BG_IMAGE}")
-            parts[TITLE_BG_MEDIA] = TITLE_BG_IMAGE.read_bytes()
+            _embed_title_image(parts, name)
         elif layout == "Section Header":
             xml = patch_section_header_layout(xml)
         elif layout in SEPARATOR_LAYOUTS:
@@ -513,14 +541,22 @@ def build_reference(output: Path, brand: dict | None = None) -> Path:
             continue
         seen.add(layout or name)
         parts[name] = xml.encode("utf-8")
+    return seen
 
+
+def build_reference(output: Path, brand: dict | None = None) -> Path:
+    """Write a brand-themed reference deck to *output* and return it."""
+    parts = _read_default_parts(output)
+    _patch_themes(parts, brand if brand is not None else brand_tokens())
+    _assert_slide_size(parts)
+    # Layouts are found by the names pandoc selects them with, never by file number.
+    seen = _patch_layouts(parts, _first_master(parts))
     missing = {"Title Slide", "Section Header", *SEPARATOR_LAYOUTS} - seen
     if missing:
         raise ReferenceBuildError(
             f"Layouts not found in pandoc's reference.pptx: {sorted(missing)}. "
             "Pandoc's default deck changed; update this patcher."
         )
-
     with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as out:
         for name, payload in parts.items():
             out.writestr(name, payload)

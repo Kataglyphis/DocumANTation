@@ -9,6 +9,40 @@
   Computer Vision Scientist application. Prioritize industrial detection, multi-camera
   inference, PyTorch model ownership, detector evaluation and production tooling using the
   existing shared CV sections.
+
+## 2026-10-25
+
+- Add a separate English Scaleway Backend Software Engineer (Python / DevOps) CV and cover letter, emphasizing Python repository maintenance, GitLab CI/CD, GPU operations and hardware deployment.
+
+- Strengthen the SkillCorner letter with owner-confirmed American football experience and detection, tracking, re-identification and recognition model work during the first six months at Fraunhofer IPA; preserve both facts for reuse.
+
+- Add the English SkillCorner Computer Vision Scientist cover letter, emphasizing industrial video/detection, robustness research and reproducible ML engineering.
+
+- Refine the Chipiron cover letter with owner-confirmed advanced AI/computer-graphics coursework and practical MRI image rendering; preserve the fact for future applications.
+
+- Record medical-imaging coursework in electrical engineering during both degrees as a shared education fact, include it in the Chipiron CV and add a matching English cover letter.
+
+- Add the English Chipiron AI Engineer CV target, selecting shared vision, dataset, diffusion-evaluation, GPU-performance and repository-maintenance evidence.
+
+- Record owner-confirmed maintenance of several institute GitLab repositories in Python, Rust and C++ as a shared bilingual fact; show it in the Scaleway CV and the all-sections profile.
+
+- Add the bilingual `scaleway-software` CV profile and `make cv-scaleway-software`, emphasizing documented gateway, infrastructure, operations and documentation work for Scaleway's Software Engineer role.
+
+## 0.1.0
+
+- Release the theme as `sphinx-kataglyphis-theme` 0.1.0: every push to `main` runs the Linux lane,
+  builds the sdist and the wheel from it in the family image, and publishes both as `v<version>`
+  through ANTfrastructure's `release-publish.yml`. `sphinx-kataglyphis-theme/VERSION.txt` is the one
+  version, read by the package and the release. The wheel now carries `dartdoc.css`, and
+  `python -m sphinx_kataglyphis path {brand-css,dartdoc-css}` prints where an installed sheet lives,
+  so a project needs only the wheel, not this repository as a submodule.
+- Clear every quality ratchet without allowlist entries, and run the lint gates on every push and
+  pull request instead of only by hand. `build_reference` and `patch_content_layout` split into
+  named steps (the reference deck stays byte-identical); the Dart docs' layout CSS moves out of
+  `generate_style.py` into the hand-written `style/dartdoc-layout.css` (every generated file
+  unchanged); the title background is re-encoded at 1350×3000 (392 KiB instead of 1.5 MB, same
+  aspect, so the pptx crop holds) without its camera EXIF, which carried GPS coordinates. A test
+  now fails any tracked JPEG or PNG that carries EXIF.
 - Pin smile at ae4926c and awesome-beamer at 4c5fc05, which drop their ANTfrastructure submodules and
   call the hub's workflows with `hub-checkout: true`; a recursive clone of ANTfrastructure or
   DocumANTation now ends.

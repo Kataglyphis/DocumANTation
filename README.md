@@ -38,6 +38,18 @@ primitives showcase and a Sphinx docs site all take their colours, fonts, code-b
 
 ## Quick start
 
+`make cv-scaleway-backend letter-scaleway-backend STRICT_WARNINGS=1` builds the separate English Scaleway Python / DevOps application.
+
+`make letter-skillcorner-cv STRICT_WARNINGS=1` builds the English SkillCorner Computer Vision Scientist cover letter.
+
+For Chipiron's AI Engineer application, run `make cv-chipiron-ai STRICT_WARNINGS=1`.
+This English profile emphasizes vision model deployment, datasets, diffusion-based evaluation and GPU optimization.
+It includes medical-imaging coursework from both degrees; `make letter-chipiron-ai STRICT_WARNINGS=1` builds the matching cover letter.
+
+For the Scaleway Software Engineer application, run `make cv-scaleway-software STRICT_WARNINGS=1`.
+The profile emphasizes Go gateway plugins, Linux, CI/CD, monitoring and runbooks.
+It also includes institute GitLab repository maintenance in Python, Rust and C++.
+
 ```bash
 git clone --recurse-submodules --branch develop https://github.com/Kataglyphis/DocumANTation.git
 cd DocumANTation

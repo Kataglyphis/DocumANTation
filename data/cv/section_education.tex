@@ -13,6 +13,10 @@
 \IfLanguageName{english}{
     
     \sectionTitle{Education}{\faMortarBoard}
+    % Owner-confirmed 2026-10-25; coursework does not change the degree titles.
+    \ifcvshowmedicalcoursework
+    \noindent Medical imaging: electrical-engineering coursework during both bachelor's and master's studies.\par
+    \fi
     \begin{experiences}
     \education
     {\DTMlangsetup*{showdayofmonth=false}
@@ -80,6 +84,9 @@
 }{
     
     \sectionTitle{Bildung}{\faMortarBoard}
+    \ifcvshowmedicalcoursework
+    \noindent Medizinische Bildgebung: Elektrotechnik-Lehrveranstaltungen im Bachelor- und Masterstudium.\par
+    \fi
     \begin{experiences}
     % german
     \education

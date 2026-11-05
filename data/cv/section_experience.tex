@@ -81,14 +81,14 @@
                 % tracked experiments in MLflow and ClearML -- the posting's
                 % "experiment tracking". Passive on purpose: these were the
                 % team's tools, used, not owned like the CI/CD before them.
-                \def\cvFhgCicd{%
+                \def\cvFhgCicd{\ifcvshowcicd
                 % "Docker" behind \ifcvshowstackdetail (owner, 2026-09-23: Docker
                 % daily at Fraunhofer, advanced builds; BuildKit is its build
                 % engine). Off, the sentence is exactly the line below. That
                 % line, kept:
                 % \item Owned the institute's GitLab CI/CD, DGX A100/H200 GPUs and \textbf{Grafana/Prometheus} monitoring; \textbf{BuildKit} and \textbf{sccache} caching cut builds from hours to minutes\ifcvshowmldetail; experiments tracked in \textbf{MLflow} and \textbf{ClearML}\fi
                 \item Owned the institute's GitLab CI/CD, DGX A100/H200 GPUs and \textbf{Grafana/Prometheus} monitoring; \textbf{BuildKit} and \textbf{sccache} caching cut \ifcvshowstackdetail\textbf{Docker} \fi builds from hours to minutes\ifcvshowmldetail; experiments tracked in \textbf{MLflow} and \textbf{ClearML}\fi
-                }
+                \fi}
                 % Naming the projects is the point: "fixes go upstream" is a
                 % posture, named projects are checkable evidence of root-cause
                 % work in somebody else's codebase -- the posting's "root cause
@@ -109,7 +109,9 @@
                 % deliberately removed.
                 % Behind \ifcvshowbuilds (default on; see cv.tex).
                 \def\cvFhgBuilds{\ifcvshowbuilds
-                \item Advanced \textbf{CMake} build systems for C++ codebases, \textbf{GStreamer} (\textbf{Meson}) and \textbf{LiteRT-LM} (\textbf{Bazel}) built from source; fixes upstreamed to \textbf{LLVM} and \textbf{sccache}, not kept as local patches
+                % Plainer wording (owner, 2026-10-07: "sound like a developer, not like an AI"). The line before, kept:
+                % \item Advanced \textbf{CMake} build systems for C++ codebases, \textbf{GStreamer} (\textbf{Meson}) and \textbf{LiteRT-LM} (\textbf{Bazel}) built from source; fixes upstreamed to \textbf{LLVM} and \textbf{sccache}, not kept as local patches
+                \item Maintained the \textbf{CMake} builds for our C++ code, built \textbf{GStreamer} (\textbf{Meson}) and \textbf{LiteRT-LM} (\textbf{Bazel}) from source, and fixed bugs upstream in \textbf{LLVM} and \textbf{sccache}
                 \fi}
                 % Third in the platform cluster, and the only place the CV claims
                 % Go -- see the flag in cv.tex. "45 researchers" is the scale
@@ -134,6 +136,10 @@
                 % profile to render it next to the others, set "from" alone on
                 % a second line). Same facts. The first wording, kept:
                 % \item Wrote the runbooks and onboarding docs for the CI/CD and GPU cluster the group works from
+                % Owner-confirmed 2026-10-25; no repository count or review responsibilities inferred.
+                \def\cvFhgMaintainer{\ifcvshowmaintainer
+                \item Code maintainer for several institute repositories on \textbf{GitLab}, in \textbf{Python}, \textbf{Rust} and \textbf{C++}
+                \fi}
                 \def\cvFhgDocs{\ifcvshowdocs
                 \item Wrote the runbooks and onboarding docs for the group's CI/CD and GPU cluster
                 \fi}
@@ -152,9 +158,9 @@
                 % "its labels partly trained my models". The first clause,
                 % kept:
                 % \ifcvshowmldetail{} in my own research tool for self-labeling; its labels partly trained my models\fi
-                \def\cvFhgVlm{%
+                \def\cvFhgVlm{\ifcvshowvlm
                 \item Cut hand-labeling time by \textbf{75\%} with \textbf{vLLM-served vision-language model pipelines}\ifcvshowmldetail{} in my own research tool for self-labeling; some of my projects used its generated labels\fi
-                }
+                \fi}
                 % Both GLM-5.2 bullets are the same box: 6 GPUs of one H200
                 % system. It said "6x H100" here until now, which read as a
                 % second, different deployment. The hardware is named once, in
@@ -223,7 +229,10 @@
                 % with vision). The bullet named the model but never the
                 % engine; vLLM sat only in the tags. The line before, kept:
                 % \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
-                \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} served with \textbf{vLLM} on \textbf{6 H200 GPUs}\ifcvshowservingdetail{} (\textbf{TP2$\times$PP3})\fi, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}\ifcvshowservingdetail, \textbf{$-$60\% worst-case latency}\fi) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                % "privacy-first" went with it; "self-hosted" says the same thing.
+                % Plainer wording (owner, 2026-10-07: "sound like a developer, not like an AI"). The line before, kept:
+                % \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} served with \textbf{vLLM} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                \item Started the institute's self-hosted coding agent on our own initiative with a colleague; it is now in production for our researchers. It runs \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} on \textbf{vLLM} across \textbf{6 H200 GPUs}\ifcvshowservingdetail{} (\textbf{TP2$\times$PP3})\fi, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}\ifcvshowservingdetail, \textbf{$-$60\% worst-case latency}\fi) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
                 }
                 % RemaNet = Remanufacturing Network, Horizon Europe grant
                 % 101138627, 25 partners, Jan 2024 - Dec 2026, Fraunhofer IPA a
@@ -330,8 +339,12 @@
                 % had to hold up there. That is the "building, shipping and
                 % supporting production B2B applications" a posting may ask for,
                 % and "Built" did not say it.
+                % Owner, 2026-10-07: the application had strict latency and throughput requirements, met with the batched inference. No figures on record.
                 \def\cvFhgSafety{\ifcvshowsafety
-                \item Delivered \textbf{person detection} for an industrial customer's safety application: \textbf{4 cameras} in parallel, inferences \textbf{batched}
+                % "for an industrial customer" still says the model went to a paying customer.
+                % Plainer wording (owner, 2026-10-07: "sound like a developer, not like an AI"). The line before, kept:
+                % \item Delivered \textbf{person detection} for an industrial customer's safety application: \textbf{4 cameras} in parallel, inferences \textbf{batched}
+                \item Built \textbf{person detection} for an industrial customer's safety system, with \textbf{4 cameras} in parallel and \textbf{batched} inference
                 \fi}
                 % KI-PrOT (owner, 2026-09-22; ki-prot.de checked the same day):
                 % "Optimierte Produktionsplanung für die Oberflächentechnik",
@@ -438,13 +451,15 @@
             % OFFEN: eine Zeile bleibt gedehnt (badness 5667), STRICT_WARNINGS
             % schlägt fehl. \allowbreak am Schrägstrich ändert den Umbruch nicht;
             % "Monitoring mit Grafana/Prometheus" löst es, kostet aber die Seite.
-            \def\cvFhgCicd{%
+            \def\cvFhgCicd{\ifcvshowcicd
             \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten \ifcvshowstackdetail\textbf{Docker}-\fi Builds von Stunden auf Minuten\ifcvshowmldetail; Experiment-Tracking mit \textbf{MLflow} und \textbf{ClearML}\fi
-            }
+            \fi}
             % Siehe die Anmerkung im englischen Zweig.
             % Hinter \ifcvshowbuilds (standardmäßig an; siehe cv.tex).
             \def\cvFhgBuilds{\ifcvshowbuilds
-            \item Fortgeschrittene \textbf{CMake}-Builds für C++-Codebasen, \textbf{GStreamer} (\textbf{Meson}) und \textbf{LiteRT-LM} (\textbf{Bazel}) aus dem Quellcode gebaut; Fixes an \textbf{LLVM} und \textbf{sccache} upstream eingebracht, statt sie lokal zu patchen
+            % Schlichtere Formulierung (Inhaber, 2026-10-07), siehe englischer Zweig. Die Zeile davor, erhalten:
+            % \item Fortgeschrittene \textbf{CMake}-Builds für C++-Codebasen, \textbf{GStreamer} (\textbf{Meson}) und \textbf{LiteRT-LM} (\textbf{Bazel}) aus dem Quellcode gebaut; Fixes an \textbf{LLVM} und \textbf{sccache} upstream eingebracht, statt sie lokal zu patchen
+            \item \textbf{CMake}-Builds unseres C++-Codes gepflegt, \textbf{GStreamer} (\textbf{Meson}) und \textbf{LiteRT-LM} (\textbf{Bazel}) aus dem Quellcode gebaut und Fehler in \textbf{LLVM} und \textbf{sccache} upstream behoben
             \fi}
             % Siehe die Anmerkung im englischen Zweig.
             % "zugriffsgeschützt" seit 2026-09-23, siehe die Anmerkung im
@@ -454,15 +469,18 @@
             \item Zugriffsgeschütztes \textbf{KI-Gateway} des Instituts um eigene \textbf{WebAssembly}-Plugins in \textbf{Go} erweitert: Token-Metering und Rate-Limiting für \textbf{45 Forschende}
             \fi}
             % Siehe die Anmerkung im englischen Zweig: nennt die Systeme.
+            \def\cvFhgMaintainer{\ifcvshowmaintainer
+            \item Code-Maintainer mehrerer Instituts-Repositories auf \textbf{GitLab} in \textbf{Python}, \textbf{Rust} und \textbf{C++}
+            \fi}
             \def\cvFhgDocs{\ifcvshowdocs
             \item Runbooks und Onboarding-Dokumentation für die CI/CD und den GPU-Cluster geschrieben, mit denen die Gruppe arbeitet
             \fi}
             % Siehe die Anmerkung im englischen Zweig. Umformuliert 2026-09-23;
             % die erste Fassung des Zusatzes, zum Nachschlagen erhalten:
             % \ifcvshowmldetail{} in meinem eigenen Forschungstool für Self-Labeling; seine Labels flossen teils ins Training meiner Modelle\fi
-            \def\cvFhgVlm{%
+            \def\cvFhgVlm{\ifcvshowvlm
             \item Manuelles Labeling um \textbf{75\%} reduziert: \textbf{vLLM-gehostete Vision-Language-Pipelines}\ifcvshowmldetail{} in meinem eigenen Forschungstool für Self-Labeling; einige meiner Projekte nutzten die generierten Labels\fi
-            }
+            \fi}
             % Siehe die Anmerkung im englischen Zweig: eine Maschine, einmal benannt.
             % Siehe die Anmerkung im englischen Zweig: ein Deployment, drei Optimierungen.
             % Siehe die Anmerkung im englischen Zweig: eine Kennzahl je Optimierung.
@@ -477,7 +495,9 @@
             % Fassung mit beiden Modellen, zum Nachschlagen erhalten:
             % \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.2 und GLM-5.3} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
             \def\cvFhgAgent{%
-            \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.3 mit Vision-Fähigkeiten}\ifcvshowstackdetail{} (offene Gewichte von \textbf{Hugging Face})\fi{} mit \textbf{vLLM} auf \textbf{6 H200-GPUs}\ifcvshowservingdetail{} (\textbf{TP2$\times$PP3})\fi, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}\ifcvshowservingdetail, \textbf{$-$60\% Worst-Case-Latenz}\fi) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            % Schlichtere Formulierung (Inhaber, 2026-10-07), siehe englischer Zweig. Die Zeile davor, erhalten:
+            % \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.3 mit Vision-Fähigkeiten}\ifcvshowstackdetail{} (offene Gewichte von \textbf{Hugging Face})\fi{} mit \textbf{vLLM} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            \item Selbst gehosteten Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen gestartet; er läuft heute in Produktion für unsere Forschenden. Er nutzt \textbf{GLM-5.3 mit Vision-Fähigkeiten}\ifcvshowstackdetail{} (offene Gewichte von \textbf{Hugging Face})\fi{} auf \textbf{vLLM} mit \textbf{6 H200-GPUs}\ifcvshowservingdetail{} (\textbf{TP2$\times$PP3})\fi, mit eigenem \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}\ifcvshowservingdetail, \textbf{$-$60\% Worst-Case-Latenz}\fi) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
             }
             % Kein "end to end" hier: im Deutschen ein Anglizismus, den die
             % Doppelpunkt-Liste ohnehin schon sagt. Die Geraete stehen in einer
@@ -517,7 +537,9 @@
             % Frühere Fassung, 2026-09-22, zum Nachschlagen erhalten:
             % \item \textbf{Personenerkennung} für industrielle Sicherheit: \textbf{4 Kameras} parallel, Inferenzen \textbf{gebatcht}
             \def\cvFhgSafety{\ifcvshowsafety
-            \item \textbf{Personenerkennung} für die Sicherheitsanwendung eines Industriekunden geliefert: \textbf{4 Kameras} parallel, Inferenzen \textbf{gebatcht}
+            % Schlichtere Formulierung (Inhaber, 2026-10-07), siehe englischer Zweig. Die Zeile davor, erhalten:
+            % \item \textbf{Personenerkennung} für die Sicherheitsanwendung eines Industriekunden geliefert: \textbf{4 Kameras} parallel, Inferenzen \textbf{gebatcht}
+            \item \textbf{Personenerkennung} für das Sicherheitssystem eines Industriekunden gebaut, mit \textbf{4 Kameras} parallel und Inferenz im \textbf{Batch}
             \fi}
             % Siehe die Anmerkung im englischen Zweig: KI-PrOT, Ziel und nicht
             % Messergebnis, daher "um ... zu sparen".

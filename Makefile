@@ -1,9 +1,14 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
+.PHONY: cv-scaleway-software
+.PHONY: cv-chipiron-ai
+.PHONY: letter-chipiron-ai
+.PHONY: letter-skillcorner-cv
+.PHONY: cv-scaleway-backend letter-scaleway-backend
 STRICT_WARNINGS ?= 0
 # cv only: english (default) or german. Both come from the same sources.
 CV_LANG ?= english
@@ -21,6 +26,25 @@ $(DOC_TARGETS):
 cv-all:
 	$(MAKE) cv CV_LANG=english
 	$(MAKE) cv CV_LANG=german
+
+# Keep application filenames stable across reproducible builds.
+cv-scaleway-software:
+	$(MAKE) cv CV_PROFILE=scaleway-software CV_JOB_SUFFIX=Scaleway_Software_Engineer
+
+cv-scaleway-backend:
+	$(MAKE) cv CV_LANG=english CV_PROFILE=scaleway-backend CV_JOB_SUFFIX=Scaleway_Backend_Python_DevOps
+
+letter-scaleway-backend:
+	$(MAKE) letter CV_LANG=english CV_PROFILE=scaleway-backend CV_JOB_SUFFIX=Scaleway_Backend_Python_DevOps
+
+cv-chipiron-ai:
+	$(MAKE) cv CV_LANG=english CV_PROFILE=chipiron-ai CV_JOB_SUFFIX=Chipiron_AI_Engineer
+
+letter-chipiron-ai:
+	$(MAKE) letter CV_LANG=english CV_PROFILE=chipiron-ai CV_JOB_SUFFIX=Chipiron_AI_Engineer
+
+letter-skillcorner-cv:
+	$(MAKE) letter CV_LANG=english CV_PROFILE=skillcorner-cv CV_JOB_SUFFIX=SkillCorner_Computer_Vision_Scientist
 
 # Application: Research Software Engineer, Mistral AI (Paris).
 cv-mistral-rse:
@@ -63,6 +87,28 @@ cv-inference-mle:
 # Application: AI & Automation Lead, TISSIUM (Paris).
 cv-tissium-automation:
 	$(MAKE) cv CV_PROFILE=tissium-automation CV_JOB_SUFFIX=Tissium_AI_Automation
+
+# Application: Creative Engineer / AI Creative Technologist, Runware (France, remote).
+cv-runware-creative:
+	$(MAKE) cv CV_PROFILE=runware-creative CV_JOB_SUFFIX=Runware_Creative
+
+letter-runware-creative:
+	$(MAKE) letter CV_PROFILE=runware-creative CV_JOB_SUFFIX=Runware_Creative
+
+# Application: Software Engineer, C++, Brain-Computer Interface team, Snap Inc. (Paris).
+cv-snap-bci:
+	$(MAKE) cv CV_PROFILE=snap-bci CV_JOB_SUFFIX=Snap_BCI
+
+# Application: Machine Learning Engineer, Model Optimization, Zendar (Paris).
+cv-zendar-optim:
+	$(MAKE) cv CV_PROFILE=zendar-optim CV_JOB_SUFFIX=Zendar_ML_Optimization
+
+# Recruiter contact: real-time video pipelines, client not named (Germany).
+cv-realtime-vision:
+	$(MAKE) cv CV_PROFILE=realtime-vision CV_JOB_SUFFIX=Realtime_Vision
+
+cv-realtime-vision-german:
+	$(MAKE) cv CV_PROFILE=realtime-vision CV_LANG=german CV_JOB_SUFFIX=Realtime_Vision_German
 
 # watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation

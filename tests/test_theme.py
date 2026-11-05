@@ -2,12 +2,21 @@
 
 from __future__ import annotations
 
+import importlib.metadata
 import json
+import subprocess
+import sys
 import tomllib
 from pathlib import Path
 
 import pytest
-from sphinx_kataglyphis import LINKS_EXTENSION, brand, brand_css_path, setup_theme
+from sphinx_kataglyphis import (
+    LINKS_EXTENSION,
+    brand,
+    brand_css_path,
+    dartdoc_css_path,
+    setup_theme,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -57,6 +66,32 @@ def test_brand_css_ships_with_the_package():
     css = brand_css_path()
     assert css.is_file()
     assert f"--brand-accent: {brand()['colors']['accent']}" in css.read_text("utf-8")
+
+
+def test_dartdoc_css_ships_with_the_package_as_the_repo_copy():
+    css = dartdoc_css_path()
+    assert css.is_file()
+    repo_copy = REPO_ROOT / "style" / "dartdoc.css"
+    assert css.read_bytes() == repo_copy.read_bytes()
+
+
+@pytest.mark.parametrize("name", ["brand-css", "dartdoc-css"])
+def test_the_path_command_prints_an_existing_sheet(name: str):
+    out = subprocess.run(
+        [sys.executable, "-m", "sphinx_kataglyphis", "path", name],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    assert Path(out).is_file()
+    assert Path(out).suffix == ".css"
+
+
+def test_the_packaged_version_is_the_release_version():
+    version_file = REPO_ROOT / "sphinx-kataglyphis-theme/VERSION.txt"
+    assert (
+        importlib.metadata.version("sphinx-kataglyphis-theme") == version_file.read_text().strip()
+    )
 
 
 # setup_theme()

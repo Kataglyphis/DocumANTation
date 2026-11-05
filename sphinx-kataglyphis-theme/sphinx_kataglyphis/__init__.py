@@ -32,6 +32,15 @@ def brand_css_path() -> Path:
     return Path(str(files(_PACKAGE).joinpath("_static/css/custom.css")))
 
 
+def dartdoc_css_path() -> Path:
+    """Filesystem path to the sheet appended to `dart doc`'s styles.css."""
+    return Path(str(files(_PACKAGE).joinpath("dartdoc.css")))
+
+
+# Shell consumers ask `python -m sphinx_kataglyphis path <name>` instead of knowing the layout.
+_PATHS = {"brand-css": brand_css_path, "dartdoc-css": dartdoc_css_path}
+
+
 # Helpers
 
 
@@ -287,9 +296,14 @@ def main() -> None:
     sc = sub.add_parser("scaffold", help="Create a new Sphinx doc directory")
     sc.add_argument("dest", nargs="?", default="docs", help="Target directory (default: docs)")
 
+    pa = sub.add_parser("path", help="Print the path of a packaged stylesheet")
+    pa.add_argument("name", choices=sorted(_PATHS))
+
     args = parser.parse_args()
     if args.command == "scaffold":
         _scaffold(Path(args.dest).resolve())
+    elif args.command == "path":
+        print(_PATHS[args.name]())
 
 
 if __name__ == "__main__":

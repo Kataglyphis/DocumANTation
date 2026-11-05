@@ -1,0 +1,97 @@
+% Profile: snap-bci -- Software Engineer, C++, Brain-Computer Interface team,
+% Snap Inc. / Specs Inc. (Paris 9e, on-site 4+ days a week; wearable-device
+% sensing; posting read 2026-10-07).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "Integrate systems for sensor data acquisition and ML inference with
+%    robust real-time performance"
+%        -> the three camera bullets first: object detection at ~14 fps on an
+%           embedded Berghof PLC fitted with a Hailo accelerator, person
+%           detection over four cameras with batched inference
+%           (\cvshowsafetytrue). Cameras are the sensors on record; no other
+%           sensor type is claimed. RemaNet's camera pipelines did not fit
+%   "enable complex software to run efficiently on wearable hardware and
+%    cloud backends"
+%        -> the embedded PLC and the GPU servers above; the CUDA-kernel and
+%           C++-bindings bullet; in the summary, the HoloLens 2 (a head-worn
+%           device) from the CAS Software entry and the M.Sc. thesis
+%   "tools for analyzing performance and quality of our algorithms"
+%        -> the CUDA bullet and the CI/CD bullet's Grafana/Prometheus
+%           monitoring. The ~700x Nsight/VTune profiling bullet did not fit
+%   "Strong knowledge in C++" / "At least 2 years of C++"
+%        -> C++ first in the tag row; the summary's "writing C++ since my
+%           bachelor's thesis" and the public C++ repositories behind the header's
+%           GitHub link. No years figure is written: the timeline shows it
+%   "Strong understanding of Computer Science fundamentals" / "BSc in
+%    Computer Science"
+%        -> both KIT degrees, the B.Sc. tagged Real-Time Systems and Low
+%           Latency. The tutor entry (computer organization, C, assembler)
+%           did not fit; see \cvBody
+%   "Comfortable with large code bases" / "isolate root causes across
+%    different software systems"
+%        -> the build bullet: LLVM, GStreamer, LiteRT-LM from source, fixes
+%           upstreamed to LLVM and sccache
+%   "Experience with continuous integration and code quality tools"
+%        -> the CI/CD bullet, and in the summary the public CMake modules
+%           for sanitizers, static analysis and GoogleTest plus one
+%           clang-format/clang-tidy setup (ANTfrastructure cmake/ and
+%           shared/config/, checked 2026-10-07)
+%   "Experience using AI tools to support engineering workflows"
+%        -> the coding-agent bullet, and in the summary AI agents in daily
+%           review, testing and debugging (owner, 2026-09-22, terabase-cv)
+%   "collaborating across hardware, software and ML teams"
+%        -> the Hailo retrofit (hardware), and in the summary the teams the
+%           owner works with (owner, 2026-09-23)
+%   "Communicate technical tradeoffs clearly"
+%        -> not on the page; the cover letter is the place for teaching
+%   Paris, on-site -> \cvrelocatetrue; English C1 and French B1 in
+%   section_private.
+%
+% Not claimed: EEG or any physiological sensing beyond eye, head and hand
+% tracking on the HoloLens 2 (which was C# and Unity, not C++ -- the summary
+% claims the device and its sensors, not C++ on it), digital signal
+% processing, time-series analysis, asynchronous programming as such, and
+% shipping software for a consumer wearable.
+%
+% Nothing is deleted for this profile: every bullet it does not show is only
+% switched off here and stays in section_experience.tex.
+
+% Three plain nouns instead of a pitch (owner, 2026-10-07: "sound like a
+% developer"). The first tagline, kept:
+% \newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | C++, real-time camera pipelines \& embedded ML inference}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | C++, Echtzeit-Kamerapipelines \& Embedded-ML}}
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | C++, computer vision \& embedded ML}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | C++, Bildverarbeitung \& Embedded-ML}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+% Paris, on-site.
+\cvrelocatetrue
+% Four cameras at once with batched inference: sensor acquisition and
+% inference in real time.
+\cvshowsafetytrue
+% Off to fit one page: RemaNet's camera pipelines (the two bullets above carry
+% sensor-to-inference better, without the React frontend) and the VLM
+% labeling bullet, the one this posting needs least.
+\cvshowremanetfalse
+\cvshowvlmfalse
+\setlength{\cvtagsep}{3pt}
+% C++ first, then the inference and build stack the bullets name.
+\renewcommand{\cvFhgTags}{C++, CMake, CUDA, Python, PyTorch, ONNX, Hailo, Bazel, Meson, Docker, Git, GitLab CI/CD}
+
+% Sensor to inference first, then the C++ performance and build work, then
+% the platform and the AI tooling. Every bullet is listed, hidden ones too.
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgBerghof\cvFhgSafety\cvFhgRemanet\cvFhgKernels\cvFhgBuilds\cvFhgCicd%
+	\cvFhgAgent\cvFhgVlm\cvFhgQuantum\cvFhgGateway\cvFhgDocs\cvFhgKiprot}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_snap_bci}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    % The tutor entry did not fit: with it the Languages row went to page
+    % two. The coding-agent bullet stayed instead -- performance work and
+    % the posting's AI-tools ask -- and the degrees carry the fundamentals.
+    % \input{section_teaching_mentoring}%
+    \input{section_education}%
+    \input{section_private}%
+}

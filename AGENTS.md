@@ -73,6 +73,11 @@ make cv CV_LANG=german
 make cv CV_PROFILE=<data/cv/profiles/*>
 make cv-skillcorner-cv
 make cv-all
+make cv-scaleway-software STRICT_WARNINGS=1
+make cv-scaleway-backend letter-scaleway-backend STRICT_WARNINGS=1
+make cv-chipiron-ai STRICT_WARNINGS=1
+make letter-chipiron-ai STRICT_WARNINGS=1
+make letter-skillcorner-cv STRICT_WARNINGS=1
 
 # Any target, with the strict warning gates
 STRICT_WARNINGS=1 ./scripts/build_in_container.sh book
@@ -144,7 +149,7 @@ type checks; `pytest` + `pytest-cov` + `shellcheck-py` under the `dev` extra. Co
 ### Running Tools
 
 ```bash
-# On the host -- these are the CI gates in linux-x64.yml, in this order:
+# On the host -- the gates scripts/ci-checks.sh runs in linux-x64.yml, on the family image's X.Y and X.Yt:
 bash ../ANTfrastructure/linux/scripts/refactor-python.sh --root "$PWD" --check
 ANTFRASTRUCTURE_DIR=../ANTfrastructure bash scripts/check-python-types.sh
 git ls-files -z '*.sh' | xargs -0 uv run --extra dev shellcheck
@@ -159,7 +164,7 @@ pytest, pytest-cov and the theme package imported by `tests/test_theme.py`.
 
 `tests/test_brand_divs_filter.py` drives `md2pdfLib/common/filters/brand-divs.lua` through **real
 pandoc** and skips when pandoc is absent, so a host without it skips those 23 tests. CI installs
-pandoc (at the version the Dockerfile pins) before the suite. Locally, use the image:
+pandoc (at the version and checksum the Dockerfile pins) before the suite. Locally, use the image:
 
 ```bash
 nerdctl run --rm --entrypoint "" -v "$(pwd):/repo" -w /repo pandoc_all   sh -c '. /md2pdf/bin/activate && uv pip install -q pytest          && python -m pytest tests/test_brand_divs_filter.py -o addopts=""'
@@ -206,6 +211,9 @@ and was removed, so the valid invocations stay enumerable:
 ---
 
 ## LaTeX Conventions
+
+CV facts stay in shared bilingual sections; repository maintenance uses `\cvshowmaintainertrue`
+and `\cvFhgMaintainer`, with provenance recorded in `data/cv/profiles/README.md`.
 
 ### File Organization
 
@@ -327,11 +335,19 @@ never passed to pandoc, so such a subdirectory needs its own preset (that is wha
 
 ---
 
+## Releasing the theme
+
+Every push to `main` is a release (`release.yml`): the Linux lane, then `scripts/build-theme-dist.sh`
+in the family image, then `v<version>` with the wheel and sdist through ANTfrastructure's
+`release-publish.yml`. Raise `sphinx-kataglyphis-theme/VERSION.txt` and give `CHANGELOG.md` a
+`## <version>` section before `main` moves; only the owner moves `main`. Prove a change to the
+release with a dry run: `gh workflow run release.yml --ref develop -f dry-run=true`.
+
 ## Version Pins
 
 The `Dockerfile` and `uv.lock` are authoritative; this table is a snapshot, and
-`tests/test_docs_versions.py` fails when its Ubuntu, Pandoc or uv row drifts from the Dockerfile.
-Pandoc and uv are synced from ANTfrastructure's `linux/scripts/01-core/versions.env` by its
+`tests/test_docs_versions.py` fails when its Ubuntu, Pandoc, uv or Python row drifts from the Dockerfile.
+Pandoc, uv and Python are synced from ANTfrastructure's `linux/scripts/01-core/versions.env` by its
 `docs/scripts/sync_versions.py`: bump them there, never in the Dockerfile
 ([how](docs/project-info.md#external-dependencies)).
 
@@ -342,4 +358,4 @@ Pandoc and uv are synced from ANTfrastructure's `linux/scripts/01-core/versions.
 | TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
 | uv | 0.13.1 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ANTfrastructure) |
 | Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
-| Python | 3.14 | `python3-full` from Ubuntu 26.04 repos |
+| Python | 3.15.0 | `ARG PYTHON_VERSION` in Dockerfile, uv-managed (synced from ANTfrastructure); CI runs the family image's X.Y and X.Yt |

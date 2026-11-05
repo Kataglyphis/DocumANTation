@@ -1,0 +1,20 @@
+% Reuse the infrastructure layout; Python maintenance, CI/CD and physical deployment lead.
+% No four-year application-Python claim, Terraform, Ansible, Proxmox or Kubernetes is inferred.
+\input{profiles/scaleway-software}
+\renewcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Python, Linux \& CI/CD}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Python, Linux \& CI/CD}}
+\cvshowgatewayfalse
+\cvshowdocsfalse
+\cvshowberghoftrue
+\renewcommand{\cvFhgTags}{Python, Rust, C++, Linux, Docker, GitLab CI/CD, BuildKit, sccache, Grafana, Prometheus}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgMaintainer\cvFhgCicd\cvFhgBuilds\cvFhgBerghof\cvFhgAgent\cvFhgVlm%
+    \cvFhgGateway\cvFhgDocs\cvFhgKernels\cvFhgQuantum\cvFhgRemanet\cvFhgSafety\cvFhgKiprot}
+\renewcommand{\cvBody}{%
+    \enlargethispage{3\baselineskip}%
+    \input{section_headline_scaleway_backend}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_teaching_mentoring}%
+    \input{section_education}%
+    \input{section_private}%
+}

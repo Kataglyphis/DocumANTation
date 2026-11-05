@@ -19,6 +19,12 @@ make cv-c12-automation                   # AI Automation Engineer, C12 Quantum E
 make letter-c12-automation               # its cover letter
 make cv-tissium-automation               # AI & Automation Lead, TISSIUM, English
 make cv-inference-mle                    # Senior ML Engineer, Inference (remote), English
+make cv-runware-creative                 # Creative Engineer / AI Creative Technologist, Runware, English
+make letter-runware-creative             # its cover letter
+make cv-snap-bci                         # Software Engineer C++, Brain-Computer Interface, Snap, English
+make cv-zendar-optim                     # ML Engineer, Model Optimization, Zendar, English
+make cv-realtime-vision                  # Real-time video pipelines, recruiter contact, English
+make cv-realtime-vision-german           # the same in German
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -79,6 +85,9 @@ fits proves nothing about the German one.
 | Profile | Target | Output |
 | --- | --- | --- |
 | `default` | General purpose; the pair published on jonasheinle.de | `CV_Jonas_Heinle_<language>.pdf` |
+| `scaleway-backend` | Backend Software Engineer (Python / DevOps), HDV Hardware Operations, Scaleway; English | `CV_Jonas_Heinle_Scaleway_Backend_Python_DevOps.pdf` |
+| `chipiron-ai` | AI Engineer (Always Open), Chipiron (Paris); English deliverable | `CV_Jonas_Heinle_Chipiron_AI_Engineer.pdf` |
+| `scaleway-software` | Software Engineer, Cloud Product Engineering, Scaleway (Paris) | `CV_Jonas_Heinle_Scaleway_Software_Engineer.pdf` |
 | `mistral-rse` | Research Software Engineer, Mistral AI (Paris) | `CV_Jonas_Heinle_Mistral_RSE.pdf` |
 | `mistral-platform` | Platform Engineer, Research Platform team, Mistral AI (Paris/Warsaw/London) | `CV_Jonas_Heinle_Mistral_Platform.pdf` |
 | `amd-hpc` | Lead HPC/AI Computational Scientist / Engineer, AMD GENCI Center of Excellence (Paris) | `CV_Jonas_Heinle_AMD_HPC.pdf` |
@@ -88,6 +97,10 @@ fits proves nothing about the German one.
 | `c12-automation` | AI Automation Engineer, C12 Quantum Electronics (Paris, on-site) | `CV_Jonas_Heinle_C12_AI_Automation.pdf` |
 | `tissium-automation` | AI & Automation Lead, TISSIUM (Paris, hybrid) | `CV_Jonas_Heinle_Tissium_AI_Automation.pdf` |
 | `inference-mle` | Senior ML Engineer, Inference (remote; via Smartchoice, client unnamed) | `CV_Jonas_Heinle_ML_Inference.pdf` |
+| `runware-creative` | Creative Engineer / AI Creative Technologist, Runware (France, remote) | `CV_Jonas_Heinle_Runware_Creative.pdf` |
+| `snap-bci` | Software Engineer, C++, Brain-Computer Interface team, Snap Inc. (Paris, on-site) | `CV_Jonas_Heinle_Snap_BCI.pdf` |
+| `zendar-optim` | Machine Learning Engineer, Model Optimization, Zendar (Paris, hybrid) | `CV_Jonas_Heinle_Zendar_ML_Optimization.pdf` |
+| `realtime-vision` | Real-time video pipelines, recruiter contact, client not named (Germany); both languages | `CV_Jonas_Heinle_Realtime_Vision.pdf`, `CV_Jonas_Heinle_Realtime_Vision_German.pdf` |
 | `all` | Every section — a compile check for the dormant ones, not a published CV (`make cv CV_PROFILE=all CV_JOB=CV_all`, without `STRICT_WARNINGS`) | `CV_all.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
@@ -113,13 +126,23 @@ every Fraunhofer bullet identifier remains in the ordering macro. A4 paper, 12 m
 and ragged-right lists with 1 pt item spacing keep both languages readable on one page.
 It adds no claim of AWS,
 multi-object or player tracking, re-identification, GNNs, camera calibration, homography,
-TensorFlow, OpenCV proficiency or modified CNN/Transformer architectures. The supplied record
-does not establish those skills. Eye tracking in mixed reality is retained in its original
+TensorFlow, OpenCV proficiency or modified CNN/Transformer architectures. The owner's confirmation
+below covers tracking and re-identification for the letter only; the supplied record does not
+establish the rest. Eye tracking in mixed reality is retained in its original
 context. ECML PKDD is named as the actual publication venue.
 
 Build the English application with `make cv-skillcorner-cv STRICT_WARNINGS=1`. For a German
 check that preserves the English filename, use
 `make cv CV_PROFILE=skillcorner-cv CV_LANG=german CV_JOB_SUFFIX=SkillCorner_german STRICT_WARNINGS=1`.
+
+In a letter build, `skillcorner-cv` supplies the header for the English cover letter, reusing
+`terabase-cv`'s section selection. The owner confirmed on 2026-10-25 that during the
+first six months at Fraunhofer IPA they designed, trained and optimized deep learning models
+for detection, tracking, re-identification and recognition. They also played American football
+while studying computer science and were already thinking about applications like SkillCorner's,
+which would have helped them as a player. The letter includes both facts; it does not claim
+professional sports-tracking deployments, AWS, GNNs, camera calibration, a playing level or team.
+Build with `make letter-skillcorner-cv STRICT_WARNINGS=1`.
 
 ### Inference
 
@@ -132,6 +155,34 @@ TensorRT-LLM, Triton Inference Server, SGLang and Kubernetes are not claimed: th
 not establish them. Narrower side margins keep the German build on one page.
 
 ### Other profiles
+
+`scaleway-backend` targets the DevOps secondary track through documented GitLab CI/CD,
+container builds, Linux and DGX operations. The four years of structured application Python
+requested by the posting are not established by the current sources; teaching is not counted
+as application-development tenure. Terraform, Ansible, Proxmox, Kubernetes, bare-metal
+provisioning, VLAN administration and secrets management are not claimed. The English CV and
+matching letter are built separately from the original Scaleway Cloud Product application.
+
+Owner-confirmed on 2026-10-25: medical-imaging lectures in electrical engineering during both
+bachelor's and master's studies. The shared bilingual education note is selected with
+`\cvshowmedicalcourseworktrue`, enabled by Chipiron and `all`. The degrees remain Computer
+Science; no named course, grade or clinical experience was specified.
+
+The owner also confirmed advanced university courses in AI and computer graphics, including
+practical rendering of MRI images. The Chipiron cover letter includes this academic work.
+Rendering MRI images does not establish MRI acquisition, reconstruction or clinical experience.
+
+`chipiron-ai` emphasizes industrial vision deployment, curated datasets, SemProbe's
+diffusion-based robustness evaluation and the quantum-simulation GPU port. It claims no MRI
+reconstruction, super-resolution, registration, deformation, phantom/patient-data validation or
+clinical experience. `make cv-chipiron-ai` builds the requested English deliverable; the shared
+source also carries a German summary, whose layout is not part of this delivery.
+
+Owner-confirmed on 2026-10-25: code maintainer for several institute repositories hosted on
+GitLab, in Python, Rust and C++. The bilingual shared bullet is `\cvFhgMaintainer` in
+`section_experience.tex`; opt in with `\cvshowmaintainertrue` and include the bullet in any
+custom `\cvFraunhoferOrder`. Scaleway and `all` enable it. Repository counts, formal review
+responsibilities and test-coverage results were not specified.
 
 A tailored CV reorders and re-selects true facts. It does not acquire skills
 the posting asks for. `mistral-rse` deliberately claims neither Kubernetes nor
@@ -164,6 +215,32 @@ training non-technical teams on AI tools and 5-10 years of experience, and
 the profile claims none of them. Working with biotech researchers is on the
 page; a regulated environment is not. See the notes at the top of
 `tissium-automation.tex`.
+
+`runware-creative` follows it furthest. Its posting is built on ComfyUI,
+image and video generation models (FLUX, Stable Diffusion, Wan, LTX,
+Hunyuan, Kling) and a generative-AI portfolio, and the profile claims none of
+them. What it shows is the true overlap: computer graphics and image quality
+(the Projects section), self-hosted vision-language models, automated
+pipelines and technical communication. See the notes at the top of
+`runware-creative.tex`.
+
+`snap-bci` claims no EEG or other physiological sensing, signal processing,
+time-series analysis, asynchronous programming or consumer-wearable software,
+all named in its posting. The HoloLens 2 eye, head and hand tracking is the one
+wearable on record, and it was C# and Unity, so the summary claims the device,
+not C++ on it. See the notes at the top of `snap-bci.tex`.
+
+`zendar-optim` claims no TensorRT deployment, neural architecture search,
+knowledge distillation, quantization-error analysis, OpenCL, radar or
+automotive work. The CPU/GPU/NPU benchmarking in its summary is the GenieX
+work in ANTfrastructure's `docs/geniex-local-ai-setup.md`.
+
+`realtime-vision` claims no load testing or latency targets on a video pipeline. Its load
+evidence is LLM serving, and the summary says so. Kubernetes, DeepStream and production
+multi-object tracking are not claimed. Owner-confirmed on 2026-11-03: the GStreamer camera
+pipelines with WebRTC and Rust/C++ inference and the live Jetson object detection were run in
+industry projects. Never word them as own or personal projects. See the notes at the top of
+`realtime-vision.tex`.
 
 A fact arriving late does not relax this. Go moved off the not-claimed list on
 2026-09-04 because the work turned up, not because the posting wanted it.

@@ -1,0 +1,61 @@
+% Cover letter: AI Engineer, Mendo (Paris Chatelet, hybrid), 2026-10-07.
+% Built with its CV profile of the same name:
+%   make letter-mendo-ai -> Cover_Letter_<First>_<Last>_Mendo_AI.pdf
+%
+% Plain paragraphs, no bold slogans: the owner asked for a developer's voice
+% (2026-10-07). Each paragraph answers a block of the posting.
+%   para 1 -> "Execution-first ... ship a measured improvement": the coding
+%             agent, started unasked, in production on GLM-5.3 and vLLM
+%   para 2 -> "Own the health of the AI features in production: quality,
+%             cost, and latency" / "Keep our models ... current": the gateway
+%             plugins (cost), Grafana/Prometheus (health), the move from
+%             GLM-5.2 to GLM-5.3 (section_experience.tex history)
+%   para 3 -> "small language models ... on-device" / "evaluation harnesses":
+%             GenieX on a Snapdragon laptop (ANTfrastructure
+%             docs/geniex-local-ai-setup.md: findings 2 and 3, section 1d's
+%             executed-code benchmark); the Hailo PLC at ~14 fps, INT8
+%   para 4 -> "Curate and maintain the datasets": KI-PrOT (DVC), the
+%             self-labeling tool (75%)
+%   para 5 -> "Explain AI trade-offs" / "Document" / "Coach": teaching, the
+%             teams, runbooks, DocumANTation. Coaching juniors at Fraunhofer
+%             is not on record, so teaching stands in for it
+%   gap    -> French B1 against "excellent command"; Azure/AKS/Helm, Datadog,
+%             MongoDB/Redis, WebLLM/wllama; RAG used but never productized;
+%             no MCP servers yet. Claude Code and opencode ARE in the owner's
+%             daily workflow (the c12-automation letter)
+%   close  -> a first project: a regression suite for the on-device models
+%
+% Sentences about what the owner would do are drafted from the owner's
+% facts; read them as a proposal and put them in your own voice, above all
+% "I would keep working on my French in Paris" and the first-project
+% paragraph.
+%
+% Nothing in this file is ever deleted: a replaced sentence goes into a
+% comment beside its replacement.
+
+\renewcommand{\cvfootertitle}{\IfLanguageName{english}{Cover Letter}{Anschreiben}}
+
+\renewcommand{\cvBody}{%
+	\cvletterhead
+		{Stuttgart, 7 October 2026}
+		{Mendo\\Technology team\\Paris, France}
+		{Application: AI Engineer (Paris, hybrid)}
+
+	Dear Mendo team,
+
+	You are looking for someone who would rather ship a measured improvement than pitch a redesign, and who keeps running what they ship. That describes most of my work at Fraunhofer IPA. A colleague and I started the institute's self-hosted coding agent on our own initiative, and it now runs in production for our researchers on GLM-5.3 and vLLM across six H200 GPUs. Custom speculative decoding and scheduling gave it about ten times the throughput, and NVFP4 quantization with an FP8 KV cache gave it a 1M-token context.
+
+	Running it is the part I have learned the most from. I wrote the WebAssembly plugins in Go that meter tokens and rate-limit all 45 researchers at our AI gateway, so cost is visible per user, and the GPU servers report to the Grafana and Prometheus monitoring I am responsible for. When GLM-5.3 came out we moved the service over from GLM-5.2 and checked that it still held up.
+
+	Small models on the user's own hardware are what I work on in my public repositories. I run GGUF models on a Snapdragon laptop's CPU, GPU and NPU behind an OpenAI-compatible server, and I benchmark them in my lab OrchestrANT on coding tasks whose output is executed against hidden tests. The numbers changed my plans more than once. The fastest model in tokens per second was the slowest to a finished answer, because it spent about 1,900 tokens thinking, and for an agent the prompt prefill cost more time than generation did. At work I ran INT8 object detection at about 14 fps on an industrial PLC that I fitted with a Hailo accelerator.
+
+	I also build the data my models are judged on. For the KI-PrOT project I created, annotated and versioned a dataset with DVC, and the vision-language pipelines in my labeling tool cut hand-labeling time by 75\%.
+
+	At the institute I work with mechanical engineers and with researchers in quantum computing and biotech, so explaining a trade-off to people outside AI is a normal part of my week. I taught computer organization to undergraduates for four years, I write the runbooks for the systems I run, and my own documentation pipeline typeset this letter.
+
+	Two gaps you should hear from me. My French is at B1, not the excellent French you ask for; I work in English and German today and would keep working on my French in Paris. And parts of your stack are new to me: Azure with AKS and Helm, Datadog, MongoDB and Redis, and WebLLM or wllama in the browser. I have used RAG but never built it into a product, and I have not written an MCP server yet. TypeScript I have used for a React frontend, and Claude Code and opencode are already part of my daily work.
+
+	A likely first project: a regression suite for your on-device models that runs every candidate quantization through your golden sets in the browser runtime and records quality, latency and memory, so each model update ships with numbers attached. I would be glad to move to Paris for this role.
+
+	\cvletterclosing{Best regards}
+}

@@ -11,8 +11,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     --no-install-recommends \
     lmodern \
     imagemagick \
-    python3-full \
-    python3-pip \
     ghostscript \
     locales \
     curl \
@@ -28,7 +26,10 @@ RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
 
 # Delete the project metadata after install, or a runtime `uv run` finds it at / and spawns a stray .venv.
 COPY pyproject.toml uv.lock /tmp/deps/
-RUN uv venv md2pdf && \
+# The family pin as uv's own build: this image is not the family image, whose interpreter would cost its whole pull.
+ARG PYTHON_VERSION=3.15.0
+RUN uv python install "${PYTHON_VERSION}" && \
+    uv venv --managed-python --python "${PYTHON_VERSION}" md2pdf && \
     . md2pdf/bin/activate && \
     uv export --frozen --no-dev --no-emit-project --project /tmp/deps -o /tmp/requirements.txt && \
     uv pip install -r /tmp/requirements.txt && \

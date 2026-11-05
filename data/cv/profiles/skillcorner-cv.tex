@@ -1,3 +1,10 @@
+% A letter keeps the terabase selection and its own tagline; the CV's \newif rules out an \else branch.
+\ifdefined\cvletter
+    \input{profiles/terabase-cv}
+    \renewcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Computer Vision, PyTorch \& Model Deployment}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Computer Vision, PyTorch \& Modelldeployment}}
+    \expandafter\endinput
+\fi
+
 % See profiles/README.md for the evidence behind this application's selection.
 \newcommand{\cvTagline}{\IfLanguageName{english}{Computer Vision Scientist | PyTorch, detection \& production ML}{Computer Vision Scientist | PyTorch, Objekterkennung \& ML in Produktion}}
 
@@ -24,7 +31,7 @@
 
 \renewcommand{\cvFraunhoferOrder}{%
     \cvFhgSafety\cvFhgBerghof\cvFhgRemanet\cvFhgKiprot\cvFhgVlm%
-    \cvFhgKernels\cvFhgCicd\cvFhgQuantum\cvFhgBuilds\cvFhgGateway\cvFhgDocs%
+    \cvFhgKernels\cvFhgCicd\cvFhgQuantum\cvFhgMaintainer\cvFhgBuilds\cvFhgGateway\cvFhgDocs%
     \ifcvskillcornershowagent\cvFhgAgent\fi}
 \renewcommand{\cvFhgTags}{Python, PyTorch, C++, CUDA, ONNX, MLflow, ClearML, DVC, Docker, GitLab CI/CD}
 

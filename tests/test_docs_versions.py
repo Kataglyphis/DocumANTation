@@ -22,6 +22,7 @@ AGENTS_MD = REPO_ROOT / "AGENTS.md"
 # AGENTS.md row label -> the Dockerfile ARG that owns the value.
 PINNED_ARGS = {
     "Pandoc": "PANDOC_VERSION",
+    "Python": "PYTHON_VERSION",
     "uv": "UV_VERSION",
 }
 

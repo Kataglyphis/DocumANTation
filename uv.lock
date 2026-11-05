@@ -682,7 +682,6 @@ wheels = [
 
 [[package]]
 name = "sphinx-kataglyphis-theme"
-version = "0.1.0"
 source = { editable = "sphinx-kataglyphis-theme" }
 dependencies = [
     { name = "myst-parser" },

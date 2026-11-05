@@ -1,0 +1,33 @@
+% Model deployment and optimization: Berghof, the GPU simulation port and CI/CD.
+% Dataset curation: KI-PrOT and VLM self-labeling; generative evaluation: SemProbe.
+% Initiative and code ownership: the production coding service and GitLab maintenance.
+% Medical-imaging coursework is academic background, not MRI or patient-data project experience.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Computer Vision, PyTorch \& GPU Optimization}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Computer Vision, PyTorch \& GPU-Optimierung}}
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvrelocatetrue
+\cvshowcudakernelsfalse
+\cvshowquantumtrue
+\cvshowremanetfalse
+\cvshowberghoftrue
+\cvshowkiprottrue
+\cvshowmldetailtrue
+\cvshowsemprobetrue
+\cvshowmaintainertrue
+\cvshowmedicalcourseworktrue
+\cvshowbuildsfalse
+\AtBeginEnvironment{itemize}{\raggedright}
+\setlength{\cvtagsep}{3pt}
+\renewcommand{\cvFhgTags}{Python, PyTorch, C++, Rust, CUDA, DVC, MLflow, ClearML, vLLM, GitLab CI/CD}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgBerghof\cvFhgKiprot\cvFhgVlm\cvFhgQuantum\cvFhgMaintainer%
+    \cvFhgCicd\cvFhgAgent\cvFhgKernels\cvFhgRemanet\cvFhgSafety%
+    \cvFhgBuilds\cvFhgGateway\cvFhgDocs}
+\newcommand{\cvBody}{%
+    \enlargethispage{3\baselineskip}%
+    \input{section_headline_chipiron_ai}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}
