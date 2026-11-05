@@ -1,0 +1,57 @@
+% Profile: inference-mle -- Senior ML Engineer, Inference (recruiter message via
+% Smartchoice, 2026-10-29; client unnamed, fully remote).
+%
+% What the brief asks for, and what this profile puts in front of it:
+%
+%   "hands-on production experience with vLLM or TensorRT-LLM"
+%        -> the coding-agent bullet, first: GLM-5.3 served with vLLM on
+%           6 H200 GPUs as a production service, with the serving detail on
+%           (TP2xPP3, worst-case latency); the vLLM-served VLM labeling
+%           pipelines second
+%   "GPU optimisation"
+%        -> custom CUDA kernels, the quantum port profiled with Nsight and
+%           VTune to ~700x, NVFP4 + FP8 KV cache, DGX A100/H200 ownership
+%   "improving inference latency and throughput"
+%        -> ~10x throughput and -60% worst-case latency from custom speculative
+%           decoding and scheduling; batched 4-camera inference; INT8 detection
+%           at ~14 fps on the Hailo-equipped PLC
+%   "Senior"
+%        -> Fraunhofer IPA since 02/2024 plus CAS Software and the KIT tutor
+%           post on the timeline
+%
+% Not claimed: TensorRT-LLM, Triton Inference Server, Kubernetes, SGLang.
+% The brief takes vLLM OR TensorRT-LLM; vLLM is the one on the record.
+%
+% Remote, so no relocation line.
+
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | LLM inference, vLLM serving \& GPU optimization}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | LLM-Inferenz, vLLM \& GPU-Optimierung}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvshowservingdetailtrue
+\cvshowcudakernelstrue
+\cvshowquantumtrue
+\cvshowsafetytrue
+% Hidden for room: the gateway, experiment tracking, build systems, RemaNet's web stack and KI-PrOT say least about inference.
+\cvshowgatewayfalse
+\cvshowmldetailfalse
+\cvshowbuildsfalse
+\cvshowremanetfalse
+\cvshowkiprotfalse
+\cvshowdocsfalse
+\setlength{\cvtagsep}{3pt}
+% Layout, not content: the German build overran by the bottom row.
+\geometry{left=1.2cm,right=1.2cm}
+
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgAgent\cvFhgVlm\cvFhgKernels\cvFhgQuantum\cvFhgGateway\cvFhgCicd%
+	\cvFhgSafety\cvFhgBerghof\cvFhgRemanet\cvFhgBuilds\cvFhgDocs\cvFhgKiprot}
+\renewcommand{\cvFhgTags}{Python, C++, CUDA, PyTorch, vLLM, NVFP4/FP8, ONNX, Nsight, Hailo, Docker, GitLab CI/CD}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_inference_mle}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

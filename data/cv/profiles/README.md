@@ -18,6 +18,7 @@ make letter-parallel-ai                  # its cover letter (letters/parallel-ai
 make cv-c12-automation                   # AI Automation Engineer, C12 Quantum Electronics, English
 make letter-c12-automation               # its cover letter
 make cv-tissium-automation               # AI & Automation Lead, TISSIUM, English
+make cv-inference-mle                    # Senior ML Engineer, Inference (remote), English
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -86,6 +87,7 @@ fits proves nothing about the German one.
 | `parallel-ai` | AI Engineer, Parallel (Paris, on-site) | `CV_Jonas_Heinle_Parallel_AI.pdf` |
 | `c12-automation` | AI Automation Engineer, C12 Quantum Electronics (Paris, on-site) | `CV_Jonas_Heinle_C12_AI_Automation.pdf` |
 | `tissium-automation` | AI & Automation Lead, TISSIUM (Paris, hybrid) | `CV_Jonas_Heinle_Tissium_AI_Automation.pdf` |
+| `inference-mle` | Senior ML Engineer, Inference (remote; via Smartchoice, client unnamed) | `CV_Jonas_Heinle_ML_Inference.pdf` |
 | `all` | Every section — a compile check for the dormant ones, not a published CV (`make cv CV_PROFILE=all CV_JOB=CV_all`, without `STRICT_WARNINGS`) | `CV_all.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
@@ -118,6 +120,16 @@ context. ECML PKDD is named as the actual publication venue.
 Build the English application with `make cv-skillcorner-cv STRICT_WARNINGS=1`. For a German
 check that preserves the English filename, use
 `make cv CV_PROFILE=skillcorner-cv CV_LANG=german CV_JOB_SUFFIX=SkillCorner_german STRICT_WARNINGS=1`.
+
+### Inference
+
+The `inference-mle` profile answers a brief that requires production vLLM or TensorRT-LLM,
+GPU optimization and inference latency and throughput work. It leads with the vLLM-served
+GLM-5.3 coding agent and turns on `\cvshowservingdetail`, which adds the TP2×PP3 layout and
+the −60% worst-case latency figure from the owner's recorded measurements. CUDA kernels, the
+Nsight-profiled quantum port, batched four-camera inference and the INT8 Hailo PLC follow.
+TensorRT-LLM, Triton Inference Server, SGLang and Kubernetes are not claimed: the record does
+not establish them. Narrower side margins keep the German build on one page.
 
 ### Other profiles
 

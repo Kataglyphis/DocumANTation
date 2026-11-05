@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 STRICT_WARNINGS ?= 0
@@ -55,6 +55,10 @@ cv-c12-automation:
 
 letter-c12-automation:
 	$(MAKE) letter CV_PROFILE=c12-automation CV_JOB_SUFFIX=C12_AI_Automation
+
+# Application: Senior ML Engineer, Inference (remote, via Smartchoice).
+cv-inference-mle:
+	$(MAKE) cv CV_PROFILE=inference-mle CV_JOB_SUFFIX=ML_Inference
 
 # Application: AI & Automation Lead, TISSIUM (Paris).
 cv-tissium-automation:

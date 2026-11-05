@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add the bilingual `inference-mle` profile and `make cv-inference-mle` target for a remote
+  Senior ML Engineer, Inference brief. A new `\cvshowservingdetail` flag, off by default, adds
+  the vLLM deployment's TP2×PP3 layout and worst-case latency figure to the coding-agent bullet.
 - Add the bilingual `skillcorner-cv` profile and `make cv-skillcorner-cv` target for the
   Computer Vision Scientist application. Prioritize industrial detection, multi-camera
   inference, PyTorch model ownership, detector evaluation and production tooling using the
