@@ -1,0 +1,111 @@
+% Profile: runware-creative -- Creative Engineer / AI Creative Technologist,
+% Runware (France, remote; generative image and video inference platform;
+% posting read 2026-10-07).
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "Experiment hands-on with new generative image and video models"
+%        -> the coding-agent bullet, first: GLM-5.3 with vision capabilities,
+%           self-hosted and served with vLLM (from Hugging Face,
+%           \cvshowstackdetailtrue). A vision model, not an image or video
+%           generator -- the summary says so rather than blur it
+%   "Develop repeatable and automated generation workflows ... at scale"
+%        -> the VLM labeling bullet: automated vision-language pipelines that
+%           cut hand-labeling by 75%
+%   "Coding and API experience, including building custom integrations,
+%    scripts, tools"
+%        -> the summary's "automated pipelines and tools". The AI-gateway
+%           bullet (custom Go plugins in front of the model APIs) is the
+%           stronger evidence but did not fit the page
+%   "A strong creative eye" / "technical depth"
+%        -> the Projects section's Vulkan/OpenGL renderers (since 2020) and
+%           the summary's B.Sc. thesis on blue-noise error distribution for
+%           real-time image quality. Image quality is the owner's own
+%           research topic, and the renderers are public
+%   "Strong technical communication skills" / "turn complex experiments
+%    into clear, engaging content"
+%        -> the summary: four years of teaching, and the public
+%           documentation pipeline (books, slides, this CV)
+%   "practical experience across multiple image and/or video models"
+%        -> SemProbe, the ECML PKDD 2026 demo (Publications), which uses
+%           diffusion-based inpainting to probe object detectors. One
+%           generative image technique used in research, named in the
+%           summary; no model family is claimed beyond it
+%   "Experience with model adaptation or fine-tuning, such as LoRAs"
+%        -> the LoRA tag, which the experience section keeps because the
+%           fine-tuning is real (an LLM, not a diffusion model)
+%   "Contributions to open-source generative AI projects or communities"
+%        -> not claimed as such; the summary names the owner's public
+%           repositories and upstreamed fixes, which is open source but not
+%           generative media
+%   "Work independently and move quickly"
+%        -> the coding agent, started on the owner's own initiative
+%   France, remote -> no relocation line: the job is remote. French B1 in
+%   section_private.
+%
+% Not claimed: ComfyUI or comparable node-based workflow tooling, custom
+% ComfyUI nodes, any image or video generation model (FLUX, Stable Diffusion,
+% Wan, LTX, Hunyuan, Kling), a generative-AI portfolio, social-media or
+% launch content, LoRA training for diffusion models, work at a generative-AI
+% or inference platform company, public talks or livestreams (the YouTube
+% handle stays commented out in cv.tex: no videos published), and a
+% three-years-in-generative-media figure. These are the posting's core
+% requirements; the cover letter, if one is written, is where to say how the
+% owner would close them, not this page.
+%
+% Nothing is deleted for this profile: every bullet it does not show is only
+% switched off here and stays in section_experience.tex.
+
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Vision models, GPU pipelines \& real-time rendering}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Vision-Modelle, GPU-Pipelines \& Echtzeit-Rendering}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+% Off to fit one page: the gateway plugins (the posting's "custom
+% integrations"), the self-labeling and MLflow/ClearML clauses, and the CAS
+% Software bullet. The page ran about twelve lines over with them on.
+\cvshowgatewayfalse
+\cvshowmldetailfalse
+\cvshowcasdetailfalse
+% Hugging Face as the model source: the ecosystem this posting lives in.
+\cvshowstackdetailtrue
+% Not rendered here, kept in the source: the industrial computer-vision,
+% build-system and HPC depth this reader needs least, traded for the
+% Projects section.
+\cvshowremanetfalse
+\cvshowberghoffalse
+\cvshowsafetyfalse
+\cvshowkiprotfalse
+\cvshowquantumfalse
+\cvshowcudakernelsfalse
+\cvshowbuildsfalse
+\cvshowdocsfalse
+% SemProbe's detail line stays off: the summary already says what the demo
+% does, in fewer lines than the Publications column would spend on it.
+\cvshowsemprobefalse
+% Only the renderer stays. The blue-noise thesis is in the summary and in the
+% B.Sc. tags (Path Tracing, Blue Noise), so its entry went to fit the page.
+\cvshowprojbluenoisefalse
+\cvshowprojmlfalse
+\cvshowprojmrfalse
+\cvshowprojcollisionfalse
+\setlength{\cvtagsep}{3pt}
+% The posting's ecosystem first (Python, PyTorch, Hugging Face, LoRA, vLLM),
+% then the GPU and graphics side.
+\renewcommand{\cvFhgTags}{Python, PyTorch, Hugging Face, LoRA, vLLM, CUDA, C++, Docker, uv, GitLab CI/CD}
+
+% The vision model first, then the automated pipelines, then the GPU
+% platform under them. Every bullet is listed, hidden ones too.
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgAgent\cvFhgVlm\cvFhgGateway\cvFhgCicd\cvFhgRemanet\cvFhgBerghof%
+	\cvFhgSafety\cvFhgKiprot\cvFhgQuantum\cvFhgKernels\cvFhgBuilds\cvFhgDocs}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_runware_creative}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    % The renderers: the creative-technology evidence on record, so they take
+    % the room the hidden bullets left.
+    \input{section_projects}%
+    \input{section_education}%
+    \input{section_private}%
+}

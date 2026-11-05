@@ -17,6 +17,12 @@ make letter-parallel-ai                  # its cover letter (letters/parallel-ai
 make cv-c12-automation                   # AI Automation Engineer, C12 Quantum Electronics, English
 make letter-c12-automation               # its cover letter
 make cv-tissium-automation               # AI & Automation Lead, TISSIUM, English
+make cv-runware-creative                 # Creative Engineer / AI Creative Technologist, Runware, English
+make letter-runware-creative             # its cover letter
+make cv-snap-bci                         # Software Engineer C++, Brain-Computer Interface, Snap, English
+make cv-zendar-optim                     # ML Engineer, Model Optimization, Zendar, English
+make cv-realtime-vision                  # Real-time video pipelines, recruiter contact, English
+make cv-realtime-vision-german           # the same in German
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -87,6 +93,10 @@ fits proves nothing about the German one.
 | `parallel-ai` | AI Engineer, Parallel (Paris, on-site) | `CV_Jonas_Heinle_Parallel_AI.pdf` |
 | `c12-automation` | AI Automation Engineer, C12 Quantum Electronics (Paris, on-site) | `CV_Jonas_Heinle_C12_AI_Automation.pdf` |
 | `tissium-automation` | AI & Automation Lead, TISSIUM (Paris, hybrid) | `CV_Jonas_Heinle_Tissium_AI_Automation.pdf` |
+| `runware-creative` | Creative Engineer / AI Creative Technologist, Runware (France, remote) | `CV_Jonas_Heinle_Runware_Creative.pdf` |
+| `snap-bci` | Software Engineer, C++, Brain-Computer Interface team, Snap Inc. (Paris, on-site) | `CV_Jonas_Heinle_Snap_BCI.pdf` |
+| `zendar-optim` | Machine Learning Engineer, Model Optimization, Zendar (Paris, hybrid) | `CV_Jonas_Heinle_Zendar_ML_Optimization.pdf` |
+| `realtime-vision` | Real-time video pipelines, recruiter contact, client not named (Germany); both languages | `CV_Jonas_Heinle_Realtime_Vision.pdf`, `CV_Jonas_Heinle_Realtime_Vision_German.pdf` |
 | `all` | Every section — a compile check for the dormant ones, not a published CV (`make cv CV_PROFILE=all CV_JOB=CV_all`, without `STRICT_WARNINGS`) | `CV_all.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
@@ -163,6 +173,32 @@ training non-technical teams on AI tools and 5-10 years of experience, and
 the profile claims none of them. Working with biotech researchers is on the
 page; a regulated environment is not. See the notes at the top of
 `tissium-automation.tex`.
+
+`runware-creative` follows it furthest. Its posting is built on ComfyUI,
+image and video generation models (FLUX, Stable Diffusion, Wan, LTX,
+Hunyuan, Kling) and a generative-AI portfolio, and the profile claims none of
+them. What it shows is the true overlap: computer graphics and image quality
+(the Projects section), self-hosted vision-language models, automated
+pipelines and technical communication. See the notes at the top of
+`runware-creative.tex`.
+
+`snap-bci` claims no EEG or other physiological sensing, signal processing,
+time-series analysis, asynchronous programming or consumer-wearable software,
+all named in its posting. The HoloLens 2 eye, head and hand tracking is the one
+wearable on record, and it was C# and Unity, so the summary claims the device,
+not C++ on it. See the notes at the top of `snap-bci.tex`.
+
+`zendar-optim` claims no TensorRT deployment, neural architecture search,
+knowledge distillation, quantization-error analysis, OpenCL, radar or
+automotive work. The CPU/GPU/NPU benchmarking in its summary is the GenieX
+work in ANTfrastructure's `docs/geniex-local-ai-setup.md`.
+
+`realtime-vision` claims no load testing or latency targets on a video pipeline. Its load
+evidence is LLM serving, and the summary says so. Kubernetes, DeepStream and production
+multi-object tracking are not claimed. Owner-confirmed on 2026-11-03: the GStreamer camera
+pipelines with WebRTC and Rust/C++ inference and the live Jetson object detection were run in
+industry projects. Never word them as own or personal projects. See the notes at the top of
+`realtime-vision.tex`.
 
 A fact arriving late does not relax this. Go moved off the not-claimed list on
 2026-09-04 because the work turned up, not because the posting wanted it.

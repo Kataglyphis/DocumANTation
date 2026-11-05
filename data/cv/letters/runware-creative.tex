@@ -1,0 +1,59 @@
+% Cover letter: Creative Engineer / AI Creative Technologist, Runware
+% (France, remote), 2026-10-07. Built with its CV profile of the same name:
+%   make letter-runware-creative -> Cover_Letter_<First>_<Last>_Runware_Creative.pdf
+%
+% The parallel-ai/c12-automation shape: a hook, three lessons each answering
+% a line of the posting, the gap named plainly, a first project.
+%   hook      -> "explore what's possible ... push them to their limits":
+%                the coding agent, started unasked and pushed to ~10x
+%   lesson 1  -> "a strong creative eye": computer graphics -- the B.Sc.
+%                thesis on temporally stable blue-noise error distribution,
+%                the public Vulkan/OpenGL renderers, path tracing
+%   lesson 2  -> "figure out how to consistently get the best possible
+%                results" / "repeatable and automated generation workflows":
+%                the GLM-5.3 tuning (speculative decoding, NVFP4 + FP8 KV
+%                cache), the VLM pipelines (75% less hand-labeling), SemProbe's
+%                diffusion-based inpainting, and the OrchestrANT benchmark lab
+%   lesson 3  -> "strong technical communication": four years of teaching,
+%                DocumANTation (books, slides, this letter), the public
+%                repositories
+%   gap       -> ComfyUI, FLUX, Stable Diffusion, Wan, LTX, Kling and a
+%                generative portfolio: none is on record (see the profile's
+%                not-claimed list), so the letter says so and says where the
+%                owner would start. If the owner has used any of them, move
+%                it out of that paragraph and into the CV.
+%   close     -> a first project modelled on OrchestrANT: every new model
+%                release through one fixed prompt and conditioning set.
+%
+% Sentences about what the owner sees or would like to do are drafted from
+% the owner's facts; read them as a proposal and put them in your own voice,
+% above all "a node graph is a render graph with models in it" and the
+% first-project paragraph.
+%
+% Nothing in this file is ever deleted: a replaced sentence goes into a
+% comment beside its replacement.
+
+\renewcommand{\cvfootertitle}{\IfLanguageName{english}{Cover Letter}{Anschreiben}}
+
+\renewcommand{\cvBody}{%
+	\cvletterhead
+		{Stuttgart, 7 October 2026}
+		{Runware\\Creative Engineer hiring team\\Remote, France}
+		{Application: Creative Engineer / AI Creative Technologist (remote)}
+
+	Dear Runware team,
+
+	Your posting asks for someone who takes a new model, pushes it to its limits and works out how to get the best out of it every time. That is what I do at Fraunhofer IPA, with vision-language models rather than generators so far: nobody asked a colleague and me to build the institute's coding agent, and today it is a production service its researchers use. Three things from that work and from where I come from match your posting.
+
+	\textbf{I learned to see images by rendering them.} Before machine learning I studied computer graphics: my B.Sc.\ thesis made blue-noise error distribution temporally stable for real-time rendering, so that noise reads as grain instead of flicker, and since 2020 I have maintained my own public Vulkan and OpenGL renderers. Path tracing, sampling and image quality are where my eye was trained, and they are what I would bring to judging generated output.
+
+	\textbf{The best result is an engineering problem.} We serve a vision-capable GLM-5.3 ourselves with vLLM on six H200 GPUs; custom speculative decoding and scheduling give it $\sim$10$\times$ throughput, and NVFP4 with an FP8 KV cache gives it a 1M-token context. I turned vision-language models into automated pipelines that cut hand-labeling by 75\%, and I co-authored an ECML PKDD 2026 demo that edits images with diffusion-based inpainting to probe object detectors. In my public benchmark lab, OrchestrANT, I run models through the same tasks and check the result, not the transcript; that is how I found a model that won at coding but lost at tool-calling until a system prompt fixed it.
+
+	\textbf{An experiment counts once someone else can repeat it.} I taught computer organization to undergraduates for four years, and I built my own documentation pipeline, which typesets my books, my slides and this letter. Everything I build in my own time is public on GitHub, and the fixes I need in other people's tools go upstream.
+
+	I will be direct about the gap: ComfyUI and the image and video models you name -- FLUX, Stable Diffusion, Wan, LTX, Kling -- are not yet on my record, and I have no generative portfolio to show you today. A node graph is a render graph with models in it, and I have written custom code against every stack I have used, so custom nodes and API integrations are where I would start. I speak English at C1 and French at B1, and remote work suits me well.
+
+	A likely first project: a harness that runs every new model release through one fixed set of prompts and conditioning inputs on Runware, so that each launch starts from a side-by-side comparison and the best examples are already on the table. I would like to help your users see what these models can do.
+
+	\cvletterclosing{Best regards}
+}

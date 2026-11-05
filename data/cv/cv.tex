@@ -80,6 +80,20 @@
 % because it is the only section line that says "object detectors", and that
 % profile's summary sentence on detectors rests on it. `all` turns it on.
 \newif\ifcvshowsemprobe \cvshowsemprobefalse
+% The VLM labeling bullet. Default ON; snap-bci hides it, a C++ posting with
+% the least use for it.
+\newif\ifcvshowvlm \cvshowvlmtrue
+% The CI/CD and GPU-platform bullet. Default ON; zendar-optim hides it to make
+% room for RemaNet's PyTorch-to-ONNX pipeline.
+\newif\ifcvshowcicd \cvshowcicdtrue
+% Per-entry switches for section_projects.tex, all default ON so `all` and any
+% profile that inputs the section unchanged still shows every entry.
+% runware-creative keeps only the renderer: the whole section ran the page
+% onto a second one.
+\newif\ifcvshowprojml \cvshowprojmltrue
+\newif\ifcvshowprojbluenoise \cvshowprojbluenoisetrue
+\newif\ifcvshowprojmr \cvshowprojmrtrue
+\newif\ifcvshowprojcollision \cvshowprojcollisiontrue
 % The Berghof bullet: object detection on an embedded Berghof PLC fitted with
 % a Hailo accelerator. Until 2026-09-22 it sat inside the RemaNet bullet, which
 % made it read as part of RemaNet. The owner corrected that: it was a separate

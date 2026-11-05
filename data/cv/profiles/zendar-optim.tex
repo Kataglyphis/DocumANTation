@@ -1,0 +1,98 @@
+% Profile: zendar-optim -- Machine Learning Engineer, Model Optimization,
+% Zendar (Paris, hybrid 3 days on site; radar-centric autonomy stack on
+% heterogeneous embedded platforms; posting read 2026-10-07). The posting
+% asks for an English resume, so only the English build matters.
+%
+% What the posting asks for, and what this profile puts in front of it:
+%
+%   "deploy machine learning models on heterogeneous embedded computing
+%    platforms" / bonus "deploying ML models in embedded systems"
+%        -> the Berghof bullet first: PyTorch-trained detection at ~14 fps on
+%           an embedded PLC the owner fitted with a Hailo accelerator, INT8
+%           (\cvshowmldetailtrue)
+%   "Profile and analyze ... bottlenecks"
+%        -> the KQCBW port (\cvshowquantumtrue): Nsight and VTune, ~700x
+%   "quantization, mixed-precision inference"
+%        -> INT8 on the Hailo chip; NVFP4 + FP8 KV cache and speculative
+%           decoding in the coding-agent bullet
+%   "Evaluate ... how models should be mapped onto CPUs, GPUs, and dedicated
+%    AI accelerators"
+%        -> the summary: GGUF models benchmarked on a Snapdragon laptop's
+%           CPU, GPU and NPU (ANTfrastructure docs/geniex-local-ai-setup.md).
+%           The result itself (CPU ~2x the NPU on GGUF) is left for the
+%           interview, at the owner's request. And the co-authored
+%           AI-accelerator study in Publications
+%   "export, benchmarking, and deployment pipelines ... PyTorch, ONNX, and
+%    TensorRT"
+%        -> RemaNet (\cvshowremanettrue): PyTorch training, ONNX inference;
+%           the CAS ONNX entry. TensorRT only as far as the summary says it:
+%           the owner's public images build ONNX Runtime with its CUDA and
+%           TensorRT execution providers (ANTfrastructure: Windows smoke test
+%           asserts both EPs; linux ENABLE_NVIDIA builds them, checked
+%           2026-10-07)
+%   "compilers, runtime systems, and computer architecture" / "reason
+%    across different layers of the ML deployment stack"
+%        -> the summary: ONNX Runtime, TVM, IREE and LiteRT built from
+%           source for x86-64, Arm64 and RISC-V (ANTfrastructure
+%           docs/overview.md; TVM and IREE are compilers, RISC-V with the
+%           vector extension); the build bullet (LLVM fixes upstream,
+%           LiteRT-LM from source); four years teaching computer organization
+%   "trade-offs between model output quality and computational cost"
+%        -> the summary: quantized models benchmarked for speed AND for
+%           whether their output passes tests (geniex-local-ai-setup.md
+%           section 1d, code executed against hidden tests)
+%   "Git, unit testing, debugging, and profiling"
+%        -> the summary's sanitizers/clang-tidy/GoogleTest; Git in the tags
+%   Bonus "modern C++", "CUDA/OpenCL"
+%        -> the CUDA-kernel and C++-bindings bullet, C++ and CUDA in tags
+%   Paris, hybrid -> \cvrelocatetrue; English C1 in section_private.
+%
+% Not claimed: deploying a model through TensorRT (only building the
+% runtime with its TensorRT execution provider is on record), neural
+% architecture search,
+% knowledge distillation, analysis of the numerical error quantization
+% introduces, OpenCL, radar or RF sensing, automotive work, and mentoring
+% team members (the teaching was undergraduates).
+%
+% Nothing is deleted for this profile: every bullet it does not show is only
+% switched off here and stays in section_experience.tex.
+
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Model optimization, quantization \& embedded inference}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Modelloptimierung \& Embedded-Inferenz}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+% Paris, three days a week on site.
+\cvrelocatetrue
+% INT8 on the Hailo chip.
+\cvshowmldetailtrue
+% Nsight and VTune profiling, ~700x.
+\cvshowquantumtrue
+% Not rendered here, kept in the source: the labeling and platform work this
+% reader needs least, and the safety project, which the Berghof bullet
+% already covers.
+\cvshowvlmfalse
+\cvshowsafetyfalse
+% RemaNet is back (2026-10-07): PyTorch training to ONNX inference is the
+% posting's export pipeline. The CI/CD bullet pays for it, the one this
+% reader needs least. The switch that was in force, kept:
+% \cvshowremanetfalse
+\cvshowcicdfalse
+\setlength{\cvtagsep}{3pt}
+% LLVM for the compiler side; GitLab CI/CD went with its bullet. Before, kept:
+% \renewcommand{\cvFhgTags}{PyTorch, ONNX, Hailo, CUDA, C++, Python, vLLM, Nsight, VTune, CMake, Git, GitLab CI/CD}
+\renewcommand{\cvFhgTags}{PyTorch, ONNX, Hailo, CUDA, C++, Python, vLLM, Nsight, VTune, LLVM, CMake, Git}
+
+% Embedded deployment first, then profiling, then mixed precision, then the
+% CUDA work for researchers, the PyTorch-to-ONNX pipeline and the build work.
+% Every bullet is listed, hidden ones too.
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgBerghof\cvFhgQuantum\cvFhgAgent\cvFhgKernels\cvFhgRemanet\cvFhgBuilds%
+	\cvFhgCicd\cvFhgSafety\cvFhgVlm\cvFhgGateway\cvFhgDocs\cvFhgKiprot}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_zendar_optim}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

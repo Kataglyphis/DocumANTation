@@ -1,0 +1,28 @@
+% Recruiter message from Iman Zaman, 2026-11-03: client not named, no posting yet, based in Germany, so no relocation line.
+% "real-time video pipelines": RemaNet, 4-camera safety, Berghof at ~14 fps; GStreamer, WebRTC and Jetson in the summary, run in industry projects (owner, 2026-11-03).
+% "models run smoothly under load": the production coding agent and GPU monitoring, all LLM serving and named as such in the summary.
+% "object detection and activity recognition": the entry title and the first three bullets; tracking and re-identification from the owner, 2026-10-25.
+% "Python and C++": the summary, the Python-to-C++ bindings bullet and the tag row.
+% Not claimed: video-pipeline load testing or latency targets, Kubernetes, DeepStream, production multi-object tracking, sports or cloud deployments.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Computer vision, video pipelines \& model deployment}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Computer Vision, Video-Pipelines \& Deployment}}
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvshowmldetailtrue
+\cvshowsafetytrue
+\cvshowvlmfalse
+\AtBeginEnvironment{itemize}{\raggedright}
+\setlength{\cvtagsep}{3pt}
+\renewcommand{\cvFhgTags}{Python, C++, PyTorch, ONNX, GStreamer, Hailo, CUDA, vLLM, Prometheus}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgRemanet\cvFhgSafety\cvFhgBerghof\cvFhgAgent\cvFhgGateway\cvFhgCicd%
+    \cvFhgKernels\cvFhgBuilds\cvFhgVlm\cvFhgQuantum\cvFhgMaintainer\cvFhgDocs\cvFhgKiprot}
+\newcommand{\cvBody}{%
+    \enlargethispage{2\baselineskip}%
+    % German sets too long for one page with this bullet; C++ and Python stay in the summary and tags.
+    \IfLanguageName{english}{}{\cvshowcudakernelsfalse}%
+    \input{section_headline_realtime_vision}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

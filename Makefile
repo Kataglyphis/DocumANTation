@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 .PHONY: cv-scaleway-software
@@ -80,6 +80,28 @@ letter-c12-automation:
 # Application: AI & Automation Lead, TISSIUM (Paris).
 cv-tissium-automation:
 	$(MAKE) cv CV_PROFILE=tissium-automation CV_JOB_SUFFIX=Tissium_AI_Automation
+
+# Application: Creative Engineer / AI Creative Technologist, Runware (France, remote).
+cv-runware-creative:
+	$(MAKE) cv CV_PROFILE=runware-creative CV_JOB_SUFFIX=Runware_Creative
+
+letter-runware-creative:
+	$(MAKE) letter CV_PROFILE=runware-creative CV_JOB_SUFFIX=Runware_Creative
+
+# Application: Software Engineer, C++, Brain-Computer Interface team, Snap Inc. (Paris).
+cv-snap-bci:
+	$(MAKE) cv CV_PROFILE=snap-bci CV_JOB_SUFFIX=Snap_BCI
+
+# Application: Machine Learning Engineer, Model Optimization, Zendar (Paris).
+cv-zendar-optim:
+	$(MAKE) cv CV_PROFILE=zendar-optim CV_JOB_SUFFIX=Zendar_ML_Optimization
+
+# Recruiter contact: real-time video pipelines, client not named (Germany).
+cv-realtime-vision:
+	$(MAKE) cv CV_PROFILE=realtime-vision CV_JOB_SUFFIX=Realtime_Vision
+
+cv-realtime-vision-german:
+	$(MAKE) cv CV_PROFILE=realtime-vision CV_LANG=german CV_JOB_SUFFIX=Realtime_Vision_German
 
 # watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation

@@ -25,6 +25,12 @@ make letter-parallel-ai                             # its cover letter
 make cv-c12-automation                              # AI Automation Engineer, C12 Quantum Electronics
 make letter-c12-automation                          # its cover letter
 make cv-tissium-automation                          # AI & Automation Lead, TISSIUM
+make cv-runware-creative                            # Creative Engineer / AI Creative Technologist, Runware
+make letter-runware-creative                        # its cover letter
+make cv-snap-bci                                    # Software Engineer C++, Brain-Computer Interface, Snap
+make cv-zendar-optim                                # ML Engineer, Model Optimization, Zendar
+make cv-realtime-vision                             # Real-time video pipelines, recruiter contact, client not named
+make cv-realtime-vision-german                      # the same in German
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf`, the filenames the CV is published

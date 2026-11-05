@@ -1,0 +1,36 @@
+% Summary for the zendar-optim profile: Machine Learning Engineer, Model
+% Optimization, Zendar (Paris, hybrid).
+%
+% Carries what the bullets cannot: C++ and GPU code since the B.Sc. thesis,
+% the CPU/GPU/NPU benchmarking in the owner's public repositories
+% (ANTfrastructure docs/geniex-local-ai-setup.md), the public C++
+% tooling, and four years teaching computer organization, which is the
+% computer-architecture side of the posting. Plain developer voice (owner,
+% 2026-10-07). See the not-claimed list in profiles/zendar-optim.tex before
+% adding TensorRT, distillation or architecture search here.
+% Owner, 2026-10-07: no "public repositories" wording, their content stays;
+% name NVIDIA Jetson, Raspberry Pi, ESP32 and RISC-V controllers. On record:
+% the Jetson AGX Orin (GPU image built natively on it, linux/jetson-webcam),
+% Raspberry Pi 5 and 3 (linux/ansible hosts, the Pi camera pipeline, the old
+% "Raspberry Pi/Hailo edge devices" Fraunhofer wording in
+% section_experience.tex), ESP32-C3 (linux/homeassistant), RISC-V (the
+% riscv64 lane, TVM's licheepi3a/spacemit-k3 targets). The sentence claims
+% hardware worked with, not an ML model deployed on each board. The version
+% before, kept:
+%   EN: I've been writing C++ and GPU code since my bachelor's thesis on real-time rendering. At Fraunhofer IPA a lot of my work is taking what our researchers build and making it run fast on real hardware, from an embedded PLC to H200 GPUs. In my public repositories I build ONNX Runtime with its CUDA and TensorRT execution providers, TVM, IREE and LiteRT from source for x86-64, Arm64 and RISC-V. I also benchmark quantized models on a Snapdragon laptop's CPU, GPU and NPU, timing them and running the code they write against tests. My C++ projects use sanitizers, clang-tidy and GoogleTest, and I taught computer organization for four years.
+%   DE: Ich schreibe C++ und GPU-Code seit meiner Bachelorarbeit über Echtzeit-Rendering. Am Fraunhofer IPA bringe ich vieles, was unsere Forschenden entwickeln, auf echter Hardware auf Tempo, von einer Embedded-SPS bis zu H200-GPUs. In meinen öffentlichen Repositories baue ich ONNX Runtime mit den Execution Providern für CUDA und TensorRT, TVM, IREE und LiteRT aus dem Quellcode für x86-64, Arm64 und RISC-V. Außerdem messe ich quantisierte Modelle auf CPU, GPU und NPU eines Snapdragon-Laptops und lasse den Code, den sie schreiben, gegen Tests laufen. Meine C++-Projekte nutzen Sanitizer, clang-tidy und GoogleTest, und ich habe vier Jahre Rechnerorganisation gelehrt.
+% Retargeted 2026-10-07 ("customize better"): the researchers-to-hardware
+% span the posting names, the runtimes and compilers built from source (its
+% "compilers, runtime systems, and computer architecture"), and the
+% benchmark as speed against output quality. The version before, kept:
+%   EN: I've been writing C++ and GPU code since my bachelor's thesis on real-time rendering. At Fraunhofer IPA a lot of my work is getting models to run fast on the hardware they ship on, from an embedded PLC to H200 GPUs. In my public repositories I benchmark quantized GGUF models on a Snapdragon laptop's CPU, GPU and NPU. My C++ projects share CMake modules for sanitizers, clang-tidy and GoogleTest, and I taught computer organization for four years.
+%   DE: Ich schreibe C++ und GPU-Code seit meiner Bachelorarbeit über Echtzeit-Rendering. Am Fraunhofer IPA bringe ich vor allem Modelle auf der Hardware, auf der sie laufen sollen, auf Tempo, von einer Embedded-SPS bis zu H200-GPUs. In meinen öffentlichen Repositories messe ich quantisierte GGUF-Modelle auf CPU, GPU und NPU eines Snapdragon-Laptops. Meine C++-Projekte teilen CMake-Module für Sanitizer, clang-tidy und GoogleTest, und ich habe vier Jahre Rechnerorganisation gelehrt.
+% The CPU-vs-NPU result left the summary at the owner's request (2026-10-07).
+% The clause it had, kept:
+%   EN: ; there the CPU beat the NPU by about 2x, because llama.cpp's ARM kernels are mature and its Hexagon backend is not.
+%   DE: ; dort war die CPU etwa doppelt so schnell wie die NPU, weil die ARM-Kernels von llama.cpp ausgereift sind und das Hexagon-Backend nicht.
+\IfLanguageName{english}{
+    \par{I've been writing C++ and GPU code since my bachelor's thesis on real-time rendering. At Fraunhofer IPA a lot of my work is taking what our researchers build and making it run fast on real hardware, from an embedded PLC to H200 GPUs. Other embedded targets I work with are NVIDIA Jetson, Raspberry Pi, ESP32 and RISC-V controllers. I build ONNX Runtime with its CUDA and TensorRT execution providers, TVM, IREE and LiteRT from source for x86-64, Arm64 and RISC-V, and benchmark quantized models on a Snapdragon laptop's CPU, GPU and NPU, timing them and testing the code they write. My C++ projects use sanitizers, clang-tidy and GoogleTest, and I taught computer organization for four years.}
+}{
+    \par{Ich schreibe C++ und GPU-Code seit meiner Bachelorarbeit über Echtzeit-Rendering. Am Fraunhofer IPA bringe ich vieles, was unsere Forschenden entwickeln, auf echter Hardware auf Tempo, von einer Embedded-SPS bis zu H200-GPUs. Weitere Embedded-Plattformen, mit denen ich arbeite, sind NVIDIA Jetson, Raspberry Pi, ESP32 und RISC-V-Controller. ONNX Runtime mit den Execution Providern für CUDA und TensorRT, TVM, IREE und LiteRT baue ich aus dem Quellcode für x86-64, Arm64 und RISC-V, und quantisierte Modelle messe ich auf CPU, GPU und NPU eines Snapdragon-Laptops, mit Zeitmessung und Tests für den Code, den sie schreiben. Meine C++-Projekte nutzen Sanitizer, clang-tidy und GoogleTest, und ich habe vier Jahre Rechnerorganisation gelehrt.}
+}
