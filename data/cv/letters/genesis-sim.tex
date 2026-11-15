@@ -1,0 +1,28 @@
+% Cover letter: Genesis-World Core Simulation Engine Engineer, Genesis AI (Paris, hybrid), 2026-11-14; make letter-genesis-sim.
+% Facts: ANTfrastructure's AGENTS.md and docs/scripts/mutations.json (4,770 entries on 2026-11-14), OxidANT's webgpu_renderer README, section_experience.tex, section_projects.tex.
+% Drafted for the owner's voice; confirm the macOS gap and the first-project paragraph.
+
+\renewcommand{\cvfootertitle}{\IfLanguageName{english}{Cover Letter}{Anschreiben}}
+
+\renewcommand{\cvBody}{%
+	\cvletterhead
+		{Stuttgart, 14 November 2026}
+		{Genesis AI\\Genesis-World team\\Paris, France}
+		{Application: Genesis-World Core Simulation Engine Engineer (Paris)}
+
+	Dear Genesis-World team,
+
+	Your posting describes the job as removing friction: the slow test, the cryptic error, the manual step. That is the part of engineering I keep choosing. At Fraunhofer IPA I own the institute's GitLab CI/CD and DGX GPU platform, where BuildKit and sccache caching turned builds that took hours into minutes. In my own time I maintain the build, test and CI hub that my public repositories share.
+
+	That hub builds staged container images for Linux on x86-64, arm64 and riscv64 and for Windows on x64 and arm64, with CUDA and ROCm variants, and it taught me what your first problem feels like. Compile time dominates there too, so the compiler cache is wired through every step and its hit rate is printed, not assumed. Its quality gates are themselves mutation-tested: more than 4,700 recipes each break the code a gate guards and expect the gate to fail, split across eight CI jobs by measured cost so that every round proves every entry. When the tools underneath broke, I fixed them upstream, in LLVM and in sccache.
+
+	On the GPU I ported a quantum-physics simulation from CPU to GPU with CUDA and PyTorch and profiled it with Nsight and VTune to a $\sim$700$\times$ speedup, and I write CUDA kernels with Python bindings for my team's methods. I come from computer graphics: Vulkan and OpenGL renderers since 2020, a GPU particle system with BVH-based collision detection, and lately a renderer in Rust on wgpu that loads glTF, runs on Vulkan, DX12 and Metal and in the browser, and is checked by headless golden-image tests. Chasing one bug across backends, operating systems and architectures is a normal week for me.
+
+	Python is in every project I work on. The hub's Python tooling runs under fatal Ruff and ty type checks, and at the institute I maintain several repositories in Python, Rust and C++. Everything I build in my own time is public, including the documentation pipeline that typeset this letter.
+
+	Three gaps you should hear from me. My physics comes from GPU simulation and graphics, not from robotics simulators: I have not used Drake, MuJoCo or Isaac, and autodiff and JIT compilers such as Quadrants, Triton or Numba are new to me. My open-source work is my own repositories and upstream fixes; I have not yet triaged issues or reviewed pull requests for a project with an outside community. And macOS is the one platform in your matrix I have not worked on.
+
+	A likely first project: measure, per test, how your suite's hours split between Quadrants compilation and runtime, then make compiled kernels a cache that CI shares across runs and machines, keyed on kernel source, backend and compiler version the way sccache keys a compile, and split the suite by measured cost, as I do with my mutation shards. I speak German natively, English at C1 and French at B1, and I would be glad to move to Paris for this role.
+
+	\cvletterclosing{Best regards}
+}

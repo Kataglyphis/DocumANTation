@@ -1,0 +1,44 @@
+% Profile: rerun-rust -- Software Engineer (Rust), Rerun (Remote Europe, viewer and SDKs; posting read 2026-11-14 on api.ashbyhq.com, published 2026-09-11).
+% "Rust or another compiled language": the wgpu renderer in Rust (Projects), the maintainer bullet (Rust, C++, Python), CUDA and C++.
+% "Generalist with UI skills": egui overlay (renderer), Flutter frontend (OmniAccelerANT), React frontend (RemaNet).
+% "Real-time, high-performance applications": camera pipelines and the renderers; the ~700x profiled GPU port is in the letter.
+% "AI-empowered": the self-hosted coding agent and daily coding-agent use (owner-confirmed in terabase-cv and c12-automation).
+% "Cross-language SDKs": CUDA kernels with Python bindings to C++, flutter_rust_bridge in OmniAccelerANT.
+% Nice-to-haves: upstream fixes (LLVM, sccache), rendering and streaming, wgpu itself.
+% Not claimed: data-visualization products for large datasets, RViz or robotics tooling, a UI used by an outside community, Apache Arrow, production Rust services at scale.
+% Remote Europe, so no relocation line.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Rust \& C++, real-time rendering, GPU software}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Rust \& C++, Echtzeit-Rendering, GPU-Software}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvshowmaintainertrue
+\cvshowcasdetailfalse
+\cvshowvlmfalse
+\cvshowcicdfalse
+\cvshowberghoffalse
+\cvshowprojwgputrue
+% Off for the one-page fit: the letter carries OmniAccelerANT, the CUDA bindings and the LLVM/sccache fixes (the summary too).
+\cvshowprojomnifalse
+% The wgpu entry names the Vulkan engine and the summary the renderers since 2020, so the old Renderer entry gives way.
+\cvshowprojrendererfalse
+\cvshowcudakernelsfalse
+\cvshowbuildsfalse
+\renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
+\cvshowprojmlfalse
+\cvshowprojmrfalse
+\cvshowprojbluenoisefalse
+\cvshowprojcollisionfalse
+\AtBeginEnvironment{itemize}{\raggedright}
+\setlength{\cvtagsep}{3pt}
+\renewcommand{\cvFhgTags}{Rust, C++, Python, CUDA, PyTorch, ONNX, GStreamer, React, vLLM, CMake, GitLab CI/CD}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgAgent\cvFhgMaintainer\cvFhgRemanet\cvFhgKernels\cvFhgQuantum\cvFhgBuilds%
+    \cvFhgCicd\cvFhgBerghof\cvFhgSafety\cvFhgGateway\cvFhgVlm\cvFhgDocs\cvFhgKiprot}
+\newcommand{\cvBody}{%
+    \input{section_headline_rerun_rust}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_projects}%
+    \input{section_education}%
+    \input{section_private}%
+}

@@ -1,0 +1,43 @@
+% Profile: genesis-sim -- Genesis-World: Core Simulation Engine Engineer, Genesis AI (Paris, hybrid; posting read 2026-11-14 on api.ashbyhq.com, published 2026-08-17).
+% "Developer tooling, test infrastructure, or CI at scale": the CI/CD bullet, the build-systems bullet and the ANTfrastructure project.
+% "Compilation caching, kernel dispatch, startup cost": BuildKit and sccache caching, upstream sccache and LLVM fixes, CUDA kernels.
+% "Debugging across the full platform matrix": the hub's Linux/Windows x86-64/arm64 lanes with CUDA and ROCm; the wgpu renderer on Vulkan, DX12 and Metal.
+% "Strong Python engineering on large codebases" / "performance profiling": Python in every project, the Nsight/VTune-profiled GPU port.
+% "Comfortable with physics": the quantum-physics GPU port and the GPU collision-detection particle system.
+% Bonus: PyTorch, C++, CUDA, glTF (the wgpu renderer), Blender is in section_skills (not shown).
+% Not claimed: robotics simulators (Drake, MuJoCo, Isaac), autodiff, JIT compilers (Triton, JAX, Numba), macOS or Xcode Instruments, RenderDoc, USD or MJCF/URDF, reviewing PRs for an outside community.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Developer tooling, CI \& GPU simulation}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Entwicklerwerkzeuge, CI \& GPU-Simulation}}
+
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvrelocatetrue
+\cvshowquantumtrue
+\cvshowmaintainertrue
+\cvshowremanetfalse
+\cvshowberghoffalse
+\cvshowvlmfalse
+\cvshowcasdetailfalse
+\cvshowprojhubtrue
+% One page fits one project, the hub; the renderers stay in the summary, the collision project in the letter, and the agent is off-topic here.
+\cvshowprojcollisionfalse
+\cvshowprojwgpufalse
+\cvshowprojrendererfalse
+\cvshowagentfalse
+\renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
+\cvshowprojmlfalse
+\cvshowprojmrfalse
+\cvshowprojbluenoisefalse
+\AtBeginEnvironment{itemize}{\raggedright}
+\setlength{\cvtagsep}{3pt}
+\renewcommand{\cvFhgTags}{Python, PyTorch, CUDA, C++, Rust, CMake, Bazel, Meson, sccache, BuildKit, GitLab CI/CD}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgCicd\cvFhgBuilds\cvFhgQuantum\cvFhgKernels\cvFhgMaintainer\cvFhgDocs\cvFhgAgent%
+    \cvFhgGateway\cvFhgVlm\cvFhgRemanet\cvFhgBerghof\cvFhgSafety\cvFhgKiprot}
+\newcommand{\cvBody}{%
+    \input{section_headline_genesis_sim}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_projects}%
+    \input{section_education}%
+    \input{section_private}%
+}

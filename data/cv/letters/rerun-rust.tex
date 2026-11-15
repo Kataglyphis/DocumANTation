@@ -1,0 +1,28 @@
+% Cover letter: Software Engineer (Rust), Rerun (Remote Europe), 2026-11-14; make letter-rerun-rust.
+% Facts: OxidANT's webgpu_renderer README and third_party/egui-winit-0.36.2/PATCHED.md, OmniAccelerANT's README, section_experience.tex.
+% Drafted for the owner's voice; confirm "I decide the design and I own what lands" and the first-project paragraph.
+
+\renewcommand{\cvfootertitle}{\IfLanguageName{english}{Cover Letter}{Anschreiben}}
+
+\renewcommand{\cvBody}{%
+	\cvletterhead
+		{Stuttgart, 14 November 2026}
+		{Rerun\\Engineering team\\Remote, Europe}
+		{Application: Software Engineer (Rust), viewer and SDKs}
+
+	Dear Rerun team,
+
+	In my own time I build a renderer in Rust on wgpu with an egui overlay, and the same code runs natively on Vulkan, DX12 and Metal and in the browser on WebGPU. Your viewer is built on the same libraries, which is why your posting caught my eye. It asks for someone who moves between the interface, rendering, data handling and infrastructure, and that is what my work at Fraunhofer IPA and in my own repositories looks like.
+
+	The renderer loads glTF and does PBR with image-based lighting, cascaded shadow maps, SSAO, bloom, GPU skinning and animation, with frustum and occlusion culling, hot shader reload and headless golden-image tests. Its shaders come from the same Slang sources as my C++ Vulkan engine. When egui-winit 0.36.2 would not compile for wasm32, I traced it to egui\#8436 and carried the upstream fix until the next release. I come from computer graphics: my B.Sc.\ thesis made blue-noise error distribution temporally stable for real-time rendering, and I have maintained Vulkan and OpenGL renderers since 2020.
+
+	At Fraunhofer IPA I build systems that handle camera streams in real time. For the Horizon Europe project RemaNet I shipped activity detection with camera pipelines, ONNX inference and a React frontend. I maintain several of the institute's repositories in Rust, C++ and Python, including CUDA kernels that reach Python through C++ bindings, and I start with the profiler: a CPU-to-GPU port of a quantum-physics simulation, profiled with Nsight and VTune, reached a $\sim$700$\times$ speedup. In my public app OmniAccelerANT, a Flutter frontend talks to a Rust and C++ core through flutter\_rust\_bridge, streams GStreamer camera pipelines to the browser over WebRTC, and logs every detection with a picture and a short clip.
+
+	A colleague and I started the institute's self-hosted coding agent without being asked. It now runs in production for our researchers on GLM-5.3 and vLLM across six H200 GPUs, where custom speculative decoding and scheduling give it about ten times the throughput. Claude Code and opencode are part of how I write and review code every day; I decide the design, and I own what lands. When a tool I depend on breaks, the fix goes upstream, as it did for LLVM and sccache.
+
+	Two gaps you should hear from me. I have not built a visualization product for large datasets, and RViz is new to me; the closest I have come are real-time camera and detection streams, and the eye, head and hand tracking data from mixed reality that I analysed for my master's thesis. And my UI work in egui, Flutter and React has served my own projects and research tools, not a product with a community around it.
+
+	A likely first project: take one large recording, profile the viewer natively and in the browser side by side, and close the biggest gap. It is the comparison I keep making for my own renderer. I live in Stuttgart and am moving to Paris, so your 1:30 to 5:00\,pm CET window falls inside my normal working day, and a week together every quarter suits me well. I speak German natively, English at C1 and French at B1.
+
+	\cvletterclosing{Best regards}
+}

@@ -25,6 +25,10 @@ make cv-snap-bci                         # Software Engineer C++, Brain-Computer
 make cv-zendar-optim                     # ML Engineer, Model Optimization, Zendar, English
 make cv-realtime-vision                  # Real-time video pipelines, recruiter contact, English
 make cv-realtime-vision-german           # the same in German
+make cv-rerun-rust                       # Software Engineer (Rust), Rerun, English
+make letter-rerun-rust                   # its cover letter
+make cv-genesis-sim                      # Genesis-World Core Simulation Engine Engineer, Genesis AI, English
+make letter-genesis-sim                  # its cover letter
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -101,6 +105,8 @@ fits proves nothing about the German one.
 | `snap-bci` | Software Engineer, C++, Brain-Computer Interface team, Snap Inc. (Paris, on-site) | `CV_Jonas_Heinle_Snap_BCI.pdf` |
 | `zendar-optim` | Machine Learning Engineer, Model Optimization, Zendar (Paris, hybrid) | `CV_Jonas_Heinle_Zendar_ML_Optimization.pdf` |
 | `realtime-vision` | Real-time video pipelines, recruiter contact, client not named (Germany); both languages | `CV_Jonas_Heinle_Realtime_Vision.pdf`, `CV_Jonas_Heinle_Realtime_Vision_German.pdf` |
+| `rerun-rust` | Software Engineer (Rust), viewer and SDKs, Rerun (Remote Europe) | `CV_Jonas_Heinle_Rerun_Rust.pdf` |
+| `genesis-sim` | Genesis-World: Core Simulation Engine Engineer, Genesis AI (Paris, hybrid) | `CV_Jonas_Heinle_Genesis_Simulation_Engine.pdf` |
 | `all` | Every section — a compile check for the dormant ones, not a published CV (`make cv CV_PROFILE=all CV_JOB=CV_all`, without `STRICT_WARNINGS`) | `CV_all.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
@@ -241,6 +247,23 @@ multi-object tracking are not claimed. Owner-confirmed on 2026-11-03: the GStrea
 pipelines with WebRTC and Rust/C++ inference and the live Jetson object detection were run in
 industry projects. Never word them as own or personal projects. See the notes at the top of
 `realtime-vision.tex`.
+
+`rerun-rust` adds two shared project entries, default off: the wgpu renderer in OxidANT
+(`\cvshowprojwgputrue`) and OmniAccelerANT (`\cvshowprojomnitrue`), both described from their
+public READMEs. It claims no visualization product for large datasets, RViz, Apache Arrow, a UI
+used by an outside community or production Rust services at scale. The letter names the first two
+as gaps. To fit one page the CV shows only the wgpu entry: OmniAccelerANT, the old Renderer
+(`\cvshowprojrendererfalse`), the CUDA-kernels and the builds bullets are off, and the letter
+carries them.
+
+`genesis-sim` adds the ANTfrastructure project entry (`\cvshowprojhubtrue`, default off), described
+from that repository's own rules and its mutation manifest. It claims no robotics simulator, autodiff,
+JIT compiler (Triton, JAX, Numba), macOS or Xcode Instruments, RenderDoc, USD or MJCF/URDF, and no
+review work for a project with an outside community. The letter names these as gaps. One page fits
+one project, the hub; the renderers sit in the summary, the collision project in the letter, and the
+coding-agent bullet is off (`\cvshowagentfalse`).
+
+`\cvshowprojrenderer` and `\cvshowagent` default on, so every other profile keeps both entries.
 
 A fact arriving late does not relax this. Go moved off the not-claimed list on
 2026-09-04 because the work turned up, not because the posting wanted it.

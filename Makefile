@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german cv-rerun-rust letter-rerun-rust cv-genesis-sim letter-genesis-sim $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 .PHONY: cv-scaleway-software
@@ -109,6 +109,20 @@ cv-realtime-vision:
 
 cv-realtime-vision-german:
 	$(MAKE) cv CV_PROFILE=realtime-vision CV_LANG=german CV_JOB_SUFFIX=Realtime_Vision_German
+
+# Application: Software Engineer (Rust), viewer and SDKs, Rerun (Remote Europe).
+cv-rerun-rust:
+	$(MAKE) cv CV_PROFILE=rerun-rust CV_JOB_SUFFIX=Rerun_Rust
+
+letter-rerun-rust:
+	$(MAKE) letter CV_PROFILE=rerun-rust CV_JOB_SUFFIX=Rerun_Rust
+
+# Application: Genesis-World Core Simulation Engine Engineer, Genesis AI (Paris).
+cv-genesis-sim:
+	$(MAKE) cv CV_PROFILE=genesis-sim CV_JOB_SUFFIX=Genesis_Simulation_Engine
+
+letter-genesis-sim:
+	$(MAKE) letter CV_PROFILE=genesis-sim CV_JOB_SUFFIX=Genesis_Simulation_Engine
 
 # watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation

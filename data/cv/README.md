@@ -33,6 +33,10 @@ make cv-snap-bci                                    # Software Engineer C++, Bra
 make cv-zendar-optim                                # ML Engineer, Model Optimization, Zendar
 make cv-realtime-vision                             # Real-time video pipelines, recruiter contact, client not named
 make cv-realtime-vision-german                      # the same in German
+make cv-rerun-rust                                  # Software Engineer (Rust), Rerun, Remote Europe
+make letter-rerun-rust                              # its cover letter
+make cv-genesis-sim                                 # Genesis-World Core Simulation Engine Engineer, Genesis AI (Paris)
+make letter-genesis-sim                             # its cover letter
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf`, the filenames the CV is published
