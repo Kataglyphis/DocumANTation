@@ -43,6 +43,12 @@ Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf`, the filenames the CV 
 under on jonasheinle.de, so the deliverables are reproducible, not committed binaries. Nothing in
 this directory is a build artifact.
 
+## Phone number
+
+The repository is public, so the number is not in it. Put `\newcommand*{\cvphone}{+49 ...}` into
+`data/cv/private.tex`, which git ignores. Without that file no CV shows a phone line; the `default`
+profile, published on jonasheinle.de, hides it either way (`\cvshowphonefalse`).
+
 ## Profiles
 
 Medical-imaging coursework during both degrees is a shared education fact, selected with

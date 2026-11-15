@@ -162,6 +162,9 @@
 \newif\ifcvrelocate \cvrelocatefalse
 % The phone number stays on application CVs; the default profile is public on jonasheinle.de and hides it.
 \newif\ifcvshowphone \cvshowphonetrue
+% The number lives in the git-ignored private.tex (data/cv/README.md); without that file no CV prints a phone line.
+\InputIfFileExists{private.tex}{}{}
+\providecommand*{\cvphone}{}
 % The order of the Fraunhofer IPA bullets. section_experience.tex defines each
 % one as \cvFhg<Name> (each still behind its own \ifcvshow... flag) and prints
 % them through this macro, so a profile can lead with what its posting asks
@@ -375,9 +378,9 @@
 		%\infos{\IfLanguageName{english}{Birthday: \DTMdisplaydate{1995}{12}{25}{}}{Geburtstag: \DTMdisplaydate{1995}{12}{25}{}}}\newline
 		% The \newline moves inside the flag, or a hidden phone leaves an empty last line.
 		\infos{\IfLanguageName{english}{Driving License: Class B}{Führerschein: Klasse B}}%
-		\ifcvshowphone\newline
-		\smartphone{+49 15253799950}%
-		\fi
+		\ifcvshowphone\ifx\cvphone\empty\else\newline
+		\smartphone{\cvphone}%
+		\fi\fi
 	\end{minipage}%
 	\hspace{1.5em}%
 	\begin{minipage}[t]{0.24\linewidth}
