@@ -354,8 +354,8 @@ Pandoc, uv and Python are synced from ANTfrastructure's `linux/scripts/01-core/v
 | Component | Version | Source |
 |-----------|---------|--------|
 | Ubuntu | 26.04 | `FROM ubuntu:26.04` in Dockerfile |
-| Pandoc | 3.12.1 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ANTfrastructure) |
+| Pandoc | 3.13 | `ARG PANDOC_VERSION` in Dockerfile, SHA256-verified .deb (synced from ANTfrastructure) |
 | TeX Live | 2025 | Ubuntu 26.04 repos (`texlive-full`, deliberate) |
-| uv | 0.13.1 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ANTfrastructure) |
+| uv | 0.13.7 | `ARG UV_VERSION` in Dockerfile, pinned installer (synced from ANTfrastructure) |
 | Pygments | >=2.17, pinned in `uv.lock` | `pyproject.toml` runtime dependency |
-| Python | 3.15.0 | `ARG PYTHON_VERSION` in Dockerfile, uv-managed (synced from ANTfrastructure); CI runs the family image's X.Y and X.Yt |
+| Python | 3.15.2 | `ARG PYTHON_VERSION` in Dockerfile, uv-managed (synced from ANTfrastructure); CI runs the family image's X.Y and X.Yt |
