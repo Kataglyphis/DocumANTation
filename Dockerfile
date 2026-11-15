@@ -21,13 +21,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     rm -rf /var/lib/apt/lists/*
 
 # Pinned uv installer (reproducible; avoids "curl | sh" pulling a moving target).
-ARG UV_VERSION=0.13.1
+ARG UV_VERSION=0.13.7
 RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
 
 # Delete the project metadata after install, or a runtime `uv run` finds it at / and spawns a stray .venv.
 COPY pyproject.toml uv.lock /tmp/deps/
 # The family pin as uv's own build: this image is not the family image, whose interpreter would cost its whole pull.
-ARG PYTHON_VERSION=3.15.0
+ARG PYTHON_VERSION=3.15.2
 RUN uv python install "${PYTHON_VERSION}" && \
     uv venv --managed-python --python "${PYTHON_VERSION}" md2pdf && \
     . md2pdf/bin/activate && \
@@ -35,10 +35,10 @@ RUN uv python install "${PYTHON_VERSION}" && \
     uv pip install -r /tmp/requirements.txt && \
     rm -rf /tmp/deps /tmp/requirements.txt
 
-ARG PANDOC_VERSION=3.12.1
+ARG PANDOC_VERSION=3.13
 # SHA256 of the official pandoc .deb releases (verify tamper-free downloads).
-ARG PANDOC_SHA256_AMD64=b4217ac7c54067c442f9d4cd38bcd0c184a43f3e7053431a12263a6f92a33ba2
-ARG PANDOC_SHA256_ARM64=38f44718c0cb15cb81fc31026bd68c33e8628ca5f7ab15ca86494a7f24f7b8e4
+ARG PANDOC_SHA256_AMD64=7e3736f255090296ca5d1a14291a76b9b3c43cd385011b1621a4d0c16091a70f
+ARG PANDOC_SHA256_ARM64=e55b480eb76997812b44c3f65f641c84214e623bc40b70a6b6d16ee00bfcca23
 ARG TARGETARCH
 RUN set -eu; \
     case "$TARGETARCH" in \
