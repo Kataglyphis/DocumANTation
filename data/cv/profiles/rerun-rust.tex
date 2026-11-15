@@ -7,22 +7,25 @@
 % Nice-to-haves: upstream fixes (LLVM, sccache), rendering and streaming, wgpu itself.
 % Not claimed: data-visualization products for large datasets, RViz or robotics tooling, a UI used by an outside community, Apache Arrow, production Rust services at scale.
 % Remote Europe, so no relocation line.
-\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Rust \& C++, real-time rendering, GPU software}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Rust \& C++, Echtzeit-Rendering, GPU-Software}}
+% Work experience leads (owner, 2026-11-15); the tagline before, kept: Rust \& C++, real-time rendering, GPU software
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Rust \& C++, real-time camera pipelines, GPU software}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Rust \& C++, Echtzeit-Kamera-Pipelines, GPU-Software}}
 
 \cvshowschoolfalse
 \cvshowthesislinesfalse
 \cvshowmaintainertrue
 \cvshowcasdetailfalse
 \cvshowvlmfalse
-\cvshowcicdfalse
+\cvshowcicdtrue
 \cvshowberghoffalse
 \cvshowprojwgputrue
 % Off for the one-page fit: the letter carries OmniAccelerANT, the CUDA bindings and the LLVM/sccache fixes (the summary too).
 \cvshowprojomnifalse
 % The wgpu entry names the Vulkan engine and the summary the renderers since 2020, so the old Renderer entry gives way.
 \cvshowprojrendererfalse
-\cvshowcudakernelsfalse
-\cvshowbuildsfalse
+\cvshowcudakernelstrue
+\cvshowbuildstrue
+% The GPU port is work evidence and takes the room the projects section left.
+\cvshowquantumtrue
 \renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
 \cvshowprojmlfalse
 \cvshowprojmrfalse
@@ -32,13 +35,13 @@
 \setlength{\cvtagsep}{3pt}
 \renewcommand{\cvFhgTags}{Rust, C++, Python, CUDA, PyTorch, ONNX, GStreamer, React, vLLM, CMake, GitLab CI/CD}
 \renewcommand{\cvFraunhoferOrder}{%
-    \cvFhgAgent\cvFhgMaintainer\cvFhgRemanet\cvFhgKernels\cvFhgQuantum\cvFhgBuilds%
-    \cvFhgCicd\cvFhgBerghof\cvFhgSafety\cvFhgGateway\cvFhgVlm\cvFhgDocs\cvFhgKiprot}
+    \cvFhgRemanet\cvFhgMaintainer\cvFhgBuilds\cvFhgCicd\cvFhgAgent\cvFhgKernels\cvFhgQuantum%
+    \cvFhgBerghof\cvFhgSafety\cvFhgGateway\cvFhgVlm\cvFhgDocs\cvFhgKiprot}
 \newcommand{\cvBody}{%
     \input{section_headline_rerun_rust}%
     \vspace{0.15cm}%
     \input{section_experience}%
-    \input{section_projects}%
+    % No projects section: work experience leads (owner, 2026-11-15); the summary and the letter name the wgpu renderer.
     \input{section_education}%
     \input{section_private}%
 }

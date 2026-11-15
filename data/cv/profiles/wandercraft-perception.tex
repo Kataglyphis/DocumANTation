@@ -1,0 +1,36 @@
+% Profile: AI & Control Engineer, Perception and Navigation, Wandercraft (Paris 13e), 2026-11-15; make cv-wandercraft-perception.
+% Work first (owner, 2026-11-15): the vision projects lead; SLAM, mapping and path planning are not claimed, the letter names them as the gap.
+
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Real-time computer vision \& embedded AI}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Echtzeit-Computer-Vision \& Embedded-KI}}
+
+\cvrelocatetrue
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvshowmldetailtrue
+\cvshowsafetytrue
+\cvshowberghoftrue
+\cvshowremanettrue
+\cvshowkiprottrue
+\cvshowvlmtrue
+\cvshowcicdtrue
+\cvshowcudakernelstrue
+\cvshowquantumfalse
+\cvshowbuildsfalse
+\cvshowgatewayfalse
+\cvshowagentfalse
+\cvshowsemprobefalse
+\cvshowmedicalcourseworktrue
+\AtBeginEnvironment{itemize}{\raggedright}
+\setlength{\cvtagsep}{3pt}
+\renewcommand{\cvFhgTags}{Python, C++, PyTorch, ONNX, GStreamer, Hailo, CUDA, DVC, GitLab CI/CD}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgRemanet\cvFhgSafety\cvFhgBerghof\cvFhgKiprot\cvFhgVlm\cvFhgCicd\cvFhgKernels%
+    \cvFhgQuantum\cvFhgMaintainer\cvFhgBuilds\cvFhgAgent\cvFhgGateway\cvFhgDocs}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_wandercraft_perception}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

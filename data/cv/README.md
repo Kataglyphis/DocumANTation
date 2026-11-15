@@ -37,6 +37,10 @@ make cv-rerun-rust                                  # Software Engineer (Rust), 
 make letter-rerun-rust                              # its cover letter
 make cv-genesis-sim                                 # Genesis-World Core Simulation Engine Engineer, Genesis AI (Paris)
 make letter-genesis-sim                             # its cover letter
+make cv-doctolib-inference                          # Senior IA Inference Engineer, Doctolib (Paris)
+make letter-doctolib-inference                      # its cover letter
+make cv-wandercraft-perception                      # AI & Control Engineer, Perception and Navigation, Wandercraft (Paris)
+make letter-wandercraft-perception                  # its cover letter
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf`, the filenames the CV is published

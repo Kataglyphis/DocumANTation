@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german cv-rerun-rust letter-rerun-rust cv-genesis-sim letter-genesis-sim $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german cv-rerun-rust letter-rerun-rust cv-genesis-sim letter-genesis-sim cv-doctolib-inference letter-doctolib-inference cv-wandercraft-perception letter-wandercraft-perception $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 .PHONY: cv-scaleway-software
@@ -123,6 +123,20 @@ cv-genesis-sim:
 
 letter-genesis-sim:
 	$(MAKE) letter CV_PROFILE=genesis-sim CV_JOB_SUFFIX=Genesis_Simulation_Engine
+
+# Application: Senior IA Inference Engineer, ML Platform (TIGER), Doctolib (Paris).
+cv-doctolib-inference:
+	$(MAKE) cv CV_PROFILE=doctolib-inference CV_JOB_SUFFIX=Doctolib_Inference
+
+letter-doctolib-inference:
+	$(MAKE) letter CV_PROFILE=doctolib-inference CV_JOB_SUFFIX=Doctolib_Inference
+
+# Application: AI & Control Engineer, Perception and Navigation, Wandercraft (Paris).
+cv-wandercraft-perception:
+	$(MAKE) cv CV_PROFILE=wandercraft-perception CV_JOB_SUFFIX=Wandercraft_Perception
+
+letter-wandercraft-perception:
+	$(MAKE) letter CV_PROFILE=wandercraft-perception CV_JOB_SUFFIX=Wandercraft_Perception
 
 # watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation

@@ -1,0 +1,25 @@
+% Cover letter: AI & Control Engineer, Perception and Navigation, Wandercraft (Paris 13e), 2026-11-15; make letter-wandercraft-perception.
+% Facts: section_experience.tex, section_education.tex, the terabase-cv summary and the Rerun letter's thesis sentence; work leads (owner, 2026-11-15).
+
+\renewcommand{\cvfootertitle}{\IfLanguageName{english}{Cover Letter}{Anschreiben}}
+
+\renewcommand{\cvBody}{%
+	\cvletterhead
+		{Stuttgart, 15 November 2026}
+		{Wandercraft\\Perception and Navigation team\\Paris}
+		{Application: AI \& Control Engineer, Perception and Navigation}
+
+	Dear Wandercraft team,
+
+	An exoskeleton that walks with a person has to understand the space around it from its own sensors, in real time, on hardware it carries. Perception under those limits is what I do at Fraunhofer IPA, and I would like to bring it to the exoskeletons and robots you build.
+
+	I have taken several industrial vision projects from data to deployment. For the Horizon Europe project RemaNet I shipped activity detection: camera pipelines, PyTorch training and ONNX inference on NVIDIA GPUs. For an industrial safety application I built person detection over four cameras at once, with their inferences batched. On an embedded Berghof PLC that I fitted with a Hailo accelerator, a PyTorch-trained detector runs INT8-quantized at about 14 fps, and we iterated on it with the customer's field feedback. The data is part of the job too: for KI-PrOT I built and annotated the dataset and versioned it with DVC, and vision-language model pipelines served with vLLM cut our hand-labeling time by 75\%.
+
+	I write C++ and Python, including CUDA kernels with Python bindings, and I profile before I optimize: a CPU-to-GPU port of a quantum-physics simulation, profiled with Nsight and VTune, reached a $\sim$700$\times$ speedup. I own the GitLab CI/CD and GPU platform my group tests and ships with, and when a tool I depend on breaks, the fix goes upstream, as it did for LLVM and sccache. Geometry and linear algebra come from computer graphics, where I started; my M.Sc.\ at KIT covered geometry processing and anthropomatics and cognitive systems, and for my master's thesis I analyzed eye, head and hand tracking data from mixed reality.
+
+	The gap you should hear from me: SLAM, mapping and path planning are the core of this role, and I have not built them professionally. My perception work so far detects people, objects and activities rather than localizing a robot, and kinematics, odometry and control would be new to me in practice. I learn fastest on a real system, so I would start from your localization stack on one robot and measure before changing it.
+
+	I live in Stuttgart and am moving to Paris, where your office in the 13th with one or two days at home suits me well, and I am open to the level you see fit. Medical imaging was part of my coursework in both degrees. I speak German natively, English at C1 and French at B1.
+
+	\cvletterclosing{Best regards}
+}
