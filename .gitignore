@@ -46,3 +46,6 @@ htmlcov/
 docs/_build/
 
 /logs/
+
+# Contact details stay out of the public source, see data/cv/README.md.
+data/cv/private.tex

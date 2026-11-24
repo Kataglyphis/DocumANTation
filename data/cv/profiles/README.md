@@ -12,11 +12,13 @@ make cv-mistral-rse                      # Research Software Engineer, Mistral, 
 make cv-mistral-platform                 # Platform Engineer, Mistral Research Platform, English
 make cv-amd-hpc                          # Lead HPC/AI Computational Scientist, AMD GENCI CoE, English
 make cv-terabase-cv                      # Computer Vision Engineer, Bamboo, Terabase Energy, English
+make cv-skillcorner-cv                   # Computer Vision Scientist, SkillCorner, English
 make cv-parallel-ai                      # AI Engineer, Parallel, English
 make letter-parallel-ai                  # its cover letter (letters/parallel-ai.tex; see ../README.md)
 make cv-c12-automation                   # AI Automation Engineer, C12 Quantum Electronics, English
 make letter-c12-automation               # its cover letter
 make cv-tissium-automation               # AI & Automation Lead, TISSIUM, English
+make cv-inference-mle                    # Senior ML Engineer, Inference (remote), English
 make cv-runware-creative                 # Creative Engineer / AI Creative Technologist, Runware, English
 make letter-runware-creative             # its cover letter
 make cv-snap-bci                         # Software Engineer C++, Brain-Computer Interface, Snap, English
@@ -27,6 +29,10 @@ make cv-h-inference                      # Research Engineer, Model Inference & 
 make cv-pruna-ml                         # ML Engineer, Pruna AI, English
 make cv-idemia-cv                        # Research Engineer in Computer Vision / AI, IDEMIA Public Security, English
 make letter-idemia-cv                    # its cover letter
+make cv-rerun-rust                       # Software Engineer (Rust), Rerun, English
+make letter-rerun-rust                   # its cover letter
+make cv-genesis-sim                      # Genesis-World Core Simulation Engine Engineer, Genesis AI, English
+make letter-genesis-sim                  # its cover letter
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -94,9 +100,11 @@ fits proves nothing about the German one.
 | `mistral-platform` | Platform Engineer, Research Platform team, Mistral AI (Paris/Warsaw/London) | `CV_Jonas_Heinle_Mistral_Platform.pdf` |
 | `amd-hpc` | Lead HPC/AI Computational Scientist / Engineer, AMD GENCI Center of Excellence (Paris) | `CV_Jonas_Heinle_AMD_HPC.pdf` |
 | `terabase-cv` | Computer Vision Engineer, Bamboo, Terabase Energy (Paris R&D hub, remote) | `CV_Jonas_Heinle_Terabase.pdf` |
+| `skillcorner-cv` | Computer Vision Scientist, SkillCorner (Paris, hybrid) | `CV_Jonas_Heinle_SkillCorner.pdf` |
 | `parallel-ai` | AI Engineer, Parallel (Paris, on-site) | `CV_Jonas_Heinle_Parallel_AI.pdf` |
 | `c12-automation` | AI Automation Engineer, C12 Quantum Electronics (Paris, on-site) | `CV_Jonas_Heinle_C12_AI_Automation.pdf` |
 | `tissium-automation` | AI & Automation Lead, TISSIUM (Paris, hybrid) | `CV_Jonas_Heinle_Tissium_AI_Automation.pdf` |
+| `inference-mle` | Senior ML Engineer, Inference (remote; via Smartchoice, client unnamed) | `CV_Jonas_Heinle_ML_Inference.pdf` |
 | `runware-creative` | Creative Engineer / AI Creative Technologist, Runware (France, remote) | `CV_Jonas_Heinle_Runware_Creative.pdf` |
 | `snap-bci` | Software Engineer, C++, Brain-Computer Interface team, Snap Inc. (Paris, on-site) | `CV_Jonas_Heinle_Snap_BCI.pdf` |
 | `zendar-optim` | Machine Learning Engineer, Model Optimization, Zendar (Paris, hybrid) | `CV_Jonas_Heinle_Zendar_ML_Optimization.pdf` |
@@ -104,6 +112,8 @@ fits proves nothing about the German one.
 | `h-inference` | Research Engineer, Model Inference & Serving, H Company (Paris or London, hybrid); English | `CV_Jonas_Heinle_H_Company_Inference.pdf` |
 | `pruna-ml` | ML Engineer, Pruna AI (Munich or Paris, hybrid); English | `CV_Jonas_Heinle_Pruna_ML_Engineer.pdf` |
 | `idemia-cv` | Research Engineer in Computer Vision / AI, IDEMIA Public Security (Osny, on-site); English | `CV_Jonas_Heinle_IDEMIA_Research_Engineer.pdf` |
+| `rerun-rust` | Software Engineer (Rust), viewer and SDKs, Rerun (Remote Europe) | `CV_Jonas_Heinle_Rerun_Rust.pdf` |
+| `genesis-sim` | Genesis-World: Core Simulation Engine Engineer, Genesis AI (Paris, hybrid) | `CV_Jonas_Heinle_Genesis_Simulation_Engine.pdf` |
 | `all` | Every section — a compile check for the dormant ones, not a published CV (`make cv CV_PROFILE=all CV_JOB=CV_all`, without `STRICT_WARNINGS`) | `CV_all.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
@@ -112,21 +122,59 @@ profile drops the sections it drops.
 
 ## Honesty
 
+### SkillCorner
+
+The `skillcorner-cv` profile targets the supplied Computer Vision Scientist posting. It leads
+with person detection across four cameras, PyTorch object detection on a Hailo-equipped PLC,
+and RemaNet activity recognition. The summary covers the recorded ownership of more than four
+industrial vision projects, from datasets through model design, training, evaluation and
+deployment. CUDA kernels show custom implementation; SemProbe stays under Publications and
+shows detector robustness evaluation. MLflow, ClearML, DVC, Docker, CI/CD and monitoring support
+the production and reproducibility requirements. English C1, French B1, cycling and the Paris
+relocation line remain visible.
+
+The profile uses the shared experience and education sections. Its local
+`cvskillcornershowagent` flag hides the LLM-service bullet to make room for the vision work;
+every Fraunhofer bullet identifier remains in the ordering macro. A4 paper, 12 mm side margins
+and ragged-right lists with 1 pt item spacing keep both languages readable on one page.
+It adds no claim of AWS,
+multi-object or player tracking, re-identification, GNNs, camera calibration, homography,
+TensorFlow, OpenCV proficiency or modified CNN/Transformer architectures. The owner's confirmation
+below covers tracking and re-identification for the letter only; the supplied record does not
+establish the rest. Eye tracking in mixed reality is retained in its original
+context. ECML PKDD is named as the actual publication venue.
+
+Build the English application with `make cv-skillcorner-cv STRICT_WARNINGS=1`. For a German
+check that preserves the English filename, use
+`make cv CV_PROFILE=skillcorner-cv CV_LANG=german CV_JOB_SUFFIX=SkillCorner_german STRICT_WARNINGS=1`.
+
+In a letter build, `skillcorner-cv` supplies the header for the English cover letter, reusing
+`terabase-cv`'s section selection. The owner confirmed on 2026-10-25 that during the
+first six months at Fraunhofer IPA they designed, trained and optimized deep learning models
+for detection, tracking, re-identification and recognition. They also played American football
+while studying computer science and were already thinking about applications like SkillCorner's,
+which would have helped them as a player. The letter includes both facts; it does not claim
+professional sports-tracking deployments, AWS, GNNs, camera calibration, a playing level or team.
+Build with `make letter-skillcorner-cv STRICT_WARNINGS=1`.
+
+### Inference
+
+The `inference-mle` profile answers a brief that requires production vLLM or TensorRT-LLM,
+GPU optimization and inference latency and throughput work. It leads with the vLLM-served
+GLM-5.3 coding agent and turns on `\cvshowservingdetail`, which adds the TP2×PP3 layout and
+the −60% worst-case latency figure from the owner's recorded measurements. CUDA kernels, the
+Nsight-profiled quantum port, batched four-camera inference and the INT8 Hailo PLC follow.
+TensorRT-LLM, Triton Inference Server, SGLang and Kubernetes are not claimed: the record does
+not establish them. Narrower side margins keep the German build on one page.
+
+### Other profiles
+
 `scaleway-backend` targets the DevOps secondary track through documented GitLab CI/CD,
 container builds, Linux and DGX operations. The four years of structured application Python
 requested by the posting are not established by the current sources; teaching is not counted
 as application-development tenure. Terraform, Ansible, Proxmox, Kubernetes, bare-metal
 provisioning, VLAN administration and secrets management are not claimed. The English CV and
 matching letter are built separately from the original Scaleway Cloud Product application.
-
-`skillcorner-cv` supplies the header for the English Computer Vision Scientist cover letter,
-reusing `terabase-cv`'s section selection. The owner confirmed on 2026-10-25 that during the
-first six months at Fraunhofer IPA they designed, trained and optimized deep learning models
-for detection, tracking, re-identification and recognition. They also played American football
-while studying computer science and were already thinking about applications like SkillCorner's,
-which would have helped them as a player. The letter includes both facts; it does not claim
-professional sports-tracking deployments, AWS, GNNs, camera calibration, a playing level or team.
-Build with `make letter-skillcorner-cv STRICT_WARNINGS=1`; no separate SkillCorner CV is delivered.
 
 Owner-confirmed on 2026-10-25: medical-imaging lectures in electrical engineering during both
 bachelor's and master's studies. The shared bilingual education note is selected with
@@ -222,6 +270,23 @@ diffusion inpainting is its only generative evidence. See the notes at the top o
 benchmarks, smartphone or cloud deployment, or dataset sizes. Its posting requires fluent French;
 the CV keeps the recorded B1. Owner-confirmed on 2026-11-05: the team uses CNN-based models daily.
 See the notes at the top of `idemia-cv.tex`.
+
+`rerun-rust` adds two shared project entries, default off: the wgpu renderer in OxidANT
+(`\cvshowprojwgputrue`) and OmniAccelerANT (`\cvshowprojomnitrue`), both described from their
+public READMEs. It claims no visualization product for large datasets, RViz, Apache Arrow, a UI
+used by an outside community or production Rust services at scale. The letter names the first two
+as gaps. To fit one page the CV shows only the wgpu entry: OmniAccelerANT, the old Renderer
+(`\cvshowprojrendererfalse`), the CUDA-kernels and the builds bullets are off, and the letter
+carries them.
+
+`genesis-sim` adds the ANTfrastructure project entry (`\cvshowprojhubtrue`, default off), described
+from that repository's own rules and its mutation manifest. It claims no robotics simulator, autodiff,
+JIT compiler (Triton, JAX, Numba), macOS or Xcode Instruments, RenderDoc, USD or MJCF/URDF, and no
+review work for a project with an outside community. The letter names these as gaps. One page fits
+one project, the hub; the renderers sit in the summary, the collision project in the letter, and the
+coding-agent bullet is off (`\cvshowagentfalse`).
+
+`\cvshowprojrenderer` and `\cvshowagent` default on, so every other profile keeps both entries.
 
 A fact arriving late does not relax this. Go moved off the not-claimed list on
 2026-09-04 because the work turned up, not because the posting wanted it.

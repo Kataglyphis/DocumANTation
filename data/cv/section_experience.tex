@@ -232,8 +232,9 @@
                 % "privacy-first" went with it; "self-hosted" says the same thing.
                 % Plainer wording (owner, 2026-10-07: "sound like a developer, not like an AI"). The line before, kept:
                 % \item Started the institute's coding agent with a colleague on our own initiative and grew it into a privacy-first production service its researchers use: self-hosted \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} served with \textbf{vLLM} on \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
-                \item Started the institute's self-hosted coding agent on our own initiative with a colleague; it is now in production for our researchers. It runs \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} on \textbf{vLLM} across \textbf{6 H200 GPUs}, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
-                }
+                \ifcvshowagent
+                \item Started the institute's self-hosted coding agent on our own initiative with a colleague; it is now in production for our researchers. It runs \textbf{GLM-5.3 with vision capabilities}\ifcvshowstackdetail{} (from \textbf{Hugging Face})\fi{} on \textbf{vLLM} across \textbf{6 H200 GPUs}\ifcvshowservingdetail{} (\textbf{TP2$\times$PP3})\fi, with custom \textbf{speculative decoding} and \textbf{scheduling} (\textbf{$\sim$10$\times$ throughput}\ifcvshowservingdetail, \textbf{$-$60\% worst-case latency}\fi) and \textbf{NVFP4 + FP8 KV cache} (\textbf{1M-token context})
+                \fi}
                 % RemaNet = Remanufacturing Network, Horizon Europe grant
                 % 101138627, 25 partners, Jan 2024 - Dec 2026, Fraunhofer IPA a
                 % partner -- which is why it lines up with the February 2024
@@ -329,7 +330,9 @@
                 % third line, one line for one word.
                 % \ifcvshowmldetail; \textbf{INT8}-quantized and iterated with industry customers on field feedback\fi
                 \def\cvFhgBerghof{\ifcvshowberghof
-                \item Ran PyTorch-trained \textbf{object detection} at \textbf{$\sim$14 fps} on an embedded \textbf{Berghof PLC I fitted with a Hailo AI accelerator}\ifcvshowmldetail; \textbf{INT8}-quantized, iterated on customer field feedback\fi
+                % Bold names the products only, as the German branch does; the line before, kept:
+                % \item Ran PyTorch-trained \textbf{object detection} at \textbf{$\sim$14 fps} on an embedded \textbf{Berghof PLC I fitted with a Hailo AI accelerator}\ifcvshowmldetail; \textbf{INT8}-quantized, iterated on customer field feedback\fi
+                \item Ran PyTorch-trained \textbf{object detection} at \textbf{$\sim$14 fps} on an embedded \textbf{Berghof PLC} I fitted with a \textbf{Hailo} AI accelerator\ifcvshowmldetail; \textbf{INT8}-quantized, iterated on customer field feedback\fi
                 \fi}
                 % Earlier wordings, 2026-09-22, kept for reference:
                 % \item Built \textbf{person detection} for industrial safety: \textbf{4 cameras} in parallel, their inferences \textbf{batched}
@@ -340,6 +343,7 @@
                 % supporting production B2B applications" a posting may ask for,
                 % and "Built" did not say it.
                 % Owner, 2026-10-07: the application had strict latency and throughput requirements, met with the batched inference. No figures on record.
+                % Owner, 2026-11-15: it ran on an NVIDIA Jetson, at least 25 fps per camera, and a detection triggers a machine stop.
                 \def\cvFhgSafety{\ifcvshowsafety
                 % "for an industrial customer" still says the model went to a paying customer.
                 % Plainer wording (owner, 2026-10-07: "sound like a developer, not like an AI"). The line before, kept:
@@ -448,11 +452,10 @@
             \def\cvFhgQuantum{\ifcvshowquantum
             \item \textbf{Quantenphysikalische Simulation} des \link{https://www.kqcbw.de}{KQCBW} von CPU auf GPU portiert (\textbf{CUDA}, \textbf{PyTorch}) und mit \textbf{Nsight} und \textbf{VTune} auf \textbf{$\sim$700$\times$} Speedup profiliert
             \fi}
-            % OFFEN: eine Zeile bleibt gedehnt (badness 5667), STRICT_WARNINGS
-            % schlägt fehl. \allowbreak am Schrägstrich ändert den Umbruch nicht;
-            % "Monitoring mit Grafana/Prometheus" löst es, kostet aber die Seite.
+            % Nach dem Bindestrich darf "Monitoring" wieder trennen, sonst bleibt die erste Zeile gedehnt (badness 5667); die Zeile davor, erhalten:
+            % \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten \ifcvshowstackdetail\textbf{Docker}-\fi Builds von Stunden auf Minuten\ifcvshowmldetail; Experiment-Tracking mit \textbf{MLflow} und \textbf{ClearML}\fi
             \def\cvFhgCicd{\ifcvshowcicd
-            \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten \ifcvshowstackdetail\textbf{Docker}-\fi Builds von Stunden auf Minuten\ifcvshowmldetail; Experiment-Tracking mit \textbf{MLflow} und \textbf{ClearML}\fi
+            \item Verantwortlich für GitLab-CI/CD, DGX-A100/H200-GPUs und \textbf{Grafana/Prometheus}-\hspace{0pt}Monitoring; \textbf{BuildKit}- und \textbf{sccache}-Caching verkürzten \ifcvshowstackdetail\textbf{Docker}-\fi Builds von Stunden auf Minuten\ifcvshowmldetail; Experiment-Tracking mit \textbf{MLflow} und \textbf{ClearML}\fi
             \fi}
             % Siehe die Anmerkung im englischen Zweig.
             % Hinter \ifcvshowbuilds (standardmäßig an; siehe cv.tex).
@@ -497,8 +500,9 @@
             \def\cvFhgAgent{%
             % Schlichtere Formulierung (Inhaber, 2026-10-07), siehe englischer Zweig. Die Zeile davor, erhalten:
             % \item Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen als datenschutzkonformen Dienst für die Forschenden in Produktion gebracht: selbst gehostetes \textbf{GLM-5.3 mit Vision-Fähigkeiten}\ifcvshowstackdetail{} (offene Gewichte von \textbf{Hugging Face})\fi{} mit \textbf{vLLM} auf \textbf{6 H200-GPUs}, mit \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
-            \item Selbst gehosteten Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen gestartet; er läuft heute in Produktion für unsere Forschenden. Er nutzt \textbf{GLM-5.3 mit Vision-Fähigkeiten}\ifcvshowstackdetail{} (offene Gewichte von \textbf{Hugging Face})\fi{} auf \textbf{vLLM} mit \textbf{6 H200-GPUs}, mit eigenem \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
-            }
+            \ifcvshowagent
+            \item Selbst gehosteten Coding-Agent des Instituts auf Eigeninitiative mit einem Kollegen gestartet; er läuft heute in Produktion für unsere Forschenden. Er nutzt \textbf{GLM-5.3 mit Vision-Fähigkeiten}\ifcvshowstackdetail{} (offene Gewichte von \textbf{Hugging Face})\fi{} auf \textbf{vLLM} mit \textbf{6 H200-GPUs}\ifcvshowservingdetail{} (\textbf{TP2$\times$PP3})\fi, mit eigenem \textbf{Speculative Decoding} und \textbf{Scheduling} (\textbf{$\sim$10$\times$ Durchsatz}\ifcvshowservingdetail, \textbf{$-$60\% Worst-Case-Latenz}\fi) und \textbf{NVFP4 + FP8-KV-Cache} (\textbf{1M-Token-Kontext})
+            \fi}
             % Kein "end to end" hier: im Deutschen ein Anglizismus, den die
             % Doppelpunkt-Liste ohnehin schon sagt. Die Geraete stehen in einer
             % Klammer statt als Bindestrich-Kompositum: "Raspberry-Pi-/Hailo-

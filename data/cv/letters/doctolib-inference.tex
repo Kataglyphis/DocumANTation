@@ -1,0 +1,25 @@
+% Cover letter: Senior IA Inference Engineer, ML Platform (TIGER), Doctolib (Paris), 2026-11-15; make letter-doctolib-inference.
+% Facts: section_experience.tex and the posting; know the baseline behind "about ten times" before the interview.
+
+\renewcommand{\cvfootertitle}{\IfLanguageName{english}{Cover Letter}{Anschreiben}}
+
+\renewcommand{\cvBody}{%
+	\cvletterhead
+		{Stuttgart, 15 November 2026}
+		{Doctolib\\AI \& Machine Learning, ML Platform (TIGER)\\Paris}
+		{Application: Senior Inference Engineer, self-hosted LLM serving}
+
+	Dear TIGER team,
+
+	Your posting describes a self-hosted LLM serving platform that keeps sensitive data on infrastructure you control, shared by every feature team and tuned for latency and cost. At Fraunhofer IPA I run a smaller version of that platform for our researchers, and I would like to do this work at Doctolib's scale.
+
+	A colleague and I started the institute's self-hosted coding agent without being asked. It now runs in production on GLM-5.3 with vLLM across six H200 GPUs, split as tensor parallel 2 by pipeline parallel 3. Custom speculative decoding and scheduling raised throughput about ten times and cut worst-case latency by 60\%, and NVFP4 with an FP8 KV cache gives it a context of one million tokens. That is the work your posting lists: introducing an engine, tuning it past its defaults, and deciding where caching and quantization pay off.
+
+	I also own the platform underneath: the institute's DGX A100 and H200 nodes, its GitLab CI/CD, and Grafana/Prometheus monitoring. I extended our access-controlled AI gateway with WebAssembly plugins in Go that meter tokens and limit rates for its 45 researchers. I start from the profiler: I write CUDA kernels with Python bindings, and a CPU-to-GPU port of a quantum-physics simulation, profiled with Nsight and VTune, reached a $\sim$700$\times$ speedup. When a tool I depend on breaks, the fix goes upstream, as it did for LLVM and sccache.
+
+	Two gaps you should hear from me. I have about three years of experience since my master's degree, not five. And I have not run Kubernetes, Ray Serve or Terraform in production; I would start by learning your Anyscale setup, then measure time-to-first-token and cost per token on one model before changing anything.
+
+	Medical imaging was part of my coursework in both degrees. I live in Stuttgart and am moving to Paris, where a hybrid week with up to two remote days suits me well. I speak German natively, English at C1 and French at B1.
+
+	\cvletterclosing{Best regards}
+}

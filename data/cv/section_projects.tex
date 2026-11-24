@@ -14,12 +14,40 @@
 
     \begin{projects}
 
+        \ifcvshowprojrenderer
         \project
     	{Renderer}{2020-now}
     	{\github{GraphicsEngineVulkan} \github{GraphicEngine}}
         {This projects provide me with a solid Vulkan/OpenGL starting point for implementing modern established rendering techniques and getting quickly started in own research topics.}
     	{CMake, C, C++, Python, Vulkan, OpenGL}
-    				
+        \fi
+
+        \ifcvshowprojhub
+        \project
+    	{Build \& CI Infrastructure}{2025-now}
+    	{\github{ANTfrastructure}}
+    	% Two lines since genesis-sim needed the room; the three-line version, kept: The build, test and CI hub my other public repositories share: staged container images for Linux (x86-64, arm64, riscv64) and Windows (x64, arm64 cross), CUDA and ROCm variants, compiler caching end to end, digest-pinned stage handoffs, and mutation-tested quality gates sharded across eight CI jobs.
+    	{The build, test and CI hub my public repositories share: multi-arch container images for Linux and Windows with CUDA and ROCm variants, compiler caching and mutation-tested quality gates sharded across eight CI jobs.}
+    	{Python, Bash, PowerShell, BuildKit, sccache, GitHub Actions}
+        \fi
+
+        \ifcvshowprojwgpu
+        \project
+    	{WebGPU Renderer in Rust}{2026-now}
+    	{\github{OxidANT}}
+    	% Metal dropped until it is tested on a Mac (2026-11-15); the claim before, kept: runs natively (Vulkan, DX12, Metal)
+    	{wgpu glTF renderer that runs natively (Vulkan, DX12) and in the browser (wasm32, WebGPU): PBR with image-based lighting, cascaded shadows, SSAO, bloom, GPU skinning, an egui overlay and headless golden-image tests. It shares its Slang shaders with my C++ Vulkan engine.}
+    	{Rust, wgpu, WGSL, Slang, egui, WebAssembly}
+        \fi
+
+        \ifcvshowprojomni
+        \project
+    	{Cross-Platform Inference App}{2024-now}
+    	{\github{OmniAccelerANT}}
+    	{Flutter frontend on a Rust and C++ core through flutter\_rust\_bridge: GStreamer camera pipelines, WebRTC live streams to the browser and ONNX inference. Its cat cam, packaged for Linux and Windows, logs every detected visit with a picture and a 10\,s clip.}
+    	{Flutter, Dart, Rust, C++, GStreamer, WebRTC}
+        \fi
+
         \ifcvshowprojml
         \project
     	{Machine Learning Algorithms}{2020 - now}
@@ -57,12 +85,40 @@
     \sectionTitle{Projekte}{\faLaptop}
 
     \begin{projects}
+        \ifcvshowprojrenderer
         \project
     	{Renderer}{2020-now}
     	{\github{GraphicsEngineVulkan}\github{GraphicEngine}}
     	{Diese Projekte bieten mir einen soliden Startpunkt um diverse etablierte Computergrafik Algorithmen nachzuimplementieren und darauf aufbauend auch eigene Forschung zu betreiben.}
     	{\LaTeX, CMake, C, C++, Python, Vulkan, OpenGL}
-        
+        \fi
+
+        \ifcvshowprojhub
+        \project
+     	{Build- \& CI-Infrastruktur}{2025-now}
+     	{\github{ANTfrastructure}}
+     	% Gekürzt wie der englische Zweig; die Fassung davor, erhalten: Der Build-, Test- und CI-Hub, den meine anderen öffentlichen Repositories teilen: gestufte Container-Images für Linux (x86-64, arm64, riscv64) und Windows (x64, arm64-Cross), CUDA- und ROCm-Varianten, durchgängiges Compiler-Caching, per Digest gepinnte Stufenübergaben und mutationsgetestete Qualitäts-Gates, verteilt auf acht CI-Jobs.
+     	{Der Build-, Test- und CI-Hub, den meine öffentlichen Repositories teilen: Multi-Arch-Container-Images für Linux und Windows mit CUDA- und ROCm-Varianten, Compiler-Caching und mutationsgetestete Qualitäts-Gates, verteilt auf acht CI-Jobs.}
+     	{Python, Bash, PowerShell, BuildKit, sccache, GitHub Actions}
+        \fi
+
+        \ifcvshowprojwgpu
+        \project
+     	{WebGPU-Renderer in Rust}{2026-now}
+     	{\github{OxidANT}}
+     	% Metal gestrichen, bis es auf einem Mac getestet ist (2026-11-15); vorher: nativ (Vulkan, DX12, Metal)
+     	{wgpu-glTF-Renderer, der nativ (Vulkan, DX12) und im Browser (wasm32, WebGPU) läuft: PBR mit Image-Based Lighting, Cascaded Shadows, SSAO, Bloom, GPU-Skinning, egui-Overlay und Headless-Golden-Image-Tests. Seine Slang-Shader teilt er mit meiner C++-Vulkan-Engine.}
+     	{Rust, wgpu, WGSL, Slang, egui, WebAssembly}
+        \fi
+
+        \ifcvshowprojomni
+        \project
+     	{Plattformübergreifende Inferenz-App}{2024-now}
+     	{\github{OmniAccelerANT}}
+     	{Flutter-Frontend auf einem Rust- und C++-Kern über flutter\_rust\_bridge: GStreamer-Kamera-Pipelines, WebRTC-Livestreams in den Browser und ONNX-Inferenz. Die für Linux und Windows paketierte Katzenkamera protokolliert jeden erkannten Besuch mit Bild und 10-s-Clip.}
+     	{Flutter, Dart, Rust, C++, GStreamer, WebRTC}
+        \fi
+
         \ifcvshowprojml
      	\project
      	{Machine Learning Algorithms}{2020 - now}

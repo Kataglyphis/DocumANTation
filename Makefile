@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german cv-h-inference cv-pruna-ml cv-idemia-cv letter-idemia-cv $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-skillcorner-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-inference-mle cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german cv-rerun-rust letter-rerun-rust cv-genesis-sim letter-genesis-sim cv-doctolib-inference letter-doctolib-inference cv-wandercraft-perception letter-wandercraft-perception cv-h-inference cv-pruna-ml cv-idemia-cv letter-idemia-cv $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 .PHONY: cv-scaleway-software
@@ -62,6 +62,9 @@ cv-amd-hpc:
 cv-terabase-cv:
 	$(MAKE) cv CV_PROFILE=terabase-cv CV_JOB_SUFFIX=Terabase
 
+cv-skillcorner-cv:
+	$(MAKE) cv CV_PROFILE=skillcorner-cv CV_JOB_SUFFIX=SkillCorner
+
 # Application: AI Engineer, Parallel (Paris).
 cv-parallel-ai:
 	$(MAKE) cv CV_PROFILE=parallel-ai CV_JOB_SUFFIX=Parallel_AI
@@ -76,6 +79,10 @@ cv-c12-automation:
 
 letter-c12-automation:
 	$(MAKE) letter CV_PROFILE=c12-automation CV_JOB_SUFFIX=C12_AI_Automation
+
+# Application: Senior ML Engineer, Inference (remote, via Smartchoice).
+cv-inference-mle:
+	$(MAKE) cv CV_PROFILE=inference-mle CV_JOB_SUFFIX=ML_Inference
 
 # Application: AI & Automation Lead, TISSIUM (Paris).
 cv-tissium-automation:
@@ -117,6 +124,34 @@ cv-idemia-cv:
 
 letter-idemia-cv:
 	$(MAKE) letter CV_PROFILE=idemia-cv CV_JOB_SUFFIX=IDEMIA_Research_Engineer
+
+# Application: Software Engineer (Rust), viewer and SDKs, Rerun (Remote Europe).
+cv-rerun-rust:
+	$(MAKE) cv CV_PROFILE=rerun-rust CV_JOB_SUFFIX=Rerun_Rust
+
+letter-rerun-rust:
+	$(MAKE) letter CV_PROFILE=rerun-rust CV_JOB_SUFFIX=Rerun_Rust
+
+# Application: Genesis-World Core Simulation Engine Engineer, Genesis AI (Paris).
+cv-genesis-sim:
+	$(MAKE) cv CV_PROFILE=genesis-sim CV_JOB_SUFFIX=Genesis_Simulation_Engine
+
+letter-genesis-sim:
+	$(MAKE) letter CV_PROFILE=genesis-sim CV_JOB_SUFFIX=Genesis_Simulation_Engine
+
+# Application: Senior IA Inference Engineer, ML Platform (TIGER), Doctolib (Paris).
+cv-doctolib-inference:
+	$(MAKE) cv CV_PROFILE=doctolib-inference CV_JOB_SUFFIX=Doctolib_Inference
+
+letter-doctolib-inference:
+	$(MAKE) letter CV_PROFILE=doctolib-inference CV_JOB_SUFFIX=Doctolib_Inference
+
+# Application: AI & Control Engineer, Perception and Navigation, Wandercraft (Paris).
+cv-wandercraft-perception:
+	$(MAKE) cv CV_PROFILE=wandercraft-perception CV_JOB_SUFFIX=Wandercraft_Perception
+
+letter-wandercraft-perception:
+	$(MAKE) letter CV_PROFILE=wandercraft-perception CV_JOB_SUFFIX=Wandercraft_Perception
 
 # watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation

@@ -20,11 +20,13 @@ make cv-mistral-rse                                 # Research Software Engineer
 make cv-mistral-platform                            # Platform Engineer, Mistral Research Platform
 make cv-amd-hpc                                     # Lead HPC/AI Computational Scientist, AMD GENCI CoE
 make cv-terabase-cv                                 # Computer Vision Engineer, Bamboo, Terabase Energy
+make cv-skillcorner-cv                              # Computer Vision Scientist, SkillCorner
 make cv-parallel-ai                                 # AI Engineer, Parallel
 make letter-parallel-ai                             # its cover letter
 make cv-c12-automation                              # AI Automation Engineer, C12 Quantum Electronics
 make letter-c12-automation                          # its cover letter
 make cv-tissium-automation                          # AI & Automation Lead, TISSIUM
+make cv-inference-mle                               # Senior ML Engineer, Inference (remote)
 make cv-runware-creative                            # Creative Engineer / AI Creative Technologist, Runware
 make letter-runware-creative                        # its cover letter
 make cv-snap-bci                                    # Software Engineer C++, Brain-Computer Interface, Snap
@@ -35,11 +37,25 @@ make cv-h-inference                                 # Research Engineer, Model I
 make cv-pruna-ml                                    # ML Engineer, Pruna AI
 make cv-idemia-cv                                   # Research Engineer in Computer Vision / AI, IDEMIA Public Security
 make letter-idemia-cv                               # its cover letter
+make cv-rerun-rust                                  # Software Engineer (Rust), Rerun, Remote Europe
+make letter-rerun-rust                              # its cover letter
+make cv-genesis-sim                                 # Genesis-World Core Simulation Engine Engineer, Genesis AI (Paris)
+make letter-genesis-sim                             # its cover letter
+make cv-doctolib-inference                          # Senior IA Inference Engineer, Doctolib (Paris)
+make letter-doctolib-inference                      # its cover letter
+make cv-wandercraft-perception                      # AI & Control Engineer, Perception and Navigation, Wandercraft (Paris)
+make letter-wandercraft-perception                  # its cover letter
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf`, the filenames the CV is published
 under on jonasheinle.de, so the deliverables are reproducible, not committed binaries. Nothing in
 this directory is a build artifact.
+
+## Phone number
+
+The repository is public, so the number is not in it. Put `\newcommand*{\cvphone}{+49 ...}` into
+`data/cv/private.tex`, which git ignores. Without that file no CV shows a phone line; the `default`
+profile, published on jonasheinle.de, hides it either way (`\cvshowphonefalse`).
 
 ## Profiles
 

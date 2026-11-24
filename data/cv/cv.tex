@@ -50,6 +50,8 @@
 % posting does not buy, and the cheapest two lines in the Fraunhofer entry for
 % a profile that needs room. On for every research-facing profile.
 \newif\ifcvshowcudakernels \cvshowcudakernelstrue
+% The coding-agent bullet, four lines; default ON, off only where a posting has no use for LLM serving.
+\newif\ifcvshowagent \cvshowagenttrue
 % The AI-gateway bullet, and the only flag here that defaults OFF: it is the
 % one place the CV claims Go, so a profile opts in rather than every existing
 % profile paying two lines it did not budget for. \ifcvrelocate is the same
@@ -94,6 +96,12 @@
 \newif\ifcvshowprojbluenoise \cvshowprojbluenoisetrue
 \newif\ifcvshowprojmr \cvshowprojmrtrue
 \newif\ifcvshowprojcollision \cvshowprojcollisiontrue
+% New entries default OFF so profiles that input section_projects keep their page; rerun-rust and `all` opt in.
+\newif\ifcvshowprojwgpu \cvshowprojwgpufalse
+\newif\ifcvshowprojomni \cvshowprojomnifalse
+\newif\ifcvshowprojhub \cvshowprojhubfalse
+% Default ON so every existing profile keeps it; a profile whose own projects need the room turns it off.
+\newif\ifcvshowprojrenderer \cvshowprojrenderertrue
 % The Berghof bullet: object detection on an embedded Berghof PLC fitted with
 % a Hailo accelerator. Until 2026-09-22 it sat inside the RemaNet bullet, which
 % made it read as part of RemaNet. The owner corrected that: it was a separate
@@ -134,6 +142,11 @@
 % typeset exactly as before, so no other profile's lines move. parallel-ai
 % and `all` turn it on.
 \newif\ifcvshowstackdetail \cvshowstackdetailfalse
+% Serving-detail clauses on the coding-agent bullet: the TP2xPP3 layout and the
+% worst-case latency figure, both from the owner's measurements kept in
+% section_experience.tex. Default OFF so no other profile's lines move;
+% inference-mle and `all` turn it on.
+\newif\ifcvshowservingdetail \cvshowservingdetailfalse
 % Drops the CAS description, keeping the entry: its dates, title, employer and
 % tags all stay, so the timeline is untouched. The ONNX/mixed-reality bullet is
 % the one description on the page a platform posting has no use for. Guards the
@@ -147,6 +160,11 @@
 % or seven (German), so it is the citation that sets the header height. Only
 % grow this past five lines with the German build in front of you.
 \newif\ifcvrelocate \cvrelocatefalse
+% The phone number stays on application CVs; the default profile is public on jonasheinle.de and hides it.
+\newif\ifcvshowphone \cvshowphonetrue
+% The number lives in the git-ignored private.tex (data/cv/README.md); without that file no CV prints a phone line.
+\InputIfFileExists{private.tex}{}{}
+\providecommand*{\cvphone}{}
 % The order of the Fraunhofer IPA bullets. section_experience.tex defines each
 % one as \cvFhg<Name> (each still behind its own \ifcvshow... flag) and prints
 % them through this macro, so a profile can lead with what its posting asks
@@ -359,8 +377,11 @@
 		% header height at five. Restore by uncommenting; note the empty fourth
 		% argument to \DTMdisplaydate is required (see the note above).
 		%\infos{\IfLanguageName{english}{Birthday: \DTMdisplaydate{1995}{12}{25}{}}{Geburtstag: \DTMdisplaydate{1995}{12}{25}{}}}\newline
-		\infos{\IfLanguageName{english}{Driving License: Class B}{Führerschein: Klasse B}}\newline
-		\smartphone{+49 15253799950}
+		% The \newline moves inside the flag, or a hidden phone leaves an empty last line.
+		\infos{\IfLanguageName{english}{Driving License: Class B}{Führerschein: Klasse B}}%
+		\ifcvshowphone\ifx\cvphone\empty\else\newline
+		\smartphone{\cvphone}%
+		\fi\fi
 	\end{minipage}%
 	\hspace{1.5em}%
 	\begin{minipage}[t]{0.24\linewidth}

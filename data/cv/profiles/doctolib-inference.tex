@@ -1,0 +1,37 @@
+% Profile: Senior IA Inference Engineer, ML Platform (TIGER), Doctolib (Paris, hybrid), 2026-11-15; make cv-doctolib-inference.
+% Built from inference-mle: the serving, gateway and platform bullets lead because the posting is about owning a self-hosted LLM serving platform.
+
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Self-hosted LLM serving, vLLM tuning \& GPU performance}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Selbst gehostetes LLM-Serving, vLLM-Tuning \& GPU-Performance}}
+
+\cvrelocatetrue
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvshowservingdetailtrue
+\cvshowcudakernelstrue
+\cvshowquantumtrue
+\cvshowgatewaytrue
+\cvshowcicdtrue
+\cvshowsafetyfalse
+% The edge PLC bullet pays for the one page; the posting is server-side serving.
+\cvshowberghoffalse
+\cvshowmldetailfalse
+\cvshowbuildsfalse
+\cvshowremanetfalse
+\cvshowkiprotfalse
+\cvshowdocsfalse
+\cvshowmedicalcourseworktrue
+\setlength{\cvtagsep}{3pt}
+\geometry{left=1.2cm,right=1.2cm}
+
+\renewcommand{\cvFraunhoferOrder}{%
+	\cvFhgAgent\cvFhgGateway\cvFhgCicd\cvFhgKernels\cvFhgQuantum\cvFhgVlm\cvFhgMaintainer%
+	\cvFhgSafety\cvFhgBerghof\cvFhgRemanet\cvFhgBuilds\cvFhgDocs\cvFhgKiprot}
+\renewcommand{\cvFhgTags}{Python, vLLM, NVFP4/FP8, CUDA, Nsight, PyTorch, Docker, GitLab CI/CD, Grafana/Prometheus}
+
+\newcommand{\cvBody}{%
+    \input{section_headline_doctolib_inference}%
+    \vspace{0.25cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}
