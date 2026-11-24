@@ -31,6 +31,10 @@ make cv-snap-bci                                    # Software Engineer C++, Bra
 make cv-zendar-optim                                # ML Engineer, Model Optimization, Zendar
 make cv-realtime-vision                             # Real-time video pipelines, recruiter contact, client not named
 make cv-realtime-vision-german                      # the same in German
+make cv-h-inference                                 # Research Engineer, Model Inference & Serving, H Company
+make cv-pruna-ml                                    # ML Engineer, Pruna AI
+make cv-idemia-cv                                   # Research Engineer in Computer Vision / AI, IDEMIA Public Security
+make letter-idemia-cv                               # its cover letter
 ```
 
 Output lands in `data/out/CV_Jonas_Heinle_<language>.pdf`, the filenames the CV is published

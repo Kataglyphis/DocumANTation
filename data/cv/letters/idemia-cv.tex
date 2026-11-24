@@ -1,0 +1,22 @@
+% Names the biometrics and French gaps itself; the French plan is the owner's to confirm.
+\renewcommand{\cvfootertitle}{Cover Letter}
+\renewcommand{\cvBody}{%
+    \cvletterhead
+        {Stuttgart, 5 November 2026}
+        {IDEMIA Public Security\\Research team\\Osny, France}
+        {Application: Research Engineer in Computer Vision / AI}
+
+    Dear IDEMIA Public Security team,
+
+    Your posting describes research that runs from data collection and modeling to publication and support in the field. That is close to how I work at Fraunhofer IPA, and I would like to do this work on products that are deployed at your scale.
+
+    Since February 2024 I have owned the ML lifecycle of more than four industrial vision projects in Python, PyTorch and C++. I designed, trained and optimized deep learning models for object detection, activity recognition, tracking and re-identification, and our team uses CNN-based models daily. For KI-PrOT I created and annotated the dataset for a visual classifier and versioned it with DVC. For RemaNet, a Horizon Europe project with 25 partners, I shipped activity detection with PyTorch training and ONNX inference on NVIDIA GPUs.
+
+    I have also run video analysis on very different hardware. For an industrial customer's safety system I built person detection with 4 cameras in parallel and met strict latency and throughput requirements with batched inference. I ran INT8-quantized object detection at about 14 fps on a Berghof PLC that I fitted with a Hailo accelerator, and iterated on customer field feedback. In other industry projects I ran GStreamer camera pipelines with WebRTC and Rust/C++ inference, and live object detection on a Jetson GPU. To find bottlenecks I profile with Nsight and VTune. With those tools and CUDA I sped up a quantum-physics simulation by about 700 times.
+
+    I co-authored \textit{Semantic Robustness Probing via Inpainting}, an ECML PKDD 2026 demo that uses diffusion-based inpainting to probe object detectors against operating-condition factors, and a Fraunhofer IPA/IAO study on AI accelerators. Finding out where a detector fails and why is the same question you face when you analyze field problems and prepare for benchmarks, and I would like to work on it with your team.
+
+    I have not worked on biometrics yet and would expect to learn that field from your team. I hold an M.Sc. in computer science from the Karlsruhe Institute of Technology. I work in English at C1 level. My French is at B1, which is below the fluency you ask for, and I plan to improve it once I live in France. I am relocating to Paris, so working on site in Osny is possible. I would welcome a conversation.
+
+    \cvletterclosing{Best regards}
+}

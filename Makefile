@@ -1,7 +1,7 @@
 DOC_TARGETS = book beamer demo example pptx cv letter
 WATCH_TARGETS = beamer book cv demo example
 
-.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german $(addprefix watch-,$(WATCH_TARGETS))
+.PHONY: $(DOC_TARGETS) cv-all cv-mistral-rse cv-mistral-platform cv-amd-hpc cv-terabase-cv cv-parallel-ai letter-parallel-ai cv-c12-automation letter-c12-automation cv-tissium-automation cv-runware-creative letter-runware-creative cv-snap-bci cv-zendar-optim cv-realtime-vision cv-realtime-vision-german cv-h-inference cv-pruna-ml cv-idemia-cv letter-idemia-cv $(addprefix watch-,$(WATCH_TARGETS))
 
 IMAGE ?= pandoc_all
 .PHONY: cv-scaleway-software
@@ -102,6 +102,21 @@ cv-realtime-vision:
 
 cv-realtime-vision-german:
 	$(MAKE) cv CV_PROFILE=realtime-vision CV_LANG=german CV_JOB_SUFFIX=Realtime_Vision_German
+
+# Application: Research Engineer, Model Inference & Serving, H Company (Paris or London).
+cv-h-inference:
+	$(MAKE) cv CV_PROFILE=h-inference CV_JOB_SUFFIX=H_Company_Inference
+
+# Application: ML Engineer, Pruna AI (Munich or Paris).
+cv-pruna-ml:
+	$(MAKE) cv CV_PROFILE=pruna-ml CV_JOB_SUFFIX=Pruna_ML_Engineer
+
+# Application: Research Engineer in Computer Vision / AI, IDEMIA Public Security (Osny).
+cv-idemia-cv:
+	$(MAKE) cv CV_PROFILE=idemia-cv CV_JOB_SUFFIX=IDEMIA_Research_Engineer
+
+letter-idemia-cv:
+	$(MAKE) letter CV_PROFILE=idemia-cv CV_JOB_SUFFIX=IDEMIA_Research_Engineer
 
 # watch-<target> rebuilds via entr; $(eval), not a watch-% rule, which make skips for .PHONY targets.
 WATCH_DIR_beamer = data/presentation

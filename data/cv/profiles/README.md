@@ -23,6 +23,10 @@ make cv-snap-bci                         # Software Engineer C++, Brain-Computer
 make cv-zendar-optim                     # ML Engineer, Model Optimization, Zendar, English
 make cv-realtime-vision                  # Real-time video pipelines, recruiter contact, English
 make cv-realtime-vision-german           # the same in German
+make cv-h-inference                      # Research Engineer, Model Inference & Serving, H Company, English
+make cv-pruna-ml                         # ML Engineer, Pruna AI, English
+make cv-idemia-cv                        # Research Engineer in Computer Vision / AI, IDEMIA Public Security, English
+make letter-idemia-cv                    # its cover letter
 CV_PROFILE=mistral-rse CV_LANG=german ./scripts/build_in_container.sh cv
 ```
 
@@ -97,6 +101,9 @@ fits proves nothing about the German one.
 | `snap-bci` | Software Engineer, C++, Brain-Computer Interface team, Snap Inc. (Paris, on-site) | `CV_Jonas_Heinle_Snap_BCI.pdf` |
 | `zendar-optim` | Machine Learning Engineer, Model Optimization, Zendar (Paris, hybrid) | `CV_Jonas_Heinle_Zendar_ML_Optimization.pdf` |
 | `realtime-vision` | Real-time video pipelines, recruiter contact, client not named (Germany); both languages | `CV_Jonas_Heinle_Realtime_Vision.pdf`, `CV_Jonas_Heinle_Realtime_Vision_German.pdf` |
+| `h-inference` | Research Engineer, Model Inference & Serving, H Company (Paris or London, hybrid); English | `CV_Jonas_Heinle_H_Company_Inference.pdf` |
+| `pruna-ml` | ML Engineer, Pruna AI (Munich or Paris, hybrid); English | `CV_Jonas_Heinle_Pruna_ML_Engineer.pdf` |
+| `idemia-cv` | Research Engineer in Computer Vision / AI, IDEMIA Public Security (Osny, on-site); English | `CV_Jonas_Heinle_IDEMIA_Research_Engineer.pdf` |
 | `all` | Every section — a compile check for the dormant ones, not a published CV (`make cv CV_PROFILE=all CV_JOB=CV_all`, without `STRICT_WARNINGS`) | `CV_all.pdf` |
 
 Each profile file opens with the posting's requirements and the section that
@@ -199,6 +206,22 @@ multi-object tracking are not claimed. Owner-confirmed on 2026-11-03: the GStrea
 pipelines with WebRTC and Rust/C++ inference and the live Jetson object detection were run in
 industry projects. Never word them as own or personal projects. See the notes at the top of
 `realtime-vision.tex`.
+
+`h-inference` claims no Kubernetes, commercial cloud, Triton, MLX, JAX, disaggregated inference,
+multi-node distributed serving or startup work. Owner-confirmed on 2026-11-05: TensorRT-LLM used and
+algorithms from SGLang and TokenFlow (EuroSys 2026) reimplemented for vLLM. Which SGLang algorithms
+and in what setting are not on record, so these stay in the summary, outside the Fraunhofer bullets and tags. The owner replaced the Snapdragon benchmarks
+and APISIX gateway with work from industry projects on 2026-11-05. Only the English build fits one page; the German one runs to
+two. See the notes at the top of `h-inference.tex`.
+
+`pruna-ml` claims no reinforcement learning, preference optimization, distillation, pruning, Triton,
+Cog, neo-cloud platforms, generative model training or serving at millions of users. SemProbe's
+diffusion inpainting is its only generative evidence. See the notes at the top of `pruna-ml.tex`.
+
+`idemia-cv` claims no PhD, GANs, Bayesian methods, biometrics, patents, won
+benchmarks, smartphone or cloud deployment, or dataset sizes. Its posting requires fluent French;
+the CV keeps the recorded B1. Owner-confirmed on 2026-11-05: the team uses CNN-based models daily.
+See the notes at the top of `idemia-cv.tex`.
 
 A fact arriving late does not relax this. Go moved off the not-claimed list on
 2026-09-04 because the work turned up, not because the posting wanted it.

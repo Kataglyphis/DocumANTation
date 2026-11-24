@@ -1,0 +1,35 @@
+% Profile: h-inference -- Research Engineer, Model Inference & Serving, H Company (Paris or London, hybrid 3 days; posting read 2026-11-05).
+% "serves H's multimodal agentic models", "latency, throughput, and cost": the coding-agent bullet first (GLM-5.3 with vision on vLLM, 6 H200 GPUs, ~10x throughput).
+% Preferred "quantization, speculative decoding ... KV-cache compression": the same bullet (NVFP4 + FP8 KV cache, custom speculative decoding) and the summary's quantized models; the INT8 clause does not fit the page.
+% Team line "intelligent routing": the Go gateway bullet only; it meters and rate-limits, so routing itself is not claimed.
+% Preferred "Writing or modifying GPU kernels (CUDA ...)": the kernels bullet and the KQCBW port with Nsight and VTune.
+% Preferred "Edge or on-device inference": the summary's Jetson detection, Berghof on Hailo, the ONNX tag and the CAS entry; llama.cpp and ONNX Runtime are not named.
+% Preferred "inference frameworks (vLLM, SGLang, TensorRT-LLM)": vLLM in the agent bullet; algorithms from SGLang and TokenFlow (EuroSys 2026) reimplemented for vLLM and TensorRT-LLM used, all in the summary (owner, 2026-11-05); the paper's figures are not the owner's and stay out.
+% "Evaluate ... hardware platforms, and communicate findings": the co-authored AI-accelerator study in Publications.
+% "Python and at least one systems language": the maintainer bullet (Python, Rust, C++) and the tag row; "PyTorch": the tag row and the KQCBW port.
+% "production ML infrastructure": the CI/CD bullet (DGX A100/H200, Grafana/Prometheus).
+% "Research engagement": M.Sc., the ECML PKDD 2026 demo, the accelerator study, fixes upstream in LLVM and sccache.
+% Not claimed: Kubernetes, commercial cloud, Triton, MLX, JAX, disaggregated inference, multi-node distributed serving, startup work. See profiles/README.md.
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | LLM serving, inference optimization \& CUDA kernels}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | LLM-Serving \& Inferenz-Optimierung}}
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvrelocatetrue
+\cvshowgatewaytrue
+\cvshowquantumtrue
+\cvshowmaintainertrue
+\cvshowremanetfalse
+\setlength{\cvtagsep}{3pt}
+% Half a line back from each entry gap keeps the Languages row on page one.
+\renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
+\renewcommand{\cvFhgTags}{Python, C++, Rust, Go, CUDA, PyTorch, vLLM, ONNX, Hailo, Nsight, VTune, Prometheus}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgAgent\cvFhgGateway\cvFhgQuantum\cvFhgKernels\cvFhgVlm\cvFhgBerghof\cvFhgSafety%
+    \cvFhgMaintainer\cvFhgCicd\cvFhgBuilds\cvFhgRemanet\cvFhgDocs\cvFhgKiprot}
+\newcommand{\cvBody}{%
+    \enlargethispage{2\baselineskip}%
+    \input{section_headline_h_inference}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}

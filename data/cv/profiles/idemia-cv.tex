@@ -1,0 +1,35 @@
+% Profile: idemia-cv -- Research Engineer in Computer Vision / AI, IDEMIA Public Security (Osny near Cergy, on-site; posting read 2026-11-05).
+% "image processing, computer vision, deep learning", "optimized automated video analysis": the entry title, summary, RemaNet, safety and Berghof bullets.
+% "data collection, modeling, implementation": the summary's lifecycle and KI-PrOT (dataset created, annotated, versioned with DVC); no dataset size is on record.
+% "publication of articles": ECML PKDD 2026 with its SemProbe line and the accelerator study; the thesis lines do not fit the page.
+% "Optimization of the algorithms", "Performance measurement": the KQCBW port with Nsight and VTune and ~14 fps on Hailo.
+% "cloud or on-premises, embedded devices": H200 servers, the Hailo PLC and Jetson in the summary; "customers": Berghof field feedback and the safety bullet.
+% "Proficiency with python. Experience with C/C++": summary and tags.
+% "CNN": the summary's daily use and the tag row (owner, 2026-11-05); tracking and re-identification: owner, 2026-10-25; GStreamer, WebRTC and Jetson: industry projects, owner, 2026-11-03.
+% Not claimed: PhD, GANs, Bayesian methods, biometrics, patents, won benchmarks, smartphone or cloud deployment, large-scale data figures, fluent French (B1).
+\newcommand{\cvTagline}{\IfLanguageName{english}{Research Associate @ Fraunhofer IPA | Computer vision, video analysis \& model optimization}{Wissenschaftlicher Mitarbeiter @ Fraunhofer IPA | Computer Vision \& Videoanalyse}}
+\cvshowschoolfalse
+\cvshowthesislinesfalse
+\cvrelocatetrue
+\cvshowsemprobetrue
+\cvshowmldetailtrue
+\cvshowsafetytrue
+\cvshowkiprottrue
+\cvshowquantumtrue
+\cvshowcudakernelsfalse
+\cvshowbuildsfalse
+\cvshowcicdfalse
+\setlength{\cvtagsep}{3pt}
+\renewcommand\emptySeparator{\multicolumn{2}{c}{}\\[-5\baselineskip]}
+\renewcommand{\cvFhgTags}{Python, C++, PyTorch, CNN, ONNX, CUDA, GStreamer, Hailo, DVC, Nsight, VTune}
+\renewcommand{\cvFraunhoferOrder}{%
+    \cvFhgRemanet\cvFhgSafety\cvFhgBerghof\cvFhgKiprot\cvFhgVlm\cvFhgQuantum\cvFhgKernels\cvFhgAgent%
+    \cvFhgCicd\cvFhgGateway\cvFhgMaintainer\cvFhgBuilds\cvFhgDocs}
+\newcommand{\cvBody}{%
+    \enlargethispage{2\baselineskip}%
+    \input{section_headline_idemia_cv}%
+    \vspace{0.15cm}%
+    \input{section_experience}%
+    \input{section_education}%
+    \input{section_private}%
+}
